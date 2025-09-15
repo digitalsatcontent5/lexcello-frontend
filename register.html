@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - Lexcello LNAT Practice</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #1a365d;
+            --secondary-color: #2b6cb0;
+            --accent-gold: #d69e2e;
+            --text-dark: #1a202c;
+            --text-light: #4a5568;
+            --bg-light: #f7fafc;
+            --success-color: #48bb78;
+            --warning-color: #ed8936;
+            --danger-color: #e53e3e;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .register-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+            max-width: 1000px;
+            width: 100%;
+            min-height: 700px;
+        }
+
+        .register-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            min-height: 700px;
+        }
+
+        .register-form-section {
+            padding: 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .register-brand {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .brand-logo {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            margin-bottom: 8px;
+        }
+
+        .brand-tagline {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .register-form {
+            width: 100%;
+        }
+
+        .form-title {
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 6px;
+            display: block;
+            font-size: 0.9rem;
+        }
+
+        .form-control {
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 12px 16px;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 3px rgba(43, 108, 176, 0.1);
+        }
+
+        .password-requirements {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            margin-top: 5px;
+        }
+
+        .requirement {
+            display: flex;
+            align-items: center;
+            margin: 3px 0;
+        }
+
+        .requirement.valid {
+            color: var(--success-color);
+        }
+
+        .requirement.invalid {
+            color: var(--danger-color);
+        }
+
+        .requirement i {
+            width: 12px;
+            margin-right: 8px;
+            font-size: 0.8rem;
+        }
+
+        .btn-register {
+            background: var(--secondary-color);
+            border: none;
+            border-radius: 10px;
+            padding: 14px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: white;
+            width: 100%;
+            transition: all 0.3s ease;
+            margin: 20px 0;
+        }
+
+        .btn-register:hover {
+            background: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn-register:disabled {
+            opacity: 0.6;
+            transform: none;
+            cursor: not-allowed;
+        }
+
+        .form-links {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .form-links a {
+            color: var(--secondary-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .form-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .register-hero {
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            text-align: center;
+            z-index: 2;
+            padding: 40px;
+        }
+
+        .hero-title {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .hero-subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .features-list {
+            text-align: left;
+            margin: 30px 0;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+            font-size: 1rem;
+        }
+
+        .feature-item i {
+            margin-right: 15px;
+            font-size: 1.2rem;
+            color: var(--accent-gold);
+        }
+
+        .pricing-highlight {
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .price {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .price-desc {
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+
+        .alert {
+            border-radius: 10px;
+            border: none;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+        }
+
+        .alert-danger {
+            background: #fee;
+            color: #c53030;
+        }
+
+        .alert-success {
+            background: #f0fff4;
+            color: #2f855a;
+        }
+
+        .spinner {
+            width: 18px;
+            height: 18px;
+            border: 2px solid transparent;
+            border-top: 2px solid currentColor;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            margin-right: 8px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .register-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .register-hero {
+                order: -1;
+                min-height: 200px;
+            }
+            
+            .register-form-section {
+                padding: 30px 25px;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+            
+            .hero-title {
+                font-size: 1.8rem;
+            }
+            
+            .features-list {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <div class="register-content">
+            <div class="register-form-section">
+                <div class="register-brand">
+                    <div class="brand-logo">Lexcello</div>
+                    <div class="brand-tagline">Start your LNAT success journey</div>
+                </div>
+
+                <form class="register-form" id="registerForm">
+                    <h2 class="form-title">Create Your Account</h2>
+                    
+                    <div id="alertContainer"></div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="firstName">First Name</label>
+                            <input type="text" class="form-control" id="firstName" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="lastName">Last Name</label>
+                            <input type="text" class="form-control" id="lastName" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="email">Email Address</label>
+                        <input type="email" class="form-control" id="email" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="password">Password</label>
+                        <input type="password" class="form-control" id="password" required>
+                        <div class="password-requirements" id="passwordRequirements">
+                            <div class="requirement" id="lengthReq">
+                                <i class="fas fa-times"></i>At least 6 characters
+                            </div>
+                            <div class="requirement" id="letterReq">
+                                <i class="fas fa-times"></i>Contains letters
+                            </div>
+                            <div class="requirement" id="numberReq">
+                                <i class="fas fa-times"></i>Contains numbers
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="confirmPassword">Confirm Password</label>
+                        <input type="password" class="form-control" id="confirmPassword" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-register" id="registerBtn">
+                        <span class="btn-text">Create Account</span>
+                    </button>
+
+                    <div class="form-links">
+                        <p>Already have an account? <a href="login.html">Sign in here</a></p>
+                    </div>
+                </form>
+            </div>
+
+            <div class="register-hero">
+                <div class="hero-content">
+                    <h1 class="hero-title">Join Lexcello Today</h1>
+                    <p class="hero-subtitle">Get access to comprehensive LNAT practice tests and track your progress towards success</p>
+                    
+                    <div class="features-list">
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>10 Full-Length Practice Tests</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-chart-line"></i>
+                            <span>Detailed Performance Analytics</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-book-open"></i>
+                            <span>Complete Answer Explanations</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-clock"></i>
+                            <span>Timed Practice Sessions</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-trophy"></i>
+                            <span>Progress Tracking & Goals</span>
+                        </div>
+                    </div>
+
+                    <div class="pricing-highlight">
+                        <div class="price">£79 / $99</div>
+                        <div class="price-desc">Full access to all practice tests</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        const API_BASE_URL = 'https://lexcello-backend.onrender.com';
+
+        // Password validation
+        const passwordInput = document.getElementById('password');
+        passwordInput.addEventListener('input', validatePassword);
+
+        function validatePassword() {
+            const password = passwordInput.value;
+            const lengthReq = document.getElementById('lengthReq');
+            const letterReq = document.getElementById('letterReq');
+            const numberReq = document.getElementById('numberReq');
+
+            // Length requirement
+            if (password.length >= 6) {
+                lengthReq.classList.remove('invalid');
+                lengthReq.classList.add('valid');
+                lengthReq.querySelector('i').className = 'fas fa-check';
+            } else {
+                lengthReq.classList.remove('valid');
+                lengthReq.classList.add('invalid');
+                lengthReq.querySelector('i').className = 'fas fa-times';
+            }
+
+            // Letter requirement
+            if (/[a-zA-Z]/.test(password)) {
+                letterReq.classList.remove('invalid');
+                letterReq.classList.add('valid');
+                letterReq.querySelector('i').className = 'fas fa-check';
+            } else {
+                letterReq.classList.remove('valid');
+                letterReq.classList.add('invalid');
+                letterReq.querySelector('i').className = 'fas fa-times';
+            }
+
+            // Number requirement
+            if (/[0-9]/.test(password)) {
+                numberReq.classList.remove('invalid');
+                numberReq.classList.add('valid');
+                numberReq.querySelector('i').className = 'fas fa-check';
+            } else {
+                numberReq.classList.remove('valid');
+                numberReq.classList.add('invalid');
+                numberReq.querySelector('i').className = 'fas fa-times';
+            }
+        }
+
+        // Form submission
+        document.getElementById('registerForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const firstName = document.getElementById('firstName').value.trim();
+            const lastName = document.getElementById('lastName').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const registerBtn = document.getElementById('registerBtn');
+            const btnText = registerBtn.querySelector('.btn-text');
+            
+            // Validation
+            if (!firstName || !lastName || !email || !password || !confirmPassword) {
+                showAlert('Please fill in all fields', 'danger');
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                showAlert('Passwords do not match', 'danger');
+                return;
+            }
+
+            if (password.length < 6) {
+                showAlert('Password must be at least 6 characters long', 'danger');
+                return;
+            }
+
+            if (!validateEmail(email)) {
+                showAlert('Please enter a valid email address', 'danger');
+                return;
+            }
+
+            // Update button state
+            registerBtn.disabled = true;
+            btnText.innerHTML = '<span class="spinner"></span>Creating Account...';
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/auth/register`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ firstName, lastName, email, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // Store authentication data
+                    localStorage.setItem('authToken', data.token);
+                    localStorage.setItem('userData', JSON.stringify(data.user));
+                    
+                    showAlert('Account created successfully! Redirecting...', 'success');
+                    
+                    // Redirect to dashboard after short delay
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 1500);
+                } else {
+                    showAlert(data.error || 'Registration failed', 'danger');
+                }
+            } catch (error) {
+                console.error('Registration error:', error);
+                showAlert('Network error. Please try again.', 'danger');
+            } finally {
+                // Reset button state
+                registerBtn.disabled = false;
+                btnText.innerHTML = 'Create Account';
+            }
+        });
+
+        function validateEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+
+        function showAlert(message, type) {
+            const alertContainer = document.getElementById('alertContainer');
+            alertContainer.innerHTML = `
+                <div class="alert alert-${type}" role="alert">
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-triangle'} me-2"></i>
+                    ${message}
+                </div>
+            `;
+            
+            // Auto-hide success messages
+            if (type === 'success') {
+                setTimeout(() => {
+                    alertContainer.innerHTML = '';
+                }, 3000);
+            }
+        }
+
+        // Check if user is already logged in
+        window.addEventListener('DOMContentLoaded', function() {
+            const token = localStorage.getItem('authToken');
+            if (token) {
+                // Verify token is still valid
+                fetch(`${API_BASE_URL}/api/auth/me`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                })
+                .then(response => {
+                    if (response.ok) {
+                        // User is already logged in, redirect to dashboard
+                        window.location.href = 'dashboard.html';
+                    }
+                })
+                .catch(() => {
+                    // Token is invalid, clear it
+                    localStorage.removeItem('authToken');
+                    localStorage.removeItem('userData');
+                });
+            }
+        });
+    </script>
+</body>
+</html>
