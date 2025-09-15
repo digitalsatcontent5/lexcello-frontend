@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Practice Test 1 - Foundation | Lexcello LNAT</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #1a365d;
+            --primary-hover: #2d4a66;
+            --secondary-color: #2b6cb0;
+            --accent-gold: #d69e2e;
+            --text-dark: #1a202c;
+            --text-light: #4a5568;
+            --bg-light: #f7fafc;
+            --success-color: #48bb78;
+            --warning-color: #ed8936;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            padding-top: 80px;
+        }
+        
+        /* Navigation */
+        .navbar {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 1rem 0;
+        }
+        
+        .navbar-brand {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--primary-color) !important;
+            letter-spacing: -1px;
+        }
+        
+        .nav-link {
+            font-weight: 500;
+            color: var(--text-dark) !important;
+            margin: 0 0.5rem;
+        }
+        
+        .nav-link:hover {
+            color: var(--secondary-color) !important;
+        }
+        
+        /* Test Header */
+        .test-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 100px 0 60px;
+        }
+        
+        .test-badge {
+            display: inline-block;
+            background: var(--success-color);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        
+        .test-title {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+        }
+        
+        .test-subtitle {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            margin-bottom: 30px;
+        }
+        
+        .test-stats {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255,255,255,0.15);
+            padding: 12px 20px;
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .stat-icon {
+            font-size: 1.2rem;
+            color: var(--accent-gold);
+        }
+        
+        .stat-text {
+            font-weight: 500;
+        }
+        
+        /* Content Sections */
+        .content-section {
+            padding: 60px 0;
+        }
+        
+        .content-section:nth-child(even) {
+            background: var(--bg-light);
+        }
+        
+        .section-title {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 30px;
+        }
+        
+        /* Test Overview Cards */
+        .overview-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            border-left: 5px solid var(--secondary-color);
+        }
+        
+        .overview-card h4 {
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        
+        /* Question Types */
+        .question-types {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+        
+        .question-type-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .question-type-card:hover {
+            transform: translateY(-3px);
+        }
+        
+        .type-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .type-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .type-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .type-count {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            background: var(--bg-light);
+            padding: 4px 12px;
+            border-radius: 15px;
+        }
+        
+        /* Difficulty Indicator */
+        .difficulty-indicator {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        .difficulty-bars {
+            display: flex;
+            gap: 3px;
+        }
+        
+        .difficulty-bar {
+            width: 25px;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+        }
+        
+        .difficulty-bar.active {
+            background: var(--secondary-color);
+        }
+        
+        /* Sample Question */
+        .sample-question {
+            background: var(--primary-color);
+            color: white;
+            padding: 40px;
+            border-radius: 15px;
+            margin: 40px 0;
+        }
+        
+        .sample-question h4 {
+            color: var(--accent-gold);
+            margin-bottom: 20px;
+        }
+        
+        .passage {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-style: italic;
+        }
+        
+        .question-text {
+            font-weight: 600;
+            margin: 20px 0;
+        }
+        
+        .options {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .options li {
+            background: rgba(255,255,255,0.1);
+            margin: 10px 0;
+            padding: 12px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        
+        .options li:hover {
+            background: rgba(255,255,255,0.2);
+        }
+        
+        .options li.correct {
+            background: var(--success-color);
+        }
+        
+        /* Action Buttons */
+        .action-section {
+            background: var(--bg-light);
+            padding: 60px 0;
+            text-align: center;
+        }
+        
+        .btn-start-test {
+            background: var(--secondary-color);
+            color: white;
+            padding: 18px 40px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            border: none;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            margin: 0 10px;
+            cursor: pointer;
+        }
+        
+        .btn-start-test:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+        }
+        
+        .btn-preview {
+            background: transparent;
+            color: var(--secondary-color);
+            border: 2px solid var(--secondary-color);
+            padding: 18px 40px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            border-radius: 12px;
+            margin: 0 10px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .btn-preview:hover {
+            background: var(--secondary-color);
+            color: white;
+        }
+        
+        /* Requirements Section */
+        .requirements {
+            background: white;
+            border: 2px solid var(--accent-gold);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+        
+        .requirements h5 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .requirements ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .requirements li {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+            padding: 8px 0;
+        }
+        
+        .requirements .fa-check {
+            color: var(--success-color);
+            margin-right: 10px;
+        }
+        
+        /* Footer */
+        .footer {
+            background: #1a202c;
+            color: white;
+            padding: 40px 0 20px;
+        }
+        
+        .footer-links a {
+            color: #a0aec0;
+            text-decoration: none;
+            margin-right: 20px;
+        }
+        
+        .footer-links a:hover {
+            color: white;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .test-title {
+                font-size: 2.2rem;
+            }
+            
+            .test-stats {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .question-types {
+                grid-template-columns: 1fr;
+            }
+            
+            .btn-start-test,
+            .btn-preview {
+                width: 100%;
+                margin: 10px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">Lexcello</a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html#tests">Practice Tests</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="about-lnat.html">About LNAT</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="pricing.html">Pricing</a>
+                    </li>
+                </ul>
+                
+                <div class="d-flex gap-2">
+                    <button class="btn btn-outline-primary">Sign In</button>
+                    <button class="btn btn-primary">Get Started</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Test Header -->
+    <section class="test-header">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="test-badge">
+                        <i class="fas fa-play me-2"></i>Available Now
+                    </div>
+                    
+                    <h1 class="test-title">Practice Test 1: Foundation</h1>
+                    <p class="test-subtitle">Build your fundamental LNAT skills with carefully crafted questions designed for beginners to intermediate students</p>
+                    
+                    <div class="test-stats">
+                        <div class="stat-item">
+                            <i class="fas fa-question-circle stat-icon"></i>
+                            <span class="stat-text">42 Questions</span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-clock stat-icon"></i>
+                            <span class="stat-text">95 Minutes</span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-chart-bar stat-icon"></i>
+                            <span class="stat-text">Beginner-Intermediate</span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-users stat-icon"></i>
+                            <span class="stat-text">2,847 Students Taken</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Test Overview -->
+    <section class="content-section">
+        <div class="container">
+            <h2 class="section-title">Test Overview</h2>
+            
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="overview-card">
+                        <h4><i class="fas fa-bullseye me-2"></i>Purpose & Goals</h4>
+                        <p>Practice Test 1 is designed as your introduction to the LNAT format and question styles. This foundational test helps you:</p>
+                        <ul>
+                            <li>Familiarize yourself with authentic LNAT question formats</li>
+                            <li>Practice critical reading and logical reasoning skills</li>
+                            <li>Experience realistic time pressure and test conditions</li>
+                            <li>Establish a baseline score for tracking improvement</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="overview-card">
+                        <h4><i class="fas fa-layer-group me-2"></i>Difficulty Level</h4>
+                        <div class="difficulty-indicator">
+                            <span>Difficulty:</span>
+                            <div class="difficulty-bars">
+                                <div class="difficulty-bar active"></div>
+                                <div class="difficulty-bar active"></div>
+                                <div class="difficulty-bar"></div>
+                                <div class="difficulty-bar"></div>
+                                <div class="difficulty-bar"></div>
+                            </div>
+                            <span class="text-muted">Beginner-Intermediate</span>
+                        </div>
+                        <p>This test features questions slightly easier than the average LNAT, making it perfect for students beginning their preparation journey. Questions gradually increase in complexity to build confidence while challenging your reasoning skills.</p>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4">
+                    <div class="requirements">
+                        <h5>
+                            <i class="fas fa-clipboard-check"></i>
+                            Requirements
+                        </h5>
+                        <ul>
+                            <li><i class="fas fa-check"></i>Active Lexcello subscription</li>
+                            <li><i class="fas fa-check"></i>95 minutes uninterrupted time</li>
+                            <li><i class="fas fa-check"></i>Quiet testing environment</li>
+                            <li><i class="fas fa-check"></i>Stable internet connection</li>
+                            <li><i class="fas fa-check"></i>Desktop or tablet device</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Question Types Breakdown -->
+    <section class="content-section">
+        <div class="container">
+            <h2 class="section-title">Question Types Breakdown</h2>
+            <p class="text-muted mb-4">Understanding the distribution of question types helps you prepare strategically for each section</p>
+            
+            <div class="question-types">
+                <div class="question-type-card">
+                    <div class="type-header">
+                        <div class="type-icon">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <div>
+                            <div class="type-title">Main Conclusion</div>
+                            <div class="type-count">8 questions</div>
+                        </div>
+                    </div>
+                    <p>Identify the primary argument or main point being made in argumentative passages. These questions test your ability to distinguish between main points and supporting evidence.</p>
+                </div>
+                
+                <div class="question-type-card">
+                    <div class="type-header">
+                        <div class="type-icon">
+                            <i class="fas fa-lightbulb"></i>
+                        </div>
+                        <div>
+                            <div class="type-title">Assumptions</div>
+                            <div class="type-count">7 questions</div>
+                        </div>
+                    </div>
+                    <p>Recognize unstated premises that arguments rely upon. These questions require you to identify what the author takes for granted but doesn't explicitly state.</p>
+                </div>
+                
+                <div class="question-type-card">
+                    <div class="type-header">
+                        <div class="type-icon">
+                            <i class="fas fa-balance-scale"></i>
+                        </div>
+                        <div>
+                            <div class="type-title">Strengthen/Weaken</div>
+                            <div class="type-count">9 questions</div>
+                        </div>
+                    </div>
+                    <p>Evaluate which additional evidence would support or undermine the given argument. These questions test your understanding of logical relationships.</p>
+                </div>
+                
+                <div class="question-type-card">
+                    <div class="type-header">
+                        <div class="type-icon">
+                            <i class="fas fa-arrow-right"></i>
+                        </div>
+                        <div>
+                            <div class="type-title">Inference</div>
+                            <div class="type-count">10 questions</div>
+                        </div>
+                    </div>
+                    <p>Draw logical conclusions from the information provided. These questions require you to identify what can be reasonably concluded from the passage.</p>
+                </div>
+                
+                <div class="question-type-card">
+                    <div class="type-header">
+                        <div class="type-icon">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div>
+                            <div class="type-title">Reasoning Flaws</div>
+                            <div class="type-count">6 questions</div>
+                        </div>
+                    </div>
+                    <p>Identify logical errors, fallacies, or weaknesses in arguments. These questions test your ability to spot faulty reasoning patterns.</p>
+                </div>
+                
+                <div class="question-type-card">
+                    <div class="type-header">
+                        <div class="type-icon">
+                            <i class="fas fa-puzzle-piece"></i>
+                        </div>
+                        <div>
+                            <div class="type-title">Application</div>
+                            <div class="type-count">4 questions</div>
+                        </div>
+                    </div>
+                    <p>Apply principles or arguments to new situations. These questions test your ability to extend reasoning to different contexts or scenarios.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sample Question -->
+    <section class="content-section">
+        <div class="container">
+            <div class="sample-question">
+                <h4><i class="fas fa-eye me-2"></i>Sample Question Preview</h4>
+                <p>Get a taste of the question quality and format you'll encounter in Practice Test 1:</p>
+                
+                <div class="passage">
+                    <strong>Passage:</strong> The government's decision to increase university tuition fees will inevitably lead to a decrease in higher education participation among working-class students. This is because working-class families, unlike their middle-class counterparts, cannot afford to pay higher fees or take on additional debt. Therefore, the policy effectively creates a barrier that prevents social mobility through education.
+                </div>
+                
+                <div class="question-text">
+                    <strong>Question:</strong> Which of the following best identifies an assumption made in this argument?
+                </div>
+                
+                <ol class="options" type="A">
+                    <li onclick="selectOption(this)">A) Middle-class families always have sufficient funds for university fees</li>
+                    <li onclick="selectOption(this)">B) Working-class students are less academically capable than middle-class students</li>
+                    <li onclick="selectOption(this)" class="correct-answer">C) Higher education is the primary means of achieving social mobility</li>
+                    <li onclick="selectOption(this)">D) The government intends to reduce working-class participation in higher education</li>
+                </ol>
+                
+                <div class="mt-3 text-center">
+                    <button class="btn btn-outline-light" onclick="revealAnswer()">
+                        <i class="fas fa-eye me-2"></i>Show Correct Answer
+                    </button>
+                </div>
+                
+                <div id="explanation" style="display: none;" class="mt-3 p-3" style="background: rgba(255,255,255,0.1); border-radius: 8px;">
+                    <strong>Explanation:</strong> The correct answer is C. The argument assumes that higher education is the primary means of achieving social mobility. Without this assumption, the conclusion that the policy "prevents social mobility through education" would not follow logically from the premises.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Action Section -->
+    <section class="action-section">
+        <div class="container">
+            <h3 class="mb-4">Ready to Begin Practice Test 1?</h3>
+            <p class="mb-4 text-muted">Set aside 95 minutes for an uninterrupted, authentic LNAT experience</p>
+            
+            <div class="d-flex justify-content-center flex-wrap gap-3">
+                <button class="btn-start-test" onclick="startPracticeTest()">
+                    <i class="fas fa-play me-2"></i>Start Practice Test 1
+                </button>
+                <button class="btn-preview" onclick="viewAllQuestions()">
+                    <i class="fas fa-list me-2"></i>View All Questions
+                </button>
+            </div>
+            
+            <div class="mt-4">
+                <small class="text-muted">
+                    <i class="fas fa-info-circle me-1"></i>
+                    You can pause and resume this test within 24 hours of starting
+                </small>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="text-center">
+                <div class="footer-links mb-3">
+                    <a href="index.html">Home</a>
+                    <a href="about-lnat.html">About LNAT</a>
+                    <a href="pricing.html">Pricing</a>
+                    <a href="#contact">Contact</a>
+                    <a href="#privacy">Privacy Policy</a>
+                    <a href="#terms">Terms of Service</a>
+                </div>
+                <p class="text-muted">&copy; 2024 Lexcello. All rights reserved. LNATÂ® is a trademark of the LNAT Consortium.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        function selectOption(element) {
+            // Remove previous selections
+            document.querySelectorAll('.options li').forEach(li => {
+                li.style.background = 'rgba(255,255,255,0.1)';
+            });
+            
+            // Highlight selected option
+            element.style.background = 'rgba(255,255,255,0.3)';
+        }
+        
+        function revealAnswer() {
+            // Show correct answer
+            document.querySelector('.correct-answer').style.background = 'var(--success-color)';
+            
+            // Show explanation
+            document.getElementById('explanation').style.display = 'block';
+            
+            // Update button
+            event.target.innerHTML = '<i class="fas fa-check me-2"></i>Answer Revealed';
+            event.target.disabled = true;
+        }
+        
+        // UPDATED FUNCTION - This now correctly redirects to the test interface
+        function startPracticeTest() {
+            if (confirm('You are about to start Practice Test 1. You will have 95 minutes to complete 10 questions. Are you ready to begin?')) {
+                window.location.href = 'practice-test-1.html';
+            }
+        }
+        
+        function viewAllQuestions() {
+            // In a real application, this might show a question overview or preview
+            alert('This feature will show an overview of all questions in the test. For now, use "Start Practice Test 1" to begin.');
+        }
+    </script>
+</body>
+</html>

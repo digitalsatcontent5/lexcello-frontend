@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About the LNAT - Complete Guide | Lexcello</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #1a365d;
+            --primary-hover: #2d4a66;
+            --secondary-color: #2b6cb0;
+            --accent-gold: #d69e2e;
+            --text-dark: #1a202c;
+            --text-light: #4a5568;
+            --bg-light: #f7fafc;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.7;
+            color: var(--text-dark);
+            padding-top: 80px;
+        }
+        
+        /* Navigation */
+        .navbar {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 1rem 0;
+        }
+        
+        .navbar-brand {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--primary-color) !important;
+            letter-spacing: -1px;
+        }
+        
+        .nav-link {
+            font-weight: 500;
+            color: var(--text-dark) !important;
+            margin: 0 0.5rem;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            color: var(--secondary-color) !important;
+        }
+        
+        /* Header */
+        .page-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 100px 0 80px;
+            text-align: center;
+        }
+        
+        .page-header h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+        }
+        
+        .page-header p {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        /* Content Sections */
+        .content-section {
+            padding: 80px 0;
+        }
+        
+        .content-section:nth-child(even) {
+            background: var(--bg-light);
+        }
+        
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 30px;
+        }
+        
+        .section-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-light);
+            margin-bottom: 40px;
+        }
+        
+        /* Info Cards */
+        .info-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            border-left: 5px solid var(--secondary-color);
+            transition: transform 0.3s ease;
+        }
+        
+        .info-card:hover {
+            transform: translateY(-3px);
+        }
+        
+        .info-card h4 {
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin: 50px 0;
+        }
+        
+        .stat-card {
+            text-align: center;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--secondary-color);
+            display: block;
+            margin-bottom: 10px;
+        }
+        
+        .stat-label {
+            font-size: 1rem;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+        
+        /* Timeline */
+        .timeline {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: var(--secondary-color);
+            transform: translateX(-50%);
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin-bottom: 50px;
+            width: 50%;
+        }
+        
+        .timeline-item:nth-child(odd) {
+            left: 0;
+            padding-right: 40px;
+            text-align: right;
+        }
+        
+        .timeline-item:nth-child(even) {
+            left: 50%;
+            padding-left: 40px;
+            text-align: left;
+        }
+        
+        .timeline-content {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .timeline-date {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--secondary-color);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        
+        .timeline-item:nth-child(odd) .timeline-date {
+            right: -25px;
+        }
+        
+        .timeline-item:nth-child(even) .timeline-date {
+            left: -25px;
+        }
+        
+        /* Universities Grid */
+        .universities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 40px 0;
+        }
+        
+        .university-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .university-card:hover {
+            transform: translateY(-3px);
+        }
+        
+        .university-card h5 {
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        /* Tips Section */
+        .tips-section {
+            background: var(--primary-color);
+            color: white;
+            padding: 80px 0;
+        }
+        
+        .tip-card {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .tip-card h5 {
+            color: var(--accent-gold);
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        
+        /* CTA Section */
+        .cta-section {
+            background: var(--accent-gold);
+            color: var(--primary-color);
+            padding: 60px 0;
+            text-align: center;
+        }
+        
+        .cta-section h3 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        
+        .btn-cta {
+            background: var(--primary-color);
+            color: white;
+            padding: 16px 32px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-cta:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+        }
+        
+        /* Footer */
+        .footer {
+            background: #1a202c;
+            color: white;
+            padding: 40px 0 20px;
+        }
+        
+        .footer-links a {
+            color: #a0aec0;
+            text-decoration: none;
+            margin-right: 20px;
+        }
+        
+        .footer-links a:hover {
+            color: white;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .page-header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .timeline::before {
+                left: 20px;
+            }
+            
+            .timeline-item {
+                width: 100%;
+                left: 0 !important;
+                padding-left: 50px !important;
+                padding-right: 0 !important;
+                text-align: left !important;
+            }
+            
+            .timeline-date {
+                left: -15px !important;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">Lexcello</a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html#tests">Practice Tests</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="about-lnat.html">About LNAT</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="pricing.html">Pricing</a>
+                    </li>
+                </ul>
+                
+                <div class="d-flex gap-2">
+                    <button class="btn btn-outline-primary">Sign In</button>
+                    <button class="btn btn-primary">Get Started</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1>Understanding the LNAT</h1>
+            <p>Everything you need to know about the National Admissions Test for Law - format, scoring, preparation strategies, and what top law schools expect</p>
+        </div>
+    </section>
+
+    <!-- What is LNAT -->
+    <section class="content-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    <h2 class="section-title">What is the LNAT?</h2>
+                    <p class="section-subtitle">The National Admissions Test for Law (LNAT) is a standardized test used by top UK law schools as part of their admissions process.</p>
+                    
+                    <div class="info-card">
+                        <h4><i class="fas fa-university me-2 text-primary"></i>Purpose</h4>
+                        <p>The LNAT measures your ability to analyze arguments, draw reasoned conclusions, and understand implications - skills essential for studying law at university level. It's designed to differentiate between highly qualified candidates who often have similar A-level grades.</p>
+                    </div>
+                    
+                    <div class="info-card">
+                        <h4><i class="fas fa-clock me-2 text-primary"></i>Test Format</h4>
+                        <p>The test consists of two sections:</p>
+                        <ul class="mt-3">
+                            <li><strong>Section A:</strong> 42 multiple-choice questions based on argumentative passages (95 minutes)</li>
+                            <li><strong>Section B:</strong> One essay from a choice of three topics (40 minutes)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Test Statistics -->
+    <section class="content-section">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="section-title">LNAT by the Numbers</h2>
+                <p class="section-subtitle">Key statistics about the LNAT and its role in law school admissions</p>
+            </div>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-number">9</span>
+                    <span class="stat-label">Universities Require LNAT</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">13,000+</span>
+                    <span class="stat-label">Students Take LNAT Annually</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">42</span>
+                    <span class="stat-label">Multiple Choice Questions</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">29</span>
+                    <span class="stat-label">Average Score (out of 42)</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Universities -->
+    <section class="content-section">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="section-title">Universities Requiring LNAT</h2>
+                <p class="section-subtitle">Leading UK institutions that use LNAT as part of their law admissions process</p>
+            </div>
+            
+            <div class="universities-grid">
+                <div class="university-card">
+                    <h5>University of Oxford</h5>
+                    <p class="text-muted">All law applicants</p>
+                </div>
+                <div class="university-card">
+                    <h5>University College London</h5>
+                    <p class="text-muted">Law with another subject</p>
+                </div>
+                <div class="university-card">
+                    <h5>King's College London</h5>
+                    <p class="text-muted">All law courses</p>
+                </div>
+                <div class="university-card">
+                    <h5>London School of Economics</h5>
+                    <p class="text-muted">LLB Law programmes</p>
+                </div>
+                <div class="university-card">
+                    <h5>University of Bristol</h5>
+                    <p class="text-muted">Law programmes</p>
+                </div>
+                <div class="university-card">
+                    <h5>University of Glasgow</h5>
+                    <p class="text-muted">Law degrees</p>
+                </div>
+                <div class="university-card">
+                    <h5>University of Nottingham</h5>
+                    <p class="text-muted">Law courses</p>
+                </div>
+                <div class="university-card">
+                    <h5>SOAS, University of London</h5>
+                    <p class="text-muted">Law programmes</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Application Timeline -->
+    <section class="content-section">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="section-title">LNAT Application Timeline</h2>
+                <p class="section-subtitle">Key dates and deadlines for your LNAT preparation and law school applications</p>
+            </div>
+            
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h5>LNAT Registration Opens</h5>
+                        <p>Register for your LNAT test online. Book early as popular test centers fill up quickly, especially in London.</p>
+                    </div>
+                    <div class="timeline-date">August</div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h5>UCAS Application Deadline</h5>
+                        <p>Submit your UCAS application for law courses. All LNAT universities have the earlier Oxbridge deadline.</p>
+                    </div>
+                    <div class="timeline-date">October 15</div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h5>LNAT Test Period</h5>
+                        <p>Take your LNAT test. Most students take it in October-December, but January slots are also available.</p>
+                    </div>
+                    <div class="timeline-date">September - January</div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h5>Oxford Interviews</h5>
+                        <p>Oxford candidates may be called for interview in December. Your LNAT score influences interview invitations.</p>
+                    </div>
+                    <div class="timeline-date">December</div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h5>University Decisions</h5>
+                        <p>Universities make their decisions. Strong LNAT scores significantly boost your chances of offers from top institutions.</p>
+                    </div>
+                    <div class="timeline-date">January - March</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Success Tips -->
+    <section class="tips-section">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 style="color: white;">LNAT Success Strategies</h2>
+                <p style="color: rgba(255,255,255,0.9);">Evidence-based preparation techniques used by top-scoring students</p>
+            </div>
+            
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="tip-card">
+                        <h5><i class="fas fa-book-reader me-2"></i>Read Critically Every Day</h5>
+                        <p>Develop your critical reading skills by reading quality newspapers, academic journals, and opinion pieces. Focus on understanding arguments, identifying assumptions, and evaluating evidence.</p>
+                    </div>
+                    
+                    <div class="tip-card">
+                        <h5><i class="fas fa-clock me-2"></i>Master Time Management</h5>
+                        <p>With just 95 minutes for 42 questions, you have about 2.25 minutes per question. Practice working quickly while maintaining accuracy through regular timed practice sessions.</p>
+                    </div>
+                    
+                    <div class="tip-card">
+                        <h5><i class="fas fa-search me-2"></i>Focus on Question Types</h5>
+                        <p>Learn to quickly identify different question types: main conclusion, assumption, strengthen/weaken, inference, and reasoning flaws. Each type requires a specific approach.</p>
+                    </div>
+                </div>
+                
+                <div class="col-lg-6">
+                    <div class="tip-card">
+                        <h5><i class="fas fa-pencil-alt me-2"></i>Practice Essay Writing</h5>
+                        <p>Section B essays are marked by admissions tutors at your chosen universities. Practice writing clear, well-structured arguments under time pressure with diverse topics.</p>
+                    </div>
+                    
+                    <div class="tip-card">
+                        <h5><i class="fas fa-chart-line me-2"></i>Track Your Progress</h5>
+                        <p>Keep detailed records of your practice test scores, identifying patterns in your mistakes. Focus additional practice on your weakest question types and topics.</p>
+                    </div>
+                    
+                    <div class="tip-card">
+                        <h5><i class="fas fa-target me-2"></i>Set Realistic Score Goals</h5>
+                        <p>Research the typical LNAT scores for your target universities. Oxford typically expects 28+, while other universities may accept 23-25+. Aim for consistency above your target score.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <h3>Ready to Start Your LNAT Preparation?</h3>
+            <p class="mb-4">Join thousands of students who've improved their LNAT scores with our comprehensive practice tests and expert guidance.</p>
+            <button class="btn btn-cta">
+                <i class="fas fa-play me-2"></i>Start Practicing Today
+            </button>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="text-center">
+                <div class="footer-links mb-3">
+                    <a href="index.html">Home</a>
+                    <a href="about-lnat.html">About LNAT</a>
+                    <a href="pricing.html">Pricing</a>
+                    <a href="#contact">Contact</a>
+                    <a href="#privacy">Privacy Policy</a>
+                    <a href="#terms">Terms of Service</a>
+                </div>
+                <p class="text-muted">&copy; 2024 Lexcello. All rights reserved. LNAT® is a trademark of the LNAT Consortium.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

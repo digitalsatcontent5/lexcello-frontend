@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Practice Test 1 - LNAT Test Interface | Lexcello</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #1a365d;
+            --secondary-color: #2b6cb0;
+            --accent-gold: #d69e2e;
+            --text-dark: #1a202c;
+            --text-light: #4a5568;
+            --bg-light: #f7fafc;
+            --success-color: #48bb78;
+            --warning-color: #ed8936;
+            --danger-color: #e53e3e;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background: #fafafa;
+            margin: 0;
+            padding: 0;
+        }
+        
+        /* Test Header */
+        .test-header {
+            background: white;
+            border-bottom: 2px solid #e2e8f0;
+            padding: 15px 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+        
+        .test-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .test-title-small {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .test-progress {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .question-counter {
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+        
+        .timer {
+            background: var(--danger-color);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .timer.warning {
+            background: var(--warning-color);
+            animation: pulse 1s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+        
+        /* Main Content */
+        .test-content {
+            margin-top: 80px;
+            padding: 20px 0;
+        }
+        
+        .test-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        /* Question Navigation */
+        .question-nav {
+            background: var(--bg-light);
+            padding: 20px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .question-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+            gap: 8px;
+            max-width: 600px;
+        }
+        
+        .question-btn {
+            width: 40px;
+            height: 40px;
+            border: 2px solid #e2e8f0;
+            background: white;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .question-btn:hover {
+            border-color: var(--secondary-color);
+        }
+        
+        .question-btn.current {
+            background: var(--secondary-color);
+            color: white;
+            border-color: var(--secondary-color);
+        }
+        
+        .question-btn.answered {
+            background: var(--success-color);
+            color: white;
+            border-color: var(--success-color);
+        }
+        
+        .question-btn.flagged {
+            background: var(--warning-color);
+            color: white;
+            border-color: var(--warning-color);
+        }
+        
+        /* Question Content */
+        .question-content {
+            padding: 40px;
+        }
+        
+        .passage {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            border-left: 4px solid var(--secondary-color);
+        }
+        
+        .passage h4 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+        }
+        
+        .passage-text {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            text-align: justify;
+        }
+        
+        .question-section {
+            margin: 30px 0;
+        }
+        
+        .question-text {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+        
+        .options {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .option {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 15px 20px;
+            margin: 12px 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+        
+        .option:hover {
+            border-color: var(--secondary-color);
+            background: #f7fafc;
+        }
+        
+        .option.selected {
+            border-color: var(--secondary-color);
+            background: #e6f3ff;
+        }
+        
+        .option-label {
+            font-weight: 600;
+            color: var(--secondary-color);
+            min-width: 20px;
+        }
+        
+        .option-text {
+            flex: 1;
+            line-height: 1.5;
+        }
+        
+        /* Control Buttons */
+        .test-controls {
+            background: var(--bg-light);
+            padding: 25px 40px;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .btn-control {
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-previous {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .btn-previous:hover:not(:disabled) {
+            background: #5a6268;
+        }
+        
+        .btn-next {
+            background: var(--secondary-color);
+            color: white;
+        }
+        
+        .btn-next:hover:not(:disabled) {
+            background: var(--primary-color);
+        }
+        
+        .btn-flag {
+            background: var(--warning-color);
+            color: white;
+        }
+        
+        .btn-flag:hover {
+            background: #d69e2e;
+        }
+        
+        .btn-flag.flagged {
+            background: #d69e2e;
+        }
+        
+        .btn-submit {
+            background: var(--danger-color);
+            color: white;
+            font-size: 1.1rem;
+            padding: 15px 30px;
+        }
+        
+        .btn-submit:hover {
+            background: #c53030;
+        }
+        
+        .btn-control:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        /* Test Complete Modal */
+        .modal-content {
+            border-radius: 12px;
+            border: none;
+        }
+        
+        .modal-header {
+            background: var(--success-color);
+            color: white;
+            border-radius: 12px 12px 0 0;
+        }
+        
+        .test-summary {
+            padding: 20px 0;
+        }
+        
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .summary-item:last-child {
+            border-bottom: none;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .test-info {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+            
+            .test-progress {
+                justify-content: center;
+            }
+            
+            .question-content {
+                padding: 20px;
+            }
+            
+            .test-controls {
+                padding: 20px;
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .question-grid {
+                grid-template-columns: repeat(auto-fill, minmax(35px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Test Header -->
+    <div class="test-header">
+        <div class="container-fluid">
+            <div class="test-info">
+                <div class="test-title-small">
+                    <i class="fas fa-clipboard-list me-2"></i>
+                    Practice Test 1: Foundation
+                </div>
+                <div class="test-progress">
+                    <span class="question-counter">Question <span id="currentQuestion">1</span> of <span id="totalQuestions">10</span></span>
+                    <div class="timer" id="timer">01:35:00</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Test Content -->
+    <div class="test-content">
+        <div class="container-fluid">
+            <div class="test-container">
+                <!-- Question Navigation -->
+                <div class="question-nav">
+                    <h6 class="mb-3">Question Navigation:</h6>
+                    <div class="question-grid" id="questionGrid">
+                        <!-- Generated by JavaScript -->
+                    </div>
+                    <div class="mt-3">
+                        <small class="text-muted">
+                            <span class="badge bg-secondary me-2">Current</span>
+                            <span class="badge bg-success me-2">Answered</span>
+                            <span class="badge bg-warning">Flagged</span>
+                        </small>
+                    </div>
+                </div>
+
+                <!-- Question Content -->
+                <div class="question-content">
+                    <div id="questionContainer">
+                        <!-- Question content loaded by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Test Controls -->
+                <div class="test-controls">
+                    <div>
+                        <button class="btn-control btn-previous" id="prevBtn" onclick="previousQuestion()">
+                            <i class="fas fa-chevron-left me-2"></i>Previous
+                        </button>
+                    </div>
+                    
+                    <div class="d-flex gap-3">
+                        <button class="btn-control btn-flag" id="flagBtn" onclick="toggleFlag()">
+                            <i class="fas fa-flag me-2"></i>Flag
+                        </button>
+                        <button class="btn-control btn-submit" onclick="showSubmitModal()" data-bs-toggle="modal" data-bs-target="#submitModal">
+                            <i class="fas fa-check me-2"></i>Submit Test
+                        </button>
+                    </div>
+                    
+                    <div>
+                        <button class="btn-control btn-next" id="nextBtn" onclick="nextQuestion()">
+                            Next<i class="fas fa-chevron-right ms-2"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Submit Confirmation Modal -->
+    <div class="modal fade" id="submitModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-check-circle me-2"></i>Submit Practice Test
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="test-summary">
+                        <div class="summary-item">
+                            <span>Questions Answered:</span>
+                            <span id="answeredCount">0 / 10</span>
+                        </div>
+                        <div class="summary-item">
+                            <span>Questions Flagged:</span>
+                            <span id="flaggedCount">0</span>
+                        </div>
+                        <div class="summary-item">
+                            <span>Time Remaining:</span>
+                            <span id="timeRemaining">01:35:00</span>
+                        </div>
+                    </div>
+                    <div class="alert alert-warning mt-3">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        Once submitted, you cannot return to modify your answers.
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Continue Test</button>
+                    <button type="button" class="btn btn-danger" onclick="submitTest()">Submit Final Answers</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Sample LNAT questions data
+        const questions = [
+            {
+                id: 1,
+                passage: {
+                    title: "University Access and Social Mobility",
+                    text: "The government's recent decision to increase university tuition fees has sparked widespread debate about access to higher education. Critics argue that higher fees will inevitably create barriers for students from lower-income families, effectively restricting university education to those who can afford it. However, supporters contend that the increased revenue will improve the quality of education and that enhanced student loan systems ensure that no qualified student is denied access based on financial circumstances alone. They argue that graduates typically earn significantly more than non-graduates, making the investment worthwhile regardless of initial financial background."
+                },
+                question: "Which of the following best identifies the main conclusion of the supporters' argument?",
+                options: [
+                    { label: "A", text: "University tuition fees should be increased to improve educational quality" },
+                    { label: "B", text: "Student loan systems eliminate financial barriers to university access" },
+                    { label: "C", text: "Higher education remains accessible despite increased fees due to loan systems and future earning potential" },
+                    { label: "D", text: "Graduates consistently earn more money than those without university degrees" },
+                    { label: "E", text: "Quality of education is directly proportional to tuition fee levels" }
+                ],
+                correctAnswer: "C"
+            },
+            {
+                id: 2,
+                passage: {
+                    title: "Social Media and Political Discourse",
+                    text: "Social media platforms have fundamentally transformed political discourse, but not necessarily for the better. While these platforms democratize access to information and enable previously marginalized voices to participate in political conversations, they also facilitate the rapid spread of misinformation and create echo chambers where users encounter only information that confirms their existing beliefs. The algorithms that determine what content users see prioritize engagement over accuracy, often promoting sensational or divisive content that generates strong reactions. This has contributed to increasing political polarization and a decline in constructive political dialogue."
+                },
+                question: "The argument assumes which of the following about social media algorithms?",
+                options: [
+                    { label: "A", text: "They are designed intentionally to increase political polarization" },
+                    { label: "B", text: "They cannot distinguish between accurate and inaccurate information" },
+                    { label: "C", text: "Engagement and accuracy are mutually exclusive qualities in online content" },
+                    { label: "D", text: "Users prefer sensational content over factual reporting" },
+                    { label: "E", text: "Algorithms prioritize characteristics that may conflict with promoting accurate information" }
+                ],
+                correctAnswer: "E"
+            },
+            {
+                id: 3,
+                passage: {
+                    title: "Corporate Environmental Responsibility",
+                    text: "Many corporations now claim to prioritize environmental sustainability, implementing green policies and advertising their commitment to fighting climate change. However, genuine environmental responsibility requires more than superficial changes to marketing strategies and minor operational adjustments. Companies that continue to invest heavily in fossil fuel projects while simultaneously promoting renewable energy initiatives demonstrate a fundamental contradiction in their approach. True corporate environmental leadership demands comprehensive structural changes to business models, not merely cosmetic improvements designed to enhance public image."
+                },
+                question: "Which of the following would most strengthen the argument?",
+                options: [
+                    { label: "A", text: "Evidence that consumers increasingly prefer environmentally responsible companies" },
+                    { label: "B", text: "Data showing that superficial environmental initiatives have minimal impact on actual emissions" },
+                    { label: "C", text: "Examples of companies that have successfully implemented comprehensive environmental reforms" },
+                    { label: "D", text: "Research indicating that marketing costs for green initiatives exceed their implementation costs" },
+                    { label: "E", text: "Studies showing that fossil fuel investments are becoming less profitable" }
+                ],
+                correctAnswer: "B"
+            },
+            {
+                id: 4,
+                passage: {
+                    title: "Artificial Intelligence in Healthcare",
+                    text: "Artificial intelligence systems are increasingly being deployed in medical diagnosis and treatment recommendations. Proponents argue that AI can process vast amounts of medical data more quickly and accurately than human physicians, potentially reducing diagnostic errors and improving patient outcomes. Critics, however, worry that over-reliance on AI systems may lead to a degradation of clinical skills among medical professionals and create vulnerabilities when systems fail or encounter unusual cases not covered in their training data. Additionally, the opacity of many AI decision-making processes makes it difficult for physicians to understand and verify the reasoning behind AI recommendations."
+                },
+                question: "Based on the information provided, which of the following can be reasonably inferred?",
+                options: [
+                    { label: "A", text: "AI systems are more accurate than human physicians in all diagnostic scenarios" },
+                    { label: "B", text: "The implementation of AI in healthcare involves trade-offs between potential benefits and risks" },
+                    { label: "C", text: "Medical professionals are generally opposed to AI integration in healthcare" },
+                    { label: "D", text: "AI systems will eventually replace human physicians entirely" },
+                    { label: "E", text: "The transparency of AI decision-making is improving rapidly" }
+                ],
+                correctAnswer: "B"
+            },
+            {
+                id: 5,
+                passage: {
+                    title: "Privacy in the Digital Age",
+                    text: "Digital privacy advocates argue that individuals should have complete control over their personal data and how it is used by corporations and governments. They contend that current data collection practices are excessive and that people are not adequately informed about how their information is being utilized. However, this perspective overlooks the significant benefits that data sharing provides to society, including improved medical research, more efficient public services, and enhanced security measures. Furthermore, many digital services that users value highly would be impossible to provide without collecting and analyzing user data."
+                },
+                question: "The argument contains which logical flaw?",
+                options: [
+                    { label: "A", text: "It assumes that all data collection is beneficial to society" },
+                    { label: "B", text: "It presents a false choice between complete privacy and complete data sharing" },
+                    { label: "C", text: "It fails to address the privacy advocates' specific concerns about informed consent" },
+                    { label: "D", text: "It generalizes from specific examples to broad conclusions" },
+                    { label: "E", text: "It confuses correlation with causation regarding data use and societal benefits" }
+                ],
+                correctAnswer: "B"
+            },
+            {
+                id: 6,
+                passage: {
+                    title: "Remote Work and Productivity",
+                    text: "The shift to remote work during the pandemic has led to debates about workplace productivity and employee satisfaction. Some studies suggest that remote workers are more productive due to reduced commuting time and fewer office distractions. Other research indicates that remote work can lead to social isolation and difficulties in collaboration. Companies must now decide whether to maintain flexible work arrangements or require employees to return to traditional office settings. The decision should be based primarily on what arrangement best serves the company's long-term interests and productivity goals."
+                },
+                question: "Which principle, if accepted, would most support the conclusion?",
+                options: [
+                    { label: "A", text: "Employee preferences should be the primary factor in workplace policy decisions" },
+                    { label: "B", text: "Companies have a responsibility to prioritize employee wellbeing over profit" },
+                    { label: "C", text: "Business decisions should be guided by organizational objectives rather than external social pressures" },
+                    { label: "D", text: "Workplace policies should adapt to technological changes in society" },
+                    { label: "E", text: "The most productive work arrangement should be adopted regardless of other considerations" }
+                ],
+                correctAnswer: "C"
+            },
+            {
+                id: 7,
+                passage: {
+                    title: "Educational Technology Integration",
+                    text: "Schools worldwide have invested heavily in educational technology, believing that digital tools will enhance learning outcomes and prepare students for a technology-driven future. However, recent studies suggest that simply adding technology to classrooms does not automatically improve educational results. In some cases, technology may even serve as a distraction, reducing student attention and comprehension. The key to successful educational technology integration lies not in the quantity of digital tools available, but in how thoughtfully they are implemented and aligned with pedagogical objectives."
+                },
+                question: "If the argument is sound, which of the following scenarios would be most problematic?",
+                options: [
+                    { label: "A", text: "A school using tablets for interactive math exercises designed by education specialists" },
+                    { label: "B", text: "A district purchasing laptops for every student without providing teacher training" },
+                    { label: "C", text: "Teachers using presentation software to enhance traditional lectures" },
+                    { label: "D", text: "Students researching assignments using supervised internet access" },
+                    { label: "E", text: "A school gradually introducing new technology after pilot testing" }
+                ],
+                correctAnswer: "B"
+            },
+            {
+                id: 8,
+                passage: {
+                    title: "Urban Planning and Community Health",
+                    text: "Urban planners increasingly recognize that city design significantly impacts public health outcomes. Communities with walkable neighborhoods, accessible public transportation, and abundant green spaces tend to have lower rates of obesity, mental health issues, and cardiovascular disease. However, implementing health-focused urban planning often requires significant upfront investment and may face resistance from developers focused on maximizing profit from limited land resources. Critics argue that prioritizing health considerations in urban planning is a luxury that many cash-strapped municipalities cannot afford."
+                },
+                question: "The critics' argument relies on which assumption?",
+                options: [
+                    { label: "A", text: "Health-focused urban planning is always more expensive than traditional development" },
+                    { label: "B", text: "Developers' profit motives are incompatible with community health goals" },
+                    { label: "C", text: "The long-term health benefits do not justify the initial financial costs" },
+                    { label: "D", text: "Municipalities must choose between health considerations and fiscal responsibility" },
+                    { label: "E", text: "Urban planning has minimal impact on actual health outcomes" }
+                ],
+                correctAnswer: "D"
+            },
+            {
+                id: 9,
+                passage: {
+                    title: "Renewable Energy Transition",
+                    text: "The transition to renewable energy sources is essential for addressing climate change, but it faces significant practical challenges. Solar and wind power generation is intermittent, creating difficulties for electrical grid stability and energy storage. Additionally, many renewable energy projects require substantial land use, potentially conflicting with agricultural needs and natural habitat preservation. Proponents argue that technological advances and government support can overcome these obstacles, while skeptics question whether renewable energy can realistically meet global energy demands within the necessary timeframe."
+                },
+                question: "Which of the following, if true, would most weaken the skeptics' position?",
+                options: [
+                    { label: "A", text: "Recent breakthroughs have dramatically improved battery storage capacity and efficiency" },
+                    { label: "B", text: "Public opinion polls show increasing support for renewable energy initiatives" },
+                    { label: "C", text: "Fossil fuel prices have become more volatile and unpredictable" },
+                    { label: "D", text: "Several countries have committed to carbon neutrality goals" },
+                    { label: "E", text: "Renewable energy job creation has exceeded expectations in several regions" }
+                ],
+                correctAnswer: "A"
+            },
+            {
+                id: 10,
+                passage: {
+                    title: "Artificial Intelligence and Employment",
+                    text: "As artificial intelligence capabilities expand, concerns about job displacement have intensified across various industries. While AI may eliminate certain types of jobs, particularly those involving routine tasks, it also creates new employment opportunities in areas such as AI development, data analysis, and human-machine interaction design. Historical precedent suggests that technological advances ultimately lead to net job creation, although the transition period may involve significant disruption for affected workers. Society must therefore focus on retraining programs and educational initiatives to help workers adapt to the changing employment landscape."
+                },
+                question: "The argument's reasoning would be most similar to which of the following?",
+                options: [
+                    { label: "A", text: "Medical advances may have side effects, but the overall health benefits justify their development" },
+                    { label: "B", text: "International trade may hurt some domestic industries, but it generally increases overall economic prosperity" },
+                    { label: "C", text: "Environmental regulations may increase business costs, but they are necessary for long-term sustainability" },
+                    { label: "D", text: "Social media may create new problems, but it also provides valuable communication benefits" },
+                    { label: "E", text: "Urban development may displace some communities, but it provides housing for growing populations" }
+                ],
+                correctAnswer: "B"
+            }
+        ];
+
+        // Test state variables
+        let currentQuestionIndex = 0;
+        let userAnswers = {};
+        let flaggedQuestions = new Set();
+        let timeLeft = 95 * 60; // 95 minutes in seconds
+        let timerInterval;
+
+        // Initialize test
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeTest();
+            startTimer();
+        });
+
+        function initializeTest() {
+            document.getElementById('totalQuestions').textContent = questions.length;
+            createQuestionNavigation();
+            loadQuestion(0);
+            updateNavigationButtons();
+        }
+
+        function createQuestionNavigation() {
+            const grid = document.getElementById('questionGrid');
+            grid.innerHTML = '';
+            
+            questions.forEach((q, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'question-btn';
+                btn.textContent = index + 1;
+                btn.onclick = () => loadQuestion(index);
+                grid.appendChild(btn);
+            });
+        }
+
+        function loadQuestion(index) {
+            currentQuestionIndex = index;
+            const question = questions[index];
+            
+            document.getElementById('currentQuestion').textContent = index + 1;
+            
+            const container = document.getElementById('questionContainer');
+            container.innerHTML = `
+                <div class="passage">
+                    <h4>${question.passage.title}</h4>
+                    <div class="passage-text">${question.passage.text}</div>
+                </div>
+                
+                <div class="question-section">
+                    <div class="question-text">${question.question}</div>
+                    
+                    <div class="options">
+                        ${question.options.map(option => `
+                            <div class="option ${userAnswers[question.id] === option.label ? 'selected' : ''}" 
+                                 onclick="selectAnswer('${option.label}')">
+                                <div class="option-label">${option.label}</div>
+                                <div class="option-text">${option.text}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+            
+            updateQuestionNavigation();
+            updateNavigationButtons();
+            updateFlagButton();
+        }
+
+        function selectAnswer(answer) {
+            const questionId = questions[currentQuestionIndex].id;
+            userAnswers[questionId] = answer;
+            
+            // Update option styling
+            document.querySelectorAll('.option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            event.currentTarget.classList.add('selected');
+            
+            updateQuestionNavigation();
+        }
+
+        function updateQuestionNavigation() {
+            const buttons = document.querySelectorAll('.question-btn');
+            buttons.forEach((btn, index) => {
+                const questionId = questions[index].id;
+                btn.className = 'question-btn';
+                
+                if (index === currentQuestionIndex) {
+                    btn.classList.add('current');
+                } else if (flaggedQuestions.has(questionId)) {
+                    btn.classList.add('flagged');
+                } else if (userAnswers[questionId]) {
+                    btn.classList.add('answered');
+                }
+            });
+        }
+
+        function previousQuestion() {
+            if (currentQuestionIndex > 0) {
+                loadQuestion(currentQuestionIndex - 1);
+            }
+        }
+
+        function nextQuestion() {
+            if (currentQuestionIndex < questions.length - 1) {
+                loadQuestion(currentQuestionIndex + 1);
+            }
+        }
+
+        function updateNavigationButtons() {
+            document.getElementById('prevBtn').disabled = currentQuestionIndex === 0;
+            document.getElementById('nextBtn').disabled = currentQuestionIndex === questions.length - 1;
+        }
+
+        function toggleFlag() {
+            const questionId = questions[currentQuestionIndex].id;
+            const flagBtn = document.getElementById('flagBtn');
+            
+            if (flaggedQuestions.has(questionId)) {
+                flaggedQuestions.delete(questionId);
+                flagBtn.classList.remove('flagged');
+                flagBtn.innerHTML = '<i class="fas fa-flag me-2"></i>Flag';
+            } else {
+                flaggedQuestions.add(questionId);
+                flagBtn.classList.add('flagged');
+                flagBtn.innerHTML = '<i class="fas fa-flag me-2"></i>Flagged';
+            }
+            
+            updateQuestionNavigation();
+        }
+
+        function updateFlagButton() {
+            const questionId = questions[currentQuestionIndex].id;
+            const flagBtn = document.getElementById('flagBtn');
+            
+            if (flaggedQuestions.has(questionId)) {
+                flagBtn.classList.add('flagged');
+                flagBtn.innerHTML = '<i class="fas fa-flag me-2"></i>Flagged';
+            } else {
+                flagBtn.classList.remove('flagged');
+                flagBtn.innerHTML = '<i class="fas fa-flag me-2"></i>Flag';
+            }
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(function() {
+                timeLeft--;
+                updateTimerDisplay();
+                
+                if (timeLeft <= 600) { // 10 minutes warning
+                    document.getElementById('timer').classList.add('warning');
+                }
+                
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    autoSubmitTest();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const hours = Math.floor(timeLeft / 3600);
+            const minutes = Math.floor((timeLeft % 3600) / 60);
+            const seconds = timeLeft % 60;
+            
+            const display = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            document.getElementById('timer').textContent = display;
+        }
+
+        function showSubmitModal() {
+            const answeredCount = Object.keys(userAnswers).length;
+            const flaggedCount = flaggedQuestions.size;
+            
+            document.getElementById('answeredCount').textContent = `${answeredCount} / ${questions.length}`;
+            document.getElementById('flaggedCount').textContent = flaggedCount.toString();
+            document.getElementById('timeRemaining').textContent = document.getElementById('timer').textContent;
+        }
+
+        function submitTest() {
+            clearInterval(timerInterval);
+            
+            // Calculate score
+            let correctAnswers = 0;
+            questions.forEach(question => {
+                if (userAnswers[question.id] === question.correctAnswer) {
+                    correctAnswers++;
+                }
+            });
+            
+            // Store results for results page
+            const results = {
+                score: correctAnswers,
+                totalQuestions: questions.length,
+                timeSpent: (95 * 60) - timeLeft,
+                answers: userAnswers,
+                flaggedQuestions: Array.from(flaggedQuestions),
+                submissionTime: new Date().toISOString()
+            };
+            
+            // In a real application, this would be sent to a server
+            sessionStorage.setItem('testResults', JSON.stringify(results));
+            
+            // Redirect to results page
+            window.location.href = 'test-results.html';
+        }
+
+        function autoSubmitTest() {
+            alert('Time is up! Your test will be automatically submitted.');
+            submitTest();
+        }
+
+        // Prevent accidental navigation away from test
+        window.addEventListener('beforeunload', function(e) {
+            if (timeLeft > 0) {
+                e.preventDefault();
+                e.returnValue = 'Are you sure you want to leave? Your test progress will be lost.';
+                return e.returnValue;
+            }
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowLeft' && currentQuestionIndex > 0) {
+                previousQuestion();
+            } else if (e.key === 'ArrowRight' && currentQuestionIndex < questions.length - 1) {
+                nextQuestion();
+            } else if (e.key === 'f' || e.key === 'F') {
+                toggleFlag();
+            }
+        });
+    </script>
+</body>
+</html>

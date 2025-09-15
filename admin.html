@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lexcello LNAT Admin - Question Manager</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2c3e50, #3498db);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+        
+        .admin-panel {
+            padding: 40px;
+        }
+        
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid #eee;
+            margin-bottom: 30px;
+        }
+        
+        .tab {
+            padding: 15px 30px;
+            background: none;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .tab.active {
+            border-bottom-color: #3498db;
+            color: #3498db;
+            font-weight: 600;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+        
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .options-container {
+            border: 2px solid #eee;
+            border-radius: 8px;
+            padding: 20px;
+            background: #f8f9fa;
+        }
+        
+        .option-input {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .option-input input[type="radio"] {
+            width: auto;
+            margin-right: 10px;
+        }
+        
+        .option-input input[type="text"] {
+            flex: 1;
+            margin-left: 10px;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-right: 10px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, #27ae60, #229954);
+            color: white;
+        }
+        
+        .btn-warning {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: white;
+        }
+        
+        .btn-danger {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+        }
+        
+        .status-message {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .status-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .status-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .question-list {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .question-item {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .question-item:hover {
+            background: #f8f9fa;
+        }
+        
+        .question-item:last-child {
+            border-bottom: none;
+        }
+        
+        .question-preview {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #2c3e50;
+        }
+        
+        .question-meta {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .file-upload {
+            border: 2px dashed #ddd;
+            border-radius: 8px;
+            padding: 40px;
+            text-align: center;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .file-upload:hover {
+            border-color: #3498db;
+            background: #f8f9fa;
+        }
+        
+        .file-upload.dragover {
+            border-color: #27ae60;
+            background: #d4edda;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>LNAT Admin Panel</h1>
+            <p>Question Management System</p>
+        </div>
+        
+        <div class="admin-panel">
+            <div class="tabs">
+                <button class="tab active" onclick="showTab('add-question')">Add Question</button>
+                <button class="tab" onclick="showTab('manage-questions')">Manage Questions</button>
+                <button class="tab" onclick="showTab('import-questions')">Import Questions</button>
+                <button class="tab" onclick="showTab('dashboard')">Dashboard</button>
+            </div>
+            
+            <div id="status-message" class="status-message"></div>
+            
+            <!-- Add Question Tab -->
+            <div id="add-question" class="tab-content active">
+                <h2>Add New Question</h2>
+                <form id="question-form">
+                    <div class="form-group">
+                        <label for="test-select">Test:</label>
+                        <select id="test-select" required>
+                            <option value="1">LNAT Practice Test 1</option>
+                            <option value="2">LNAT Practice Test 2</option>
+                            <option value="3">LNAT Practice Test 3</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="passage-title">Passage Title:</label>
+                        <input type="text" id="passage-title" required placeholder="e.g., AI and Medical Ethics">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="passage-text">Passage Text:</label>
+                        <textarea id="passage-text" required placeholder="Enter the reading passage here..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="question-text">Question:</label>
+                        <textarea id="question-text" required placeholder="Enter the question here..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Answer Options:</label>
+                        <div class="options-container">
+                            <div class="option-input">
+                                <input type="radio" name="correct-answer" value="1" id="correct-1">
+                                <label for="correct-1">A.</label>
+                                <input type="text" id="option-1" placeholder="Option A" required>
+                            </div>
+                            <div class="option-input">
+                                <input type="radio" name="correct-answer" value="2" id="correct-2">
+                                <label for="correct-2">B.</label>
+                                <input type="text" id="option-2" placeholder="Option B" required>
+                            </div>
+                            <div class="option-input">
+                                <input type="radio" name="correct-answer" value="3" id="correct-3">
+                                <label for="correct-3">C.</label>
+                                <input type="text" id="option-3" placeholder="Option C" required>
+                            </div>
+                            <div class="option-input">
+                                <input type="radio" name="correct-answer" value="4" id="correct-4">
+                                <label for="correct-4">D.</label>
+                                <input type="text" id="option-4" placeholder="Option D" required>
+                            </div>
+                            <div class="option-input">
+                                <input type="radio" name="correct-answer" value="5" id="correct-5">
+                                <label for="correct-5">E.</label>
+                                <input type="text" id="option-5" placeholder="Option E" required>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="explanation">Explanation:</label>
+                        <textarea id="explanation" required placeholder="Explain why the correct answer is right and why other options are wrong..."></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">Add Question</button>
+                    <button type="button" class="btn btn-warning" onclick="previewQuestion()">Preview</button>
+                    <button type="button" class="btn btn-danger" onclick="clearForm()">Clear</button>
+                </form>
+            </div>
+            
+            <!-- Manage Questions Tab -->
+            <div id="manage-questions" class="tab-content">
+                <h2>Manage Existing Questions</h2>
+                <div class="form-group">
+                    <label for="test-filter">Filter by Test:</label>
+                    <select id="test-filter" onchange="loadQuestions()">
+                        <option value="">All Tests</option>
+                        <option value="1">LNAT Practice Test 1</option>
+                        <option value="2">LNAT Practice Test 2</option>
+                        <option value="3">LNAT Practice Test 3</option>
+                    </select>
+                </div>
+                <div id="questions-list" class="question-list">
+                    <p style="padding: 20px; text-align: center; color: #666;">Loading questions...</p>
+                </div>
+            </div>
+            
+            <!-- Import Questions Tab -->
+            <div id="import-questions" class="tab-content">
+                <h2>Import Questions from Excel</h2>
+                <div class="file-upload" id="file-upload">
+                    <p><strong>Drop Excel file here or click to browse</strong></p>
+                    <p>Supported formats: .xlsx, .xls</p>
+                    <input type="file" id="file-input" accept=".xlsx,.xls" style="display: none;">
+                </div>
+                <div id="import-preview" style="display: none; margin-top: 20px;">
+                    <h3>Import Preview</h3>
+                    <div id="import-data"></div>
+                    <button class="btn btn-success" onclick="processImport()">Import All Questions</button>
+                </div>
+            </div>
+            
+            <!-- Dashboard Tab -->
+            <div id="dashboard" class="tab-content">
+                <h2>Dashboard</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number" id="total-questions">-</div>
+                        <div class="stat-label">Total Questions</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="total-tests">3</div>
+                        <div class="stat-label">Active Tests</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="test1-questions">-</div>
+                        <div class="stat-label">Test 1 Questions</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="avg-difficulty">-</div>
+                        <div class="stat-label">Avg. Difficulty</div>
+                    </div>
+                </div>
+                
+                <button class="btn btn-primary" onclick="loadDashboard()">Refresh Stats</button>
+                <button class="btn btn-warning" onclick="exportQuestions()">Export All Questions</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'https://lexcello-backend.onrender.com';
+        
+        // Tab Management
+        function showTab(tabName) {
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(tabName).classList.add('active');
+            
+            if (tabName === 'manage-questions') {
+                loadQuestions();
+            } else if (tabName === 'dashboard') {
+                loadDashboard();
+            }
+        }
+        
+        // Status Messages
+        function showMessage(message, type = 'success') {
+            const statusDiv = document.getElementById('status-message');
+            statusDiv.className = `status-message status-${type}`;
+            statusDiv.textContent = message;
+            statusDiv.style.display = 'block';
+            
+            setTimeout(() => {
+                statusDiv.style.display = 'none';
+            }, 5000);
+        }
+        
+        // Form Submission
+        document.getElementById('question-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = {
+                testId: parseInt(document.getElementById('test-select').value),
+                questions: [{
+                    passageTitle: document.getElementById('passage-title').value,
+                    passageText: document.getElementById('passage-text').value,
+                    questionText: document.getElementById('question-text').value,
+                    options: [
+                        document.getElementById('option-1').value,
+                        document.getElementById('option-2').value,
+                        document.getElementById('option-3').value,
+                        document.getElementById('option-4').value,
+                        document.getElementById('option-5').value
+                    ],
+                    correctAnswer: parseInt(document.querySelector('input[name="correct-answer"]:checked').value),
+                    explanation: document.getElementById('explanation').value
+                }]
+            };
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/admin/add-questions`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    showMessage('Question added successfully!', 'success');
+                    clearForm();
+                } else {
+                    showMessage(`Error: ${result.error}`, 'error');
+                }
+            } catch (error) {
+                showMessage(`Network error: ${error.message}`, 'error');
+            }
+        });
+        
+        // Load Questions
+        async function loadQuestions() {
+            const testFilter = document.getElementById('test-filter').value;
+            const questionsList = document.getElementById('questions-list');
+            
+            try {
+                let url = `${API_BASE}/api/tests`;
+                if (testFilter) {
+                    url = `${API_BASE}/api/tests/${testFilter}/questions`;
+                }
+                
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                if (testFilter && data.questions) {
+                    displayQuestions(data.questions);
+                } else if (data.tests) {
+                    // Load questions from all tests
+                    const allQuestions = [];
+                    for (const test of data.tests) {
+                        const testResponse = await fetch(`${API_BASE}/api/tests/${test.id}/questions`);
+                        const testData = await testResponse.json();
+                        if (testData.questions) {
+                            allQuestions.push(...testData.questions.map(q => ({...q, testId: test.id, testTitle: test.title})));
+                        }
+                    }
+                    displayQuestions(allQuestions);
+                }
+            } catch (error) {
+                questionsList.innerHTML = `<p style="padding: 20px; text-align: center; color: #e74c3c;">Error loading questions: ${error.message}</p>`;
+            }
+        }
+        
+        function displayQuestions(questions) {
+            const questionsList = document.getElementById('questions-list');
+            
+            if (questions.length === 0) {
+                questionsList.innerHTML = '<p style="padding: 20px; text-align: center; color: #666;">No questions found.</p>';
+                return;
+            }
+            
+            questionsList.innerHTML = questions.map(q => `
+                <div class="question-item" onclick="editQuestion(${q.id})">
+                    <div class="question-preview">${q.questionText.substring(0, 100)}...</div>
+                    <div class="question-meta">
+                        ${q.testTitle || `Test ${q.testId}`} | Passage: ${q.passageTitle} | ID: ${q.id}
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        // File Upload
+        const fileUpload = document.getElementById('file-upload');
+        const fileInput = document.getElementById('file-input');
+        
+        fileUpload.addEventListener('click', () => fileInput.click());
+        
+        fileUpload.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            fileUpload.classList.add('dragover');
+        });
+        
+        fileUpload.addEventListener('dragleave', () => {
+            fileUpload.classList.remove('dragover');
+        });
+        
+        fileUpload.addEventListener('drop', (e) => {
+            e.preventDefault();
+            fileUpload.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                handleFileUpload(files[0]);
+            }
+        });
+        
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                handleFileUpload(e.target.files[0]);
+            }
+        });
+        
+        // Utility Functions
+        function clearForm() {
+            document.getElementById('question-form').reset();
+        }
+        
+        function previewQuestion() {
+            // Implement question preview functionality
+            showMessage('Preview functionality coming soon!', 'warning');
+        }
+        
+        function editQuestion(questionId) {
+            // Implement question editing
+            showMessage(`Edit question ${questionId} - functionality coming soon!`, 'warning');
+        }
+        
+        function handleFileUpload(file) {
+            showMessage('Excel import functionality will be implemented based on your file structure', 'warning');
+        }
+        
+        function processImport() {
+            showMessage('Import processing functionality coming soon!', 'warning');
+        }
+        
+        function loadDashboard() {
+            // Load dashboard statistics
+            loadQuestions(); // This will help us count questions
+        }
+        
+        function exportQuestions() {
+            showMessage('Export functionality coming soon!', 'warning');
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            loadDashboard();
+        });
+    </script>
+</body>
+</html>

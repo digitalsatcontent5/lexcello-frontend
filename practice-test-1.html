@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Practice Test 1 - LNAT Test Interface | Lexcello</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #1a365d;
+            --secondary-color: #2b6cb0;
+            --accent-gold: #d69e2e;
+            --text-dark: #1a202c;
+            --text-light: #4a5568;
+            --bg-light: #f7fafc;
+            --success-color: #48bb78;
+            --warning-color: #ed8936;
+            --danger-color: #e53e3e;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background: #fafafa;
+            margin: 0;
+            padding: 0;
+        }
+        
+        /* Loading Spinner */
+        .loading-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: white;
+        }
+        
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid var(--secondary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Test Header */
+        .test-header {
+            background: white;
+            border-bottom: 2px solid #e2e8f0;
+            padding: 15px 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+        
+        .test-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .test-title-small {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .test-progress {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .question-counter {
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+        
+        .timer {
+            background: var(--danger-color);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .timer.warning {
+            background: var(--warning-color);
+            animation: pulse 1s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+        
+        /* Main Content */
+        .test-content {
+            margin-top: 80px;
+            padding: 20px 0;
+            display: none; /* Hidden until questions load */
+        }
+        
+        .test-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        /* Question Navigation */
+        .question-nav {
+            background: var(--bg-light);
+            padding: 20px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .question-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+            gap: 8px;
+            max-width: 600px;
+        }
+        
+        .question-btn {
+            width: 40px;
+            height: 40px;
+            border: 2px solid #e2e8f0;
+            background: white;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+        }
+        
+        .question-btn:hover {
+            border-color: var(--secondary-color);
+        }
+        
+        .question-btn.current {
+            background: var(--secondary-color);
+            color: white;
+            border-color: var(--secondary-color);
+        }
+        
+        .question-btn.answered {
+            background: var(--success-color);
+            color: white;
+            border-color: var(--success-color);
+        }
+        
+        .question-btn.flagged {
+            background: var(--warning-color);
+            color: white;
+            border-color: var(--warning-color);
+        }
+        
+        /* Question Content */
+        .question-content {
+            padding: 40px;
+        }
+        
+        .passage {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            border-left: 4px solid var(--secondary-color);
+        }
+        
+        .passage h4 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+        }
+        
+        .passage-text {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            text-align: justify;
+        }
+        
+        .question-section {
+            margin: 30px 0;
+        }
+        
+        .question-text {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+        
+        .options {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .option {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 15px 20px;
+            margin: 12px 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+        
+        .option:hover {
+            border-color: var(--secondary-color);
+            background: #f7fafc;
+        }
+        
+        .option.selected {
+            border-color: var(--secondary-color);
+            background: #e6f3ff;
+        }
+        
+        .option-label {
+            font-weight: 600;
+            color: var(--secondary-color);
+            min-width: 20px;
+        }
+        
+        .option-text {
+            flex: 1;
+            line-height: 1.5;
+        }
+        
+        /* Control Buttons */
+        .test-controls {
+            background: var(--bg-light);
+            padding: 25px 40px;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .btn-control {
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-previous {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .btn-previous:hover:not(:disabled) {
+            background: #5a6268;
+        }
+        
+        .btn-next {
+            background: var(--secondary-color);
+            color: white;
+        }
+        
+        .btn-next:hover:not(:disabled) {
+            background: var(--primary-color);
+        }
+        
+        .btn-flag {
+            background: var(--warning-color);
+            color: white;
+        }
+        
+        .btn-flag:hover {
+            background: #d69e2e;
+        }
+        
+        .btn-flag.flagged {
+            background: #d69e2e;
+        }
+        
+        .btn-submit {
+            background: var(--danger-color);
+            color: white;
+            font-size: 1.1rem;
+            padding: 15px 30px;
+        }
+        
+        .btn-submit:hover {
+            background: #c53030;
+        }
+        
+        .btn-control:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        /* Error Messages */
+        .error-container {
+            display: none;
+            padding: 40px;
+            text-align: center;
+            background: white;
+            margin: 80px 20px 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .error-icon {
+            font-size: 3rem;
+            color: var(--danger-color);
+            margin-bottom: 20px;
+        }
+        
+        /* Test Complete Modal */
+        .modal-content {
+            border-radius: 12px;
+            border: none;
+        }
+        
+        .modal-header {
+            background: var(--success-color);
+            color: white;
+            border-radius: 12px 12px 0 0;
+        }
+        
+        .test-summary {
+            padding: 20px 0;
+        }
+        
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .summary-item:last-child {
+            border-bottom: none;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .test-info {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+            
+            .test-progress {
+                justify-content: center;
+            }
+            
+            .question-content {
+                padding: 20px;
+            }
+            
+            .test-controls {
+                padding: 20px;
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .question-grid {
+                grid-template-columns: repeat(auto-fill, minmax(35px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loadingScreen" class="loading-container">
+        <div class="text-center">
+            <div class="spinner"></div>
+            <h4 class="mt-3">Loading Practice Test...</h4>
+            <p class="text-muted">Fetching questions from database</p>
+        </div>
+    </div>
+
+    <!-- Error Screen -->
+    <div id="errorScreen" class="error-container">
+        <div class="error-icon">
+            <i class="fas fa-exclamation-triangle"></i>
+        </div>
+        <h3>Unable to Load Test</h3>
+        <p class="text-muted mb-4">There was an error connecting to the test database.</p>
+        <button class="btn btn-primary" onclick="loadTest()">
+            <i class="fas fa-retry me-2"></i>Try Again
+        </button>
+        <a href="index.html" class="btn btn-outline-secondary ms-2">
+            <i class="fas fa-home me-2"></i>Return Home
+        </a>
+    </div>
+
+    <!-- Test Header -->
+    <div class="test-header">
+        <div class="container-fluid">
+            <div class="test-info">
+                <div class="test-title-small">
+                    <i class="fas fa-clipboard-list me-2"></i>
+                    Practice Test 1: Foundation
+                </div>
+                <div class="test-progress">
+                    <span class="question-counter">Question <span id="currentQuestion">1</span> of <span id="totalQuestions">42</span></span>
+                    <div class="timer" id="timer">01:35:00</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Test Content -->
+    <div class="test-content" id="testContent">
+        <div class="container-fluid">
+            <div class="test-container">
+                <!-- Question Navigation -->
+                <div class="question-nav">
+                    <h6 class="mb-3">Question Navigation:</h6>
+                    <div class="question-grid" id="questionGrid">
+                        <!-- Generated by JavaScript -->
+                    </div>
+                    <div class="mt-3">
+                        <small class="text-muted">
+                            <span class="badge bg-secondary me-2">Current</span>
+                            <span class="badge bg-success me-2">Answered</span>
+                            <span class="badge bg-warning">Flagged</span>
+                        </small>
+                    </div>
+                </div>
+
+                <!-- Question Content -->
+                <div class="question-content">
+                    <div id="questionContainer">
+                        <!-- Question content loaded by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Test Controls -->
+                <div class="test-controls">
+                    <div>
+                        <button class="btn-control btn-previous" id="prevBtn" onclick="previousQuestion()">
+                            <i class="fas fa-chevron-left me-2"></i>Previous
+                        </button>
+                    </div>
+                    
+                    <div class="d-flex gap-3">
+                        <button class="btn-control btn-flag" id="flagBtn" onclick="toggleFlag()">
+                            <i class="fas fa-flag me-2"></i>Flag
+                        </button>
+                        <button class="btn-control btn-submit" onclick="showSubmitModal()" data-bs-toggle="modal" data-bs-target="#submitModal">
+                            <i class="fas fa-check me-2"></i>Submit Test
+                        </button>
+                    </div>
+                    
+                    <div>
+                        <button class="btn-control btn-next" id="nextBtn" onclick="nextQuestion()">
+                            Next<i class="fas fa-chevron-right ms-2"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Submit Confirmation Modal -->
+    <div class="modal fade" id="submitModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-check-circle me-2"></i>Submit Practice Test
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="test-summary">
+                        <div class="summary-item">
+                            <span>Questions Answered:</span>
+                            <span id="answeredCount">0 / 42</span>
+                        </div>
+                        <div class="summary-item">
+                            <span>Questions Flagged:</span>
+                            <span id="flaggedCount">0</span>
+                        </div>
+                        <div class="summary-item">
+                            <span>Time Remaining:</span>
+                            <span id="timeRemaining">01:35:00</span>
+                        </div>
+                    </div>
+                    <div class="alert alert-warning mt-3">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        Once submitted, you cannot return to modify your answers.
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Continue Test</button>
+                    <button type="button" class="btn btn-danger" onclick="submitTest()">Submit Final Answers</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Configuration
+        const API_BASE_URL = 'https://lexcello-backend.onrender.com';
+        const TEST_ID = 1;
+        
+        // Test state variables
+        let questions = [];
+        let currentQuestionIndex = 0;
+        let userAnswers = {};
+        let flaggedQuestions = new Set();
+        let timeLeft = 95 * 60; // 95 minutes in seconds
+        let timerInterval;
+        let testStartTime;
+
+        // Initialize test when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            loadTest();
+        });
+
+        async function loadTest() {
+            try {
+                showLoading();
+                
+                // Fetch questions from your API
+                const response = await fetch(`${API_BASE_URL}/api/tests/${TEST_ID}/questions`);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                // Transform API data to match frontend format
+                questions = data.questions.map(q => ({
+                    id: q.id,
+                    passage: {
+                        title: q.passage_title,
+                        text: q.passage_text
+                    },
+                    question: q.question_text,
+                    options: [
+                        { label: "A", text: q.option_a },
+                        { label: "B", text: q.option_b },
+                        { label: "C", text: q.option_c },
+                        { label: "D", text: q.option_d },
+                        { label: "E", text: q.option_e }
+                    ],
+                    correctAnswer: q.correct_answer // This is stored as 1-5 in DB, we'll convert as needed
+                }));
+                
+                console.log('Loaded questions:', questions);
+                
+                if (questions.length === 0) {
+                    throw new Error('No questions found for this test');
+                }
+                
+                initializeTest();
+                hideLoading();
+                
+            } catch (error) {
+                console.error('Error loading test:', error);
+                showError();
+            }
+        }
+
+        function showLoading() {
+            document.getElementById('loadingScreen').style.display = 'flex';
+            document.getElementById('errorScreen').style.display = 'none';
+            document.getElementById('testContent').style.display = 'none';
+        }
+
+        function hideLoading() {
+            document.getElementById('loadingScreen').style.display = 'none';
+            document.getElementById('testContent').style.display = 'block';
+        }
+
+        function showError() {
+            document.getElementById('loadingScreen').style.display = 'none';
+            document.getElementById('errorScreen').style.display = 'block';
+            document.getElementById('testContent').style.display = 'none';
+        }
+
+        function initializeTest() {
+            testStartTime = new Date();
+            document.getElementById('totalQuestions').textContent = questions.length;
+            createQuestionNavigation();
+            loadQuestion(0);
+            updateNavigationButtons();
+            startTimer();
+        }
+
+        function createQuestionNavigation() {
+            const grid = document.getElementById('questionGrid');
+            grid.innerHTML = '';
+            
+            questions.forEach((q, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'question-btn';
+                btn.textContent = index + 1;
+                btn.onclick = () => loadQuestion(index);
+                grid.appendChild(btn);
+            });
+        }
+
+        function loadQuestion(index) {
+            if (index < 0 || index >= questions.length) return;
+            
+            currentQuestionIndex = index;
+            const question = questions[index];
+            
+            document.getElementById('currentQuestion').textContent = index + 1;
+            
+            const container = document.getElementById('questionContainer');
+            container.innerHTML = `
+                <div class="passage">
+                    <h4>${question.passage.title}</h4>
+                    <div class="passage-text">${question.passage.text}</div>
+                </div>
+                
+                <div class="question-section">
+                    <div class="question-text">${question.question}</div>
+                    
+                    <div class="options">
+                        ${question.options.map(option => `
+                            <div class="option ${userAnswers[question.id] === option.label ? 'selected' : ''}" 
+                                 onclick="selectAnswer('${option.label}')">
+                                <div class="option-label">${option.label}</div>
+                                <div class="option-text">${option.text}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+            
+            updateQuestionNavigation();
+            updateNavigationButtons();
+            updateFlagButton();
+        }
+
+        function selectAnswer(answer) {
+            const questionId = questions[currentQuestionIndex].id;
+            userAnswers[questionId] = answer;
+            
+            // Update option styling
+            document.querySelectorAll('.option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            event.currentTarget.classList.add('selected');
+            
+            updateQuestionNavigation();
+        }
+
+        function updateQuestionNavigation() {
+            const buttons = document.querySelectorAll('.question-btn');
+            buttons.forEach((btn, index) => {
+                const questionId = questions[index].id;
+                btn.className = 'question-btn';
+                
+                if (index === currentQuestionIndex) {
+                    btn.classList.add('current');
+                } else if (flaggedQuestions.has(questionId)) {
+                    btn.classList.add('flagged');
+                } else if (userAnswers[questionId]) {
+                    btn.classList.add('answered');
+                }
+            });
+        }
+
+        function previousQuestion() {
+            if (currentQuestionIndex > 0) {
+                loadQuestion(currentQuestionIndex - 1);
+            }
+        }
+
+        function nextQuestion() {
+            if (currentQuestionIndex < questions.length - 1) {
+                loadQuestion(currentQuestionIndex + 1);
+            }
+        }
+
+        function updateNavigationButtons() {
+            document.getElementById('prevBtn').disabled = currentQuestionIndex === 0;
+            document.getElementById('nextBtn').disabled = currentQuestionIndex === questions.length - 1;
+        }
+
+        function toggleFlag() {
+            const questionId = questions[currentQuestionIndex].id;
+            const flagBtn = document.getElementById('flagBtn');
+            
+            if (flaggedQuestions.has(questionId)) {
+                flaggedQuestions.delete(questionId);
+                flagBtn.classList.remove('flagged');
+                flagBtn.innerHTML = '<i class="fas fa-flag me-2"></i>Flag';
+            } else {
+                flaggedQuestions.add(questionId);
+                flagBtn.classList.add('flagged');
+                flagBtn.innerHTML = '<i class="fas fa-flag me-2"></i>Flagged';
+            }
+            
+            updateQuestionNavigation();
+        }
+
+        function updateFlagButton() {
+            const questionId = questions[currentQuestionIndex].id;
+            const flagBtn = document.getElementById('flagBtn');
+            
+            if (flaggedQuestions.has(questionId)) {
+                flagBtn.classList.add('flagged');
+                flagBtn.innerHTML = '<i class="fas fa-flag me-2"></i>Flagged';
+            } else {
+                flagBtn.classList.remove('flagged');
+                flagBtn.innerHTML = '<i class="fas fa-flag me-2"></i>Flag';
+            }
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(function() {
+                timeLeft--;
+                updateTimerDisplay();
+                
+                if (timeLeft <= 600) { // 10 minutes warning
+                    document.getElementById('timer').classList.add('warning');
+                }
+                
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    autoSubmitTest();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const hours = Math.floor(timeLeft / 3600);
+            const minutes = Math.floor((timeLeft % 3600) / 60);
+            const seconds = timeLeft % 60;
+            
+            const display = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            document.getElementById('timer').textContent = display;
+        }
+
+        function showSubmitModal() {
+            const answeredCount = Object.keys(userAnswers).length;
+            const flaggedCount = flaggedQuestions.size;
+            
+            document.getElementById('answeredCount').textContent = `${answeredCount} / ${questions.length}`;
+            document.getElementById('flaggedCount').textContent = flaggedCount.toString();
+            document.getElementById('timeRemaining').textContent = document.getElementById('timer').textContent;
+        }
+
+        async function submitTest() {
+            try {
+                clearInterval(timerInterval);
+                
+                // Prepare submission data in the format your API expects
+                const submissionData = {
+                    test_id: TEST_ID,
+                    answers: userAnswers, // This should be in format: { questionId: "A", questionId2: "B", ... }
+                    time_spent: (95 * 60) - timeLeft,
+                    flagged_questions: Array.from(flaggedQuestions)
+                };
+                
+                console.log('Submitting test data:', submissionData);
+                
+                // Submit to your API
+                const response = await fetch(`${API_BASE_URL}/api/tests/${TEST_ID}/submit`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(submissionData)
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const results = await response.json();
+                console.log('Test results:', results);
+                
+                // Store results for results page
+                sessionStorage.setItem('testResults', JSON.stringify(results));
+                
+                // Redirect to results page
+                window.location.href = 'test-results.html';
+                
+            } catch (error) {
+                console.error('Error submitting test:', error);
+                alert('There was an error submitting your test. Please try again.');
+                
+                // Restart timer if submission failed
+                startTimer();
+            }
+        }
+
+        function autoSubmitTest() {
+            alert('Time is up! Your test will be automatically submitted.');
+            submitTest();
+        }
+
+        // Prevent accidental navigation away from test
+        window.addEventListener('beforeunload', function(e) {
+            if (timeLeft > 0 && questions.length > 0) {
+                e.preventDefault();
+                e.returnValue = 'Are you sure you want to leave? Your test progress will be lost.';
+                return e.returnValue;
+            }
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (questions.length === 0) return; // Don't process shortcuts if test isn't loaded
+            
+            if (e.key === 'ArrowLeft' && currentQuestionIndex > 0) {
+                previousQuestion();
+            } else if (e.key === 'ArrowRight' && currentQuestionIndex < questions.length - 1) {
+                nextQuestion();
+            } else if (e.key === 'f' || e.key === 'F') {
+                e.preventDefault();
+                toggleFlag();
+            }
+        });
+    </script>
+</body>
+</html>
