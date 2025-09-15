@@ -774,12 +774,19 @@
             try {
                 clearInterval(timerInterval);
                 
-                // Prepare submission data in the format your API expects
+                // Convert answers from {questionId: "A"} to [{questionId: 1, selectedAnswer: 1}]
+                const answersArray = Object.entries(userAnswers).map(([questionId, letter]) => {
+                    // Convert letter to number: A=1, B=2, C=3, D=4, E=5
+                    const letterToNumber = { 'A': 1, 'B': 2, 'C': 3, 'D': 4, 'E': 5 };
+                    return {
+                        questionId: parseInt(questionId),
+                        selectedAnswer: letterToNumber[letter]
+                    };
+                });
+                
+                // Prepare submission data in the format your backend expects
                 const submissionData = {
-                    test_id: TEST_ID,
-                    answers: userAnswers, // This should be in format: { questionId: "A", questionId2: "B", ... }
-                    time_spent: (95 * 60) - timeLeft,
-                    flagged_questions: Array.from(flaggedQuestions)
+                    answers: answersArray
                 };
                 
                 console.log('Submitting test data:', submissionData);
@@ -800,8 +807,24 @@
                 const results = await response.json();
                 console.log('Test results:', results);
                 
+                // Transform backend results to match frontend results page format
+                const transformedResults = {
+                    total_questions: results.totalQuestions,
+                    correct_answers: results.score,
+                    percentage: results.percentage,
+                    time_spent: (95 * 60) - timeLeft,
+                    user_answers: userAnswers, // Keep original A-E format for display
+                    flagged_questions: Array.from(flaggedQuestions),
+                    questions: results.results.map((result, index) => ({
+                        id: result.questionId,
+                        questionText: questions.find(q => q.id === result.questionId)?.question || 'Question not found',
+                        correct_answer: ['A', 'B', 'C', 'D', 'E'][result.correctAnswer - 1], // Convert 1-5 back to A-E
+                        explanation: result.explanation
+                    }))
+                };
+                
                 // Store results for results page
-                sessionStorage.setItem('testResults', JSON.stringify(results));
+                sessionStorage.setItem('testResults', JSON.stringify(transformedResults));
                 
                 // Redirect to results page
                 window.location.href = 'test-results.html';
