@@ -553,22 +553,22 @@
                 
                 const data = await response.json();
                 
-                // Transform API data to match frontend format
+                // Transform API data to match frontend format (FIXED)
                 questions = data.questions.map(q => ({
                     id: q.id,
                     passage: {
-                        title: q.passage_title,
-                        text: q.passage_text
+                        title: q.passageTitle,
+                        text: q.passageText
                     },
-                    question: q.question_text,
+                    question: q.questionText,
                     options: [
-                        { label: "A", text: q.option_a },
-                        { label: "B", text: q.option_b },
-                        { label: "C", text: q.option_c },
-                        { label: "D", text: q.option_d },
-                        { label: "E", text: q.option_e }
+                        { label: "A", text: q.options[0] },
+                        { label: "B", text: q.options[1] },
+                        { label: "C", text: q.options[2] },
+                        { label: "D", text: q.options[3] },
+                        { label: "E", text: q.options[4] }
                     ],
-                    correctAnswer: q.correct_answer // This is stored as 1-5 in DB, we'll convert as needed
+                    correctAnswer: q.correct_answer || 1 // Default to 1 if not provided
                 }));
                 
                 console.log('Loaded questions:', questions);
