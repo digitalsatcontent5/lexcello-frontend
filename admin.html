@@ -735,6 +735,8 @@
         
         // Handle Excel File Upload
         async function handleFileUpload(file) {
+            console.log('File selected:', file.name, 'Size:', file.size, 'Type:', file.type);
+            
             if (!file.name.match(/\.(xlsx|xls)$/)) {
                 showMessage('Please select a valid Excel file (.xlsx or .xls)', 'error');
                 return;
@@ -742,41 +744,83 @@
             
             showMessage('Reading Excel file...', 'success');
             
+            // Reset any previous import preview
+            document.getElementById('import-preview').style.display = 'none';
+            importData = null;
+            
             try {
+                console.log('Starting to read file...');
                 const data = await file.arrayBuffer();
+                console.log('File read successfully, size:', data.byteLength);
                 
                 // Import SheetJS dynamically
                 if (!window.XLSX) {
+                    console.log('Loading SheetJS library...');
+                    showMessage('Loading Excel processing library...', 'success');
                     const script = document.createElement('script');
                     script.src = 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
                     document.head.appendChild(script);
-                    await new Promise(resolve => script.onload = resolve);
+                    await new Promise((resolve, reject) => {
+                        script.onload = () => {
+                            console.log('SheetJS loaded successfully');
+                            resolve();
+                        };
+                        script.onerror = () => {
+                            console.error('Failed to load SheetJS');
+                            reject(new Error('Failed to load Excel processing library'));
+                        };
+                        setTimeout(() => reject(new Error('Timeout loading library')), 10000);
+                    });
                 }
                 
+                console.log('Processing Excel file...');
+                showMessage('Processing Excel file...', 'success');
                 const workbook = window.XLSX.read(data, { type: 'array' });
+                console.log('Workbook created, sheets:', workbook.SheetNames);
+                
                 const firstSheetName = workbook.SheetNames[0];
                 const worksheet = workbook.Sheets[firstSheetName];
+                console.log('Reading sheet:', firstSheetName);
                 
                 // Convert to JSON
                 const jsonData = window.XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+                console.log('Converted to JSON, rows:', jsonData.length);
+                console.log('First few rows:', jsonData.slice(0, 3));
                 
                 if (jsonData.length < 2) {
                     showMessage('Excel file appears to be empty or has no data rows', 'error');
                     return;
                 }
                 
+                showMessage('Validating data format...', 'success');
                 parseExcelData(jsonData, file.name);
                 
             } catch (error) {
                 console.error('Error reading Excel file:', error);
                 showMessage('Error reading Excel file: ' + error.message, 'error');
+                
+                // Show more detailed error info
+                const importDataDiv = document.getElementById('import-data');
+                importDataDiv.innerHTML = `
+                    <div style="background: #ffebee; padding: 15px; border-radius: 8px; margin: 15px 0;">
+                        <h4 style="color: #c62828;">❌ Error Details:</h4>
+                        <p><strong>Error:</strong> ${error.message}</p>
+                        <p><strong>File:</strong> ${file.name}</p>
+                        <p><strong>Size:</strong> ${file.size} bytes</p>
+                        <p><strong>Suggestion:</strong> Try saving your Excel file in .xlsx format and ensure it's not corrupted.</p>
+                    </div>
+                `;
+                document.getElementById('import-preview').style.display = 'block';
             }
         }
         
         // Parse Excel Data and Show Preview
         function parseExcelData(jsonData, fileName) {
+            console.log('Parsing Excel data...');
             const headers = jsonData[0];
             const dataRows = jsonData.slice(1);
+            console.log('Headers found:', headers);
+            console.log('Data rows:', dataRows.length);
             
             // Expected column order
             const expectedHeaders = [
@@ -788,9 +832,26 @@
             // Validate headers
             const headerValidation = validateHeaders(headers, expectedHeaders);
             if (!headerValidation.valid) {
+                console.error('Header validation failed:', headerValidation.error);
                 showMessage('Invalid Excel format: ' + headerValidation.error, 'error');
+                
+                // Show format help
+                const importDataDiv = document.getElementById('import-data');
+                importDataDiv.innerHTML = `
+                    <div style="background: #ffebee; padding: 15px; border-radius: 8px; margin: 15px 0;">
+                        <h4 style="color: #c62828;">❌ Wrong Excel Format</h4>
+                        <p><strong>Error:</strong> ${headerValidation.error}</p>
+                        <p><strong>Your headers:</strong> ${headers.join(' | ')}</p>
+                        <p><strong>Expected headers:</strong> ${expectedHeaders.join(' | ')}</p>
+                        <p><strong>Fix:</strong> Make sure Row 1 has exactly these column headers in this order.</p>
+                    </div>
+                `;
+                document.getElementById('import-preview').style.display = 'block';
                 return;
             }
+            
+            console.log('Headers validated successfully');
+            showMessage('Processing question data...', 'success');
             
             // Parse and validate data
             const parsedQuestions = [];
