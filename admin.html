@@ -171,6 +171,16 @@
             color: white;
         }
         
+        .btn-secondary {
+            background: linear-gradient(135deg, #6c757d, #5a6268);
+            color: white;
+        }
+        
+        .btn-sm {
+            padding: 8px 16px;
+            font-size: 14px;
+        }
+        
         .status-message {
             padding: 15px;
             border-radius: 8px;
@@ -202,6 +212,9 @@
             border-bottom: 1px solid #eee;
             cursor: pointer;
             transition: background 0.3s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         
         .question-item:hover {
@@ -210,6 +223,11 @@
         
         .question-item:last-child {
             border-bottom: none;
+        }
+        
+        .question-info {
+            flex: 1;
+            margin-right: 15px;
         }
         
         .question-preview {
@@ -265,6 +283,19 @@
         
         .stat-label {
             opacity: 0.9;
+        }
+        
+        .bulk-actions {
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #e74c3c;
+        }
+        
+        .bulk-actions h4 {
+            color: #e74c3c;
+            margin-bottom: 10px;
         }
     </style>
 </head>
@@ -358,6 +389,7 @@
             <!-- Manage Questions Tab -->
             <div id="manage-questions" class="tab-content">
                 <h2>Manage Existing Questions</h2>
+                
                 <div class="form-group">
                     <label for="test-filter">Filter by Test:</label>
                     <select id="test-filter" onchange="loadQuestions()">
@@ -367,8 +399,16 @@
                         <option value="3">LNAT Practice Test 3</option>
                     </select>
                 </div>
+                
+                <!-- Bulk Delete Section -->
+                <div class="bulk-actions">
+                    <h4>⚠️ Danger Zone</h4>
+                    <p>Use these actions carefully - they cannot be undone!</p>
+                    <button onclick="deleteAllQuestionsForTest()" class="btn btn-danger btn-sm">Delete All Questions for Selected Test</button>
+                </div>
+                
                 <div id="questions-list" class="question-list">
-                    <p style="padding: 20px; text-align: center; color: #666;">Loading questions...</p>
+                    <p style="padding: 20px; text-align: center; color: #666;">Select a test to load questions...</p>
                 </div>
             </div>
             
@@ -489,55 +529,104 @@
             }
         });
         
-        // Load Questions
+        // Load Questions - ENHANCED VERSION
         async function loadQuestions() {
             const testFilter = document.getElementById('test-filter').value;
             const questionsList = document.getElementById('questions-list');
             
+            if (!testFilter) {
+                questionsList.innerHTML = '<p style="padding: 20px; text-align: center; color: #666;">Please select a test to view questions.</p>';
+                return;
+            }
+            
+            questionsList.innerHTML = '<p style="padding: 20px; text-align: center; color: #666;">Loading questions...</p>';
+            
             try {
-                let url = `${API_BASE}/api/tests`;
-                if (testFilter) {
-                    url = `${API_BASE}/api/tests/${testFilter}/questions`;
-                }
-                
-                const response = await fetch(url);
+                const response = await fetch(`${API_BASE}/api/tests/${testFilter}/questions`);
                 const data = await response.json();
                 
-                if (testFilter && data.questions) {
-                    displayQuestions(data.questions);
-                } else if (data.tests) {
-                    // Load questions from all tests
-                    const allQuestions = [];
-                    for (const test of data.tests) {
-                        const testResponse = await fetch(`${API_BASE}/api/tests/${test.id}/questions`);
-                        const testData = await testResponse.json();
-                        if (testData.questions) {
-                            allQuestions.push(...testData.questions.map(q => ({...q, testId: test.id, testTitle: test.title})));
-                        }
-                    }
-                    displayQuestions(allQuestions);
+                if (data.questions && data.questions.length > 0) {
+                    displayQuestionsWithDelete(data.questions, testFilter);
+                } else {
+                    questionsList.innerHTML = '<p style="padding: 20px; text-align: center; color: #666;">No questions found for this test.</p>';
                 }
             } catch (error) {
                 questionsList.innerHTML = `<p style="padding: 20px; text-align: center; color: #e74c3c;">Error loading questions: ${error.message}</p>`;
             }
         }
         
-        function displayQuestions(questions) {
+        // Display Questions with Delete Buttons
+        function displayQuestionsWithDelete(questions, testId) {
             const questionsList = document.getElementById('questions-list');
             
-            if (questions.length === 0) {
-                questionsList.innerHTML = '<p style="padding: 20px; text-align: center; color: #666;">No questions found.</p>';
+            questionsList.innerHTML = questions.map(q => `
+                <div class="question-item">
+                    <div class="question-info">
+                        <div class="question-preview">Q${q.questionNumber || q.question_number}: ${q.questionText || q.question_text}</div>
+                        <div class="question-meta">
+                            Passage: ${q.passageTitle || q.passage_title || 'No title'} | 
+                            Correct Answer: ${q.correctAnswer || q.correct_answer} | 
+                            ID: ${q.id}
+                        </div>
+                    </div>
+                    <button onclick="deleteQuestion(${q.id})" class="btn btn-danger btn-sm">Delete</button>
+                </div>
+            `).join('');
+        }
+        
+        // Delete Single Question
+        async function deleteQuestion(questionId) {
+            if (!confirm('Are you sure you want to delete this question? This action cannot be undone.')) {
                 return;
             }
             
-            questionsList.innerHTML = questions.map(q => `
-                <div class="question-item" onclick="editQuestion(${q.id})">
-                    <div class="question-preview">${q.questionText.substring(0, 100)}...</div>
-                    <div class="question-meta">
-                        ${q.testTitle || `Test ${q.testId}`} | Passage: ${q.passageTitle} | ID: ${q.id}
-                    </div>
-                </div>
-            `).join('');
+            try {
+                const response = await fetch(`${API_BASE}/api/admin/questions/${questionId}`, {
+                    method: 'DELETE'
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    showMessage('Question deleted successfully!', 'success');
+                    loadQuestions(); // Reload the list
+                } else {
+                    showMessage(`Error: ${result.error}`, 'error');
+                }
+            } catch (error) {
+                showMessage(`Network error: ${error.message}`, 'error');
+            }
+        }
+        
+        // Delete All Questions for Test
+        async function deleteAllQuestionsForTest() {
+            const testId = document.getElementById('test-filter').value;
+            
+            if (!testId) {
+                showMessage('Please select a test first!', 'error');
+                return;
+            }
+            
+            if (!confirm(`Are you sure you want to delete ALL questions for Test ${testId}? This action cannot be undone.`)) {
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/admin/tests/${testId}/questions`, {
+                    method: 'DELETE'
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    showMessage(result.message, 'success');
+                    loadQuestions(); // Reload the list
+                } else {
+                    showMessage(`Error: ${result.error}`, 'error');
+                }
+            } catch (error) {
+                showMessage(`Network error: ${error.message}`, 'error');
+            }
         }
         
         // File Upload
@@ -576,13 +665,7 @@
         }
         
         function previewQuestion() {
-            // Implement question preview functionality
             showMessage('Preview functionality coming soon!', 'warning');
-        }
-        
-        function editQuestion(questionId) {
-            // Implement question editing
-            showMessage(`Edit question ${questionId} - functionality coming soon!`, 'warning');
         }
         
         function handleFileUpload(file) {
@@ -595,7 +678,7 @@
         
         function loadDashboard() {
             // Load dashboard statistics
-            loadQuestions(); // This will help us count questions
+            showMessage('Dashboard stats loading...', 'success');
         }
         
         function exportQuestions() {
