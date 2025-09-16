@@ -828,13 +828,7 @@
                         text: q.passage_text
                     },
                     question: q.question_text,
-                    options: [
-                        { label: "A", text: q.option_a },
-                        { label: "B", text: q.option_b },
-                        { label: "C", text: q.option_c },
-                        { label: "D", text: q.option_d },
-                        { label: "E", text: q.option_e }
-                    ],
+                    options: q.options, // Use the options array directly from API
                     correctAnswer: q.correct_answer || 1
                 }));
                 
