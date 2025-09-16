@@ -293,9 +293,64 @@
             border-left: 4px solid #e74c3c;
         }
         
-        .bulk-actions h4 {
-            color: #e74c3c;
+        .import-instructions {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+        }
+        
+        .import-instructions h4 {
+            color: #1976d2;
             margin-bottom: 10px;
+        }
+        
+        .import-instructions code {
+            background: #fff;
+            padding: 5px;
+            border-radius: 4px;
+            font-size: 12px;
+            word-break: break-all;
+        }
+        
+        .import-instructions ul {
+            margin: 10px 0 0 20px;
+        }
+        
+        .preview-table {
+            max-height: 300px;
+            overflow: auto;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        
+        .preview-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .preview-table th,
+        .preview-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+            font-size: 12px;
+        }
+        
+        .preview-table th {
+            background: #f5f5f5;
+            font-weight: bold;
+            position: sticky;
+            top: 0;
+        }
+        
+        .error-row {
+            background-color: #ffebee !important;
+            color: #c62828;
+        }
+        
+        .warning-row {
+            background-color: #fff3e0 !important;
+            color: #ef6c00;
         }
     </style>
 </head>
@@ -415,15 +470,33 @@
             <!-- Import Questions Tab -->
             <div id="import-questions" class="tab-content">
                 <h2>Import Questions from Excel</h2>
+                
+                <div class="import-instructions" style="background: #e3f2fd; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+                    <h4>📋 Excel Format Required:</h4>
+                    <p><strong>Columns (in this exact order):</strong></p>
+                    <code>test_id | passage_title | passage_text | question_text | option_1 | option_2 | option_3 | option_4 | option_5 | correct_answer | explanation</code>
+                    <p style="margin-top: 10px;"><strong>Notes:</strong></p>
+                    <ul>
+                        <li>Row 1 must contain the exact column headers above</li>
+                        <li>correct_answer should be 1-5 (1=A, 2=B, 3=C, 4=D, 5=E)</li>
+                        <li>test_id should be 1, 2, or 3 depending on which test</li>
+                    </ul>
+                </div>
+                
                 <div class="file-upload" id="file-upload">
                     <p><strong>Drop Excel file here or click to browse</strong></p>
                     <p>Supported formats: .xlsx, .xls</p>
                     <input type="file" id="file-input" accept=".xlsx,.xls" style="display: none;">
                 </div>
+                
                 <div id="import-preview" style="display: none; margin-top: 20px;">
                     <h3>Import Preview</h3>
+                    <div id="file-info" style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 15px;"></div>
                     <div id="import-data"></div>
-                    <button class="btn btn-success" onclick="processImport()">Import All Questions</button>
+                    <div style="margin-top: 20px;">
+                        <button class="btn btn-success" onclick="processImport()">Import All Questions</button>
+                        <button class="btn btn-secondary" onclick="cancelImport()">Cancel</button>
+                    </div>
                 </div>
             </div>
             
@@ -629,9 +702,10 @@
             }
         }
         
-        // File Upload
+        // File Upload and Import Functionality
         const fileUpload = document.getElementById('file-upload');
         const fileInput = document.getElementById('file-input');
+        let importData = null;
         
         fileUpload.addEventListener('click', () => fileInput.click());
         
@@ -659,6 +733,286 @@
             }
         });
         
+        // Handle Excel File Upload
+        async function handleFileUpload(file) {
+            if (!file.name.match(/\.(xlsx|xls)$/)) {
+                showMessage('Please select a valid Excel file (.xlsx or .xls)', 'error');
+                return;
+            }
+            
+            showMessage('Reading Excel file...', 'success');
+            
+            try {
+                const data = await file.arrayBuffer();
+                
+                // Import SheetJS dynamically
+                if (!window.XLSX) {
+                    const script = document.createElement('script');
+                    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
+                    document.head.appendChild(script);
+                    await new Promise(resolve => script.onload = resolve);
+                }
+                
+                const workbook = window.XLSX.read(data, { type: 'array' });
+                const firstSheetName = workbook.SheetNames[0];
+                const worksheet = workbook.Sheets[firstSheetName];
+                
+                // Convert to JSON
+                const jsonData = window.XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+                
+                if (jsonData.length < 2) {
+                    showMessage('Excel file appears to be empty or has no data rows', 'error');
+                    return;
+                }
+                
+                parseExcelData(jsonData, file.name);
+                
+            } catch (error) {
+                console.error('Error reading Excel file:', error);
+                showMessage('Error reading Excel file: ' + error.message, 'error');
+            }
+        }
+        
+        // Parse Excel Data and Show Preview
+        function parseExcelData(jsonData, fileName) {
+            const headers = jsonData[0];
+            const dataRows = jsonData.slice(1);
+            
+            // Expected column order
+            const expectedHeaders = [
+                'test_id', 'passage_title', 'passage_text', 'question_text',
+                'option_1', 'option_2', 'option_3', 'option_4', 'option_5',
+                'correct_answer', 'explanation'
+            ];
+            
+            // Validate headers
+            const headerValidation = validateHeaders(headers, expectedHeaders);
+            if (!headerValidation.valid) {
+                showMessage('Invalid Excel format: ' + headerValidation.error, 'error');
+                return;
+            }
+            
+            // Parse and validate data
+            const parsedQuestions = [];
+            const errors = [];
+            
+            dataRows.forEach((row, index) => {
+                const rowNumber = index + 2; // +2 because index starts at 0 and row 1 is headers
+                
+                if (row.length === 0 || row.every(cell => !cell && cell !== 0)) {
+                    return; // Skip empty rows
+                }
+                
+                const question = {
+                    testId: parseInt(row[0]),
+                    passageTitle: row[1]?.toString().trim() || '',
+                    passageText: row[2]?.toString().trim() || '',
+                    questionText: row[3]?.toString().trim() || '',
+                    options: [
+                        row[4]?.toString().trim() || '',
+                        row[5]?.toString().trim() || '',
+                        row[6]?.toString().trim() || '',
+                        row[7]?.toString().trim() || '',
+                        row[8]?.toString().trim() || ''
+                    ],
+                    correctAnswer: parseInt(row[9]),
+                    explanation: row[10]?.toString().trim() || ''
+                };
+                
+                // Validate question data
+                const validation = validateQuestion(question, rowNumber);
+                if (validation.valid) {
+                    parsedQuestions.push(question);
+                } else {
+                    errors.push(`Row ${rowNumber}: ${validation.error}`);
+                }
+            });
+            
+            importData = parsedQuestions;
+            displayImportPreview(parsedQuestions, errors, fileName);
+        }
+        
+        // Validate Excel Headers
+        function validateHeaders(actualHeaders, expectedHeaders) {
+            for (let i = 0; i < expectedHeaders.length; i++) {
+                const actual = actualHeaders[i]?.toString().toLowerCase().trim();
+                const expected = expectedHeaders[i].toLowerCase();
+                
+                if (actual !== expected) {
+                    return {
+                        valid: false,
+                        error: `Column ${i + 1} should be "${expectedHeaders[i]}" but found "${actualHeaders[i] || 'empty'}"`
+                    };
+                }
+            }
+            return { valid: true };
+        }
+        
+        // Validate Individual Question
+        function validateQuestion(question, rowNumber) {
+            if (!question.testId || ![1, 2, 3].includes(question.testId)) {
+                return { valid: false, error: `Invalid test_id (must be 1, 2, or 3)` };
+            }
+            
+            if (!question.passageTitle) {
+                return { valid: false, error: `Missing passage_title` };
+            }
+            
+            if (!question.passageText) {
+                return { valid: false, error: `Missing passage_text` };
+            }
+            
+            if (!question.questionText) {
+                return { valid: false, error: `Missing question_text` };
+            }
+            
+            if (question.options.some(option => !option)) {
+                return { valid: false, error: `All 5 options must be filled` };
+            }
+            
+            if (!question.correctAnswer || ![1, 2, 3, 4, 5].includes(question.correctAnswer)) {
+                return { valid: false, error: `correct_answer must be 1, 2, 3, 4, or 5` };
+            }
+            
+            if (!question.explanation) {
+                return { valid: false, error: `Missing explanation` };
+            }
+            
+            return { valid: true };
+        }
+        
+        // Display Import Preview
+        function displayImportPreview(questions, errors, fileName) {
+            document.getElementById('import-preview').style.display = 'block';
+            
+            const fileInfo = document.getElementById('file-info');
+            fileInfo.innerHTML = `
+                <strong>File:</strong> ${fileName}<br>
+                <strong>Valid Questions:</strong> ${questions.length}<br>
+                <strong>Errors:</strong> ${errors.length}
+                ${errors.length > 0 ? '<br><strong style="color: #e74c3c;">⚠️ Fix errors before importing</strong>' : ''}
+            `;
+            
+            const importDataDiv = document.getElementById('import-data');
+            
+            if (errors.length > 0) {
+                let errorHtml = '<div style="background: #ffebee; padding: 15px; border-radius: 8px; margin-bottom: 15px;">';
+                errorHtml += '<h4 style="color: #c62828; margin: 0 0 10px 0;">❌ Errors Found:</h4>';
+                errorHtml += '<ul style="margin: 0; padding-left: 20px;">';
+                errors.forEach(error => {
+                    errorHtml += `<li style="color: #c62828;">${error}</li>`;
+                });
+                errorHtml += '</ul></div>';
+                importDataDiv.innerHTML = errorHtml;
+                
+                // Disable import button if there are errors
+                const importButton = document.querySelector('button[onclick="processImport()"]');
+                if (importButton) {
+                    importButton.disabled = true;
+                    importButton.style.background = '#ccc';
+                    importButton.textContent = 'Fix Errors First';
+                }
+                return;
+            }
+            
+            // Show preview table
+            let tableHtml = '<div class="preview-table"><table>';
+            tableHtml += '<tr><th>Test</th><th>Passage Title</th><th>Question (Preview)</th><th>Options</th><th>Correct</th></tr>';
+            
+            questions.slice(0, 10).forEach((q, index) => { // Show first 10 questions
+                tableHtml += `<tr>
+                    <td>${q.testId}</td>
+                    <td>${q.passageTitle}</td>
+                    <td>${q.questionText.substring(0, 100)}...</td>
+                    <td>A) ${q.options[0].substring(0, 30)}...<br>B) ${q.options[1].substring(0, 30)}...</td>
+                    <td>${String.fromCharCode(64 + q.correctAnswer)}</td>
+                </tr>`;
+            });
+            
+            if (questions.length > 10) {
+                tableHtml += `<tr><td colspan="5" style="text-align: center; font-style: italic; color: #666;">... and ${questions.length - 10} more questions</td></tr>`;
+            }
+            
+            tableHtml += '</table></div>';
+            importDataDiv.innerHTML = tableHtml;
+            
+            // Enable import button
+            const importButton = document.querySelector('button[onclick="processImport()"]');
+            if (importButton) {
+                importButton.disabled = false;
+                importButton.style.background = '';
+                importButton.textContent = `Import ${questions.length} Questions`;
+            }
+        }
+        
+        // Process Import
+        async function processImport() {
+            if (!importData || importData.length === 0) {
+                showMessage('No valid questions to import', 'error');
+                return;
+            }
+            
+            showMessage(`Importing ${importData.length} questions...`, 'success');
+            
+            // Group questions by test ID
+            const questionsByTest = {};
+            importData.forEach(question => {
+                if (!questionsByTest[question.testId]) {
+                    questionsByTest[question.testId] = [];
+                }
+                questionsByTest[question.testId].push(question);
+            });
+            
+            try {
+                let totalImported = 0;
+                
+                for (const [testId, questions] of Object.entries(questionsByTest)) {
+                    const requestData = {
+                        testId: parseInt(testId),
+                        questions: questions.map(q => ({
+                            passageTitle: q.passageTitle,
+                            passageText: q.passageText,
+                            questionText: q.questionText,
+                            options: q.options,
+                            correctAnswer: q.correctAnswer,
+                            explanation: q.explanation
+                        }))
+                    };
+                    
+                    const response = await fetch(`${API_BASE}/api/admin/add-questions`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(requestData)
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (response.ok) {
+                        totalImported += questions.length;
+                        showMessage(`Imported ${questions.length} questions for Test ${testId}`, 'success');
+                    } else {
+                        throw new Error(`Test ${testId}: ${result.error}`);
+                    }
+                }
+                
+                showMessage(`✅ Successfully imported all ${totalImported} questions!`, 'success');
+                cancelImport();
+                
+            } catch (error) {
+                console.error('Import error:', error);
+                showMessage(`Import failed: ${error.message}`, 'error');
+            }
+        }
+        
+        // Cancel Import
+        function cancelImport() {
+            document.getElementById('import-preview').style.display = 'none';
+            document.getElementById('file-input').value = '';
+            importData = null;
+        }
+        
         // Utility Functions
         function clearForm() {
             document.getElementById('question-form').reset();
@@ -666,14 +1020,6 @@
         
         function previewQuestion() {
             showMessage('Preview functionality coming soon!', 'warning');
-        }
-        
-        function handleFileUpload(file) {
-            showMessage('Excel import functionality will be implemented based on your file structure', 'warning');
-        }
-        
-        function processImport() {
-            showMessage('Import processing functionality coming soon!', 'warning');
         }
         
         function loadDashboard() {
