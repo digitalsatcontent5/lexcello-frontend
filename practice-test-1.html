@@ -804,7 +804,10 @@
                 }
                 
                 const data = await response.json();
-                console.log('API response:', data);
+                console.log('Raw API response:', data);
+                console.log('First question from API:', data.questions[0]);
+                console.log('First question options:', data.questions[0].options);
+                console.log('Type of options:', typeof data.questions[0].options);
                 
                 if (!data.questions || data.questions.length === 0) {
                     throw new Error('No questions found in response');
@@ -820,17 +823,49 @@
                     document.getElementById('testTitle').textContent = 'LNAT Demo (4 Questions)';
                 }
                 
-                // Transform API data to frontend format
-                questions = questionData.map(q => ({
-                    id: q.id,
-                    passage: {
-                        title: q.passage_title || 'Reading Passage',
-                        text: q.passage_text
-                    },
-                    question: q.question_text,
-                    options: q.options, // Use the options array directly from API
-                    correctAnswer: q.correct_answer || 1
-                }));
+                // Transform API data to frontend format - with better error handling
+                questions = questionData.map(q => {
+                    console.log('Processing question:', q.id);
+                    console.log('Question options:', q.options);
+                    
+                    // Handle different possible formats of options
+                    let processedOptions = [];
+                    if (Array.isArray(q.options)) {
+                        // If options is already an array of objects with label/text
+                        processedOptions = q.options;
+                    } else if (typeof q.options === 'string') {
+                        // If options is a JSON string, parse it
+                        try {
+                            const parsed = JSON.parse(q.options);
+                            processedOptions = Array.isArray(parsed) ? parsed : [];
+                        } catch (e) {
+                            console.error('Failed to parse options JSON:', e);
+                            processedOptions = [];
+                        }
+                    } else {
+                        // Fallback: create from individual fields if they exist
+                        processedOptions = [
+                            { label: "A", text: q.option_a || "Option A not found" },
+                            { label: "B", text: q.option_b || "Option B not found" },
+                            { label: "C", text: q.option_c || "Option C not found" },
+                            { label: "D", text: q.option_d || "Option D not found" },
+                            { label: "E", text: q.option_e || "Option E not found" }
+                        ];
+                    }
+                    
+                    console.log('Processed options for question', q.id, ':', processedOptions);
+                    
+                    return {
+                        id: q.id,
+                        passage: {
+                            title: q.passage_title || 'Reading Passage',
+                            text: q.passage_text
+                        },
+                        question: q.question_text,
+                        options: processedOptions,
+                        correctAnswer: q.correct_answer || 1
+                    };
+                });
                 
                 console.log(`Loaded ${questions.length} questions:`, questions);
                 
