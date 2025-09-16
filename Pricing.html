@@ -48,6 +48,99 @@
         .nav-link:hover {
             color: var(--secondary-color) !important;
         }
+
+        .navbar-collapse.show {
+            background-color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+
+        .btn-primary {
+            background: var(--secondary-color);
+            border: none;
+            padding: 12px 24px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+        }
+        
+        .btn-outline-primary {
+            color: var(--secondary-color);
+            border-color: var(--secondary-color);
+            padding: 12px 24px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-outline-primary:hover {
+            background: var(--secondary-color);
+            border-color: var(--secondary-color);
+            color: white;
+        }
+
+        /* User menu styles */
+        .user-menu {
+            position: relative;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--secondary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .user-avatar:hover {
+            background: var(--primary-hover);
+        }
+        
+        .user-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            padding: 10px 0;
+            min-width: 200px;
+            z-index: 1000;
+            display: none;
+        }
+        
+        .user-dropdown.show {
+            display: block;
+        }
+        
+        .user-dropdown a {
+            display: block;
+            padding: 10px 20px;
+            color: var(--text-dark);
+            text-decoration: none;
+            transition: background 0.3s ease;
+        }
+        
+        .user-dropdown a:hover {
+            background: var(--bg-light);
+        }
+        
+        .user-dropdown .divider {
+            height: 1px;
+            background: #e2e8f0;
+            margin: 5px 0;
+        }
         
         /* Header Section */
         .pricing-header {
@@ -209,6 +302,18 @@
             transform: translateY(-2px);
         }
         
+        /* Already subscribed state */
+        .btn-subscribed {
+            background: var(--success-color);
+            color: white;
+            cursor: default;
+        }
+        
+        .btn-subscribed:hover {
+            background: var(--success-color);
+            transform: none;
+        }
+        
         /* FAQ Section */
         .faq-section {
             padding: 80px 0;
@@ -313,7 +418,7 @@
                         <a class="nav-link" href="index.html">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#tests">Practice Tests</a>
+                        <a class="nav-link" href="index.html#tests">Practice Tests</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="about-lnat.html">About LNAT</a>
@@ -323,9 +428,32 @@
                     </li>
                 </ul>
                 
-                <div class="d-flex gap-2">
-                    <button class="btn btn-outline-primary">Sign In</button>
-                    <button class="btn btn-primary">Get Started</button>
+                <!-- Authentication buttons (shown when not logged in) -->
+                <div class="d-flex gap-2" id="auth-buttons">
+                    <button class="btn btn-outline-primary" onclick="signIn()">Sign In</button>
+                    <button class="btn btn-primary" onclick="getStarted()">Get Started</button>
+                </div>
+                
+                <!-- User menu (shown when logged in) -->
+                <div class="user-menu" id="user-menu" style="display: none;">
+                    <div class="user-avatar" onclick="toggleUserDropdown()" id="user-avatar">
+                        U
+                    </div>
+                    <div class="user-dropdown" id="user-dropdown">
+                        <a href="dashboard.html">
+                            <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                        </a>
+                        <a href="profile.html">
+                            <i class="fas fa-user me-2"></i>Profile
+                        </a>
+                        <a href="test-history.html">
+                            <i class="fas fa-history me-2"></i>Test History
+                        </a>
+                        <div class="divider"></div>
+                        <a href="#" onclick="signOut()">
+                            <i class="fas fa-sign-out-alt me-2"></i>Sign Out
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -405,7 +533,7 @@
                             </li>
                         </ul>
                         
-                        <button class="cta-button btn-primary-custom">
+                        <button class="cta-button btn-primary-custom" id="ctaButton" onclick="handleSubscription()">
                             <i class="fas fa-rocket me-2"></i>Start Your LNAT Preparation
                         </button>
                     </div>
@@ -530,6 +658,146 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     
     <script>
+        // Configuration
+        const API_BASE_URL = 'https://lexcello-backend.onrender.com/api';
+        
+        // State management
+        let currentUser = null;
+        
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuthStatus();
+            
+            // Add click listener to close dropdown when clicking outside
+            document.addEventListener('click', function(event) {
+                const userMenu = document.getElementById('user-menu');
+                const dropdown = document.getElementById('user-dropdown');
+                
+                if (userMenu && !userMenu.contains(event.target)) {
+                    dropdown.classList.remove('show');
+                }
+            });
+        });
+        
+        // Authentication functions
+        async function checkAuthStatus() {
+            const token = localStorage.getItem('authToken');
+            if (token) {
+                try {
+                    const response = await fetch(`${API_BASE_URL}/auth/profile`, {
+                        method: 'GET',
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                    
+                    if (response.ok) {
+                        const userData = await response.json();
+                        updateUIForLoggedInUser(userData);
+                    } else {
+                        localStorage.removeItem('authToken');
+                        updateUIForLoggedOutUser();
+                    }
+                } catch (error) {
+                    console.error('Error checking auth status:', error);
+                    updateUIForLoggedOutUser();
+                }
+            } else {
+                updateUIForLoggedOutUser();
+            }
+        }
+        
+        function updateUIForLoggedInUser(userData) {
+            currentUser = userData;
+            
+            document.getElementById('auth-buttons').style.display = 'none';
+            document.getElementById('user-menu').style.display = 'block';
+            
+            const userAvatar = document.getElementById('user-avatar');
+            const firstLetter = (userData.name || userData.email || 'U').charAt(0).toUpperCase();
+            userAvatar.textContent = firstLetter;
+            userAvatar.title = userData.email || 'User';
+            
+            // Update CTA button for logged in users
+            updateCTAButton();
+        }
+        
+        function updateUIForLoggedOutUser() {
+            currentUser = null;
+            
+            document.getElementById('auth-buttons').style.display = 'flex';
+            document.getElementById('user-menu').style.display = 'none';
+            
+            // Reset CTA button
+            updateCTAButton();
+        }
+        
+        function updateCTAButton() {
+            const ctaButton = document.getElementById('ctaButton');
+            
+            if (currentUser) {
+                // Check if user has subscription
+                if (currentUser.hasSubscription) {
+                    ctaButton.innerHTML = '<i class="fas fa-check me-2"></i>Access Your Dashboard';
+                    ctaButton.className = 'cta-button btn-subscribed';
+                    ctaButton.onclick = () => window.location.href = 'dashboard.html';
+                } else {
+                    ctaButton.innerHTML = '<i class="fas fa-credit-card me-2"></i>Complete Your Purchase';
+                    ctaButton.className = 'cta-button btn-primary-custom';
+                    ctaButton.onclick = handleSubscription;
+                }
+            } else {
+                ctaButton.innerHTML = '<i class="fas fa-rocket me-2"></i>Start Your LNAT Preparation';
+                ctaButton.className = 'cta-button btn-primary-custom';
+                ctaButton.onclick = handleSubscription;
+            }
+        }
+        
+        function toggleUserDropdown() {
+            const dropdown = document.getElementById('user-dropdown');
+            dropdown.classList.toggle('show');
+        }
+        
+        async function signOut() {
+            try {
+                const token = localStorage.getItem('authToken');
+                if (token) {
+                    await fetch(`${API_BASE_URL}/auth/logout`, {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                }
+            } catch (error) {
+                console.error('Error during logout:', error);
+            } finally {
+                localStorage.removeItem('authToken');
+                updateUIForLoggedOutUser();
+                
+                if (window.location.pathname.includes('dashboard') || 
+                    window.location.pathname.includes('profile')) {
+                    window.location.href = 'index.html';
+                }
+            }
+        }
+        
+        // Navigation functions
+        function signIn() {
+            window.location.href = 'login.html';
+        }
+        
+        function getStarted() {
+            if (currentUser) {
+                window.location.href = 'dashboard.html';
+            } else {
+                window.location.href = 'register.html';
+            }
+        }
+        
+        // Pricing functions
         function switchCurrency(currency) {
             const usdBtn = document.querySelector('.currency-btn:first-child');
             const gbpBtn = document.querySelector('.currency-btn:last-child');
@@ -562,6 +830,35 @@
                 icon.classList.remove('fa-minus');
                 icon.classList.add('fa-plus');
             }
+        }
+        
+        function handleSubscription() {
+            if (!currentUser) {
+                // Not logged in, redirect to registration
+                window.location.href = 'register.html';
+                return;
+            }
+            
+            if (currentUser.hasSubscription) {
+                // Already subscribed, go to dashboard
+                window.location.href = 'dashboard.html';
+                return;
+            }
+            
+            // Start payment process
+            initiatePayment();
+        }
+        
+        function initiatePayment() {
+            // For now, simulate payment success and redirect to dashboard
+            // In production, this would integrate with Stripe or another payment processor
+            
+            alert('Payment processing would happen here. For demo purposes, redirecting to dashboard.');
+            window.location.href = 'dashboard.html';
+            
+            // TODO: Integrate with Stripe
+            // const stripe = Stripe('your-publishable-key');
+            // stripe.checkout.session({...})
         }
     </script>
 </body>
