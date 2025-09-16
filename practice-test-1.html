@@ -359,6 +359,41 @@
             border-bottom: none;
         }
         
+        /* Guest Access Modal Styles */
+        .access-option {
+            transition: all 0.3s ease;
+        }
+        
+        .access-option:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .premium-option {
+            border-color: var(--primary-color) !important;
+            background: linear-gradient(145deg, #f8f9ff, #ffffff);
+        }
+        
+        .guest-option {
+            border-color: #6c757d !important;
+            background: #f8f9fa;
+        }
+        
+        .access-icon {
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .feature-item {
+            font-size: 0.9rem;
+        }
+        
+        .features-list {
+            min-height: 140px;
+        }
+        
         /* Responsive */
         @media (max-width: 768px) {
             .test-info {
@@ -404,12 +439,123 @@
         </div>
         <h3>Unable to Load Test</h3>
         <p class="text-muted mb-4">There was an error connecting to the test database.</p>
-        <button class="btn btn-primary" onclick="loadTest()">
+        <button class="btn btn-primary" onclick="checkAccessOrStartTest()">
             <i class="fas fa-retry me-2"></i>Try Again
         </button>
         <a href="index.html" class="btn btn-outline-secondary ms-2">
             <i class="fas fa-home me-2"></i>Return Home
         </a>
+    </div>
+
+    <!-- Guest Access Modal -->
+    <div class="modal fade" id="guestAccessModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title">
+                        <i class="fas fa-user-clock me-2"></i>Practice Test Access
+                    </h5>
+                </div>
+                <div class="modal-body p-4">
+                    <div class="row">
+                        <!-- Sign In Option -->
+                        <div class="col-md-6">
+                            <div class="access-option premium-option h-100 p-4 border rounded">
+                                <div class="text-center mb-3">
+                                    <div class="access-icon mb-3">
+                                        <i class="fas fa-crown fa-3x text-warning"></i>
+                                    </div>
+                                    <h4 class="text-primary">Full Access</h4>
+                                    <p class="text-muted">Complete LNAT preparation experience</p>
+                                </div>
+                                
+                                <div class="features-list mb-4">
+                                    <div class="feature-item d-flex align-items-center mb-2">
+                                        <i class="fas fa-check-circle text-success me-2"></i>
+                                        <span>All 10 practice tests</span>
+                                    </div>
+                                    <div class="feature-item d-flex align-items-center mb-2">
+                                        <i class="fas fa-check-circle text-success me-2"></i>
+                                        <span>Detailed performance analytics</span>
+                                    </div>
+                                    <div class="feature-item d-flex align-items-center mb-2">
+                                        <i class="fas fa-check-circle text-success me-2"></i>
+                                        <span>Progress tracking</span>
+                                    </div>
+                                    <div class="feature-item d-flex align-items-center mb-2">
+                                        <i class="fas fa-check-circle text-success me-2"></i>
+                                        <span>Answer explanations</span>
+                                    </div>
+                                    <div class="feature-item d-flex align-items-center mb-2">
+                                        <i class="fas fa-check-circle text-success me-2"></i>
+                                        <span>Save & resume tests</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="d-grid gap-2">
+                                    <button class="btn btn-primary btn-lg" onclick="redirectToLogin()">
+                                        <i class="fas fa-sign-in-alt me-2"></i>Sign In
+                                    </button>
+                                    <button class="btn btn-outline-primary" onclick="redirectToRegister()">
+                                        <i class="fas fa-user-plus me-2"></i>Create Account
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Guest Option -->
+                        <div class="col-md-6">
+                            <div class="access-option guest-option h-100 p-4 border rounded">
+                                <div class="text-center mb-3">
+                                    <div class="access-icon mb-3">
+                                        <i class="fas fa-user-clock fa-3x text-secondary"></i>
+                                    </div>
+                                    <h4 class="text-secondary">Guest Access</h4>
+                                    <p class="text-muted">Try our platform with limited features</p>
+                                </div>
+                                
+                                <div class="features-list mb-4">
+                                    <div class="feature-item d-flex align-items-center mb-2">
+                                        <i class="fas fa-check-circle text-success me-2"></i>
+                                        <span>Practice Test 1 (4 questions)</span>
+                                    </div>
+                                    <div class="feature-item d-flex align-items-center mb-2 text-muted">
+                                        <i class="fas fa-times-circle text-danger me-2"></i>
+                                        <span>No progress saving</span>
+                                    </div>
+                                    <div class="feature-item d-flex align-items-center mb-2 text-muted">
+                                        <i class="fas fa-times-circle text-danger me-2"></i>
+                                        <span>Basic results only</span>
+                                    </div>
+                                    <div class="feature-item d-flex align-items-center mb-2 text-muted">
+                                        <i class="fas fa-times-circle text-danger me-2"></i>
+                                        <span>No detailed analytics</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="alert alert-warning">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    <strong>Demo version:</strong> Limited to 4 sample questions
+                                </div>
+                                
+                                <div class="d-grid">
+                                    <button class="btn btn-outline-secondary btn-lg" onclick="startGuestMode()">
+                                        <i class="fas fa-play me-2"></i>Continue as Guest
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center mt-4">
+                        <p class="text-muted">
+                            <i class="fas fa-lock me-1"></i>
+                            Your guest session is temporary and won't be saved
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Test Header -->
@@ -537,12 +683,72 @@
 
         // Initialize test when page loads
         document.addEventListener('DOMContentLoaded', function() {
-            loadTest();
+            checkAccessOrStartTest();
         });
+
+        // Guest Access Functions
+        function checkAccessOrStartTest() {
+            const token = localStorage.getItem('authToken');
+            if (token) {
+                // User is logged in, verify token and start test
+                verifyTokenAndStartTest(token);
+            } else {
+                // Show guest access modal
+                const modal = new bootstrap.Modal(document.getElementById('guestAccessModal'));
+                modal.show();
+            }
+        }
+        
+        async function verifyTokenAndStartTest(token) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/auth/profile`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                if (response.ok) {
+                    // Valid user, start full test
+                    localStorage.setItem('testMode', 'full');
+                    loadTest();
+                } else {
+                    // Invalid token, clear and show modal
+                    localStorage.removeItem('authToken');
+                    const modal = new bootstrap.Modal(document.getElementById('guestAccessModal'));
+                    modal.show();
+                }
+            } catch (error) {
+                console.error('Error verifying token:', error);
+                // On error, show modal
+                const modal = new bootstrap.Modal(document.getElementById('guestAccessModal'));
+                modal.show();
+            }
+        }
+        
+        function startGuestMode() {
+            localStorage.setItem('testMode', 'guest');
+            const modal = bootstrap.Modal.getInstance(document.getElementById('guestAccessModal'));
+            modal.hide();
+            loadTest();
+        }
+        
+        function redirectToLogin() {
+            sessionStorage.setItem('redirectAfterLogin', window.location.href);
+            window.location.href = 'login.html';
+        }
+        
+        function redirectToRegister() {
+            sessionStorage.setItem('redirectAfterLogin', window.location.href);
+            window.location.href = 'register.html';
+        }
 
         async function loadTest() {
             try {
                 showLoading();
+                
+                const testMode = localStorage.getItem('testMode') || 'guest';
                 
                 // Fetch questions from your API
                 const response = await fetch(`${API_BASE_URL}/api/tests/${TEST_ID}/questions`);
@@ -553,8 +759,26 @@
                 
                 const data = await response.json();
                 
-                // Transform API data to match frontend format (FIXED)
-                questions = data.questions.map(q => ({
+                // For guest mode, limit to first 4 questions
+                let questionData = data.questions;
+                if (testMode === 'guest') {
+                    questionData = data.questions.slice(0, 4);
+                    
+                    // Update UI for guest mode
+                    document.querySelector('.test-title-small').innerHTML = 
+                        '<i class="fas fa-clipboard-list me-2"></i>Practice Test 1: Demo Mode (4 Questions)';
+                    
+                    // Reduce timer for demo
+                    timeLeft = 20 * 60; // 20 minutes for 4 questions
+                    
+                    // Add guest mode notification
+                    setTimeout(() => {
+                        addGuestModeNotification();
+                    }, 1000);
+                }
+                
+                // Transform API data to match frontend format
+                questions = questionData.map(q => ({
                     id: q.id,
                     passage: {
                         title: q.passageTitle,
@@ -568,7 +792,7 @@
                         { label: "D", text: q.options[3] },
                         { label: "E", text: q.options[4] }
                     ],
-                    correctAnswer: q.correct_answer || 1 // Default to 1 if not provided
+                    correctAnswer: q.correct_answer || 1
                 }));
                 
                 console.log('Loaded questions:', questions);
@@ -583,6 +807,20 @@
             } catch (error) {
                 console.error('Error loading test:', error);
                 showError();
+            }
+        }
+
+        function addGuestModeNotification() {
+            const testMode = localStorage.getItem('testMode');
+            if (testMode === 'guest') {
+                const notification = document.createElement('div');
+                notification.className = 'alert alert-info m-3';
+                notification.innerHTML = `
+                    <i class="fas fa-info-circle me-2"></i>
+                    <strong>Demo Mode:</strong> You're using a limited version with 4 questions. 
+                    <a href="#" onclick="redirectToRegister()" class="alert-link">Sign up for full access!</a>
+                `;
+                document.querySelector('.test-content').prepend(notification);
             }
         }
 
@@ -774,6 +1012,8 @@
             try {
                 clearInterval(timerInterval);
                 
+                const testMode = localStorage.getItem('testMode') || 'guest';
+                
                 // Convert answers from {questionId: "A"} to [{questionId: 1, selectedAnswer: 1}]
                 const answersArray = Object.entries(userAnswers).map(([questionId, letter]) => {
                     // Convert letter to number: A=1, B=2, C=3, D=4, E=5
@@ -812,7 +1052,7 @@
                     total_questions: results.totalQuestions,
                     correct_answers: results.score,
                     percentage: results.percentage,
-                    time_spent: (95 * 60) - timeLeft,
+                    time_spent: (testMode === 'guest' ? 20 * 60 : 95 * 60) - timeLeft,
                     user_answers: userAnswers, // Keep original A-E format for display
                     flagged_questions: Array.from(flaggedQuestions),
                     questions: results.results.map((result, index) => ({
@@ -820,7 +1060,9 @@
                         questionText: questions.find(q => q.id === result.questionId)?.question || 'Question not found',
                         correct_answer: ['A', 'B', 'C', 'D', 'E'][result.correctAnswer - 1], // Convert 1-5 back to A-E
                         explanation: result.explanation
-                    }))
+                    })),
+                    isGuestMode: testMode === 'guest',
+                    upgradePrompt: testMode === 'guest'
                 };
                 
                 // Store results for results page
