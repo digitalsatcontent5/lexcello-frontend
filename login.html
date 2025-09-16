@@ -439,7 +439,7 @@
             const token = localStorage.getItem('authToken');
             if (token) {
                 // Verify token is still valid
-                fetch(`${API_BASE_URL}/api/auth/me`, {
+                fetch(`${API_BASE_URL}/api/auth/profile`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -459,4 +459,5 @@
         });
     </script>
 </body>
+
 </html>
