@@ -1,5 +1,3 @@
---- START OF FILE index.txt ---
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -53,10 +51,10 @@
 
         /* Added for collapsed navbar background */
         .navbar-collapse.show {
-            background-color: white; /* Or a light grey like #f8f9fa */
+            background-color: white;
             padding: 15px;
             border-radius: 8px;
-            margin-top: 10px; /* Space from toggler */
+            margin-top: 10px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.08);
         }
         
@@ -71,6 +69,20 @@
         .btn-primary:hover {
             background: var(--primary-hover);
             transform: translateY(-1px);
+        }
+        
+        .btn-outline-primary {
+            color: var(--secondary-color);
+            border-color: var(--secondary-color);
+            padding: 12px 24px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-outline-primary:hover {
+            background: var(--secondary-color);
+            border-color: var(--secondary-color);
+            color: white;
         }
         
         /* Hero Section */
@@ -343,6 +355,96 @@
             color: #718096;
         }
         
+        /* Notification styles */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            z-index: 9999;
+            opacity: 0;
+            transform: translateX(300px);
+            transition: all 0.3s ease;
+        }
+        
+        .notification.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        
+        .notification.success {
+            background: #28a745;
+        }
+        
+        .notification.error {
+            background: #dc3545;
+        }
+        
+        .notification.info {
+            background: #17a2b8;
+        }
+        
+        /* User dropdown styles */
+        .user-menu {
+            position: relative;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--secondary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .user-avatar:hover {
+            background: var(--primary-hover);
+        }
+        
+        .user-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            padding: 10px 0;
+            min-width: 200px;
+            z-index: 1000;
+            display: none;
+        }
+        
+        .user-dropdown.show {
+            display: block;
+        }
+        
+        .user-dropdown a {
+            display: block;
+            padding: 10px 20px;
+            color: var(--text-dark);
+            text-decoration: none;
+            transition: background 0.3s ease;
+        }
+        
+        .user-dropdown a:hover {
+            background: var(--bg-light);
+        }
+        
+        .user-dropdown .divider {
+            height: 1px;
+            background: #e2e8f0;
+            margin: 5px 0;
+        }
+        
         /* Responsive */
         @media (max-width: 768px) {
             .hero h1 {
@@ -385,9 +487,32 @@
                     </li>
                 </ul>
                 
-                <div class="d-flex gap-2">
+                <!-- Authentication buttons (shown when not logged in) -->
+                <div class="d-flex gap-2" id="auth-buttons">
                     <button class="btn btn-outline-primary" onclick="signIn()">Sign In</button>
                     <button class="btn btn-primary" onclick="getStarted()">Get Started</button>
+                </div>
+                
+                <!-- User menu (shown when logged in) -->
+                <div class="user-menu" id="user-menu" style="display: none;">
+                    <div class="user-avatar" onclick="toggleUserDropdown()" id="user-avatar">
+                        U
+                    </div>
+                    <div class="user-dropdown" id="user-dropdown">
+                        <a href="dashboard.html">
+                            <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                        </a>
+                        <a href="profile.html">
+                            <i class="fas fa-user me-2"></i>Profile
+                        </a>
+                        <a href="test-history.html">
+                            <i class="fas fa-history me-2"></i>Test History
+                        </a>
+                        <div class="divider"></div>
+                        <a href="#" onclick="signOut()">
+                            <i class="fas fa-sign-out-alt me-2"></i>Sign Out
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -516,7 +641,7 @@
                 
                 <div class="col-lg-6">
                     <div class="test-card">
-                        <div class="test-status status-available">Available</div>
+                        <div class="test-status status-coming-soon">Coming Soon</div>
                         <h4>Practice Test 2 - Building Skills</h4>
                         <div class="test-details">
                             <div class="test-detail">
@@ -532,13 +657,13 @@
                                 <span class="detail-value">Intermediate</span>
                             </div>
                         </div>
-                        <button class="test-action btn-available" onclick="viewTestDetails(2)">View Test Details</button>
+                        <button class="test-action btn-disabled" disabled>Coming Soon</button>
                     </div>
                 </div>
                 
                 <div class="col-lg-6">
                     <div class="test-card">
-                        <div class="test-status status-available">Available</div>
+                        <div class="test-status status-coming-soon">Coming Soon</div>
                         <h4>Practice Test 3 - Advanced</h4>
                         <div class="test-details">
                             <div class="test-detail">
@@ -554,13 +679,13 @@
                                 <span class="detail-value">Advanced</span>
                             </div>
                         </div>
-                        <button class="test-action btn-available" onclick="viewTestDetails(3)">View Test Details</button>
+                        <button class="test-action btn-disabled" disabled>Coming Soon</button>
                     </div>
                 </div>
                 
                 <div class="col-lg-6">
                     <div class="test-card">
-                        <div class="test-status status-available">Available</div>
+                        <div class="test-status status-coming-soon">Coming Soon</div>
                         <h4>Practice Test 4 - Mock Exam</h4>
                         <div class="test-details">
                             <div class="test-detail">
@@ -576,7 +701,7 @@
                                 <span class="detail-value">Full Exam Simulation</span>
                             </div>
                         </div>
-                        <button class="test-action btn-available" onclick="viewTestDetails(4)">View Test Details</button>
+                        <button class="test-action btn-disabled" disabled>Coming Soon</button>
                     </div>
                 </div>
             </div>
@@ -653,22 +778,143 @@
         </div>
     </footer>
 
+    <!-- Notification container -->
+    <div id="notification" class="notification"></div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     
     <script>
+        // Configuration
+        const API_BASE_URL = 'https://lexcello-backend.onrender.com/api';
+        
+        // State management
+        let currentUser = null;
+        
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuthStatus();
+            
+            // Add click listener to close dropdown when clicking outside
+            document.addEventListener('click', function(event) {
+                const userMenu = document.getElementById('user-menu');
+                const dropdown = document.getElementById('user-dropdown');
+                
+                if (userMenu && !userMenu.contains(event.target)) {
+                    dropdown.classList.remove('show');
+                }
+            });
+        });
+        
+        // Authentication functions
+        async function checkAuthStatus() {
+            const token = localStorage.getItem('authToken');
+            if (token) {
+                try {
+                    const response = await fetch(`${API_BASE_URL}/auth/profile`, {
+                        method: 'GET',
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                    
+                    if (response.ok) {
+                        const userData = await response.json();
+                        updateUIForLoggedInUser(userData);
+                    } else {
+                        // Token is invalid, remove it
+                        localStorage.removeItem('authToken');
+                        updateUIForLoggedOutUser();
+                    }
+                } catch (error) {
+                    console.error('Error checking auth status:', error);
+                    // In case of network error, still try to show UI based on token presence
+                    // but don't make assumptions about user data
+                    updateUIForLoggedOutUser();
+                }
+            } else {
+                updateUIForLoggedOutUser();
+            }
+        }
+        
+        function updateUIForLoggedInUser(userData) {
+            currentUser = userData;
+            
+            // Hide auth buttons, show user menu
+            document.getElementById('auth-buttons').style.display = 'none';
+            document.getElementById('user-menu').style.display = 'block';
+            
+            // Update user avatar with first letter of name or email
+            const userAvatar = document.getElementById('user-avatar');
+            const firstLetter = (userData.name || userData.email || 'U').charAt(0).toUpperCase();
+            userAvatar.textContent = firstLetter;
+            userAvatar.title = userData.email || 'User';
+        }
+        
+        function updateUIForLoggedOutUser() {
+            currentUser = null;
+            
+            // Show auth buttons, hide user menu
+            document.getElementById('auth-buttons').style.display = 'flex';
+            document.getElementById('user-menu').style.display = 'none';
+        }
+        
+        function toggleUserDropdown() {
+            const dropdown = document.getElementById('user-dropdown');
+            dropdown.classList.toggle('show');
+        }
+        
+        async function signOut() {
+            try {
+                // Call logout endpoint if available
+                const token = localStorage.getItem('authToken');
+                if (token) {
+                    await fetch(`${API_BASE_URL}/auth/logout`, {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                }
+            } catch (error) {
+                console.error('Error during logout:', error);
+            } finally {
+                // Always clean up local storage and update UI
+                localStorage.removeItem('authToken');
+                updateUIForLoggedOutUser();
+                showNotification('Successfully signed out', 'success');
+                
+                // Redirect to home if on a protected page
+                if (window.location.pathname.includes('dashboard') || 
+                    window.location.pathname.includes('profile')) {
+                    window.location.href = 'index.html';
+                }
+            }
+        }
+        
         // Navigation functions
         function signIn() {
-            // In a real application, this would redirect to sign-in page
-            window.location.href = 'dashboard.html';
+            window.location.href = 'login.html';
         }
         
         function getStarted() {
-            window.location.href = 'pricing.html';
+            // Check if user is logged in
+            if (currentUser) {
+                window.location.href = 'dashboard.html';
+            } else {
+                window.location.href = 'register.html';
+            }
         }
         
         function startPracticeTest() {
-            // Direct to first practice test
-            window.location.href = 'test-1-details.html';
+            // Check if user is logged in for premium features
+            if (currentUser) {
+                window.location.href = 'practice-test-1.html';
+            } else {
+                showNotification('Please sign in to access practice tests', 'info');
+                window.location.href = 'login.html';
+            }
         }
         
         function learnAboutLNAT() {
@@ -676,17 +922,38 @@
         }
         
         function viewTestDetails(testNumber) {
-            // Navigate to specific test details page
             if (testNumber === 1) {
-                window.location.href = 'test-1-details.html';
+                // Check authentication for premium content
+                if (currentUser) {
+                    window.location.href = 'test-1-details.html';
+                } else {
+                    showNotification('Please sign in to access test details', 'info');
+                    window.location.href = 'login.html';
+                }
             } else {
-                alert(`Test ${testNumber} details coming soon! For now, redirecting to Test 1 as an example.`);
-                window.location.href = 'test-1-details.html';
+                showNotification(`Test ${testNumber} coming soon!`, 'info');
             }
         }
         
         function startPreparation() {
-            window.location.href = 'pricing.html';
+            if (currentUser) {
+                window.location.href = 'dashboard.html';
+            } else {
+                window.location.href = 'register.html';
+            }
+        }
+        
+        // Utility functions
+        function showNotification(message, type = 'info') {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = `notification ${type}`;
+            notification.classList.add('show');
+            
+            // Auto-hide after 3 seconds
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
         }
         
         // Smooth scrolling for internal links
