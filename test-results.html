@@ -35,116 +35,343 @@
             color: white;
             padding: 40px 0;
             text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .results-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(-10px, -10px) rotate(5deg); }
         }
 
         .results-header h1 {
             font-size: 2.5rem;
             font-weight: 700;
             margin-bottom: 10px;
+            position: relative;
+            z-index: 2;
         }
 
         .results-header p {
             font-size: 1.2rem;
             opacity: 0.9;
             margin: 0;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Test Mode Badge */
+        .test-mode-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            z-index: 3;
+        }
+
+        .mode-demo {
+            background: rgba(255, 193, 7, 0.9);
+            color: #856404;
+        }
+
+        .mode-full {
+            background: rgba(72, 187, 120, 0.9);
+            color: #22543d;
         }
 
         /* Score Summary */
         .score-summary {
             background: white;
             margin: -30px 20px 30px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
             padding: 40px;
             position: relative;
             z-index: 10;
         }
 
+        .score-display {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 40px;
+            align-items: center;
+        }
+
         .score-circle {
-            width: 150px;
-            height: 150px;
+            width: 180px;
+            height: 180px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 30px;
             position: relative;
             background: conic-gradient(var(--success-color) var(--score-percentage, 0%), #e2e8f0 0%);
         }
 
         .score-circle::before {
             content: '';
-            width: 120px;
-            height: 120px;
+            width: 140px;
+            height: 140px;
             background: white;
             border-radius: 50%;
             position: absolute;
         }
 
-        .score-number {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--primary-color);
+        .score-content {
             z-index: 1;
+            text-align: center;
         }
 
-        .score-stats {
+        .score-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            display: block;
+        }
+
+        .score-label {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-top: 5px;
+        }
+
+        .performance-summary {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .performance-grade {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .grade-badge {
+            font-size: 2rem;
+            font-weight: 800;
+            padding: 15px 25px;
+            border-radius: 15px;
+            display: inline-block;
+            min-width: 80px;
+            text-align: center;
+        }
+
+        .grade-a { 
+            background: linear-gradient(135deg, var(--success-color), #38a169); 
+            color: white; 
+        }
+        .grade-b { 
+            background: linear-gradient(135deg, var(--accent-gold), #d69e2e); 
+            color: white; 
+        }
+        .grade-c { 
+            background: linear-gradient(135deg, var(--warning-color), #dd6b20); 
+            color: white; 
+        }
+        .grade-d { 
+            background: linear-gradient(135deg, var(--danger-color), #c53030); 
+            color: white; 
+        }
+
+        .grade-description {
+            flex: 1;
+        }
+
+        .grade-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+
+        .grade-text {
+            color: var(--text-light);
+            font-size: 1rem;
+        }
+
+        .percentile-info {
+            background: linear-gradient(135deg, #e6f3ff, #f0f8ff);
+            border-radius: 12px;
+            padding: 20px;
+            border-left: 4px solid var(--secondary-color);
+        }
+
+        .percentile-text {
+            font-size: 1.1rem;
+            color: var(--text-dark);
+            margin: 0;
+        }
+
+        .percentile-number {
+            font-weight: 700;
+            color: var(--secondary-color);
+        }
+
+        /* Stats Grid */
+        .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 30px;
+            gap: 20px;
             margin-top: 30px;
         }
 
-        .stat-item {
+        .stat-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 25px;
             text-align: center;
-            padding: 20px;
-            border: 2px solid #e2e8f0;
-            border-radius: 10px;
             transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
 
-        .stat-item:hover {
-            border-color: var(--secondary-color);
-            transform: translateY(-2px);
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        .stat-icon {
+            font-size: 2rem;
+            color: var(--secondary-color);
+            margin-bottom: 15px;
         }
 
         .stat-value {
-            font-size: 1.8rem;
+            font-size: 2rem;
             font-weight: 700;
             color: var(--primary-color);
             display: block;
+            margin-bottom: 5px;
         }
 
         .stat-label {
             color: var(--text-light);
             font-weight: 500;
-            margin-top: 5px;
+            font-size: 0.95rem;
         }
 
-        /* Performance Grade */
-        .performance-grade {
+        .stat-subtext {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            margin-top: 8px;
+            opacity: 0.8;
+        }
+
+        /* Performance Insights */
+        .insights-section {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            margin: 30px 20px;
+            overflow: hidden;
+        }
+
+        .insights-header {
+            background: linear-gradient(135deg, var(--accent-gold), #f7c41f);
+            color: var(--primary-color);
+            padding: 25px;
             text-align: center;
-            margin: 20px 0;
         }
 
-        .grade-badge {
-            font-size: 1.5rem;
+        .insights-header h3 {
+            margin: 0;
             font-weight: 700;
-            padding: 15px 30px;
-            border-radius: 50px;
-            display: inline-block;
+            font-size: 1.5rem;
         }
 
-        .grade-a { background: var(--success-color); color: white; }
-        .grade-b { background: var(--accent-gold); color: white; }
-        .grade-c { background: var(--warning-color); color: white; }
-        .grade-d { background: var(--danger-color); color: white; }
+        .insights-content {
+            padding: 30px;
+        }
+
+        .insight-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            padding: 20px 0;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .insight-item:last-child {
+            border-bottom: none;
+        }
+
+        .insight-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .insight-positive {
+            background: var(--success-color);
+        }
+
+        .insight-warning {
+            background: var(--warning-color);
+        }
+
+        .insight-info {
+            background: var(--secondary-color);
+        }
+
+        .insight-content {
+            flex: 1;
+        }
+
+        .insight-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--primary-color);
+            margin-bottom: 8px;
+        }
+
+        .insight-description {
+            color: var(--text-light);
+            line-height: 1.6;
+        }
 
         /* Question Review */
         .question-review {
             background: white;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
             margin: 30px 20px;
             overflow: hidden;
         }
@@ -153,11 +380,41 @@
             background: var(--bg-light);
             padding: 25px;
             border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .review-header h3 {
             margin: 0;
             color: var(--primary-color);
+            font-weight: 700;
+        }
+
+        .review-filters {
+            display: flex;
+            gap: 10px;
+        }
+
+        .filter-btn {
+            padding: 8px 16px;
+            border: 2px solid #e2e8f0;
+            background: white;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn.active {
+            border-color: var(--secondary-color);
+            background: var(--secondary-color);
+            color: white;
+        }
+
+        .filter-btn:hover:not(.active) {
+            border-color: var(--secondary-color);
         }
 
         .question-item {
@@ -174,6 +431,10 @@
             border-bottom: none;
         }
 
+        .question-item.hidden {
+            display: none;
+        }
+
         .question-header {
             display: flex;
             justify-content: space-between;
@@ -185,10 +446,18 @@
             font-weight: 700;
             color: var(--primary-color);
             font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .flag-indicator {
+            color: var(--warning-color);
+            font-size: 0.9rem;
         }
 
         .answer-status {
-            padding: 5px 15px;
+            padding: 8px 16px;
             border-radius: 20px;
             font-weight: 600;
             font-size: 0.9rem;
@@ -213,32 +482,35 @@
             font-weight: 600;
             margin-bottom: 15px;
             color: var(--text-dark);
+            line-height: 1.5;
         }
 
         .answer-comparison {
             background: #f8f9fa;
-            border-radius: 8px;
-            padding: 15px;
+            border-radius: 12px;
+            padding: 20px;
             margin: 15px 0;
         }
 
         .answer-row {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            margin: 8px 0;
+            align-items: flex-start;
+            margin: 12px 0;
         }
 
         .answer-label {
             font-weight: 600;
-            min-width: 120px;
+            min-width: 140px;
+            color: var(--text-dark);
         }
 
         .answer-value {
             flex: 1;
-            padding: 8px 15px;
-            border-radius: 5px;
-            margin-left: 15px;
+            padding: 12px 18px;
+            border-radius: 8px;
+            margin-left: 20px;
+            line-height: 1.4;
         }
 
         .your-answer {
@@ -257,17 +529,95 @@
         }
 
         .explanation {
-            background: #f0f8ff;
+            background: linear-gradient(135deg, #f0f8ff, #e6f3ff);
             border-left: 4px solid var(--secondary-color);
-            padding: 20px;
-            margin-top: 15px;
-            border-radius: 0 8px 8px 0;
+            padding: 25px;
+            margin-top: 20px;
+            border-radius: 0 12px 12px 0;
         }
 
         .explanation h6 {
             color: var(--primary-color);
             font-weight: 700;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .explanation p {
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        /* Upgrade Prompt for Demo Users */
+        .upgrade-prompt {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            margin: 30px 20px;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .upgrade-prompt::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: pulse-glow 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.05); }
+        }
+
+        .upgrade-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .upgrade-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: var(--accent-gold);
+        }
+
+        .upgrade-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .upgrade-description {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 25px;
+        }
+
+        .upgrade-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 25px 0;
+            text-align: left;
+        }
+
+        .upgrade-feature {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.95rem;
+        }
+
+        .upgrade-feature i {
+            color: var(--accent-gold);
         }
 
         /* Action Buttons */
@@ -279,11 +629,12 @@
         .btn-action {
             padding: 15px 30px;
             font-weight: 600;
-            border-radius: 8px;
+            border-radius: 12px;
             text-decoration: none;
             display: inline-block;
             margin: 10px;
             transition: all 0.3s ease;
+            font-size: 1rem;
         }
 
         .btn-primary-action {
@@ -296,6 +647,7 @@
             background: var(--primary-color);
             color: white;
             transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
 
         .btn-secondary-action {
@@ -307,9 +659,24 @@
         .btn-secondary-action:hover {
             background: var(--secondary-color);
             color: white;
+            transform: translateY(-2px);
         }
 
-        /* Loading State */
+        .btn-upgrade {
+            background: linear-gradient(135deg, var(--accent-gold), #f7c41f);
+            color: var(--primary-color);
+            border: none;
+            font-weight: 700;
+        }
+
+        .btn-upgrade:hover {
+            background: linear-gradient(135deg, #f7c41f, var(--accent-gold));
+            color: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(214, 158, 46, 0.4);
+        }
+
+        /* Loading and Error States */
         .loading-container {
             display: flex;
             justify-content: center;
@@ -332,13 +699,12 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Error State */
         .error-container {
             text-align: center;
             padding: 60px 20px;
             background: white;
             margin: 20px;
-            border-radius: 10px;
+            border-radius: 15px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
 
@@ -348,7 +714,7 @@
             margin-bottom: 20px;
         }
 
-        /* Responsive */
+        /* Responsive Design */
         @media (max-width: 768px) {
             .results-header h1 {
                 font-size: 2rem;
@@ -359,26 +725,35 @@
                 padding: 25px;
             }
 
+            .score-display {
+                grid-template-columns: 1fr;
+                gap: 25px;
+                text-align: center;
+            }
+
             .score-circle {
+                width: 150px;
+                height: 150px;
+                margin: 0 auto;
+            }
+
+            .score-circle::before {
                 width: 120px;
                 height: 120px;
             }
 
-            .score-circle::before {
-                width: 95px;
-                height: 95px;
-            }
-
             .score-number {
-                font-size: 1.5rem;
+                font-size: 2rem;
             }
 
-            .score-stats {
+            .stats-grid {
                 grid-template-columns: 1fr;
                 gap: 15px;
             }
 
-            .question-review {
+            .question-review,
+            .insights-section,
+            .upgrade-prompt {
                 margin: 20px 15px;
             }
 
@@ -399,8 +774,28 @@
 
             .answer-value {
                 margin-left: 0;
-                margin-top: 5px;
+                margin-top: 8px;
                 width: 100%;
+            }
+
+            .review-filters {
+                flex-wrap: wrap;
+                gap: 5px;
+            }
+
+            .filter-btn {
+                font-size: 0.8rem;
+                padding: 6px 12px;
+            }
+
+            .test-mode-badge {
+                position: static;
+                display: inline-block;
+                margin-bottom: 15px;
+            }
+
+            .upgrade-features {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -410,8 +805,8 @@
     <div id="loadingScreen" class="loading-container">
         <div class="text-center">
             <div class="spinner"></div>
-            <h4 class="mt-3">Processing Results...</h4>
-            <p class="text-muted">Calculating your performance</p>
+            <h4 class="mt-3">Analyzing Your Performance...</h4>
+            <p class="text-muted">Calculating detailed insights</p>
         </div>
     </div>
 
@@ -421,12 +816,12 @@
             <i class="fas fa-exclamation-triangle"></i>
         </div>
         <h3>Results Not Found</h3>
-        <p class="text-muted mb-4">Unable to load your test results. This might happen if you navigated here directly.</p>
+        <p class="text-muted mb-4">Unable to load your test results. This might happen if you navigated here directly or your session expired.</p>
         <a href="practice-test-1.html" class="btn-action btn-primary-action">
-            <i class="fas fa-redo me-2"></i>Retake Test
+            <i class="fas fa-redo me-2"></i>Take New Test
         </a>
-        <a href="index.html" class="btn-action btn-secondary-action">
-            <i class="fas fa-home me-2"></i>Return Home
+        <a href="dashboard.html" class="btn-action btn-secondary-action">
+            <i class="fas fa-tachometer-alt me-2"></i>Dashboard
         </a>
     </div>
 
@@ -434,40 +829,114 @@
     <div id="resultsContent" style="display: none;">
         <!-- Header -->
         <div class="results-header">
+            <div id="testModeBadge" class="test-mode-badge">Full Test</div>
             <div class="container">
                 <h1><i class="fas fa-chart-line me-3"></i>Test Results</h1>
-                <p>Practice Test 1: Foundation Level</p>
+                <p id="testTitle">LNAT Practice Test 1</p>
             </div>
         </div>
 
         <!-- Score Summary -->
         <div class="container">
             <div class="score-summary">
-                <div class="performance-grade">
-                    <span id="gradeBadge" class="grade-badge">A</span>
-                </div>
-                
-                <div class="score-circle" id="scoreCircle">
-                    <span class="score-number" id="scorePercentage">85%</span>
+                <div class="score-display">
+                    <div class="score-circle" id="scoreCircle">
+                        <div class="score-content">
+                            <span class="score-number" id="scorePercentage">85%</span>
+                            <div class="score-label">Overall Score</div>
+                        </div>
+                    </div>
+                    
+                    <div class="performance-summary">
+                        <div class="performance-grade">
+                            <span id="gradeBadge" class="grade-badge">A</span>
+                            <div class="grade-description">
+                                <div class="grade-title" id="gradeTitle">Excellent Performance</div>
+                                <div class="grade-text" id="gradeText">You demonstrated strong analytical and reasoning skills.</div>
+                            </div>
+                        </div>
+                        
+                        <div class="percentile-info">
+                            <p class="percentile-text">
+                                Your score places you in the <span class="percentile-number" id="percentileRank">85th percentile</span> among LNAT test-takers.
+                            </p>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="score-stats">
-                    <div class="stat-item">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
                         <span class="stat-value" id="correctCount">0</span>
                         <div class="stat-label">Correct Answers</div>
+                        <div class="stat-subtext">out of <span id="totalQuestions">0</span> questions</div>
                     </div>
-                    <div class="stat-item">
-                        <span class="stat-value" id="totalQuestions">0</span>
-                        <div class="stat-label">Total Questions</div>
-                    </div>
-                    <div class="stat-item">
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-clock"></i></div>
                         <span class="stat-value" id="timeSpent">00:00</span>
                         <div class="stat-label">Time Spent</div>
+                        <div class="stat-subtext"><span id="avgTimePerQuestion">0</span> per question</div>
                     </div>
-                    <div class="stat-item">
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-flag"></i></div>
                         <span class="stat-value" id="flaggedCount">0</span>
                         <div class="stat-label">Questions Flagged</div>
+                        <div class="stat-subtext">for review</div>
                     </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-target"></i></div>
+                        <span class="stat-value" id="accuracyRate">0%</span>
+                        <div class="stat-label">Accuracy Rate</div>
+                        <div class="stat-subtext">of answered questions</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Performance Insights -->
+        <div class="insights-section">
+            <div class="insights-header">
+                <h3><i class="fas fa-lightbulb me-2"></i>Performance Insights</h3>
+            </div>
+            <div class="insights-content" id="insightsContent">
+                <!-- Generated by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Upgrade Prompt (for demo users) -->
+        <div id="upgradePrompt" class="upgrade-prompt" style="display: none;">
+            <div class="upgrade-content">
+                <div class="upgrade-icon">
+                    <i class="fas fa-crown"></i>
+                </div>
+                <h3 class="upgrade-title">Unlock Your Full LNAT Potential</h3>
+                <p class="upgrade-description">
+                    You've experienced our demo with 4 questions. Get the complete LNAT preparation experience with all 42 questions per test.
+                </p>
+                
+                <div class="upgrade-features">
+                    <div class="upgrade-feature">
+                        <i class="fas fa-check"></i>
+                        <span>10 complete practice tests (420+ questions)</span>
+                    </div>
+                    <div class="upgrade-feature">
+                        <i class="fas fa-check"></i>
+                        <span>Detailed performance analytics & trends</span>
+                    </div>
+                    <div class="upgrade-feature">
+                        <i class="fas fa-check"></i>
+                        <span>Progress tracking across multiple attempts</span>
+                    </div>
+                    <div class="upgrade-feature">
+                        <i class="fas fa-check"></i>
+                        <span>Comprehensive answer explanations</span>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <a href="register.html" class="btn-action btn-upgrade">
+                        <i class="fas fa-rocket me-2"></i>Upgrade to Full Access
+                    </a>
                 </div>
             </div>
         </div>
@@ -475,7 +944,14 @@
         <!-- Question by Question Review -->
         <div class="question-review">
             <div class="review-header">
-                <h3><i class="fas fa-list-check me-2"></i>Question by Question Review</h3>
+                <h3><i class="fas fa-list-check me-2"></i>Question Review</h3>
+                <div class="review-filters">
+                    <button class="filter-btn active" data-filter="all">All</button>
+                    <button class="filter-btn" data-filter="correct">Correct</button>
+                    <button class="filter-btn" data-filter="incorrect">Incorrect</button>
+                    <button class="filter-btn" data-filter="unanswered">Unanswered</button>
+                    <button class="filter-btn" data-filter="flagged">Flagged</button>
+                </div>
             </div>
             <div id="questionReviewList">
                 <!-- Generated by JavaScript -->
@@ -490,8 +966,8 @@
             <a href="dashboard.html" class="btn-action btn-secondary-action">
                 <i class="fas fa-tachometer-alt me-2"></i>View Dashboard
             </a>
-            <a href="index.html" class="btn-action btn-secondary-action">
-                <i class="fas fa-home me-2"></i>Return Home
+            <a href="#" class="btn-action btn-secondary-action" id="nextTestBtn" style="display: none;">
+                <i class="fas fa-arrow-right me-2"></i>Take Test 2
             </a>
         </div>
     </div>
@@ -506,11 +982,11 @@
 
         document.addEventListener('DOMContentLoaded', function() {
             loadResults();
+            setupFilterButtons();
         });
 
         async function loadResults() {
             try {
-                // Get results from sessionStorage (set by practice test page)
                 const resultsData = sessionStorage.getItem('testResults');
                 
                 if (!resultsData) {
@@ -520,9 +996,7 @@
                 testResults = JSON.parse(resultsData);
                 console.log('Test results:', testResults);
                 
-                // Also fetch question details for explanations
                 await fetchQuestionDetails();
-                
                 displayResults();
                 
             } catch (error) {
@@ -540,7 +1014,6 @@
                 }
             } catch (error) {
                 console.error('Error fetching question details:', error);
-                // Continue without question details
             }
         }
 
@@ -548,66 +1021,214 @@
             document.getElementById('loadingScreen').style.display = 'none';
             document.getElementById('resultsContent').style.display = 'block';
             
-            // Calculate stats
-            const totalQuestions = testResults.total_questions || questions.length || 4;
+            // Update test mode badge
+            const isDemo = testResults.isGuestMode || testResults.testMode === 'guest';
+            const modeBadge = document.getElementById('testModeBadge');
+            modeBadge.textContent = isDemo ? 'Demo Mode' : 'Full Test';
+            modeBadge.className = `test-mode-badge ${isDemo ? 'mode-demo' : 'mode-full'}`;
+            
+            // Update test title
+            document.getElementById('testTitle').textContent = isDemo ? 
+                'LNAT Demo Test (4 Questions)' : 'LNAT Practice Test 1';
+            
+            // Calculate comprehensive stats
+            const totalQuestions = testResults.total_questions || questions.length || (isDemo ? 4 : 42);
             const correctCount = testResults.correct_answers || 0;
             const percentage = Math.round((correctCount / totalQuestions) * 100);
-            const timeSpent = formatTime(testResults.time_spent || 0);
+            const timeSpent = testResults.time_spent || 0;
             const flaggedCount = testResults.flagged_questions ? testResults.flagged_questions.length : 0;
             
-            // Update score display
-            document.getElementById('scorePercentage').textContent = percentage + '%';
-            document.getElementById('correctCount').textContent = correctCount;
-            document.getElementById('totalQuestions').textContent = totalQuestions;
-            document.getElementById('timeSpent').textContent = timeSpent;
-            document.getElementById('flaggedCount').textContent = flaggedCount;
+            // Calculate additional metrics
+            const answeredQuestions = testResults.user_answers ? Object.keys(testResults.user_answers).length : 0;
+            const accuracyRate = answeredQuestions > 0 ? Math.round((correctCount / answeredQuestions) * 100) : 0;
+            const avgTimePerQuestion = timeSpent > 0 ? Math.round(timeSpent / totalQuestions) : 0;
+            const percentileRank = calculatePercentile(percentage);
             
-            // Update score circle
-            const scoreCircle = document.getElementById('scoreCircle');
-            scoreCircle.style.setProperty('--score-percentage', percentage + '%');
-            
-            // Update grade badge
-            updateGradeBadge(percentage);
-            
-            // Display question review
+            // Update all display elements
+            updateScoreDisplay(percentage);
+            updateGradeDisplay(percentage);
+            updateStatsDisplay(correctCount, totalQuestions, timeSpent, flaggedCount, accuracyRate, avgTimePerQuestion);
+            updatePercentileDisplay(percentileRank);
+            generateInsights(percentage, timeSpent, flaggedCount, answeredQuestions, totalQuestions, isDemo);
             displayQuestionReview();
+            
+            // Show upgrade prompt for demo users
+            if (isDemo) {
+                document.getElementById('upgradePrompt').style.display = 'block';
+            }
         }
 
-        function updateGradeBadge(percentage) {
+        function updateScoreDisplay(percentage) {
+            document.getElementById('scorePercentage').textContent = percentage + '%';
+            const scoreCircle = document.getElementById('scoreCircle');
+            scoreCircle.style.setProperty('--score-percentage', percentage + '%');
+        }
+
+        function updateGradeDisplay(percentage) {
             const gradeBadge = document.getElementById('gradeBadge');
-            let grade, className;
+            const gradeTitle = document.getElementById('gradeTitle');
+            const gradeText = document.getElementById('gradeText');
+            
+            let grade, className, title, description;
             
             if (percentage >= 85) {
                 grade = 'A';
                 className = 'grade-a';
+                title = 'Excellent Performance';
+                description = 'Outstanding analytical and reasoning skills demonstrated.';
             } else if (percentage >= 70) {
                 grade = 'B';
                 className = 'grade-b';
+                title = 'Good Performance';
+                description = 'Solid understanding with room for targeted improvement.';
             } else if (percentage >= 55) {
                 grade = 'C';
                 className = 'grade-c';
+                title = 'Satisfactory Performance';
+                description = 'Basic competency shown, additional practice recommended.';
             } else {
                 grade = 'D';
                 className = 'grade-d';
+                title = 'Needs Improvement';
+                description = 'Focus on fundamental LNAT reasoning techniques.';
             }
             
             gradeBadge.textContent = grade;
             gradeBadge.className = 'grade-badge ' + className;
+            gradeTitle.textContent = title;
+            gradeText.textContent = description;
+        }
+
+        function updateStatsDisplay(correct, total, timeSpent, flagged, accuracy, avgTime) {
+            document.getElementById('correctCount').textContent = correct;
+            document.getElementById('totalQuestions').textContent = total;
+            document.getElementById('timeSpent').textContent = formatTime(timeSpent);
+            document.getElementById('flaggedCount').textContent = flagged;
+            document.getElementById('accuracyRate').textContent = accuracy + '%';
+            document.getElementById('avgTimePerQuestion').textContent = avgTime + 's';
+        }
+
+        function updatePercentileDisplay(percentile) {
+            document.getElementById('percentileRank').textContent = percentile + 'th percentile';
+        }
+
+        function calculatePercentile(percentage) {
+            // Simplified percentile calculation based on typical LNAT score distributions
+            if (percentage >= 90) return 95;
+            if (percentage >= 85) return 85;
+            if (percentage >= 80) return 75;
+            if (percentage >= 75) return 65;
+            if (percentage >= 70) return 55;
+            if (percentage >= 65) return 45;
+            if (percentage >= 60) return 35;
+            if (percentage >= 55) return 25;
+            if (percentage >= 50) return 15;
+            return 10;
+        }
+
+        function generateInsights(percentage, timeSpent, flaggedCount, answeredCount, totalQuestions, isDemo) {
+            const insights = [];
+            
+            // Performance insights
+            if (percentage >= 85) {
+                insights.push({
+                    type: 'positive',
+                    title: 'Exceptional Critical Reasoning',
+                    description: 'Your score demonstrates strong analytical skills. Continue practicing to maintain this high level of performance.'
+                });
+            } else if (percentage >= 70) {
+                insights.push({
+                    type: 'positive',
+                    title: 'Solid Foundation',
+                    description: 'Good grasp of LNAT concepts. Focus on consistency and tackling more challenging question types.'
+                });
+            } else {
+                insights.push({
+                    type: 'warning',
+                    title: 'Room for Improvement',
+                    description: 'Consider reviewing fundamental logical reasoning techniques and practicing with more questions.'
+                });
+            }
+
+            // Time management insights
+            const avgTimeExpected = isDemo ? 300 : 135; // 5 min per question for demo, 2.25 min for full test
+            const avgTimeActual = timeSpent / totalQuestions;
+            
+            if (avgTimeActual < avgTimeExpected * 0.7) {
+                insights.push({
+                    type: 'warning',
+                    title: 'Consider Slowing Down',
+                    description: 'You completed questions quickly. Take more time to carefully analyze each passage and question.'
+                });
+            } else if (avgTimeActual > avgTimeExpected * 1.3) {
+                insights.push({
+                    type: 'info',
+                    title: 'Time Management Focus',
+                    description: 'Practice improving your reading speed and question analysis efficiency.'
+                });
+            } else {
+                insights.push({
+                    type: 'positive',
+                    title: 'Good Time Management',
+                    description: 'Your pacing was appropriate for the LNAT format. Well done!'
+                });
+            }
+
+            // Completion insights
+            if (answeredCount < totalQuestions) {
+                insights.push({
+                    type: 'warning',
+                    title: 'Answer All Questions',
+                    description: `You left ${totalQuestions - answeredCount} question${totalQuestions - answeredCount > 1 ? 's' : ''} unanswered. Remember, there's no penalty for guessing in LNAT.`
+                });
+            }
+
+            // Flag usage insights
+            if (flaggedCount > 0) {
+                insights.push({
+                    type: 'info',
+                    title: 'Strategic Question Review',
+                    description: `You flagged ${flaggedCount} question${flaggedCount > 1 ? 's' : ''} for review. Good strategy for managing uncertainty.`
+                });
+            }
+
+            // Demo-specific insights
+            if (isDemo) {
+                insights.push({
+                    type: 'info',
+                    title: 'Ready for Full Practice',
+                    description: 'You\'ve completed the demo successfully. The full test with 42 questions will provide comprehensive LNAT preparation.'
+                });
+            }
+
+            // Render insights
+            const insightsContainer = document.getElementById('insightsContent');
+            insightsContainer.innerHTML = insights.map(insight => `
+                <div class="insight-item">
+                    <div class="insight-icon insight-${insight.type}">
+                        <i class="fas fa-${insight.type === 'positive' ? 'check' : insight.type === 'warning' ? 'exclamation' : 'info'}"></i>
+                    </div>
+                    <div class="insight-content">
+                        <div class="insight-title">${insight.title}</div>
+                        <div class="insight-description">${insight.description}</div>
+                    </div>
+                </div>
+            `).join('');
         }
 
         function displayQuestionReview() {
             const reviewList = document.getElementById('questionReviewList');
             let reviewHTML = '';
             
-            // Use either results data or questions array
             const questionsToReview = testResults.questions || questions || [];
             
             questionsToReview.forEach((question, index) => {
                 const questionId = question.id || (index + 1);
                 const userAnswer = testResults.user_answers ? testResults.user_answers[questionId] : null;
-                const correctAnswer = question.correct_answer || 'A'; // Default if not available
+                const correctAnswer = question.correct_answer || 'A';
                 const isCorrect = userAnswer === correctAnswer;
                 const wasAnswered = userAnswer !== null && userAnswer !== undefined;
+                const wasFlagged = testResults.flagged_questions && testResults.flagged_questions.includes(questionId);
                 
                 let statusClass, statusText;
                 if (!wasAnswered) {
@@ -621,10 +1242,18 @@
                     statusText = 'Incorrect';
                 }
                 
+                const filterClasses = [
+                    statusClass.replace('status-', ''),
+                    wasFlagged ? 'flagged' : ''
+                ].filter(Boolean).join(' ');
+                
                 reviewHTML += `
-                    <div class="question-item">
+                    <div class="question-item" data-filter="${filterClasses}">
                         <div class="question-header">
-                            <div class="question-number">Question ${index + 1}</div>
+                            <div class="question-number">
+                                Question ${index + 1}
+                                ${wasFlagged ? '<i class="fas fa-flag flag-indicator"></i>' : ''}
+                            </div>
                             <div class="answer-status ${statusClass}">${statusText}</div>
                         </div>
                         
@@ -647,7 +1276,7 @@
                         
                         ${question.explanation ? `
                             <div class="explanation">
-                                <h6><i class="fas fa-lightbulb me-2"></i>Explanation</h6>
+                                <h6><i class="fas fa-lightbulb"></i>Explanation</h6>
                                 <p>${question.explanation}</p>
                             </div>
                         ` : ''}
@@ -658,7 +1287,8 @@
             if (reviewHTML === '') {
                 reviewHTML = `
                     <div class="question-item">
-                        <div class="text-center text-muted">
+                        <div class="text-center text-muted py-5">
+                            <i class="fas fa-info-circle fa-2x mb-3"></i>
                             <p>Question details not available for review.</p>
                         </div>
                     </div>
@@ -666,6 +1296,32 @@
             }
             
             reviewList.innerHTML = reviewHTML;
+        }
+
+        function setupFilterButtons() {
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Update active button
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Filter questions
+                    const filter = this.getAttribute('data-filter');
+                    const questionItems = document.querySelectorAll('.question-item');
+                    
+                    questionItems.forEach(item => {
+                        const itemFilters = item.getAttribute('data-filter') || '';
+                        
+                        if (filter === 'all' || itemFilters.includes(filter)) {
+                            item.classList.remove('hidden');
+                        } else {
+                            item.classList.add('hidden');
+                        }
+                    });
+                });
+            });
         }
 
         function formatTime(seconds) {
@@ -684,12 +1340,6 @@
             document.getElementById('loadingScreen').style.display = 'none';
             document.getElementById('errorScreen').style.display = 'block';
         }
-
-        // Clear results when navigating away (optional)
-        window.addEventListener('beforeunload', function() {
-            // Optionally clear session storage
-            // sessionStorage.removeItem('testResults');
-        });
     </script>
 </body>
 </html>
