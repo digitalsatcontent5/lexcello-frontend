@@ -634,30 +634,10 @@
                     const data = await response.json();
                     console.log('Raw API response:', data);
                     
-                    // Handle different response formats from your API
-                    let tests = [];
-                    if (Array.isArray(data)) {
-                        tests = data;
-                    } else if (data.tests && Array.isArray(data.tests)) {
-                        tests = data.tests;
-                    } else if (data.message && data.message.includes('Available LNAT tests')) {
-                        // Handle the specific message format from your API
-                        console.log('API returned message format, creating test structure');
-                        tests = [
-                            {
-                                id: 1,
-                                title: 'LNAT Practice Test 1',
-                                description: 'Foundation level practice test covering core reasoning skills',
-                                difficulty: 'Beginner-Intermediate'
-                            }
-                        ];
-                    } else {
-                        console.log('Treating response as single test object');
-                        tests = [data];
-                    }
+                    // Now check each test for actual question content
+                    const testStatuses = await checkTestContent();
                     
-                    console.log('Successfully processed tests:', tests);
-                    renderTests(tests);
+                    renderTestsWithStatus(testStatuses);
                 } else {
                     throw new Error(`HTTP ${response.status}: ${response.statusText}`);
                 }
@@ -667,81 +647,154 @@
             }
         }
         
-        // Render tests with API data
-        function renderTests(tests) {
-            const container = document.getElementById('testsContainer');
+        // Check which tests actually have questions
+        async function checkTestContent() {
+            const testStatuses = {};
             
+            // Check tests 1-10 for content
+            for (let testId = 1; testId <= 10; testId++) {
+                try {
+                    console.log(`Checking content for test ${testId}...`);
+                    const response = await fetch(`${API_BASE_URL}/tests/${testId}/questions`);
+                    
+                    if (response.ok) {
+                        const questions = await response.json();
+                        const questionCount = Array.isArray(questions) ? questions.length : 0;
+                        
+                        testStatuses[testId] = {
+                            hasContent: questionCount > 0,
+                            questionCount: questionCount,
+                            status: questionCount > 0 ? 'available' : 'empty'
+                        };
+                        
+                        console.log(`Test ${testId}: ${questionCount} questions`);
+                    } else {
+                        testStatuses[testId] = {
+                            hasContent: false,
+                            questionCount: 0,
+                            status: 'empty'
+                        };
+                    }
+                } catch (error) {
+                    console.log(`Test ${testId} check failed:`, error.message);
+                    testStatuses[testId] = {
+                        hasContent: false,
+                        questionCount: 0,
+                        status: 'error'
+                    };
+                }
+            }
+            
+            return testStatuses;
+        }
+        
+        // Render tests with dynamic status checking
+        function renderTestsWithStatus(testStatuses) {
+            const container = document.getElementById('testsContainer');
             container.innerHTML = '<div class="tests-grid"></div>';
             const testsGrid = container.querySelector('.tests-grid');
             
-            // Always show Test 1 as available since you have content for it
-            testsGrid.innerHTML = `
-                <!-- Test 1 - Available -->
-                <div class="test-card available">
-                    <div class="test-header">
-                        <div class="test-number">1</div>
-                        <div class="test-info">
-                            <h4 class="test-title">LNAT Practice Test 1</h4>
-                            <span class="test-status status-available">Ready to Start</span>
-                        </div>
-                    </div>
-                    <div class="test-details">
-                        <div class="test-detail">
-                            <span class="detail-label">Questions:</span>
-                            <span class="detail-value">42</span>
-                        </div>
-                        <div class="test-detail">
-                            <span class="detail-label">Time Limit:</span>
-                            <span class="detail-value">95 minutes</span>
-                        </div>
-                        <div class="test-detail">
-                            <span class="detail-label">Difficulty:</span>
-                            <span class="detail-value">Standard LNAT</span>
-                        </div>
-                        <div class="test-detail">
-                            <span class="detail-label">Status:</span>
-                            <span class="detail-value text-success">Fully Loaded</span>
-                        </div>
-                    </div>
-                    <div class="test-actions">
-                        <button class="btn btn-test-action btn-start" onclick="startTest(1)">
-                            <i class="fas fa-play me-2"></i>Start Test 1
-                        </button>
-                    </div>
-                </div>
-                
-                <!-- Tests 2-10 - Coming Soon -->
-                <div class="test-card locked">
-                    <div class="test-header">
-                        <div class="test-number">2-10</div>
-                        <div class="test-info">
-                            <h4 class="test-title">Additional Tests</h4>
-                            <span class="test-status status-locked">Ready for Content</span>
-                        </div>
-                    </div>
-                    <div class="test-details">
-                        <div class="test-detail">
-                            <span class="detail-label">Infrastructure:</span>
-                            <span class="detail-value text-success">Complete</span>
-                        </div>
-                        <div class="test-detail">
-                            <span class="detail-label">Content Status:</span>
-                            <span class="detail-value text-warning">Awaiting Upload</span>
-                        </div>
-                        <div class="test-detail">
-                            <span class="detail-label">Admin Tool:</span>
-                            <span class="detail-value text-success">Excel Import Ready</span>
-                        </div>
-                    </div>
-                    <div class="test-actions">
-                        <button class="btn btn-test-action" style="background: var(--accent-gold); color: var(--primary-color);" onclick="window.open('admin.html', '_blank')">
-                            <i class="fas fa-upload me-2"></i>Add Content (Admin)
-                        </button>
-                    </div>
-                </div>
-            `;
+            let testsHTML = '';
             
-            console.log('Tests rendered successfully');
+            // Render each test based on its actual content status
+            for (let testId = 1; testId <= 10; testId++) {
+                const status = testStatuses[testId] || { hasContent: false, questionCount: 0, status: 'empty' };
+                
+                if (testId === 1 || status.hasContent) {
+                    // Render individual test cards for tests with content
+                    const cardClass = status.hasContent ? 'available' : 'locked';
+                    const statusText = status.hasContent ? 'Ready to Start' : 'No Content';
+                    const statusClass = status.hasContent ? 'status-available' : 'status-locked';
+                    const buttonText = status.hasContent ? 'Start Test' : 'Add Content';
+                    const buttonClass = status.hasContent ? 'btn-start' : 'btn-locked';
+                    const buttonAction = status.hasContent ? `startTest(${testId})` : `window.open('admin.html', '_blank')`;
+                    
+                    testsHTML += `
+                        <div class="test-card ${cardClass}">
+                            <div class="test-header">
+                                <div class="test-number">${testId}</div>
+                                <div class="test-info">
+                                    <h4 class="test-title">LNAT Practice Test ${testId}</h4>
+                                    <span class="test-status ${statusClass}">${statusText}</span>
+                                </div>
+                            </div>
+                            <div class="test-details">
+                                <div class="test-detail">
+                                    <span class="detail-label">Questions:</span>
+                                    <span class="detail-value">${status.questionCount}</span>
+                                </div>
+                                <div class="test-detail">
+                                    <span class="detail-label">Time Limit:</span>
+                                    <span class="detail-value">95 minutes</span>
+                                </div>
+                                <div class="test-detail">
+                                    <span class="detail-label">Status:</span>
+                                    <span class="detail-value ${status.hasContent ? 'text-success' : 'text-warning'}">
+                                        ${status.hasContent ? 'Content Loaded' : 'Needs Content'}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="test-actions">
+                                <button class="btn btn-test-action ${buttonClass}" 
+                                        onclick="${buttonAction}" 
+                                        ${!status.hasContent && testId !== 1 ? 'disabled' : ''}>
+                                    <i class="fas fa-${status.hasContent ? 'play' : 'upload'} me-2"></i>${buttonText} ${testId}
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }
+            }
+            
+            // Count tests with content
+            const testsWithContent = Object.values(testStatuses).filter(s => s.hasContent).length;
+            const testsWithoutContent = 10 - testsWithContent;
+            
+            // Add summary card for empty tests if there are any
+            if (testsWithoutContent > 0) {
+                const emptyTestNumbers = [];
+                for (let i = 1; i <= 10; i++) {
+                    if (!testStatuses[i] || !testStatuses[i].hasContent) {
+                        emptyTestNumbers.push(i);
+                    }
+                }
+                
+                testsHTML += `
+                    <div class="test-card locked">
+                        <div class="test-header">
+                            <div class="test-number">${emptyTestNumbers.length}</div>
+                            <div class="test-info">
+                                <h4 class="test-title">Tests Awaiting Content</h4>
+                                <span class="test-status status-locked">Ready for Upload</span>
+                            </div>
+                        </div>
+                        <div class="test-details">
+                            <div class="test-detail">
+                                <span class="detail-label">Empty Tests:</span>
+                                <span class="detail-value">${emptyTestNumbers.join(', ')}</span>
+                            </div>
+                            <div class="test-detail">
+                                <span class="detail-label">Infrastructure:</span>
+                                <span class="detail-value text-success">Complete</span>
+                            </div>
+                            <div class="test-detail">
+                                <span class="detail-label">Upload Tool:</span>
+                                <span class="detail-value text-success">Excel Import Ready</span>
+                            </div>
+                        </div>
+                        <div class="test-actions">
+                            <button class="btn btn-test-action" 
+                                    style="background: var(--accent-gold); color: var(--primary-color);" 
+                                    onclick="window.open('admin.html', '_blank')">
+                                <i class="fas fa-upload me-2"></i>Add Content (Admin)
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            testsGrid.innerHTML = testsHTML;
+            console.log(`Rendered ${testsWithContent} tests with content, ${testsWithoutContent} awaiting content`);
         }
         
         // Fallback rendering when API is not available
