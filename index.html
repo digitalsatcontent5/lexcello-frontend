@@ -796,6 +796,7 @@
         // Initialize the app
         document.addEventListener('DOMContentLoaded', function() {
             checkAuthStatus();
+            loadTestsStatus(); // Add dynamic test loading
             
             // Add click listener to close dropdown when clicking outside
             document.addEventListener('click', function(event) {
@@ -807,6 +808,169 @@
                 }
             });
         });
+        
+        // Load test status dynamically
+        async function loadTestsStatus() {
+            try {
+                const testStatuses = await checkTestContent();
+                updateTestsSection(testStatuses);
+                updateHeroStats(testStatuses);
+            } catch (error) {
+                console.error('Error loading test status:', error);
+                // Keep static content if API fails
+            }
+        }
+        
+        // Check which tests actually have questions
+        async function checkTestContent() {
+            const testStatuses = {};
+            
+            // Check tests 1-10 for content
+            for (let testId = 1; testId <= 10; testId++) {
+                try {
+                    const response = await fetch(`${API_BASE_URL}/tests/${testId}/questions`);
+                    
+                    if (response.ok) {
+                        const data = await response.json();
+                        let questionCount = 0;
+                        
+                        // Handle different response formats
+                        if (Array.isArray(data)) {
+                            questionCount = data.length;
+                        } else if (data.questions && Array.isArray(data.questions)) {
+                            questionCount = data.questions.length;
+                        } else if (data.message && data.message.includes('questions found')) {
+                            const match = data.message.match(/(\d+)\s+questions?\s+found/i);
+                            questionCount = match ? parseInt(match[1]) : 0;
+                        } else if (data.count !== undefined) {
+                            questionCount = data.count;
+                        }
+                        
+                        testStatuses[testId] = {
+                            hasContent: questionCount > 0,
+                            questionCount: questionCount,
+                            status: questionCount > 0 ? 'available' : 'empty'
+                        };
+                    } else {
+                        testStatuses[testId] = {
+                            hasContent: false,
+                            questionCount: 0,
+                            status: 'empty'
+                        };
+                    }
+                } catch (error) {
+                    testStatuses[testId] = {
+                        hasContent: false,
+                        questionCount: 0,
+                        status: 'error'
+                    };
+                }
+            }
+            
+            return testStatuses;
+        }
+        
+        // Update the tests section with dynamic data
+        function updateTestsSection(testStatuses) {
+            const testsWithContent = Object.values(testStatuses).filter(s => s.hasContent).length;
+            const testsWithoutContent = 10 - testsWithContent;
+            
+            // Update section description
+            const sectionDescription = document.querySelector('.tests-section .lead');
+            if (testsWithContent === 0) {
+                sectionDescription.textContent = 'Complete series of 10 practice tests - all coming soon';
+            } else if (testsWithContent === 1) {
+                sectionDescription.textContent = `Complete series of 10 practice tests - ${testsWithContent} available now, ${testsWithoutContent} more coming soon`;
+            } else {
+                sectionDescription.textContent = `Complete series of 10 practice tests - ${testsWithContent} available now, ${testsWithoutContent} more coming soon`;
+            }
+            
+            // Update individual test cards
+            for (let testId = 1; testId <= 4; testId++) {
+                const status = testStatuses[testId];
+                if (status) {
+                    updateTestCard(testId, status);
+                }
+            }
+            
+            // Update bottom notification
+            const bottomAlert = document.querySelector('.tests-section .alert');
+            if (testsWithoutContent > 0) {
+                bottomAlert.innerHTML = `
+                    <i class="fas fa-info-circle me-2"></i>
+                    <strong>${testsWithoutContent} additional practice tests coming soon!</strong> Sign up to be notified when they're released.
+                `;
+            } else {
+                bottomAlert.innerHTML = `
+                    <i class="fas fa-check-circle me-2"></i>
+                    <strong>All 10 practice tests are now available!</strong> Start your comprehensive LNAT preparation.
+                `;
+                bottomAlert.className = 'alert alert-success d-inline-block';
+            }
+        }
+        
+        // Update individual test card
+        function updateTestCard(testId, status) {
+            const testCards = document.querySelectorAll('.test-card');
+            if (testCards[testId - 1]) {
+                const card = testCards[testId - 1];
+                const statusBadge = card.querySelector('.test-status');
+                const questionCount = card.querySelector('.detail-value');
+                const button = card.querySelector('.test-action');
+                
+                if (status.hasContent) {
+                    // Test has content - make it available
+                    statusBadge.textContent = 'Available';
+                    statusBadge.className = 'test-status status-available';
+                    
+                    if (questionCount) {
+                        questionCount.textContent = `${status.questionCount} Multiple Choice`;
+                    }
+                    
+                    button.textContent = 'Start Practice Test';
+                    button.className = 'test-action btn-available';
+                    button.disabled = false;
+                    button.onclick = () => startTestFromHomepage(testId);
+                } else {
+                    // Test has no content - keep as coming soon
+                    statusBadge.textContent = 'Coming Soon';
+                    statusBadge.className = 'test-status status-coming-soon';
+                    
+                    button.textContent = 'Coming Soon';
+                    button.className = 'test-action btn-disabled';
+                    button.disabled = true;
+                }
+            }
+        }
+        
+        // Update hero section stats
+        function updateHeroStats(testStatuses) {
+            const testsWithContent = Object.values(testStatuses).filter(s => s.hasContent).length;
+            const totalQuestions = Object.values(testStatuses).reduce((sum, test) => sum + test.questionCount, 0);
+            
+            // Update stats in hero section
+            const statNumbers = document.querySelectorAll('.stat-number');
+            if (statNumbers[0]) statNumbers[0].textContent = testsWithContent || '10';
+            if (statNumbers[1]) statNumbers[1].textContent = totalQuestions > 0 ? `${totalQuestions}+` : '400+';
+            
+            // Update labels if needed
+            const statLabels = document.querySelectorAll('.stat-label');
+            if (statLabels[0] && testsWithContent === 1) {
+                statLabels[0].textContent = 'Practice Test';
+            } else if (statLabels[0]) {
+                statLabels[0].textContent = 'Practice Tests';
+            }
+        }
+        
+        // Start test from homepage
+        function startTestFromHomepage(testNumber) {
+            if (currentUser) {
+                window.location.href = `practice-test-1.html${testNumber > 1 ? '?test=' + testNumber : ''}`;
+            } else {
+                showNotification('Please sign in to access practice tests', 'info');
+                window.location.href = 'login.html';
+            }
+        }
         
         // Authentication functions
         async function checkAuthStatus() {
@@ -925,16 +1089,12 @@
         }
         
         function viewTestDetails(testNumber) {
-            if (testNumber === 1) {
-                // Check authentication for premium content
-                if (currentUser) {
-                    window.location.href = 'test-1-details.html';
-                } else {
-                    showNotification('Please sign in to access test details', 'info');
-                    window.location.href = 'login.html';
-                }
+            // For any test that has content, redirect to the test
+            if (currentUser) {
+                window.location.href = `practice-test-1.html${testNumber > 1 ? '?test=' + testNumber : ''}`;
             } else {
-                showNotification(`Test ${testNumber} coming soon!`, 'info');
+                showNotification('Please sign in to access practice tests', 'info');
+                window.location.href = 'login.html';
             }
         }
         
@@ -975,4 +1135,3 @@
     </script>
 </body>
 </html>
-
