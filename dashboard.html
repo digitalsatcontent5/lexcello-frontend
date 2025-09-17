@@ -658,22 +658,45 @@
                     const response = await fetch(`${API_BASE_URL}/tests/${testId}/questions`);
                     
                     if (response.ok) {
-                        const questions = await response.json();
-                        const questionCount = Array.isArray(questions) ? questions.length : 0;
+                        const data = await response.json();
+                        console.log(`Test ${testId} raw response:`, data);
+                        
+                        let questionCount = 0;
+                        
+                        // Handle different response formats
+                        if (Array.isArray(data)) {
+                            questionCount = data.length;
+                        } else if (data.questions && Array.isArray(data.questions)) {
+                            questionCount = data.questions.length;
+                        } else if (data.message && data.message.includes('questions found')) {
+                            // Extract count from message like "X questions found for test Y"
+                            const match = data.message.match(/(\d+)\s+questions?\s+found/i);
+                            questionCount = match ? parseInt(match[1]) : 0;
+                        } else if (data.count !== undefined) {
+                            questionCount = data.count;
+                        } else if (typeof data === 'object' && data.id) {
+                            // Single question object
+                            questionCount = 1;
+                        }
                         
                         testStatuses[testId] = {
                             hasContent: questionCount > 0,
                             questionCount: questionCount,
-                            status: questionCount > 0 ? 'available' : 'empty'
+                            status: questionCount > 0 ? 'available' : 'empty',
+                            responseFormat: Array.isArray(data) ? 'array' : 'object'
                         };
                         
-                        console.log(`Test ${testId}: ${questionCount} questions`);
-                    } else {
+                        console.log(`Test ${testId}: ${questionCount} questions (${testStatuses[testId].responseFormat} format)`);
+                    } else if (response.status === 404) {
+                        // 404 typically means no questions for this test
                         testStatuses[testId] = {
                             hasContent: false,
                             questionCount: 0,
                             status: 'empty'
                         };
+                        console.log(`Test ${testId}: No questions (404)`);
+                    } else {
+                        throw new Error(`HTTP ${response.status}`);
                     }
                 } catch (error) {
                     console.log(`Test ${testId} check failed:`, error.message);
