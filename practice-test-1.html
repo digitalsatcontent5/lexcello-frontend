@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Practice Test 1 - LNAT Test Interface | Lexcello</title>
+    <title>LNAT Practice Test - Lexcello</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     
@@ -591,7 +591,7 @@
                 <div class="d-flex align-items-center gap-3">
                     <div class="test-title-small">
                         <i class="fas fa-clipboard-list me-2"></i>
-                        <span id="testTitle">LNAT Practice Test 1</span>
+                        <span id="testTitle">LNAT Practice Test</span>
                     </div>
                     <div class="user-test-info" id="userInfo" style="display: none;">
                         <div class="user-avatar-small" id="userAvatarSmall">U</div>
@@ -702,7 +702,8 @@
     <script>
         // Configuration
         const API_BASE_URL = 'https://lexcello-backend.onrender.com';
-        const TEST_ID = 1;
+        const urlParams = new URLSearchParams(window.location.search);
+        const TEST_ID = parseInt(urlParams.get('test')) || 1;
         
         // Test state variables
         let questions = [];
@@ -828,7 +829,7 @@
                     timeLeft = 20 * 60; // 20 minutes for demo
                     
                     // Update UI for demo mode
-                    document.getElementById('testTitle').textContent = 'LNAT Demo (4 Questions)';
+                    document.getElementById('testTitle').textContent = `LNAT Test ${TEST_ID} Demo (4 Questions)`;
                 }
                 
                 // Transform API data to frontend format - with better error handling
@@ -1240,3 +1241,4 @@
     </script>
 </body>
 </html>
+
