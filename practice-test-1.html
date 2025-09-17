@@ -114,21 +114,24 @@
             margin-top: 80px;
             padding: 20px 0;
             display: none;
+            height: calc(100vh - 80px);
         }
         
         .test-container {
-            max-width: 1000px;
-            margin: 0 auto;
+            height: 100%;
             background: white;
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
         }
         
         /* Question Navigation */
         .question-nav {
             background: var(--bg-light);
-            padding: 20px;
+            padding: 15px 20px;
             border-bottom: 1px solid #e2e8f0;
+            flex-shrink: 0;
         }
         
         .question-grid {
@@ -175,33 +178,62 @@
             border-color: var(--warning-color);
         }
         
-        /* Question Content */
+        /* Split Layout for Question Content */
         .question-content {
-            padding: 40px;
+            flex: 1;
+            display: flex;
+            height: calc(100% - 80px); /* Subtract navigation height */
+            overflow: hidden;
+        }
+        
+        .passage-panel {
+            width: 50%;
+            background: #f8f9fa;
+            border-right: 2px solid #e2e8f0;
+            padding: 30px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .question-panel {
+            width: 50%;
+            padding: 30px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
         }
         
         .passage {
-            background: #f8f9fa;
-            padding: 30px;
+            background: white;
+            padding: 25px;
             border-radius: 8px;
-            margin-bottom: 30px;
             border-left: 4px solid var(--secondary-color);
+            height: 100%;
+            overflow-y: auto;
         }
         
         .passage h4 {
             color: var(--primary-color);
             margin-bottom: 20px;
             font-size: 1.2rem;
+            position: sticky;
+            top: 0;
+            background: white;
+            padding: 10px 0;
+            border-bottom: 1px solid #e2e8f0;
         }
         
         .passage-text {
-            font-size: 1.1rem;
-            line-height: 1.8;
+            font-size: 1.05rem;
+            line-height: 1.7;
             text-align: justify;
         }
         
         .question-section {
-            margin: 30px 0;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
         }
         
         .question-text {
@@ -210,11 +242,17 @@
             color: var(--primary-color);
             margin-bottom: 25px;
             line-height: 1.5;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e2e8f0;
         }
         
         .options {
             list-style: none;
             padding: 0;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
         }
         
         .option {
@@ -222,7 +260,6 @@
             border: 2px solid #e2e8f0;
             border-radius: 8px;
             padding: 15px 20px;
-            margin: 12px 0;
             cursor: pointer;
             transition: all 0.3s ease;
             display: flex;
@@ -254,11 +291,12 @@
         /* Control Buttons */
         .test-controls {
             background: var(--bg-light);
-            padding: 25px 40px;
+            padding: 20px 30px;
             border-top: 1px solid #e2e8f0;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-shrink: 0;
         }
         
         .btn-control {
@@ -419,6 +457,25 @@
         }
         
         /* Responsive */
+        @media (max-width: 1024px) {
+            .passage-panel, .question-panel {
+                width: 50%;
+                padding: 20px;
+            }
+            
+            .passage {
+                padding: 20px;
+            }
+            
+            .question-text {
+                font-size: 1.1rem;
+            }
+            
+            .passage-text {
+                font-size: 1rem;
+            }
+        }
+        
         @media (max-width: 768px) {
             .test-info {
                 flex-direction: column;
@@ -431,7 +488,19 @@
             }
             
             .question-content {
+                flex-direction: column;
+                height: auto;
+            }
+            
+            .passage-panel, .question-panel {
+                width: 100%;
                 padding: 20px;
+            }
+            
+            .passage-panel {
+                border-right: none;
+                border-bottom: 2px solid #e2e8f0;
+                max-height: 300px;
             }
             
             .test-controls {
@@ -627,10 +696,29 @@
                     </div>
                 </div>
 
-                <!-- Question Content -->
+                <!-- Split Layout: Passage + Question -->
                 <div class="question-content">
-                    <div id="questionContainer">
-                        <!-- Question content loaded by JavaScript -->
+                    <!-- Left Panel: Passage -->
+                    <div class="passage-panel">
+                        <div class="passage">
+                            <h4 id="passageTitle">Reading Passage</h4>
+                            <div class="passage-text" id="passageText">
+                                <!-- Passage content loaded by JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Panel: Question and Options -->
+                    <div class="question-panel">
+                        <div class="question-section">
+                            <div class="question-text" id="questionText">
+                                <!-- Question loaded by JavaScript -->
+                            </div>
+                            
+                            <div class="options" id="optionsContainer">
+                                <!-- Options loaded by JavaScript -->
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -976,34 +1064,29 @@
             
             document.getElementById('currentQuestion').textContent = index + 1;
             
-            const container = document.getElementById('questionContainer');
-            container.innerHTML = `
-                <div class="passage">
-                    <h4>${question.passage.title}</h4>
-                    <div class="passage-text">${question.passage.text}</div>
+            // Update passage panel
+            document.getElementById('passageTitle').textContent = question.passage.title;
+            document.getElementById('passageText').innerHTML = question.passage.text;
+            
+            // Update question panel
+            document.getElementById('questionText').textContent = question.question;
+            
+            const optionsContainer = document.getElementById('optionsContainer');
+            optionsContainer.innerHTML = question.options.map(option => `
+                <div class="option ${userAnswers[question.id] === option.label ? 'selected' : ''}" 
+                     onclick="selectAnswer('${option.label}')">
+                    <div class="option-label">${option.label}</div>
+                    <div class="option-text">${option.text}</div>
                 </div>
-                
-                <div class="question-section">
-                    <div class="question-text">${question.question}</div>
-                    
-                    <div class="options">
-                        ${question.options.map(option => `
-                            <div class="option ${userAnswers[question.id] === option.label ? 'selected' : ''}" 
-                                 onclick="selectAnswer('${option.label}')">
-                                <div class="option-label">${option.label}</div>
-                                <div class="option-text">${option.text}</div>
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>
-            `;
+            `).join('');
             
             updateQuestionNavigation();
             updateNavigationButtons();
             updateFlagButton();
             
-            // Scroll to top
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            // Scroll panels to top
+            document.querySelector('.passage-panel').scrollTop = 0;
+            document.querySelector('.question-panel').scrollTop = 0;
         }
 
         function selectAnswer(answer) {
@@ -1243,5 +1326,3 @@
     </script>
 </body>
 </html>
-
-
