@@ -360,7 +360,7 @@
     <div class="container">
         <div class="header">
             <h1>LNAT Admin Panel</h1>
-            <p>Question Management System</p>
+            <p>Question Management System - All 10 Practice Tests</p>
         </div>
         
         <div class="admin-panel">
@@ -380,9 +380,7 @@
                     <div class="form-group">
                         <label for="test-select">Test:</label>
                         <select id="test-select" required>
-                            <option value="1">LNAT Practice Test 1</option>
-                            <option value="2">LNAT Practice Test 2</option>
-                            <option value="3">LNAT Practice Test 3</option>
+                            <option value="">Loading tests...</option>
                         </select>
                     </div>
                     
@@ -450,10 +448,7 @@
                 <div class="form-group">
                     <label for="test-filter">Filter by Test:</label>
                     <select id="test-filter" onchange="loadQuestions()">
-                        <option value="">All Tests</option>
-                        <option value="1">LNAT Practice Test 1</option>
-                        <option value="2">LNAT Practice Test 2</option>
-                        <option value="3">LNAT Practice Test 3</option>
+                        <option value="">Loading tests...</option>
                     </select>
                 </div>
                 
@@ -481,7 +476,9 @@
                     <ul>
                         <li>Row 1 must contain the exact column headers above</li>
                         <li>correct_answer should be 1-5 (1=A, 2=B, 3=C, 4=D, 5=E)</li>
-                        <li>test_id should be 1, 2, or 3 depending on which test</li>
+                        <li>test_id should be 1-10 depending on which test</li>
+                        <li>Each test typically contains 40-42 questions</li>
+                        <li>Make sure all tests (1-10) exist in database before importing</li>
                     </ul>
                 </div>
                 
@@ -504,34 +501,86 @@
             
             <!-- Dashboard Tab -->
             <div id="dashboard" class="tab-content">
-                <h2>Dashboard</h2>
+                <h2>Dashboard - All 10 LNAT Practice Tests</h2>
                 <div class="stats-grid">
                     <div class="stat-card">
                         <div class="stat-number" id="total-questions">-</div>
                         <div class="stat-label">Total Questions</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-number" id="total-tests">3</div>
-                        <div class="stat-label">Active Tests</div>
+                        <div class="stat-number" id="total-tests">10</div>
+                        <div class="stat-label">Available Tests</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-number" id="test1-questions">-</div>
-                        <div class="stat-label">Test 1 Questions</div>
+                        <div class="stat-number" id="populated-tests">-</div>
+                        <div class="stat-label">Tests with Content</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-number" id="avg-difficulty">-</div>
-                        <div class="stat-label">Avg. Difficulty</div>
+                        <div class="stat-number" id="avg-questions">-</div>
+                        <div class="stat-label">Avg Questions/Test</div>
                     </div>
                 </div>
                 
-                <button class="btn btn-primary" onclick="loadDashboard()">Refresh Stats</button>
-                <button class="btn btn-warning" onclick="exportQuestions()">Export All Questions</button>
+                <div style="margin-top: 20px;">
+                    <h3>Test Status Overview</h3>
+                    <div id="test-status-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 15px;">
+                        <!-- Will be populated by loadDashboard() -->
+                    </div>
+                </div>
+                
+                <div style="margin-top: 30px;">
+                    <button class="btn btn-primary" onclick="loadDashboard()">Refresh Stats</button>
+                    <button class="btn btn-warning" onclick="exportQuestions()">Export All Questions</button>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
         const API_BASE = 'https://lexcello-backend.onrender.com';
+        
+        // Load Tests Dynamically
+        async function loadTests() {
+            try {
+                const response = await fetch(`${API_BASE}/api/tests`);
+                const data = await response.json();
+                
+                if (data.tests && data.tests.length > 0) {
+                    // Update Add Question dropdown
+                    const testSelect = document.getElementById('test-select');
+                    testSelect.innerHTML = data.tests.map(test => 
+                        `<option value="${test.id}">${test.title}</option>`
+                    ).join('');
+                    
+                    // Update Manage Questions filter dropdown
+                    const testFilter = document.getElementById('test-filter');
+                    testFilter.innerHTML = '<option value="">All Tests</option>' + 
+                        data.tests.map(test => 
+                            `<option value="${test.id}">${test.title}</option>`
+                        ).join('');
+                        
+                    // Update dashboard total tests count
+                    document.getElementById('total-tests').textContent = data.tests.length;
+                } else {
+                    console.error('No tests found in API response');
+                }
+            } catch (error) {
+                console.error('Error loading tests:', error);
+                showMessage('Error loading tests: ' + error.message, 'error');
+                
+                // Fallback to hardcoded values if API fails
+                const testSelect = document.getElementById('test-select');
+                testSelect.innerHTML = Array.from({length: 10}, (_, i) => 
+                    `<option value="${i+1}">LNAT Practice Test ${i+1}</option>`
+                ).join('');
+                
+                const testFilter = document.getElementById('test-filter');
+                testFilter.innerHTML = '<option value="">All Tests</option>' + 
+                    Array.from({length: 10}, (_, i) => 
+                        `<option value="${i+1}">LNAT Practice Test ${i+1}</option>`
+                    ).join('');
+            }
+        }
         
         // Tab Management
         function showTab(tabName) {
@@ -604,7 +653,7 @@
             }
         });
         
-        // Load Questions - ENHANCED VERSION
+        // Load Questions
         async function loadQuestions() {
             const testFilter = document.getElementById('test-filter').value;
             const questionsList = document.getElementById('questions-list');
@@ -664,7 +713,7 @@
                 
                 if (response.ok) {
                     showMessage('Question deleted successfully!', 'success');
-                    loadQuestions(); // Reload the list
+                    loadQuestions();
                 } else {
                     showMessage(`Error: ${result.error}`, 'error');
                 }
@@ -695,7 +744,7 @@
                 
                 if (response.ok) {
                     showMessage(result.message, 'success');
-                    loadQuestions(); // Reload the list
+                    loadQuestions();
                 } else {
                     showMessage(`Error: ${result.error}`, 'error');
                 }
@@ -746,7 +795,6 @@
             
             showMessage('Reading Excel file...', 'success');
             
-            // Reset any previous import preview
             document.getElementById('import-preview').style.display = 'none';
             importData = null;
             
@@ -755,7 +803,6 @@
                 const data = await file.arrayBuffer();
                 console.log('File read successfully, size:', data.byteLength);
                 
-                // Import SheetJS dynamically
                 if (!window.XLSX) {
                     console.log('Loading SheetJS library...');
                     showMessage('Loading Excel processing library...', 'success');
@@ -784,10 +831,8 @@
                 const worksheet = workbook.Sheets[firstSheetName];
                 console.log('Reading sheet:', firstSheetName);
                 
-                // Convert to JSON
                 const jsonData = window.XLSX.utils.sheet_to_json(worksheet, { header: 1 });
                 console.log('Converted to JSON, rows:', jsonData.length);
-                console.log('First few rows:', jsonData.slice(0, 3));
                 
                 if (jsonData.length < 2) {
                     showMessage('Excel file appears to be empty or has no data rows', 'error');
@@ -801,7 +846,6 @@
                 console.error('Error reading Excel file:', error);
                 showMessage('Error reading Excel file: ' + error.message, 'error');
                 
-                // Show more detailed error info
                 const importDataDiv = document.getElementById('import-data');
                 importDataDiv.innerHTML = `
                     <div style="background: #ffebee; padding: 15px; border-radius: 8px; margin: 15px 0;">
@@ -824,20 +868,17 @@
             console.log('Headers found:', headers);
             console.log('Data rows:', dataRows.length);
             
-            // Expected column order
             const expectedHeaders = [
                 'test_id', 'passage_title', 'passage_text', 'question_text',
                 'option_1', 'option_2', 'option_3', 'option_4', 'option_5',
                 'correct_answer', 'explanation'
             ];
             
-            // Validate headers
             const headerValidation = validateHeaders(headers, expectedHeaders);
             if (!headerValidation.valid) {
                 console.error('Header validation failed:', headerValidation.error);
                 showMessage('Invalid Excel format: ' + headerValidation.error, 'error');
                 
-                // Show format help
                 const importDataDiv = document.getElementById('import-data');
                 importDataDiv.innerHTML = `
                     <div style="background: #ffebee; padding: 15px; border-radius: 8px; margin: 15px 0;">
@@ -855,15 +896,14 @@
             console.log('Headers validated successfully');
             showMessage('Processing question data...', 'success');
             
-            // Parse and validate data
             const parsedQuestions = [];
             const errors = [];
             
             dataRows.forEach((row, index) => {
-                const rowNumber = index + 2; // +2 because index starts at 0 and row 1 is headers
+                const rowNumber = index + 2;
                 
                 if (row.length === 0 || row.every(cell => !cell && cell !== 0)) {
-                    return; // Skip empty rows
+                    return;
                 }
                 
                 const question = {
@@ -882,7 +922,6 @@
                     explanation: row[10]?.toString().trim() || ''
                 };
                 
-                // Validate question data
                 const validation = validateQuestion(question, rowNumber);
                 if (validation.valid) {
                     parsedQuestions.push(question);
@@ -911,10 +950,10 @@
             return { valid: true };
         }
         
-        // Validate Individual Question
+        // Validate Individual Question - UPDATED FOR ALL 10 TESTS
         function validateQuestion(question, rowNumber) {
-            if (!question.testId || ![1, 2, 3].includes(question.testId)) {
-                return { valid: false, error: `Invalid test_id (must be 1, 2, or 3)` };
+            if (!question.testId || ![1, 2, 3, 4, 5, 6, 7, 8, 9, 10].includes(question.testId)) {
+                return { valid: false, error: `Invalid test_id (must be 1-10)` };
             }
             
             if (!question.passageTitle) {
@@ -968,7 +1007,6 @@
                 errorHtml += '</ul></div>';
                 importDataDiv.innerHTML = errorHtml;
                 
-                // Disable import button if there are errors
                 const importButton = document.querySelector('button[onclick="processImport()"]');
                 if (importButton) {
                     importButton.disabled = true;
@@ -978,13 +1016,12 @@
                 return;
             }
             
-            // Show preview table
             let tableHtml = '<div class="preview-table"><table>';
             tableHtml += '<tr><th>Test</th><th>Passage Title</th><th>Question (Preview)</th><th>Options</th><th>Correct</th></tr>';
             
-            questions.slice(0, 10).forEach((q, index) => { // Show first 10 questions
+            questions.slice(0, 10).forEach((q, index) => {
                 tableHtml += `<tr>
-                    <td>${q.testId}</td>
+                    <td>Test ${q.testId}</td>
                     <td>${q.passageTitle}</td>
                     <td>${q.questionText.substring(0, 100)}...</td>
                     <td>A) ${q.options[0].substring(0, 30)}...<br>B) ${q.options[1].substring(0, 30)}...</td>
@@ -999,7 +1036,6 @@
             tableHtml += '</table></div>';
             importDataDiv.innerHTML = tableHtml;
             
-            // Enable import button
             const importButton = document.querySelector('button[onclick="processImport()"]');
             if (importButton) {
                 importButton.disabled = false;
@@ -1017,7 +1053,6 @@
             
             showMessage(`Importing ${importData.length} questions...`, 'success');
             
-            // Group questions by test ID
             const questionsByTest = {};
             importData.forEach(question => {
                 if (!questionsByTest[question.testId]) {
@@ -1076,6 +1111,77 @@
             importData = null;
         }
         
+        // Enhanced Dashboard Loading
+        async function loadDashboard() {
+            try {
+                showMessage('Loading dashboard statistics...', 'success');
+                
+                // Load test statistics
+                const testResponse = await fetch(`${API_BASE}/api/tests`);
+                const testData = await testResponse.json();
+                
+                if (testData.tests) {
+                    const totalTests = testData.tests.length;
+                    document.getElementById('total-tests').textContent = totalTests;
+                    
+                    let totalQuestions = 0;
+                    let populatedTests = 0;
+                    const testStatusGrid = document.getElementById('test-status-grid');
+                    let statusHtml = '';
+                    
+                    // Load questions for each test to get detailed stats
+                    for (const test of testData.tests) {
+                        try {
+                            const questionsResponse = await fetch(`${API_BASE}/api/tests/${test.id}/questions`);
+                            const questionsData = await questionsResponse.json();
+                            
+                            const questionCount = questionsData.questions ? questionsData.questions.length : 0;
+                            totalQuestions += questionCount;
+                            
+                            if (questionCount > 0) {
+                                populatedTests++;
+                            }
+                            
+                            const statusColor = questionCount > 0 ? '#27ae60' : '#e74c3c';
+                            const statusText = questionCount > 0 ? 'Ready' : 'Empty';
+                            
+                            statusHtml += `
+                                <div style="background: ${statusColor}; color: white; padding: 15px; border-radius: 8px; text-align: center;">
+                                    <div style="font-weight: bold; margin-bottom: 5px;">Test ${test.id}</div>
+                                    <div style="font-size: 1.2em; margin: 5px 0;">${questionCount}</div>
+                                    <div style="font-size: 0.9em; opacity: 0.9;">${statusText}</div>
+                                </div>
+                            `;
+                            
+                        } catch (error) {
+                            console.error(`Error loading questions for test ${test.id}:`, error);
+                            statusHtml += `
+                                <div style="background: #e74c3c; color: white; padding: 15px; border-radius: 8px; text-align: center;">
+                                    <div style="font-weight: bold; margin-bottom: 5px;">Test ${test.id}</div>
+                                    <div style="font-size: 1.2em; margin: 5px 0;">Error</div>
+                                    <div style="font-size: 0.9em; opacity: 0.9;">Failed</div>
+                                </div>
+                            `;
+                        }
+                    }
+                    
+                    testStatusGrid.innerHTML = statusHtml;
+                    
+                    // Update dashboard stats
+                    document.getElementById('total-questions').textContent = totalQuestions;
+                    document.getElementById('populated-tests').textContent = populatedTests;
+                    document.getElementById('avg-questions').textContent = populatedTests > 0 ? 
+                        Math.round(totalQuestions / populatedTests) : 0;
+                }
+                
+                showMessage('Dashboard updated successfully!', 'success');
+                
+            } catch (error) {
+                console.error('Error loading dashboard:', error);
+                showMessage('Error loading dashboard: ' + error.message, 'error');
+            }
+        }
+        
         // Utility Functions
         function clearForm() {
             document.getElementById('question-form').reset();
@@ -1085,20 +1191,15 @@
             showMessage('Preview functionality coming soon!', 'warning');
         }
         
-        function loadDashboard() {
-            // Load dashboard statistics
-            showMessage('Dashboard stats loading...', 'success');
-        }
-        
         function exportQuestions() {
             showMessage('Export functionality coming soon!', 'warning');
         }
         
-        // Initialize
+        // Initialize - LOAD TESTS ON PAGE LOAD
         document.addEventListener('DOMContentLoaded', () => {
+            loadTests();
             loadDashboard();
         });
     </script>
 </body>
 </html>
-
