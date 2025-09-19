@@ -114,89 +114,22 @@
             margin-top: 80px;
             padding: 20px 0;
             display: none;
-            height: calc(100vh - 80px);
         }
         
         .test-container {
-            height: 100%;
             background: white;
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             display: flex;
             flex-direction: column;
-        }
-        
-        /* Question Navigation */
-        .question-nav {
-            background: var(--bg-light);
-            padding: 15px 20px;
-            border-bottom: 1px solid #e2e8f0;
-            flex-shrink: 0;
-        }
-        
-        .nav-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-        
-        .nav-legend {
-            display: flex;
-            gap: 15px;
-        }
-        
-        .question-grid {
-            display: grid;
-            grid-template-columns: repeat(21, 1fr);
-            gap: 8px;
-            max-width: 100%;
-            width: 100%;
-        }
-        
-        .question-btn {
-            width: 40px;
-            height: 40px;
-            border: 2px solid #e2e8f0;
-            background: white;
-            border-radius: 6px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.9rem;
-        }
-        
-        .question-btn:hover {
-            border-color: var(--secondary-color);
-        }
-        
-        .question-btn.current {
-            background: var(--secondary-color);
-            color: white;
-            border-color: var(--secondary-color);
-        }
-        
-        .question-btn.answered {
-            background: var(--success-color);
-            color: white;
-            border-color: var(--success-color);
-        }
-        
-        .question-btn.flagged {
-            background: var(--warning-color);
-            color: white;
-            border-color: var(--warning-color);
+            min-height: calc(100vh - 120px);
         }
         
         /* Split Layout for Question Content */
         .question-content {
             flex: 1;
             display: flex;
-            height: calc(100% - 80px);
-            overflow: hidden;
+            min-height: 600px;
         }
         
         .passage-panel {
@@ -204,7 +137,6 @@
             background: #f8f9fa;
             border-right: 2px solid #e2e8f0;
             padding: 30px;
-            overflow: hidden;
             display: flex;
             flex-direction: column;
         }
@@ -212,7 +144,6 @@
         .question-panel {
             width: 50%;
             padding: 30px;
-            overflow-y: auto;
             display: flex;
             flex-direction: column;
         }
@@ -222,7 +153,7 @@
             padding: 25px;
             border-radius: 8px;
             border-left: 4px solid var(--secondary-color);
-            height: 500px;
+            height: 100%;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
@@ -307,9 +238,80 @@
             line-height: 1.5;
         }
         
+        /* Question Navigation - Moved Below */
+        .question-nav {
+            background: var(--bg-light);
+            padding: 20px;
+            border-top: 2px solid #e2e8f0;
+            margin-top: auto;
+        }
+        
+        .nav-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .nav-legend {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .nav-legend .badge {
+            padding: 6px 12px;
+        }
+        
+        .question-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(45px, 1fr));
+            gap: 8px;
+            max-width: 100%;
+        }
+        
+        .question-btn {
+            width: 45px;
+            height: 45px;
+            border: 2px solid #e2e8f0;
+            background: white;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+        }
+        
+        .question-btn:hover {
+            border-color: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .question-btn.current {
+            background: var(--secondary-color);
+            color: white;
+            border-color: var(--secondary-color);
+        }
+        
+        .question-btn.answered {
+            background: var(--success-color);
+            color: white;
+            border-color: var(--success-color);
+        }
+        
+        .question-btn.flagged {
+            background: var(--warning-color);
+            color: white;
+            border-color: var(--warning-color);
+        }
+        
         /* Control Buttons */
         .test-controls {
-            background: var(--bg-light);
+            background: white;
             padding: 20px 30px;
             border-top: 1px solid #e2e8f0;
             display: flex;
@@ -476,6 +478,17 @@
         }
         
         /* Responsive */
+        @media (max-width: 1200px) {
+            .question-grid {
+                grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+            }
+            
+            .question-btn {
+                width: 40px;
+                height: 40px;
+            }
+        }
+        
         @media (max-width: 1024px) {
             .passage-panel, .question-panel {
                 width: 50%;
@@ -518,7 +531,7 @@
             
             .question-content {
                 flex-direction: column;
-                height: auto;
+                min-height: auto;
             }
             
             .passage-panel, .question-panel {
@@ -532,7 +545,7 @@
             }
             
             .passage {
-                height: 250px;
+                height: 300px;
             }
             
             .test-controls {
@@ -543,6 +556,12 @@
             
             .question-grid {
                 grid-template-columns: repeat(auto-fill, minmax(35px, 1fr));
+            }
+            
+            .question-btn {
+                width: 35px;
+                height: 35px;
+                font-size: 0.8rem;
             }
             
             .user-test-info {
@@ -713,23 +732,6 @@
     <div class="test-content" id="testContent">
         <div class="container-fluid">
             <div class="test-container">
-                <!-- Question Navigation -->
-                <div class="question-nav">
-                    <div class="nav-header">
-                        <h6 class="mb-0">Question Navigation:</h6>
-                        <div class="nav-legend">
-                            <small class="text-muted d-flex align-items-center">
-                                <span class="badge bg-secondary me-1">Current</span>
-                                <span class="badge bg-success me-1">Answered</span>
-                                <span class="badge bg-warning me-1">Flagged</span>
-                            </small>
-                        </div>
-                    </div>
-                    <div class="question-grid" id="questionGrid">
-                        <!-- Generated by JavaScript -->
-                    </div>
-                </div>
-
                 <!-- Split Layout: Passage + Question -->
                 <div class="question-content">
                     <!-- Left Panel: Passage -->
@@ -753,6 +755,21 @@
                                 <!-- Options loaded by JavaScript -->
                             </div>
                         </div>
+                    </div>
+                </div>
+
+                <!-- Question Navigation - Now Below Content -->
+                <div class="question-nav">
+                    <div class="nav-header">
+                        <h6 class="mb-0">Question Navigation:</h6>
+                        <div class="nav-legend">
+                            <span class="badge bg-secondary">Current</span>
+                            <span class="badge bg-success">Answered</span>
+                            <span class="badge bg-warning">Flagged</span>
+                        </div>
+                    </div>
+                    <div class="question-grid" id="questionGrid">
+                        <!-- Generated by JavaScript -->
                     </div>
                 </div>
 
@@ -930,17 +947,6 @@
                 
                 const data = await response.json();
                 console.log('Raw API response:', data);
-                console.log('First question from API:', data.questions[0]);
-                console.log('First question options:', data.questions[0].options);
-                console.log('Type of options:', typeof data.questions[0].options);
-                
-                // Deep inspect the first option
-                if (data.questions[0] && data.questions[0].options && data.questions[0].options[0]) {
-                    console.log('First option structure:', data.questions[0].options[0]);
-                    console.log('First option keys:', Object.keys(data.questions[0].options[0]));
-                    console.log('First option label:', data.questions[0].options[0].label);
-                    console.log('First option text:', data.questions[0].options[0].text);
-                }
                 
                 if (!data.questions || data.questions.length === 0) {
                     throw new Error('No questions found in response');
@@ -956,30 +962,22 @@
                     document.getElementById('testTitle').textContent = `LNAT Test ${TEST_ID} Demo (4 Questions)`;
                 }
                 
-                // Transform API data to frontend format - with better error handling
+                // Transform API data to frontend format
                 questions = questionData.map(q => {
-                    console.log('Processing question:', q.id);
-                    console.log('Question options:', q.options);
-                    
-                    // Handle different possible formats of options
                     let processedOptions = [];
                     if (Array.isArray(q.options)) {
-                        // Check if first option is a string or object
                         if (typeof q.options[0] === 'string') {
-                            // Options are strings, convert to label/text objects
                             processedOptions = q.options.map((optionText, index) => ({
                                 label: ['A', 'B', 'C', 'D', 'E'][index],
                                 text: optionText
                             }));
                         } else {
-                            // Options are already objects with label/text
                             processedOptions = q.options.map((option, index) => ({
                                 label: option.label || ['A', 'B', 'C', 'D', 'E'][index],
                                 text: option.text || option || `Missing option ${index + 1}`
                             }));
                         }
                     } else if (typeof q.options === 'string') {
-                        // If options is a JSON string, parse it
                         try {
                             const parsed = JSON.parse(q.options);
                             if (Array.isArray(parsed)) {
@@ -997,7 +995,6 @@
                             processedOptions = [];
                         }
                     } else {
-                        // Fallback: create from individual fields if they exist
                         processedOptions = [
                             { label: "A", text: q.option_a || "Option A not found" },
                             { label: "B", text: q.option_b || "Option B not found" },
@@ -1006,8 +1003,6 @@
                             { label: "E", text: q.option_e || "Option E not found" }
                         ];
                     }
-                    
-                    console.log('Processed options for question', q.id, ':', processedOptions);
                     
                     return {
                         id: q.id,
@@ -1238,16 +1233,13 @@
             try {
                 clearInterval(timerInterval);
                 
-                // Hide the submit modal
                 const modal = bootstrap.Modal.getInstance(document.getElementById('submitModal'));
                 if (modal) modal.hide();
                 
-                // Show loading
                 showLoading();
                 document.querySelector('#loadingScreen h4').textContent = 'Submitting Your Test...';
                 document.querySelector('#loadingScreen p').textContent = 'Calculating your results';
                 
-                // Convert answers for API submission
                 const answersArray = Object.entries(userAnswers).map(([questionId, letter]) => {
                     const letterToNumber = { 'A': 1, 'B': 2, 'C': 3, 'D': 4, 'E': 5 };
                     return {
@@ -1257,9 +1249,7 @@
                 });
                 
                 const submissionData = { answers: answersArray };
-                console.log('Submitting test data:', submissionData);
                 
-                // Submit to API
                 const response = await fetch(`${API_BASE_URL}/api/tests/${TEST_ID}/submit`, {
                     method: 'POST',
                     headers: {
@@ -1274,13 +1264,10 @@
                 }
                 
                 const results = await response.json();
-                console.log('Test results received:', results);
                 
-                // Calculate time spent
                 const totalTestTime = testMode === 'guest' ? 20 * 60 : 95 * 60;
                 const timeSpent = totalTestTime - timeLeft;
                 
-                // Transform results for the results page
                 const transformedResults = {
                     total_questions: questions.length,
                     correct_answers: results.score || 0,
@@ -1302,10 +1289,7 @@
                     testMode: testMode
                 };
                 
-                // Store results
                 sessionStorage.setItem('testResults', JSON.stringify(transformedResults));
-                
-                // Redirect to results
                 window.location.href = 'test-results.html';
                 
             } catch (error) {
@@ -1313,7 +1297,6 @@
                 hideLoading();
                 alert('There was an error submitting your test. Please check your connection and try again.');
                 
-                // Restart timer if submission failed
                 if (timeLeft > 0) {
                     startTimer();
                 }
@@ -1353,9 +1336,8 @@
         // Auto-save functionality for logged-in users (future enhancement)
         if (currentUser) {
             setInterval(function() {
-                // Could implement auto-save here for premium users
                 console.log('Auto-save checkpoint');
-            }, 30000); // Every 30 seconds
+            }, 30000);
         }
     </script>
 </body>
