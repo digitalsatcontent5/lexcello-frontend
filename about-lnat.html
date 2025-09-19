@@ -238,10 +238,10 @@
             font-weight: 500;
         }
         
-        /* TIMELINE WITH HORIZONTAL BADGE POSITIONING */
+        /* CORRECTED TIMELINE - BADGES ON PROPER SIDES */
         .timeline {
             position: relative;
-            max-width: 800px;
+            max-width: 900px;
             margin: 0 auto;
             padding: 40px 0;
         }
@@ -262,44 +262,46 @@
             margin-bottom: 50px;
             width: 100%;
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             gap: 20px;
         }
         
-        /* LEFT SIDE ITEMS (1st, 3rd, 5th) - content left, badge right */
+        /* ODD ITEMS (1st, 3rd, 5th) - Content on LEFT, Badge on RIGHT side of center line */
         .timeline-item:nth-child(odd) {
-            justify-content: flex-start;
-            padding-left: 0;
-            padding-right: 50%;
+            justify-content: center;
         }
         
         .timeline-item:nth-child(odd) .timeline-content {
             order: 1;
-            flex: 1;
+            width: 45%;
+            text-align: right;
+            margin-right: 30px;
         }
         
         .timeline-item:nth-child(odd) .timeline-date {
             order: 2;
             position: static;
-            margin-left: 20px;
+            align-self: flex-start;
+            margin-top: 20px;
         }
         
-        /* RIGHT SIDE ITEMS (2nd, 4th) - badge left, content right */
+        /* EVEN ITEMS (2nd, 4th) - Badge on LEFT side of center line, Content on RIGHT */
         .timeline-item:nth-child(even) {
-            justify-content: flex-end;
-            padding-right: 0;
-            padding-left: 50%;
-        }
-        
-        .timeline-item:nth-child(even) .timeline-content {
-            order: 2;
-            flex: 1;
+            justify-content: center;
         }
         
         .timeline-item:nth-child(even) .timeline-date {
             order: 1;
             position: static;
-            margin-right: 20px;
+            align-self: flex-start;
+            margin-top: 20px;
+        }
+        
+        .timeline-item:nth-child(even) .timeline-content {
+            order: 2;
+            width: 45%;
+            text-align: left;
+            margin-left: 30px;
         }
         
         .timeline-content {
@@ -307,7 +309,6 @@
             padding: 25px;
             border-radius: 12px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            position: relative;
             border: 2px solid #f1f5f9;
             transition: all 0.3s ease;
         }
@@ -331,8 +332,6 @@
         }
         
         .timeline-date {
-            position: absolute;
-            top: 20px;
             background: var(--secondary-color);
             color: white;
             padding: 8px 16px;
@@ -341,37 +340,6 @@
             white-space: nowrap;
             font-size: 0.9rem;
             box-shadow: 0 3px 10px rgba(43, 108, 176, 0.3);
-        }
-        
-        /* LEFT SIDE DATE POSITIONING - moved further right */
-        .timeline-item:nth-child(odd) .timeline-date {
-            right: -35px;
-        }
-        
-        /* RIGHT SIDE DATE POSITIONING - moved further left */
-        .timeline-item:nth-child(even) .timeline-date {
-            left: -35px;
-        }
-        
-        /* Timeline connector dots */
-        .timeline-item::before {
-            content: '';
-            position: absolute;
-            top: 25px;
-            width: 12px;
-            height: 12px;
-            background: var(--secondary-color);
-            border-radius: 50%;
-            border: 3px solid white;
-            box-shadow: 0 0 0 3px var(--secondary-color);
-        }
-        
-        .timeline-item:nth-child(odd)::before {
-            right: -6px;
-        }
-        
-        .timeline-item:nth-child(even)::before {
-            left: -6px;
         }
         
         /* Universities Grid */
@@ -486,43 +454,25 @@
             }
             
             .timeline-item {
-                width: 100%;
-                left: 0 !important;
-                text-align: left !important;
+                flex-direction: column;
+                align-items: flex-start;
                 padding-left: 60px;
                 margin-bottom: 40px;
             }
             
-            .timeline-date {
-                left: -25px !important;
-                right: auto !important;
-                font-size: 0.8rem;
-                padding: 6px 12px;
+            .timeline-item:nth-child(odd) .timeline-content,
+            .timeline-item:nth-child(even) .timeline-content {
+                width: 100%;
+                text-align: left;
+                margin: 0;
+                order: 2;
             }
             
-            .timeline-item::before {
-                left: 24px !important;
-                right: auto !important;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .timeline {
-                padding: 10px;
-            }
-            
-            .timeline-item {
-                padding-left: 50px;
-            }
-            
-            .timeline-date {
-                left: -20px !important;
-                font-size: 0.7rem;
-                padding: 4px 8px;
-            }
-            
-            .timeline-content {
-                padding: 20px;
+            .timeline-item:nth-child(odd) .timeline-date,
+            .timeline-item:nth-child(even) .timeline-date {
+                order: 1;
+                margin: 0 0 15px 0;
+                align-self: flex-start;
             }
         }
     </style>
