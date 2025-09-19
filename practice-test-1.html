@@ -129,7 +129,7 @@
         .question-content {
             flex: 1;
             display: flex;
-            min-height: 600px;
+            height: 600px; /* Fixed height for both panels */
         }
         
         .passage-panel {
@@ -139,6 +139,7 @@
             padding: 30px;
             display: flex;
             flex-direction: column;
+            height: 100%; /* Full height of parent */
         }
         
         .question-panel {
@@ -146,6 +147,7 @@
             padding: 30px;
             display: flex;
             flex-direction: column;
+            height: 100%; /* Full height of parent */
         }
         
         .passage {
@@ -153,8 +155,8 @@
             padding: 25px;
             border-radius: 8px;
             border-left: 4px solid var(--secondary-color);
-            height: 100%;
-            overflow-y: auto;
+            height: 100%; /* Use all available height */
+            overflow-y: auto; /* Enable scrollbar when content overflows */
             display: flex;
             flex-direction: column;
         }
