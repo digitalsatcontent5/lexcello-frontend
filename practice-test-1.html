@@ -152,38 +152,35 @@
         
         .passage {
             background: white;
-            padding: 25px;
+            padding: 0;
             border-radius: 8px;
             border-left: 4px solid var(--secondary-color);
             height: 100%; /* Use all available height */
-            overflow-y: auto; /* Enable scrollbar when content overflows */
+            overflow: hidden; /* Hide overflow on container */
             display: flex;
             flex-direction: column;
         }
         
         .passage h4 {
-    color: var(--primary-color);
-    margin-bottom: 20px;
-    font-size: 1.2rem;
-    position: sticky;
-    top: 0;
-    background: white;
-    padding: 15px 0 15px 0;
-    border-bottom: 1px solid #e2e8f0;
-    flex-shrink: 0;
-    z-index: 10;
-    margin-top: -25px;
-    margin-left: -25px;
-    margin-right: -25px;
-    padding-left: 25px;
-    padding-right: 25px;
-}
+            color: var(--primary-color);
+            margin: 0;
+            font-size: 1.2rem;
+            position: sticky;
+            top: 0;
+            background: white;
+            padding: 20px 25px 15px 25px;
+            border-bottom: 1px solid #e2e8f0;
+            flex-shrink: 0;
+            z-index: 10;
+        }
         
         .passage-text {
             font-size: 1.05rem;
             line-height: 1.7;
             text-align: justify;
             flex: 1;
+            overflow-y: auto; /* Enable scrollbar when content overflows */
+            padding: 20px 25px 25px 25px;
         }
         
         .question-section {
@@ -499,10 +496,6 @@
         
         @media (max-width: 1024px) {
             .passage-panel, .question-panel {
-                padding: 20px;
-            }
-            
-            .passage {
                 padding: 20px;
             }
             
@@ -1122,7 +1115,7 @@
             updateFlagButton();
             
             // Scroll panels to top
-            document.querySelector('.passage').scrollTop = 0;
+            document.querySelector('.passage-text').scrollTop = 0;
             document.querySelector('.question-panel').scrollTop = 0;
         }
 
@@ -1350,4 +1343,3 @@
     </script>
 </body>
 </html>
-
