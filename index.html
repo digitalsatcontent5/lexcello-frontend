@@ -288,6 +288,32 @@
             cursor: not-allowed;
         }
         
+        /* Loading state */
+        .loading-card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            text-align: center;
+            color: var(--text-light);
+        }
+        
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid var(--secondary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
         /* CTA Section */
         .cta-section {
             background: var(--primary-color);
@@ -616,95 +642,15 @@
         <div class="container">
             <div class="text-center mb-5">
                 <h2 class="display-4 fw-bold text-primary">LNAT Practice Tests</h2>
-                <p class="lead">Complete series of 10 practice tests - 4 available now, 6 more coming soon</p>
+                <p class="lead">Loading test information...</p>
             </div>
             
+            <!-- This row will be populated dynamically by JavaScript -->
             <div class="row g-4">
-                <div class="col-lg-6">
-                    <div class="test-card">
-                        <div class="test-status status-available">Available</div>
-                        <h4>Practice Test 1 - Foundation</h4>
-                        <div class="test-details">
-                            <div class="test-detail">
-                                <span class="detail-label">Questions:</span>
-                                <span class="detail-value">42 Multiple Choice</span>
-                            </div>
-                            <div class="test-detail">
-                                <span class="detail-label">Time Limit:</span>
-                                <span class="detail-value">95 Minutes</span>
-                            </div>
-                            <div class="test-detail">
-                                <span class="detail-label">Difficulty:</span>
-                                <span class="detail-value">Beginner-Intermediate</span>
-                            </div>
-                        </div>
-                        <button class="test-action btn-available" onclick="viewTestDetails(1)">View Test Details</button>
-                    </div>
-                </div>
-                
-                <div class="col-lg-6">
-                    <div class="test-card">
-                        <div class="test-status status-coming-soon">Coming Soon</div>
-                        <h4>Practice Test 2 - Building Skills</h4>
-                        <div class="test-details">
-                            <div class="test-detail">
-                                <span class="detail-label">Questions:</span>
-                                <span class="detail-value">42 Multiple Choice</span>
-                            </div>
-                            <div class="test-detail">
-                                <span class="detail-label">Time Limit:</span>
-                                <span class="detail-value">95 Minutes</span>
-                            </div>
-                            <div class="test-detail">
-                                <span class="detail-label">Difficulty:</span>
-                                <span class="detail-value">Intermediate</span>
-                            </div>
-                        </div>
-                        <button class="test-action btn-disabled" disabled>Coming Soon</button>
-                    </div>
-                </div>
-                
-                <div class="col-lg-6">
-                    <div class="test-card">
-                        <div class="test-status status-coming-soon">Coming Soon</div>
-                        <h4>Practice Test 3 - Advanced</h4>
-                        <div class="test-details">
-                            <div class="test-detail">
-                                <span class="detail-label">Questions:</span>
-                                <span class="detail-value">42 Multiple Choice</span>
-                            </div>
-                            <div class="test-detail">
-                                <span class="detail-label">Time Limit:</span>
-                                <span class="detail-value">95 Minutes</span>
-                            </div>
-                            <div class="test-detail">
-                                <span class="detail-label">Difficulty:</span>
-                                <span class="detail-value">Advanced</span>
-                            </div>
-                        </div>
-                        <button class="test-action btn-disabled" disabled>Coming Soon</button>
-                    </div>
-                </div>
-                
-                <div class="col-lg-6">
-                    <div class="test-card">
-                        <div class="test-status status-coming-soon">Coming Soon</div>
-                        <h4>Practice Test 4 - Mock Exam</h4>
-                        <div class="test-details">
-                            <div class="test-detail">
-                                <span class="detail-label">Questions:</span>
-                                <span class="detail-value">42 Multiple Choice</span>
-                            </div>
-                            <div class="test-detail">
-                                <span class="detail-label">Time Limit:</span>
-                                <span class="detail-value">95 Minutes</span>
-                            </div>
-                            <div class="test-detail">
-                                <span class="detail-label">Difficulty:</span>
-                                <span class="detail-value">Full Exam Simulation</span>
-                            </div>
-                        </div>
-                        <button class="test-action btn-disabled" disabled>Coming Soon</button>
+                <div class="col-12">
+                    <div class="loading-card">
+                        <div class="loading-spinner"></div>
+                        Loading practice tests...
                     </div>
                 </div>
             </div>
@@ -712,7 +658,7 @@
             <div class="text-center mt-5">
                 <div class="alert alert-info d-inline-block">
                     <i class="fas fa-info-circle me-2"></i>
-                    <strong>6 additional practice tests coming soon!</strong> Sign up to be notified when they're released.
+                    <strong>Loading test information...</strong>
                 </div>
             </div>
         </div>
@@ -796,7 +742,7 @@
         // Initialize the app
         document.addEventListener('DOMContentLoaded', function() {
             checkAuthStatus();
-            loadTestsStatus(); // Add dynamic test loading
+            loadTestsStatus();
             
             // Add click listener to close dropdown when clicking outside
             document.addEventListener('click', function(event) {
@@ -812,13 +758,47 @@
         // Load test status dynamically
         async function loadTestsStatus() {
             try {
+                // Show loading state
+                showLoadingState();
+                
                 const testStatuses = await checkTestContent();
                 updateTestsSection(testStatuses);
                 updateHeroStats(testStatuses);
             } catch (error) {
                 console.error('Error loading test status:', error);
-                // Keep static content if API fails
+                showErrorState();
             }
+        }
+        
+        // Show loading state
+        function showLoadingState() {
+            const testsContainer = document.querySelector('.tests-section .row.g-4');
+            testsContainer.innerHTML = `
+                <div class="col-12">
+                    <div class="loading-card">
+                        <div class="loading-spinner"></div>
+                        Loading practice tests...
+                    </div>
+                </div>
+            `;
+        }
+        
+        // Show error state
+        function showErrorState() {
+            const testsContainer = document.querySelector('.tests-section .row.g-4');
+            testsContainer.innerHTML = `
+                <div class="col-12">
+                    <div class="alert alert-warning text-center">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <strong>Unable to load test information.</strong><br>
+                        Please refresh the page or try again later.
+                        <br><br>
+                        <button class="btn btn-primary" onclick="loadTestsStatus()">
+                            <i class="fas fa-refresh me-2"></i>Try Again
+                        </button>
+                    </div>
+                </div>
+            `;
         }
         
         // Check which tests actually have questions
@@ -885,13 +865,8 @@
                 sectionDescription.textContent = `Complete series of 10 practice tests - ${testsWithContent} available now, ${testsWithoutContent} more coming soon`;
             }
             
-            // Update individual test cards
-            for (let testId = 1; testId <= 4; testId++) {
-                const status = testStatuses[testId];
-                if (status) {
-                    updateTestCard(testId, status);
-                }
-            }
+            // Generate test cards dynamically
+            generateTestCards(testStatuses);
             
             // Update bottom notification
             const bottomAlert = document.querySelector('.tests-section .alert');
@@ -900,6 +875,7 @@
                     <i class="fas fa-info-circle me-2"></i>
                     <strong>${testsWithoutContent} additional practice tests coming soon!</strong> Sign up to be notified when they're released.
                 `;
+                bottomAlert.className = 'alert alert-info d-inline-block';
             } else {
                 bottomAlert.innerHTML = `
                     <i class="fas fa-check-circle me-2"></i>
@@ -909,37 +885,62 @@
             }
         }
         
-        // Update individual test card
-        function updateTestCard(testId, status) {
-            const testCards = document.querySelectorAll('.test-card');
-            if (testCards[testId - 1]) {
-                const card = testCards[testId - 1];
-                const statusBadge = card.querySelector('.test-status');
-                const questionCount = card.querySelector('.detail-value');
-                const button = card.querySelector('.test-action');
+        // Generate test cards dynamically
+        function generateTestCards(testStatuses) {
+            const testsContainer = document.querySelector('.tests-section .row.g-4');
+            
+            // Clear existing content
+            testsContainer.innerHTML = '';
+            
+            // Test configuration
+            const testConfigs = {
+                1: { name: 'Foundation', difficulty: 'Beginner-Intermediate' },
+                2: { name: 'Building Skills', difficulty: 'Intermediate' },
+                3: { name: 'Advanced', difficulty: 'Advanced' },
+                4: { name: 'Mock Exam', difficulty: 'Full Exam Simulation' },
+                5: { name: 'Strategic Practice', difficulty: 'Intermediate-Advanced' },
+                6: { name: 'Critical Thinking', difficulty: 'Advanced' },
+                7: { name: 'Final Preparation', difficulty: 'Advanced' },
+                8: { name: 'Master Challenge', difficulty: 'Expert Level' },
+                9: { name: 'Comprehensive Review', difficulty: 'Full Exam Simulation' },
+                10: { name: 'Ultimate Test', difficulty: 'Expert Level' }
+            };
+            
+            // Generate cards for tests 1-10
+            for (let testId = 1; testId <= 10; testId++) {
+                const status = testStatuses[testId] || { hasContent: false, questionCount: 0, status: 'empty' };
+                const config = testConfigs[testId];
                 
-                if (status.hasContent) {
-                    // Test has content - make it available
-                    statusBadge.textContent = 'Available';
-                    statusBadge.className = 'test-status status-available';
-                    
-                    if (questionCount) {
-                        questionCount.textContent = `${status.questionCount} Multiple Choice`;
-                    }
-                    
-                    button.textContent = 'Start Practice Test';
-                    button.className = 'test-action btn-available';
-                    button.disabled = false;
-                    button.onclick = () => startTestFromHomepage(testId);
-                } else {
-                    // Test has no content - keep as coming soon
-                    statusBadge.textContent = 'Coming Soon';
-                    statusBadge.className = 'test-status status-coming-soon';
-                    
-                    button.textContent = 'Coming Soon';
-                    button.className = 'test-action btn-disabled';
-                    button.disabled = true;
-                }
+                const cardHtml = `
+                    <div class="col-lg-6">
+                        <div class="test-card">
+                            <div class="test-status ${status.hasContent ? 'status-available' : 'status-coming-soon'}">
+                                ${status.hasContent ? 'Available' : 'Coming Soon'}
+                            </div>
+                            <h4>Practice Test ${testId} - ${config.name}</h4>
+                            <div class="test-details">
+                                <div class="test-detail">
+                                    <span class="detail-label">Questions:</span>
+                                    <span class="detail-value">${status.hasContent ? status.questionCount : '42'} Multiple Choice</span>
+                                </div>
+                                <div class="test-detail">
+                                    <span class="detail-label">Time Limit:</span>
+                                    <span class="detail-value">95 Minutes</span>
+                                </div>
+                                <div class="test-detail">
+                                    <span class="detail-label">Difficulty:</span>
+                                    <span class="detail-value">${config.difficulty}</span>
+                                </div>
+                            </div>
+                            <button class="test-action ${status.hasContent ? 'btn-available' : 'btn-disabled'}" 
+                                    ${status.hasContent ? `onclick="startTestFromHomepage(${testId})"` : 'disabled'}>
+                                ${status.hasContent ? 'Start Practice Test' : 'Coming Soon'}
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                testsContainer.insertAdjacentHTML('beforeend', cardHtml);
             }
         }
         
@@ -995,8 +996,6 @@
                     }
                 } catch (error) {
                     console.error('Error checking auth status:', error);
-                    // In case of network error, still try to show UI based on token presence
-                    // but don't make assumptions about user data
                     updateUIForLoggedOutUser();
                 }
             } else {
