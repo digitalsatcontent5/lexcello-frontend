@@ -1328,17 +1328,20 @@
                 e.preventDefault();
                 previousQuestion();
             } else if (e.key === 'ArrowRight' && currentQuestionIndex < questions.length - 1) {
-                e.preventDefault();
-                nextQuestion();
-            } else if ((e.key === 'f' || e.key === 'F') && !e.ctrlKey) {
-                e.preventDefault();
-                toggleFlag();
-            }
-        });
-        
-        // Auto-save functionality for logged-in users (future enhancement)
-        if (currentUser) {
-            setInterval(function() {
-                console.log('Auto-save checkpoint');
-            }, 30000);
+            e.preventDefault();
+            nextQuestion();
+        } else if ((e.key === 'f' || e.key === 'F') && !e.ctrlKey) {
+            e.preventDefault();
+            toggleFlag();
         }
+    });
+    
+    // Auto-save functionality for logged-in users (future enhancement)
+    if (currentUser) {
+        setInterval(function() {
+            console.log('Auto-save checkpoint');
+        }, 30000);
+    }
+</script>
+</body>
+</html>
