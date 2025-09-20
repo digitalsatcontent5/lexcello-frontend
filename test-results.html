@@ -1485,17 +1485,32 @@
                     const questionItems = document.querySelectorAll('.question-item');
                     let visibleCount = 0;
                     
+                    console.log(`Filtering by: ${filter}`); // Debug log
+                    
                     questionItems.forEach(item => {
                         const itemFilters = item.getAttribute('data-filter') || '';
+                        console.log(`Item filters: "${itemFilters}", Looking for: "${filter}"`); // Debug log
                         
-                        if (filter === 'all' || itemFilters.includes(filter)) {
+                        let shouldShow = false;
+                        
+                        if (filter === 'all') {
+                            shouldShow = true;
+                        } else {
+                            // Split the item filters and check if our target filter is included
+                            const filterArray = itemFilters.split(' ').filter(f => f.length > 0);
+                            shouldShow = filterArray.includes(filter);
+                        }
+                        
+                        if (shouldShow) {
                             item.classList.remove('hidden');
                             visibleCount++;
+                            console.log(`Showing item with filters: ${itemFilters}`); // Debug log
                         } else {
                             item.classList.add('hidden');
                         }
                     });
                     
+                    console.log(`Total visible after filtering: ${visibleCount}`); // Debug log
                     updateFilterSummary(filter, visibleCount);
                 });
             });
