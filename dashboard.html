@@ -860,18 +860,7 @@
                     </div>
                 </div>
 
-                <!-- Study Recommendation -->
-                <div class="content-section">
-                    <div class="recommendation-card">
-                        <div class="recommendation-content">
-                            <h5><i class="fas fa-lightbulb me-2"></i><span id="recommendationTitle">Study Tip</span></h5>
-                            <p id="studyRecommendation">Complete your first practice test to get personalized study recommendations based on your performance.</p>
-                            <button class="btn" id="recommendationAction" onclick="followRecommendation()">
-                                <i class="fas fa-play me-2"></i>Start Practice Test 1
-                            </button>
-                        </div>
-                    </div>
-                </div>
+
 
                 <!-- Achievements -->
                 <div class="content-section">
@@ -978,7 +967,6 @@
                 await loadUserData();
                 await loadTests();
                 updateProgressStats();
-                generateRecommendations();
                 updateRecentActivity();
                 generateAchievements();
             } catch (error) {
@@ -1578,61 +1566,6 @@
             };
         }
         
-        // MODIFIED: Simplified recommendations without "Consistency Focus" option
-        function generateRecommendations() {
-            const completedTests = [...new Set(userTestAttempts.map(a => a.test_id))].length;
-            const titleElement = document.getElementById('recommendationTitle');
-            const textElement = document.getElementById('studyRecommendation');
-            const actionElement = document.getElementById('recommendationAction');
-            
-            if (completedTests === 0) {
-                titleElement.textContent = 'Start Your Journey';
-                textElement.textContent = 'Begin with Practice Test 1 to establish your baseline LNAT score and identify areas for improvement.';
-                actionElement.innerHTML = '<i class="fas fa-play me-2"></i>Start Practice Test 1';
-                actionElement.onclick = () => startTest(1);
-            } else if (completedTests === 1) {
-                const latestScore = userTestAttempts[userTestAttempts.length - 1].score;
-                const latestScoreNum = typeof latestScore === 'string' ? parseFloat(latestScore.replace('%', '')) : Number(latestScore);
-                if (latestScoreNum >= 75) {
-                    titleElement.textContent = 'Excellent Start!';
-                    textElement.textContent = 'Your first score shows strong potential. Continue with Test 2 to build consistency and identify any knowledge gaps.';
-                    actionElement.innerHTML = '<i class="fas fa-forward me-2"></i>Take Practice Test 2';
-                    actionElement.onclick = () => startTest(2);
-                } else if (latestScoreNum >= 60) {
-                    titleElement.textContent = 'Good Foundation';
-                    textElement.textContent = 'You have a solid foundation. Review your Test 1 results, then tackle Test 2 to see improvement patterns.';
-                    actionElement.innerHTML = '<i class="fas fa-chart-line me-2"></i>Review Test 1 Results';
-                    actionElement.onclick = () => viewTestResults(1);
-                } else {
-                    titleElement.textContent = 'Focus on Fundamentals';
-                    textElement.textContent = 'Review the basic LNAT question types and logical reasoning principles before attempting more tests.';
-                    actionElement.innerHTML = '<i class="fas fa-book me-2"></i>Study LNAT Guide';
-                    actionElement.onclick = () => window.open('about-lnat.html', '_blank');
-                }
-            } else {
-                // For multiple tests, focus on continuous improvement
-                const recentScores = userTestAttempts.slice(-3).map(a => {
-                    let score = a.score;
-                    if (typeof score === 'string') score = parseFloat(score.replace('%', ''));
-                    return Number(score) || 0;
-                });
-                const isImproving = recentScores.length >= 2 && recentScores[recentScores.length - 1] > recentScores[0];
-                
-                if (isImproving) {
-                    titleElement.textContent = 'Keep the Momentum!';
-                    textElement.textContent = 'Your scores are improving! Continue with the next test to maintain this positive trend.';
-                    actionElement.innerHTML = `<i class="fas fa-rocket me-2"></i>Take Test ${completedTests + 1}`;
-                    actionElement.onclick = () => startTest(completedTests + 1);
-                } else {
-                    // Simplified recommendation without the problematic "Analyze Performance" option
-                    titleElement.textContent = 'Continue Practicing';
-                    textElement.textContent = 'Keep working through the practice tests to build familiarity with LNAT question patterns and improve your timing.';
-                    actionElement.innerHTML = `<i class="fas fa-play me-2"></i>Take Test ${completedTests + 1}`;
-                    actionElement.onclick = () => startTest(completedTests + 1);
-                }
-            }
-        }
-
         // Update recent activity with real data
         function updateRecentActivity() {
             const activityContainer = document.getElementById('recentActivity');
@@ -1824,10 +1757,6 @@
                 sessionStorage.setItem('testResults', JSON.stringify(testAttempts[testAttempts.length - 1]));
                 window.location.href = 'test-results.html';
             }
-        }
-
-        function followRecommendation() {
-            // This will be set by the generateRecommendations function
         }
 
         function showAllTests() {
