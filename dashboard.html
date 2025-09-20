@@ -1170,12 +1170,28 @@
                 const status = testStatuses[testId] || { hasContent: false, questionCount: 0, status: 'empty' };
                 const userAttempts = userTestAttempts.filter(attempt => attempt.test_id === testId);
                 const hasCompleted = userAttempts.length > 0;
-                const bestScore = hasCompleted ? Math.max(...userAttempts.map(a => a.score)) : 0;
+                
+                // FIXED: Proper score conversion for best score calculation
+                let bestScore = 0;
+                if (hasCompleted) {
+                    const validScores = userAttempts.map(attempt => {
+                        let score = attempt.score;
+                        if (typeof score === 'string') {
+                            score = score.replace('%', '');
+                            score = parseFloat(score);
+                        } else {
+                            score = Number(score);
+                        }
+                        return isNaN(score) ? 0 : score;
+                    });
+                    bestScore = Math.max(...validScores);
+                }
+                
                 const latestAttempt = hasCompleted ? userAttempts[userAttempts.length - 1] : null;
                 
                 if (status.hasContent || testId === 1) {
                     const cardClass = hasCompleted ? 'completed' : (status.hasContent ? 'available' : 'locked');
-                    const statusText = hasCompleted ? `Completed (${bestScore}%)` : (status.hasContent ? 'Ready to Start' : 'No Content');
+                    const statusText = hasCompleted ? `Completed (${Math.round(bestScore)}%)` : (status.hasContent ? 'Ready to Start' : 'No Content');
                     const statusClass = hasCompleted ? 'status-completed' : (status.hasContent ? 'status-available' : 'status-locked');
                     
                     let actionButtons = '';
@@ -1217,7 +1233,7 @@
                                 </div>
                                 ${hasCompleted ? `
                                     <div class="test-score-display">
-                                        <div class="test-score">${bestScore}%</div>
+                                        <div class="test-score">${Math.round(bestScore)}%</div>
                                         <div class="test-score-label">Best Score</div>
                                         <div class="test-attempts">${userAttempts.length} attempt${userAttempts.length > 1 ? 's' : ''}</div>
                                     </div>
@@ -1300,60 +1316,70 @@
             `;
         }
         
-        // Update progress statistics with real data
+        // FIXED: Update progress statistics with proper number conversion
         function updateProgressStats() {
-    const completedTests = userTestAttempts.length;
-    const uniqueTests = [...new Set(userTestAttempts.map(a => a.test_id))].length;
-    
-    // Fix: Convert string scores to numbers and filter out invalid ones
-    const validScores = userTestAttempts
-        .map(attempt => parseFloat(attempt.score) || 0)
-        .filter(score => !isNaN(score) && score > 0);
-    
-    const totalScore = validScores.reduce((sum, score) => sum + score, 0);
-    const averageScore = validScores.length > 0 ? Math.round(totalScore / validScores.length) : 0;
-    const bestScore = validScores.length > 0 ? Math.max(...validScores) : 0;
-    
-    // Calculate improvement with validation
-    let improvement = 0;
-    if (validScores.length >= 2) {
-        const firstScore = validScores[0];
-        const latestScore = validScores[validScores.length - 1];
-        if (firstScore > 0) {
-            improvement = Math.round(((latestScore - firstScore) / firstScore) * 100);
+            const completedTests = userTestAttempts.length;
+            const uniqueTests = [...new Set(userTestAttempts.map(a => a.test_id))].length;
+            
+            // FIXED: Ensure scores are properly converted to numbers and filter invalid ones
+            const validScores = userTestAttempts
+                .map(attempt => {
+                    let score = attempt.score;
+                    // Handle different score formats
+                    if (typeof score === 'string') {
+                        score = score.replace('%', ''); // Remove % if present
+                        score = parseFloat(score);
+                    } else {
+                        score = Number(score);
+                    }
+                    return isNaN(score) ? 0 : score;
+                })
+                .filter(score => score > 0);
+            
+            const totalScore = validScores.reduce((sum, score) => sum + score, 0);
+            const averageScore = validScores.length > 0 ? Math.round(totalScore / validScores.length) : 0;
+            const bestScore = validScores.length > 0 ? Math.max(...validScores) : 0;
+            
+            // Calculate improvement with validation
+            let improvement = 0;
+            if (validScores.length >= 2) {
+                const firstScore = validScores[0];
+                const latestScore = validScores[validScores.length - 1];
+                if (firstScore > 0) {
+                    improvement = Math.round(((latestScore - firstScore) / firstScore) * 100);
+                }
+            }
+
+            // Calculate study streak (simplified)
+            const studyStreak = Math.min(uniqueTests * 2, 14);
+            
+            // Animate progress numbers
+            animateNumber('testsCompleted', uniqueTests);
+            animateNumber('averageScore', averageScore, '%');
+            animateNumber('bestScore', bestScore, '%');
+            animateNumber('studyStreak', studyStreak);
+
+            // Update trends
+            updateTrend('testsCompletedTrend', uniqueTests > 0 ? 'up' : '', uniqueTests > 0 ? `+${uniqueTests} this week` : '');
+            updateTrend('averageScoreTrend', improvement > 0 ? 'up' : improvement < 0 ? 'down' : '', improvement !== 0 ? `${improvement > 0 ? '+' : ''}${improvement}%` : '');
+            updateTrend('bestScoreTrend', bestScore > averageScore ? 'up' : '', bestScore > 0 ? `${bestScore - averageScore > 0 ? '+' : ''}${bestScore - averageScore}% above avg` : '');
+            updateTrend('studyStreakTrend', studyStreak > 0 ? 'up' : '', studyStreak > 0 ? 'Keep it up!' : '');
+            
+            // Update mini stats
+            const totalTime = userTestAttempts.reduce((sum, attempt) => sum + (attempt.time_spent || 0), 0);
+            const accuracy = completedTests > 0 ? Math.round((userTestAttempts.reduce((sum, attempt) => sum + (attempt.correct_answers || 0), 0) / userTestAttempts.reduce((sum, attempt) => sum + (attempt.total_questions || 42), 0)) * 100) : 0;
+            
+            document.getElementById('totalTime').textContent = `${Math.round(totalTime / 3600)}h`;
+            document.getElementById('accuracy').textContent = `${accuracy}%`;
+            document.getElementById('improvement').textContent = improvement > 0 ? `+${improvement}%` : improvement < 0 ? `${improvement}%` : '0%';
+            
+            // Update next goal
+            const nextTestId = Math.max(1, uniqueTests + 1);
+            document.getElementById('nextGoal').textContent = nextTestId <= 10 ? `Test ${nextTestId}` : 'Complete!';
+
+            // Update performance chart
+            updatePerformanceChart();
         }
-    }
-
-    // Calculate study streak (simplified)
-    const studyStreak = Math.min(uniqueTests * 2, 14);
-    
-    // Animate progress numbers
-    animateNumber('testsCompleted', uniqueTests);
-    animateNumber('averageScore', averageScore, '%');
-    animateNumber('bestScore', bestScore, '%');
-    animateNumber('studyStreak', studyStreak);
-
-    // Update trends
-    updateTrend('testsCompletedTrend', uniqueTests > 0 ? 'up' : '', uniqueTests > 0 ? `+${uniqueTests} this week` : '');
-    updateTrend('averageScoreTrend', improvement > 0 ? 'up' : improvement < 0 ? 'down' : '', improvement !== 0 ? `${improvement > 0 ? '+' : ''}${improvement}%` : '');
-    updateTrend('bestScoreTrend', bestScore > averageScore ? 'up' : '', bestScore > 0 ? `${bestScore - averageScore > 0 ? '+' : ''}${bestScore - averageScore}% above avg` : '');
-    updateTrend('studyStreakTrend', studyStreak > 0 ? 'up' : '', studyStreak > 0 ? 'Keep it up!' : '');
-    
-    // Update mini stats
-    const totalTime = userTestAttempts.reduce((sum, attempt) => sum + (attempt.time_spent || 0), 0);
-    const accuracy = completedTests > 0 ? Math.round((userTestAttempts.reduce((sum, attempt) => sum + (attempt.correct_answers || 0), 0) / userTestAttempts.reduce((sum, attempt) => sum + (attempt.total_questions || 42), 0)) * 100) : 0;
-    
-    document.getElementById('totalTime').textContent = `${Math.round(totalTime / 3600)}h`;
-    document.getElementById('accuracy').textContent = `${accuracy}%`;
-    document.getElementById('improvement').textContent = improvement > 0 ? `+${improvement}%` : improvement < 0 ? `${improvement}%` : '0%';
-    
-    // Update next goal
-    const nextTestId = Math.max(1, uniqueTests + 1);
-    document.getElementById('nextGoal').textContent = nextTestId <= 10 ? `Test ${nextTestId}` : 'Complete!';
-
-    // Update performance chart
-    updatePerformanceChart();
-}
 
         function updateTrend(elementId, direction, text) {
             const element = document.getElementById(elementId);
@@ -1371,8 +1397,18 @@
             // Group attempts by test_id and get best score for each
             const testScores = {};
             userTestAttempts.forEach(attempt => {
-                if (!testScores[attempt.test_id] || testScores[attempt.test_id] < attempt.score) {
-                    testScores[attempt.test_id] = attempt.score;
+                // FIXED: Ensure score is properly converted to number
+                let score = attempt.score;
+                if (typeof score === 'string') {
+                    score = score.replace('%', '');
+                    score = parseFloat(score);
+                } else {
+                    score = Number(score);
+                }
+                if (isNaN(score)) score = 0;
+                
+                if (!testScores[attempt.test_id] || testScores[attempt.test_id] < score) {
+                    testScores[attempt.test_id] = score;
                 }
             });
 
@@ -1384,9 +1420,9 @@
                 container.innerHTML = `
                     <div class="chart-placeholder">
                         <div style="background: linear-gradient(135deg, var(--success-color), #38a169); width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; color: white; font-size: 1.5rem; font-weight: 700;">
-                            ${scores[0]}%
+                            ${Math.round(scores[0])}%
                         </div>
-                        <div class="h5 text-success">${scores[0]}%</div>
+                        <div class="h5 text-success">${Math.round(scores[0])}%</div>
                         <div class="text-muted">Your Score on Test ${testNumbers[0]}</div>
                         <div class="mt-3">
                             <span class="badge bg-success">Great start!</span>
@@ -1476,7 +1512,7 @@
                 chartHTML += `
                     <circle cx="${point.x}" cy="${point.y}" r="6" fill="${pointColor}" stroke="white" stroke-width="3" 
                             style="cursor: pointer; transition: all 0.3s ease; filter: url(#shadow)" 
-                            onmouseover="this.setAttribute('r', '8'); showTooltip(event, 'Test ${point.test}: ${point.score}%')"
+                            onmouseover="this.setAttribute('r', '8'); showTooltip(event, 'Test ${point.test}: ${Math.round(point.score)}%')"
                             onmouseout="this.setAttribute('r', '6'); hideTooltip()"
                             onclick="highlightTest(${point.test})"/>
                 `;
@@ -1498,7 +1534,7 @@
                             <div style="font-size: 0.8rem; color: var(--text-light);">Average Score</div>
                         </div>
                         <div style="background: var(--bg-light); padding: 12px; border-radius: 8px; text-align: center;">
-                            <div style="font-size: 1.3rem; font-weight: 700; color: var(--success-color);">${bestScore}%</div>
+                            <div style="font-size: 1.3rem; font-weight: 700; color: var(--success-color);">${Math.round(bestScore)}%</div>
                             <div style="font-size: 0.8rem; color: var(--text-light);">Best Score</div>
                         </div>
                     </div>
@@ -1542,7 +1578,7 @@
             };
         }
         
-        // Generate smart recommendations based on performance
+        // MODIFIED: Simplified recommendations without "Consistency Focus" option
         function generateRecommendations() {
             const completedTests = [...new Set(userTestAttempts.map(a => a.test_id))].length;
             const titleElement = document.getElementById('recommendationTitle');
@@ -1556,12 +1592,13 @@
                 actionElement.onclick = () => startTest(1);
             } else if (completedTests === 1) {
                 const latestScore = userTestAttempts[userTestAttempts.length - 1].score;
-                if (latestScore >= 75) {
+                const latestScoreNum = typeof latestScore === 'string' ? parseFloat(latestScore.replace('%', '')) : Number(latestScore);
+                if (latestScoreNum >= 75) {
                     titleElement.textContent = 'Excellent Start!';
                     textElement.textContent = 'Your first score shows strong potential. Continue with Test 2 to build consistency and identify any knowledge gaps.';
                     actionElement.innerHTML = '<i class="fas fa-forward me-2"></i>Take Practice Test 2';
                     actionElement.onclick = () => startTest(2);
-                } else if (latestScore >= 60) {
+                } else if (latestScoreNum >= 60) {
                     titleElement.textContent = 'Good Foundation';
                     textElement.textContent = 'You have a solid foundation. Review your Test 1 results, then tackle Test 2 to see improvement patterns.';
                     actionElement.innerHTML = '<i class="fas fa-chart-line me-2"></i>Review Test 1 Results';
@@ -1573,7 +1610,12 @@
                     actionElement.onclick = () => window.open('about-lnat.html', '_blank');
                 }
             } else {
-                const recentScores = userTestAttempts.slice(-3).map(a => a.score);
+                // For multiple tests, focus on continuous improvement
+                const recentScores = userTestAttempts.slice(-3).map(a => {
+                    let score = a.score;
+                    if (typeof score === 'string') score = parseFloat(score.replace('%', ''));
+                    return Number(score) || 0;
+                });
                 const isImproving = recentScores.length >= 2 && recentScores[recentScores.length - 1] > recentScores[0];
                 
                 if (isImproving) {
@@ -1582,10 +1624,11 @@
                     actionElement.innerHTML = `<i class="fas fa-rocket me-2"></i>Take Test ${completedTests + 1}`;
                     actionElement.onclick = () => startTest(completedTests + 1);
                 } else {
-                    titleElement.textContent = 'Consistency Focus';
-                    textElement.textContent = 'Work on maintaining consistent performance. Review your previous results to identify patterns.';
-                    actionElement.innerHTML = '<i class="fas fa-analytics me-2"></i>Analyze Performance';
-                    actionElement.onclick = () => showAllTests();
+                    // Simplified recommendation without the problematic "Analyze Performance" option
+                    titleElement.textContent = 'Continue Practicing';
+                    textElement.textContent = 'Keep working through the practice tests to build familiarity with LNAT question patterns and improve your timing.';
+                    actionElement.innerHTML = `<i class="fas fa-play me-2"></i>Take Test ${completedTests + 1}`;
+                    actionElement.onclick = () => startTest(completedTests + 1);
                 }
             }
         }
@@ -1599,8 +1642,18 @@
             const sortedAttempts = [...userTestAttempts].sort((a, b) => new Date(b.completed_at) - new Date(a.completed_at));
 
             sortedAttempts.slice(0, 5).forEach(attempt => {
-                const isGoodScore = attempt.score >= 70;
-                const isGreatScore = attempt.score >= 85;
+                // FIXED: Ensure score is properly converted to number
+                let score = attempt.score;
+                if (typeof score === 'string') {
+                    score = score.replace('%', '');
+                    score = parseFloat(score);
+                } else {
+                    score = Number(score);
+                }
+                if (isNaN(score)) score = 0;
+                
+                const isGoodScore = score >= 70;
+                const isGreatScore = score >= 85;
                 
                 activityHTML += `
                     <div class="activity-item">
@@ -1611,7 +1664,7 @@
                             <div class="activity-title">Completed Practice Test ${attempt.test_id}</div>
                             <div class="activity-time">${formatDate(attempt.completed_at)}</div>
                         </div>
-                        <div class="activity-score">${attempt.score}%</div>
+                        <div class="activity-score">${Math.round(score)}%</div>
                     </div>
                 `;
             });
@@ -1637,7 +1690,18 @@
         function generateAchievements() {
             const achievementsContainer = document.getElementById('achievementsContainer');
             const completedTests = [...new Set(userTestAttempts.map(a => a.test_id))].length;
-            const bestScore = userTestAttempts.length > 0 ? Math.max(...userTestAttempts.map(a => a.score)) : 0;
+            
+            // FIXED: Ensure best score calculation uses proper number conversion
+            let bestScore = 0;
+            if (userTestAttempts.length > 0) {
+                const validScores = userTestAttempts.map(a => {
+                    let score = a.score;
+                    if (typeof score === 'string') score = parseFloat(score.replace('%', ''));
+                    return Number(score) || 0;
+                });
+                bestScore = Math.max(...validScores);
+            }
+            
             const totalAttempts = userTestAttempts.length;
             
             let achievementsHTML = '';
