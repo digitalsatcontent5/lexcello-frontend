@@ -1305,9 +1305,9 @@
     const completedTests = userTestAttempts.length;
     const uniqueTests = [...new Set(userTestAttempts.map(a => a.test_id))].length;
     
-    // Fix: Use the correct field name and add validation
+    // Fix: Convert string scores to numbers and filter out invalid ones
     const validScores = userTestAttempts
-        .map(attempt => attempt.score || attempt.percentage || 0)
+        .map(attempt => parseFloat(attempt.score) || 0)
         .filter(score => !isNaN(score) && score > 0);
     
     const totalScore = validScores.reduce((sum, score) => sum + score, 0);
@@ -1324,8 +1324,17 @@
         }
     }
 
-    // Rest of the function stays the same...
+    // Calculate study streak (simplified)
+    const studyStreak = Math.min(uniqueTests * 2, 14);
+    
+    // Animate progress numbers
+    animateNumber('testsCompleted', uniqueTests);
+    animateNumber('averageScore', averageScore, '%');
+    animateNumber('bestScore', bestScore, '%');
+    animateNumber('studyStreak', studyStreak);
 
+    // Update trends and rest of function...
+}
             // Calculate study streak (simplified)
             const studyStreak = Math.min(uniqueTests * 2, 14); // Simplified calculation
             
@@ -1812,4 +1821,5 @@
     </script>
 </body>
 </html>
+
 
