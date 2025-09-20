@@ -1031,10 +1031,10 @@
                 userTestAttempts = [];
                 
                 if (currentUser) {
-                    // Try to fetch user's test attempts from API
+                    // Try to fetch user's test attempts from API using existing endpoint
                     try {
                         const token = localStorage.getItem('authToken');
-                        const response = await fetch(`${API_BASE_URL}/user/test-attempts`, {
+                        const response = await fetch(`${API_BASE_URL}/user/test-history`, {
                             headers: {
                                 'Authorization': `Bearer ${token}`,
                                 'Content-Type': 'application/json'
@@ -1043,7 +1043,17 @@
                         
                         if (response.ok) {
                             const data = await response.json();
-                            userTestAttempts = data.attempts || data || [];
+                            // Convert test-history format to the format dashboard expects
+                            userTestAttempts = (data.history || []).map(attempt => ({
+                                test_id: attempt.testId,
+                                score: attempt.percentage,
+                                correct_answers: attempt.score,
+                                total_questions: attempt.totalQuestions,
+                                time_spent: attempt.timeSpent,
+                                completed_at: attempt.completedAt,
+                                user_answers: {},
+                                flagged_questions: []
+                            }));
                             console.log('Loaded user test attempts:', userTestAttempts);
                         }
                     } catch (error) {
