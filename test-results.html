@@ -1342,6 +1342,24 @@
             `).join('');
         }
 
+        function convertToLetter(answer) {
+            // If it's already a letter, return as is
+            if (typeof answer === 'string' && answer.match(/^[A-E]$/)) {
+                return answer;
+            }
+            
+            // Convert number to letter
+            const letterMap = {
+                1: 'A',
+                2: 'B', 
+                3: 'C',
+                4: 'D',
+                5: 'E'
+            };
+            
+            return letterMap[answer] || answer;
+        }
+
         function displayQuestionReview() {
             const reviewList = document.getElementById('questionReviewList');
             let reviewHTML = '';
@@ -1362,7 +1380,12 @@
                     const questionId = question.id || (index + 1);
                     const userAnswer = testResults.user_answers ? testResults.user_answers[questionId] : null;
                     const correctAnswer = question.correct_answer || 'A';
-                    const isCorrect = userAnswer === correctAnswer;
+                    
+                    // Convert answers to letters for comparison
+                    const userAnswerLetter = convertToLetter(userAnswer);
+                    const correctAnswerLetter = convertToLetter(correctAnswer);
+                    
+                    const isCorrect = userAnswerLetter === correctAnswerLetter;
                     const wasAnswered = userAnswer !== null && userAnswer !== undefined;
                     const wasFlagged = testResults.flagged_questions && testResults.flagged_questions.includes(questionId);
                     
@@ -1403,12 +1426,12 @@
                                 <div class="answer-row">
                                     <div class="answer-label">Your Answer:</div>
                                     <div class="answer-value ${wasAnswered ? (isCorrect ? 'correct-answer' : 'your-answer') : 'incorrect-answer'}">
-                                        ${wasAnswered ? userAnswer : 'No answer selected'}
+                                        ${wasAnswered ? userAnswerLetter : 'No answer selected'}
                                     </div>
                                 </div>
                                 <div class="answer-row">
                                     <div class="answer-label">Correct Answer:</div>
-                                    <div class="answer-value correct-answer">${correctAnswer}</div>
+                                    <div class="answer-value correct-answer">${correctAnswerLetter}</div>
                                 </div>
                             </div>
                             
