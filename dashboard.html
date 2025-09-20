@@ -1333,38 +1333,27 @@
     animateNumber('bestScore', bestScore, '%');
     animateNumber('studyStreak', studyStreak);
 
-    // Update trends and rest of function...
+    // Update trends
+    updateTrend('testsCompletedTrend', uniqueTests > 0 ? 'up' : '', uniqueTests > 0 ? `+${uniqueTests} this week` : '');
+    updateTrend('averageScoreTrend', improvement > 0 ? 'up' : improvement < 0 ? 'down' : '', improvement !== 0 ? `${improvement > 0 ? '+' : ''}${improvement}%` : '');
+    updateTrend('bestScoreTrend', bestScore > averageScore ? 'up' : '', bestScore > 0 ? `${bestScore - averageScore > 0 ? '+' : ''}${bestScore - averageScore}% above avg` : '');
+    updateTrend('studyStreakTrend', studyStreak > 0 ? 'up' : '', studyStreak > 0 ? 'Keep it up!' : '');
+    
+    // Update mini stats
+    const totalTime = userTestAttempts.reduce((sum, attempt) => sum + (attempt.time_spent || 0), 0);
+    const accuracy = completedTests > 0 ? Math.round((userTestAttempts.reduce((sum, attempt) => sum + (attempt.correct_answers || 0), 0) / userTestAttempts.reduce((sum, attempt) => sum + (attempt.total_questions || 42), 0)) * 100) : 0;
+    
+    document.getElementById('totalTime').textContent = `${Math.round(totalTime / 3600)}h`;
+    document.getElementById('accuracy').textContent = `${accuracy}%`;
+    document.getElementById('improvement').textContent = improvement > 0 ? `+${improvement}%` : improvement < 0 ? `${improvement}%` : '0%';
+    
+    // Update next goal
+    const nextTestId = Math.max(1, uniqueTests + 1);
+    document.getElementById('nextGoal').textContent = nextTestId <= 10 ? `Test ${nextTestId}` : 'Complete!';
+
+    // Update performance chart
+    updatePerformanceChart();
 }
-            // Calculate study streak (simplified)
-            const studyStreak = Math.min(uniqueTests * 2, 14); // Simplified calculation
-            
-            // Animate progress numbers
-            animateNumber('testsCompleted', uniqueTests);
-            animateNumber('averageScore', averageScore, '%');
-            animateNumber('bestScore', bestScore, '%');
-            animateNumber('studyStreak', studyStreak);
-
-            // Update trends
-            updateTrend('testsCompletedTrend', uniqueTests > 0 ? 'up' : '', uniqueTests > 0 ? `+${uniqueTests} this week` : '');
-            updateTrend('averageScoreTrend', improvement > 0 ? 'up' : improvement < 0 ? 'down' : '', improvement !== 0 ? `${improvement > 0 ? '+' : ''}${improvement}%` : '');
-            updateTrend('bestScoreTrend', bestScore > averageScore ? 'up' : '', bestScore > 0 ? `${bestScore - averageScore > 0 ? '+' : ''}${bestScore - averageScore}% above avg` : '');
-            updateTrend('studyStreakTrend', studyStreak > 0 ? 'up' : '', studyStreak > 0 ? 'Keep it up!' : '');
-            
-            // Update mini stats
-            const totalTime = userTestAttempts.reduce((sum, attempt) => sum + (attempt.time_spent || 0), 0);
-            const accuracy = completedTests > 0 ? Math.round((userTestAttempts.reduce((sum, attempt) => sum + (attempt.correct_answers || 0), 0) / userTestAttempts.reduce((sum, attempt) => sum + (attempt.total_questions || 42), 0)) * 100) : 0;
-            
-            document.getElementById('totalTime').textContent = `${Math.round(totalTime / 3600)}h`;
-            document.getElementById('accuracy').textContent = `${accuracy}%`;
-            document.getElementById('improvement').textContent = improvement > 0 ? `+${improvement}%` : improvement < 0 ? `${improvement}%` : '0%';
-            
-            // Update next goal
-            const nextTestId = Math.max(1, uniqueTests + 1);
-            document.getElementById('nextGoal').textContent = nextTestId <= 10 ? `Test ${nextTestId}` : 'Complete!';
-
-            // Update performance chart
-            updatePerformanceChart();
-        }
 
         function updateTrend(elementId, direction, text) {
             const element = document.getElementById(elementId);
@@ -1821,5 +1810,6 @@
     </script>
 </body>
 </html>
+
 
 
