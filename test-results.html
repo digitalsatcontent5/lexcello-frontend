@@ -1385,9 +1385,17 @@
                     const userAnswerLetter = convertToLetter(userAnswer);
                     const correctAnswerLetter = convertToLetter(correctAnswer);
                     
-                    const isCorrect = userAnswerLetter === correctAnswerLetter;
                     const wasAnswered = userAnswer !== null && userAnswer !== undefined;
                     const wasFlagged = testResults.flagged_questions && testResults.flagged_questions.includes(questionId);
+                    
+                    // Improved comparison logic - handle both numeric and letter formats
+                    let isCorrect = false;
+                    if (wasAnswered) {
+                        // Try multiple comparison methods to ensure accuracy
+                        isCorrect = (userAnswerLetter === correctAnswerLetter) || 
+                                   (userAnswer === correctAnswer) ||
+                                   (String(userAnswer) === String(correctAnswer));
+                    }
                     
                     let statusClass, statusText;
                     if (!wasAnswered) {
