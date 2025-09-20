@@ -1409,12 +1409,25 @@
                         statusText = 'Incorrect';
                     }
                     
-                    // Create data attributes for filtering
+                    // Create data attributes for filtering with better logic
                     const filterClasses = [];
-                    if (isCorrect && wasAnswered) filterClasses.push('correct');
-                    if (!isCorrect && wasAnswered) filterClasses.push('incorrect');
-                    if (!wasAnswered) filterClasses.push('unanswered');
-                    if (wasFlagged) filterClasses.push('flagged');
+                    
+                    if (wasAnswered) {
+                        if (isCorrect) {
+                            filterClasses.push('correct');
+                        } else {
+                            filterClasses.push('incorrect');
+                        }
+                    } else {
+                        filterClasses.push('unanswered');
+                    }
+                    
+                    if (wasFlagged) {
+                        filterClasses.push('flagged');
+                    }
+                    
+                    // Debug log for troubleshooting
+                    console.log(`Question ${index + 1}: User: ${userAnswer}(${userAnswerLetter}), Correct: ${correctAnswer}(${correctAnswerLetter}), IsCorrect: ${isCorrect}, Classes: ${filterClasses.join(' ')}`);
                     
                     reviewHTML += `
                         <div class="question-item" data-filter="${filterClasses.join(' ')}">
