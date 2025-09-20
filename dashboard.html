@@ -1,4 +1,5 @@
-<!DOCTYPE html>
+<div class="recommendation-card">
+                        <div<!DOCTYPE html>
 <html lang="en">
 <head>
 <link rel="icon" type="image/png" href="/favicon.png">
@@ -1302,58 +1303,50 @@
         
         // Update progress statistics with real data
         function updateProgressStats() {
-    const completedTests = userTestAttempts.length;
-    const uniqueTests = [...new Set(userTestAttempts.map(a => a.test_id))].length;
-    
-    // Fix: Convert string scores to numbers and filter out invalid ones
-    const validScores = userTestAttempts
-        .map(attempt => parseFloat(attempt.score) || 0)
-        .filter(score => !isNaN(score) && score > 0);
-    
-    const totalScore = validScores.reduce((sum, score) => sum + score, 0);
-    const averageScore = validScores.length > 0 ? Math.round(totalScore / validScores.length) : 0;
-    const bestScore = validScores.length > 0 ? Math.max(...validScores) : 0;
-    
-    // Calculate improvement with validation
-    let improvement = 0;
-    if (validScores.length >= 2) {
-        const firstScore = validScores[0];
-        const latestScore = validScores[validScores.length - 1];
-        if (firstScore > 0) {
-            improvement = Math.round(((latestScore - firstScore) / firstScore) * 100);
+            const completedTests = userTestAttempts.length;
+            const uniqueTests = [...new Set(userTestAttempts.map(a => a.test_id))].length;
+            const totalScore = userTestAttempts.reduce((sum, attempt) => sum + attempt.score, 0);
+            const averageScore = completedTests > 0 ? Math.round(totalScore / completedTests) : 0;
+            const bestScore = completedTests > 0 ? Math.max(...userTestAttempts.map(attempt => attempt.score)) : 0;
+            
+            // Calculate improvement
+            let improvement = 0;
+            if (userTestAttempts.length >= 2) {
+                const firstScore = userTestAttempts[0].score;
+                const latestScore = userTestAttempts[userTestAttempts.length - 1].score;
+                improvement = Math.round(((latestScore - firstScore) / firstScore) * 100);
+            }
+
+            // Calculate study streak (simplified)
+            const studyStreak = Math.min(uniqueTests * 2, 14); // Simplified calculation
+            
+            // Animate progress numbers
+            animateNumber('testsCompleted', uniqueTests);
+            animateNumber('averageScore', averageScore, '%');
+            animateNumber('bestScore', bestScore, '%');
+            animateNumber('studyStreak', studyStreak);
+
+            // Update trends
+            updateTrend('testsCompletedTrend', uniqueTests > 0 ? 'up' : '', uniqueTests > 0 ? `+${uniqueTests} this week` : '');
+            updateTrend('averageScoreTrend', improvement > 0 ? 'up' : improvement < 0 ? 'down' : '', improvement !== 0 ? `${improvement > 0 ? '+' : ''}${improvement}%` : '');
+            updateTrend('bestScoreTrend', bestScore > averageScore ? 'up' : '', bestScore > 0 ? `${bestScore - averageScore > 0 ? '+' : ''}${bestScore - averageScore}% above avg` : '');
+            updateTrend('studyStreakTrend', studyStreak > 0 ? 'up' : '', studyStreak > 0 ? 'Keep it up!' : '');
+            
+            // Update mini stats
+            const totalTime = userTestAttempts.reduce((sum, attempt) => sum + (attempt.time_spent || 0), 0);
+            const accuracy = completedTests > 0 ? Math.round((userTestAttempts.reduce((sum, attempt) => sum + (attempt.correct_answers || 0), 0) / userTestAttempts.reduce((sum, attempt) => sum + (attempt.total_questions || 42), 0)) * 100) : 0;
+            
+            document.getElementById('totalTime').textContent = `${Math.round(totalTime / 3600)}h`;
+            document.getElementById('accuracy').textContent = `${accuracy}%`;
+            document.getElementById('improvement').textContent = improvement > 0 ? `+${improvement}%` : improvement < 0 ? `${improvement}%` : '0%';
+            
+            // Update next goal
+            const nextTestId = Math.max(1, uniqueTests + 1);
+            document.getElementById('nextGoal').textContent = nextTestId <= 10 ? `Test ${nextTestId}` : 'Complete!';
+
+            // Update performance chart
+            updatePerformanceChart();
         }
-    }
-
-    // Calculate study streak (simplified)
-    const studyStreak = Math.min(uniqueTests * 2, 14);
-    
-    // Animate progress numbers
-    animateNumber('testsCompleted', uniqueTests);
-    animateNumber('averageScore', averageScore, '%');
-    animateNumber('bestScore', bestScore, '%');
-    animateNumber('studyStreak', studyStreak);
-
-    // Update trends
-    updateTrend('testsCompletedTrend', uniqueTests > 0 ? 'up' : '', uniqueTests > 0 ? `+${uniqueTests} this week` : '');
-    updateTrend('averageScoreTrend', improvement > 0 ? 'up' : improvement < 0 ? 'down' : '', improvement !== 0 ? `${improvement > 0 ? '+' : ''}${improvement}%` : '');
-    updateTrend('bestScoreTrend', bestScore > averageScore ? 'up' : '', bestScore > 0 ? `${bestScore - averageScore > 0 ? '+' : ''}${bestScore - averageScore}% above avg` : '');
-    updateTrend('studyStreakTrend', studyStreak > 0 ? 'up' : '', studyStreak > 0 ? 'Keep it up!' : '');
-    
-    // Update mini stats
-    const totalTime = userTestAttempts.reduce((sum, attempt) => sum + (attempt.time_spent || 0), 0);
-    const accuracy = completedTests > 0 ? Math.round((userTestAttempts.reduce((sum, attempt) => sum + (attempt.correct_answers || 0), 0) / userTestAttempts.reduce((sum, attempt) => sum + (attempt.total_questions || 42), 0)) * 100) : 0;
-    
-    document.getElementById('totalTime').textContent = `${Math.round(totalTime / 3600)}h`;
-    document.getElementById('accuracy').textContent = `${accuracy}%`;
-    document.getElementById('improvement').textContent = improvement > 0 ? `+${improvement}%` : improvement < 0 ? `${improvement}%` : '0%';
-    
-    // Update next goal
-    const nextTestId = Math.max(1, uniqueTests + 1);
-    document.getElementById('nextGoal').textContent = nextTestId <= 10 ? `Test ${nextTestId}` : 'Complete!';
-
-    // Update performance chart
-    updatePerformanceChart();
-}
 
         function updateTrend(elementId, direction, text) {
             const element = document.getElementById(elementId);
@@ -1371,8 +1364,9 @@
             // Group attempts by test_id and get best score for each
             const testScores = {};
             userTestAttempts.forEach(attempt => {
-                if (!testScores[attempt.test_id] || testScores[attempt.test_id] < attempt.score) {
-                    testScores[attempt.test_id] = attempt.score;
+                const numericScore = parseFloat(attempt.score) || 0;
+                if (!testScores[attempt.test_id] || testScores[attempt.test_id] < numericScore) {
+                    testScores[attempt.test_id] = numericScore;
                 }
             });
 
@@ -1584,7 +1578,7 @@
                 } else {
                     titleElement.textContent = 'Consistency Focus';
                     textElement.textContent = 'Work on maintaining consistent performance. Review your previous results to identify patterns.';
-                    actionElement.innerHTML = '<i class="fas fa-analytics me-2"></i>Analyze Performance';
+                    actionElement.innerHTML = '<i class="fas fa-chart-line me-2"></i>Review Performance';
                     actionElement.onclick = () => showAllTests();
                 }
             }
@@ -1810,6 +1804,3 @@
     </script>
 </body>
 </html>
-
-
-
