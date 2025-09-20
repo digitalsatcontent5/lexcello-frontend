@@ -1302,19 +1302,29 @@
         
         // Update progress statistics with real data
         function updateProgressStats() {
-            const completedTests = userTestAttempts.length;
-            const uniqueTests = [...new Set(userTestAttempts.map(a => a.test_id))].length;
-            const totalScore = userTestAttempts.reduce((sum, attempt) => sum + attempt.score, 0);
-            const averageScore = completedTests > 0 ? Math.round(totalScore / completedTests) : 0;
-            const bestScore = completedTests > 0 ? Math.max(...userTestAttempts.map(attempt => attempt.score)) : 0;
-            
-            // Calculate improvement
-            let improvement = 0;
-            if (userTestAttempts.length >= 2) {
-                const firstScore = userTestAttempts[0].score;
-                const latestScore = userTestAttempts[userTestAttempts.length - 1].score;
-                improvement = Math.round(((latestScore - firstScore) / firstScore) * 100);
-            }
+    const completedTests = userTestAttempts.length;
+    const uniqueTests = [...new Set(userTestAttempts.map(a => a.test_id))].length;
+    
+    // Fix: Use the correct field name and add validation
+    const validScores = userTestAttempts
+        .map(attempt => attempt.score || attempt.percentage || 0)
+        .filter(score => !isNaN(score) && score > 0);
+    
+    const totalScore = validScores.reduce((sum, score) => sum + score, 0);
+    const averageScore = validScores.length > 0 ? Math.round(totalScore / validScores.length) : 0;
+    const bestScore = validScores.length > 0 ? Math.max(...validScores) : 0;
+    
+    // Calculate improvement with validation
+    let improvement = 0;
+    if (validScores.length >= 2) {
+        const firstScore = validScores[0];
+        const latestScore = validScores[validScores.length - 1];
+        if (firstScore > 0) {
+            improvement = Math.round(((latestScore - firstScore) / firstScore) * 100);
+        }
+    }
+
+    // Rest of the function stays the same...
 
             // Calculate study streak (simplified)
             const studyStreak = Math.min(uniqueTests * 2, 14); // Simplified calculation
@@ -1802,3 +1812,4 @@
     </script>
 </body>
 </html>
+
