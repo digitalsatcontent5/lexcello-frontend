@@ -84,8 +84,31 @@
             color: white;
             padding: 60px 0 40px;
             margin-bottom: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dashboard-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(-10px, -10px) rotate(5deg); }
         }
         
+        .welcome-text {
+            position: relative;
+            z-index: 2;
+        }
+
         .welcome-text h1 {
             font-size: 2.5rem;
             font-weight: 700;
@@ -99,9 +122,11 @@
         
         .progress-summary {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
             gap: 20px;
             margin-top: 30px;
+            position: relative;
+            z-index: 2;
         }
         
         .progress-card {
@@ -111,6 +136,12 @@
             border-radius: 15px;
             text-align: center;
             border: 1px solid rgba(255,255,255,0.2);
+            transition: all 0.3s ease;
+        }
+
+        .progress-card:hover {
+            background: rgba(255,255,255,0.25);
+            transform: translateY(-3px);
         }
         
         .progress-number {
@@ -118,12 +149,26 @@
             font-weight: 800;
             display: block;
             color: var(--accent-gold);
+            margin-bottom: 5px;
         }
         
         .progress-label {
             font-size: 0.9rem;
             opacity: 0.9;
+        }
+
+        .progress-trend {
+            font-size: 0.8rem;
             margin-top: 5px;
+            opacity: 0.8;
+        }
+
+        .trend-up {
+            color: #90EE90;
+        }
+
+        .trend-down {
+            color: #FFB6C1;
         }
         
         /* Content Sections */
@@ -131,17 +176,38 @@
             margin-bottom: 40px;
         }
         
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
         .section-title {
             font-size: 1.8rem;
             font-weight: 700;
             color: var(--primary-color);
-            margin-bottom: 25px;
+            margin: 0;
+        }
+
+        .section-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-section-action {
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
         }
         
-        /* Test Cards */
+        /* Enhanced Test Cards */
         .tests-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
             gap: 25px;
         }
         
@@ -150,13 +216,31 @@
             border-radius: 15px;
             padding: 25px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: all 0.3s ease;
             border-left: 5px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .test-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
         }
         
         .test-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        }
+
+        .test-card:hover::before {
+            transform: scaleX(1);
         }
         
         .test-card.completed {
@@ -174,38 +258,43 @@
         
         .test-header {
             display: flex;
-            justify-content: between;
+            justify-content: space-between;
             align-items: flex-start;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
         
         .test-number {
             background: var(--secondary-color);
             color: white;
-            width: 35px;
-            height: 35px;
+            width: 45px;
+            height: 45px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 700;
-            margin-right: 15px;
+            font-size: 1.1rem;
+        }
+
+        .test-number.completed {
+            background: var(--success-color);
         }
         
         .test-info {
             flex: 1;
+            margin-left: 15px;
         }
         
         .test-title {
             font-size: 1.3rem;
             font-weight: 600;
             color: var(--primary-color);
-            margin: 0 0 5px 0;
+            margin: 0 0 8px 0;
         }
         
         .test-status {
             font-size: 0.85rem;
-            padding: 4px 12px;
+            padding: 6px 12px;
             border-radius: 12px;
             font-weight: 600;
         }
@@ -224,15 +313,37 @@
             background: #e2e8f0;
             color: #718096;
         }
+
+        .test-score-display {
+            text-align: right;
+        }
+
+        .test-score {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--success-color);
+            line-height: 1;
+        }
+
+        .test-score-label {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            margin-top: 2px;
+        }
+
+        .test-attempts {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
         
         .test-details {
-            margin: 15px 0;
+            margin: 20px 0;
         }
         
         .test-detail {
             display: flex;
             justify-content: space-between;
-            margin: 8px 0;
+            margin: 10px 0;
             font-size: 0.9rem;
         }
         
@@ -244,19 +355,30 @@
             font-weight: 600;
             color: var(--text-dark);
         }
-        
-        .test-score {
-            font-size: 1.8rem;
-            font-weight: 800;
-            color: var(--success-color);
+
+        .progress-bar-mini {
+            height: 6px;
+            background: #e2e8f0;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .progress-fill-mini {
+            height: 100%;
+            background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
+            border-radius: 3px;
+            transition: width 0.8s ease;
         }
         
         .test-actions {
-            margin-top: 20px;
+            margin-top: 25px;
+            display: flex;
+            gap: 10px;
         }
         
         .btn-test-action {
-            width: 100%;
+            flex: 1;
             padding: 12px;
             border-radius: 8px;
             font-weight: 600;
@@ -281,6 +403,15 @@
         .btn-review:hover {
             background: #38a169;
         }
+
+        .btn-retake {
+            background: var(--warning-color);
+            color: white;
+        }
+
+        .btn-retake:hover {
+            background: #dd6b20;
+        }
         
         .btn-locked {
             background: #e2e8f0;
@@ -304,33 +435,136 @@
             background: var(--bg-light);
             border-radius: 10px;
             margin: 20px 0;
+            position: relative;
         }
         
         .chart-placeholder {
             text-align: center;
             color: var(--text-light);
         }
+
+        .performance-chart-real {
+            width: 100%;
+            height: 100%;
+            padding: 20px;
+        }
+
+        .chart-line {
+            stroke: var(--secondary-color);
+            stroke-width: 3;
+            fill: none;
+        }
+
+        .chart-area {
+            fill: url(#gradient);
+            opacity: 0.3;
+        }
+
+        .chart-point {
+            fill: var(--secondary-color);
+            stroke: white;
+            stroke-width: 2;
+            r: 5;
+            cursor: pointer;
+        }
+
+        .chart-point:hover {
+            r: 7;
+            fill: var(--primary-color);
+        }
+
+        .chart-grid {
+            stroke: #e2e8f0;
+            stroke-width: 1;
+        }
+
+        .chart-label {
+            font-size: 12px;
+            fill: var(--text-light);
+        }
         
-        /* Recent Activity */
+        /* Study Recommendations */
+        .recommendation-card {
+            background: linear-gradient(135deg, var(--accent-gold), #f7c41f);
+            color: var(--primary-color);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .recommendation-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 70%);
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.05); }
+        }
+        
+        .recommendation-card h5 {
+            font-weight: 700;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .recommendation-content {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .recommendation-card .btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .recommendation-card .btn:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+        }
+
+        /* Enhanced Recent Activity */
         .activity-item {
             display: flex;
             align-items: center;
-            padding: 15px;
+            padding: 18px;
             background: white;
-            border-radius: 10px;
+            border-radius: 12px;
             margin-bottom: 15px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+
+        .activity-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
         
         .activity-icon {
-            width: 40px;
-            height: 40px;
+            width: 45px;
+            height: 45px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             margin-right: 15px;
-            font-size: 1.1rem;
+            font-size: 1.2rem;
         }
         
         .activity-completed {
@@ -341,6 +575,11 @@
         .activity-started {
             background: var(--secondary-color);
             color: white;
+        }
+
+        .activity-improvement {
+            background: var(--accent-gold);
+            color: var(--primary-color);
         }
         
         .activity-info {
@@ -357,29 +596,77 @@
             font-size: 0.9rem;
             color: var(--text-light);
         }
-        
-        /* Study Recommendations */
-        .recommendation-card {
-            background: linear-gradient(135deg, var(--accent-gold), #f7c41f);
-            color: var(--primary-color);
-            border-radius: 15px;
-            padding: 25px;
-            margin-bottom: 20px;
-        }
-        
-        .recommendation-card h5 {
+
+        .activity-score {
             font-weight: 700;
-            margin-bottom: 10px;
+            color: var(--success-color);
+            margin-left: 15px;
+            font-size: 1.1rem;
         }
-        
-        .recommendation-card .btn {
-            background: var(--primary-color);
+
+        /* Study Statistics */
+        .stats-mini-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .stat-mini-card {
+            background: var(--bg-light);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .stat-mini-card:hover {
+            border-color: var(--secondary-color);
+            background: white;
+        }
+
+        .stat-mini-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+
+        .stat-mini-label {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        /* Achievement Badges */
+        .achievements-container {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin: 15px 0;
+        }
+
+        .achievement-badge {
+            background: var(--success-color);
             color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
             font-weight: 600;
-            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .achievement-badge.gold {
+            background: var(--accent-gold);
+            color: var(--primary-color);
+        }
+
+        .achievement-badge.silver {
+            background: #a0aec0;
+            color: white;
         }
         
         /* Loading States */
@@ -392,6 +679,29 @@
         .spinner-border {
             width: 3rem;
             height: 3rem;
+        }
+
+        .skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        .skeleton-text {
+            height: 16px;
+            border-radius: 4px;
+            margin: 8px 0;
+        }
+
+        .skeleton-title {
+            height: 24px;
+            border-radius: 6px;
+            margin: 12px 0;
         }
         
         /* Footer */
@@ -425,6 +735,20 @@
             
             .tests-grid {
                 grid-template-columns: 1fr;
+            }
+
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .stats-mini-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .test-actions {
+                flex-direction: column;
             }
         }
     </style>
@@ -460,7 +784,7 @@
                 <div class="col-lg-6">
                     <div class="welcome-text">
                         <h1 id="welcomeMessage">Welcome back!</h1>
-                        <p>Continue your LNAT preparation journey. You're making great progress toward your law school goals.</p>
+                        <p id="welcomeSubtext">Continue your LNAT preparation journey. You're making great progress toward your law school goals.</p>
                     </div>
                 </div>
                 <div class="col-lg-6">
@@ -468,14 +792,22 @@
                         <div class="progress-card">
                             <span class="progress-number" id="testsCompleted">0</span>
                             <div class="progress-label">Tests Completed</div>
+                            <div class="progress-trend" id="testsCompletedTrend"></div>
                         </div>
                         <div class="progress-card">
-                            <span class="progress-number" id="averageScore">0</span>
+                            <span class="progress-number" id="averageScore">0%</span>
                             <div class="progress-label">Average Score</div>
+                            <div class="progress-trend" id="averageScoreTrend"></div>
                         </div>
                         <div class="progress-card">
-                            <span class="progress-number" id="improvement">0%</span>
+                            <span class="progress-number" id="bestScore">0%</span>
                             <div class="progress-label">Best Score</div>
+                            <div class="progress-trend" id="bestScoreTrend"></div>
+                        </div>
+                        <div class="progress-card">
+                            <span class="progress-number" id="studyStreak">0</span>
+                            <div class="progress-label">Day Streak</div>
+                            <div class="progress-trend" id="studyStreakTrend"></div>
                         </div>
                     </div>
                 </div>
@@ -489,9 +821,16 @@
             <div class="col-lg-8">
                 <!-- Practice Tests Section -->
                 <div class="content-section">
-                    <h2 class="section-title">
-                        <i class="fas fa-clipboard-list me-2"></i>Your Practice Tests
-                    </h2>
+                    <div class="section-header">
+                        <h2 class="section-title">
+                            <i class="fas fa-clipboard-list me-2"></i>Your Practice Tests
+                        </h2>
+                        <div class="section-actions">
+                            <a href="#" class="btn btn-outline-primary btn-section-action" onclick="showAllTests()">
+                                <i class="fas fa-list me-1"></i>View All
+                            </a>
+                        </div>
+                    </div>
                     
                     <div id="testsContainer" class="loading">
                         <div class="spinner-border text-primary" role="status">
@@ -509,7 +848,7 @@
                         <h3 class="section-title">
                             <i class="fas fa-chart-line me-2"></i>Performance Trend
                         </h3>
-                        <div class="chart-container">
+                        <div class="chart-container" id="performanceChartContainer">
                             <div class="chart-placeholder" id="performanceChart">
                                 <i class="fas fa-chart-area fa-3x text-secondary mb-3"></i>
                                 <div class="h5">Score Progress</div>
@@ -524,11 +863,26 @@
                 <!-- Study Recommendation -->
                 <div class="content-section">
                     <div class="recommendation-card">
-                        <h5><i class="fas fa-lightbulb me-2"></i>Study Tip</h5>
-                        <p id="studyRecommendation">Complete your first practice test to get personalized study recommendations based on your performance.</p>
-                        <button class="btn" onclick="startFirstTest()">
-                            <i class="fas fa-play me-2"></i>Start Practice Test 1
-                        </button>
+                        <div class="recommendation-content">
+                            <h5><i class="fas fa-lightbulb me-2"></i><span id="recommendationTitle">Study Tip</span></h5>
+                            <p id="studyRecommendation">Complete your first practice test to get personalized study recommendations based on your performance.</p>
+                            <button class="btn" id="recommendationAction" onclick="followRecommendation()">
+                                <i class="fas fa-play me-2"></i>Start Practice Test 1
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Achievements -->
+                <div class="content-section">
+                    <div class="performance-card">
+                        <h4><i class="fas fa-trophy me-2"></i>Achievements</h4>
+                        <div class="achievements-container" id="achievementsContainer">
+                            <div class="achievement-badge">
+                                <i class="fas fa-star"></i>
+                                Welcome!
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -554,22 +908,32 @@
                 <!-- Quick Stats -->
                 <div class="content-section">
                     <div class="performance-card">
-                        <h4>Quick Stats</h4>
+                        <h4><i class="fas fa-chart-bar me-2"></i>Quick Stats</h4>
+                        <div class="stats-mini-grid">
+                            <div class="stat-mini-card">
+                                <div class="stat-mini-value" id="totalTime">0h</div>
+                                <div class="stat-mini-label">Study Time</div>
+                            </div>
+                            <div class="stat-mini-card">
+                                <div class="stat-mini-value" id="accuracy">0%</div>
+                                <div class="stat-mini-label">Accuracy</div>
+                            </div>
+                            <div class="stat-mini-card">
+                                <div class="stat-mini-value" id="improvement">+0%</div>
+                                <div class="stat-mini-label">Improvement</div>
+                            </div>
+                            <div class="stat-mini-card">
+                                <div class="stat-mini-value" id="nextGoal">Test 1</div>
+                                <div class="stat-mini-label">Next Goal</div>
+                            </div>
+                        </div>
                         <div class="test-detail">
                             <span class="detail-label">Account Status:</span>
                             <span class="detail-value text-success">Active</span>
                         </div>
                         <div class="test-detail">
                             <span class="detail-label">Tests Available:</span>
-                            <span class="detail-value">10</span>
-                        </div>
-                        <div class="test-detail">
-                            <span class="detail-label">Course Progress:</span>
-                            <span class="detail-value" id="courseProgress">Just Started</span>
-                        </div>
-                        <div class="test-detail">
-                            <span class="detail-label">Next Goal:</span>
-                            <span class="detail-value text-primary">Complete Test 1</span>
+                            <span class="detail-value" id="testsAvailable">Loading...</span>
                         </div>
                     </div>
                 </div>
@@ -585,8 +949,9 @@
                     <a href="index.html">Home</a>
                     <a href="about-lnat.html">About LNAT</a>
                     <a href="pricing.html">Pricing</a>
-                    <a href="#contact">Contact Support</a>
-                    <a href="#privacy">Privacy Policy</a>
+                    <a href="contact.html">Contact</a>
+                    <a href="privacy-policy.html">Privacy Policy</a>
+                    <a href="terms-of-service.html">Terms of Service</a>
                 </div>
                 <p class="text-muted">&copy; 2024 Lexcello. All rights reserved.</p>
             </div>
@@ -600,49 +965,135 @@
         const API_BASE_URL = 'https://lexcello-backend.onrender.com/api';
         let currentUser = null;
         let userTestAttempts = [];
+        let availableTests = {};
         
         // Authentication check and initialization
         document.addEventListener('DOMContentLoaded', async function() {
-            // Skip authentication check for now to focus on content
-            await loadUserData();
-            await loadTests();
+            await initializeDashboard();
         });
+
+        async function initializeDashboard() {
+            try {
+                await checkAuthStatus();
+                await loadUserData();
+                await loadTests();
+                updateProgressStats();
+                generateRecommendations();
+                updateRecentActivity();
+                generateAchievements();
+            } catch (error) {
+                console.error('Dashboard initialization error:', error);
+                showLoadingError();
+            }
+        }
+
+        async function checkAuthStatus() {
+            const token = localStorage.getItem('authToken');
+            if (token) {
+                try {
+                    const response = await fetch(`${API_BASE_URL}/auth/profile`, {
+                        method: 'GET',
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                    
+                    if (response.ok) {
+                        currentUser = await response.json();
+                        updateUserInfo();
+                    } else {
+                        // Token invalid, remove it
+                        localStorage.removeItem('authToken');
+                        currentUser = null;
+                    }
+                } catch (error) {
+                    console.error('Auth check failed:', error);
+                    currentUser = null;
+                }
+            }
+        }
+
+        function updateUserInfo() {
+            if (currentUser) {
+                const userName = currentUser.name || currentUser.email || 'Student';
+                const firstName = userName.split(' ')[0] || userName.split('@')[0] || 'Student';
+                
+                document.getElementById('userName').textContent = firstName;
+                document.getElementById('userAvatar').textContent = firstName.charAt(0).toUpperCase();
+                document.getElementById('welcomeMessage').textContent = `Welcome back, ${firstName}!`;
+            }
+        }
         
-        // Load user data and statistics
+        // Load user test attempts and performance data
         async function loadUserData() {
             try {
-                // Placeholder data - replace with real API call when authentication is implemented
                 userTestAttempts = [];
-                updateProgressStats();
+                
+                if (currentUser) {
+                    // Try to fetch user's test attempts from API
+                    try {
+                        const token = localStorage.getItem('authToken');
+                        const response = await fetch(`${API_BASE_URL}/user/test-attempts`, {
+                            headers: {
+                                'Authorization': `Bearer ${token}`,
+                                'Content-Type': 'application/json'
+                            }
+                        });
+                        
+                        if (response.ok) {
+                            const data = await response.json();
+                            userTestAttempts = data.attempts || data || [];
+                            console.log('Loaded user test attempts:', userTestAttempts);
+                        }
+                    } catch (error) {
+                        console.log('Could not fetch user test attempts, checking localStorage');
+                    }
+                }
+
+                // Also check localStorage for recent test results
+                const recentResults = sessionStorage.getItem('testResults');
+                if (recentResults) {
+                    try {
+                        const result = JSON.parse(recentResults);
+                        if (result && result.score !== undefined) {
+                            // Add to attempts if not already present
+                            const existingAttempt = userTestAttempts.find(a => 
+                                a.test_id === (result.test_id || 1) && 
+                                Math.abs(new Date(a.completed_at) - new Date()) < 60000 // Within last minute
+                            );
+                            
+                            if (!existingAttempt) {
+                                userTestAttempts.push({
+                                    test_id: result.test_id || 1,
+                                    score: result.score || Math.round((result.correct_answers / result.total_questions) * 100),
+                                    time_spent: result.time_spent || 0,
+                                    correct_answers: result.correct_answers || 0,
+                                    total_questions: result.total_questions || 42,
+                                    completed_at: new Date().toISOString()
+                                });
+                                console.log('Added recent test result to attempts');
+                            }
+                        }
+                    } catch (error) {
+                        console.log('Could not parse recent test results');
+                    }
+                }
+                
             } catch (error) {
                 console.error('Error loading user data:', error);
             }
         }
         
-        // Load available tests with robust error handling
+        // Load available tests with content checking
         async function loadTests() {
             try {
-                console.log('Attempting to load tests from API...');
-                const response = await fetch(`${API_BASE_URL}/tests`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    // Add timeout
-                    signal: AbortSignal.timeout(10000)
-                });
+                console.log('Loading tests...');
+                const testStatuses = await checkTestContent();
+                availableTests = testStatuses;
+                renderTestsWithUserProgress(testStatuses);
+                updateTestsAvailableCount(testStatuses);
                 
-                if (response.ok) {
-                    const data = await response.json();
-                    console.log('Raw API response:', data);
-                    
-                    // Now check each test for actual question content
-                    const testStatuses = await checkTestContent();
-                    
-                    renderTestsWithStatus(testStatuses);
-                } else {
-                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-                }
             } catch (error) {
                 console.error('Error loading tests:', error);
                 renderTestsFallback();
@@ -653,55 +1104,38 @@
         async function checkTestContent() {
             const testStatuses = {};
             
-            // Check tests 1-10 for content
             for (let testId = 1; testId <= 10; testId++) {
                 try {
-                    console.log(`Checking content for test ${testId}...`);
                     const response = await fetch(`${API_BASE_URL}/tests/${testId}/questions`);
                     
                     if (response.ok) {
                         const data = await response.json();
-                        console.log(`Test ${testId} raw response:`, data);
-                        
                         let questionCount = 0;
                         
-                        // Handle different response formats
                         if (Array.isArray(data)) {
                             questionCount = data.length;
                         } else if (data.questions && Array.isArray(data.questions)) {
                             questionCount = data.questions.length;
                         } else if (data.message && data.message.includes('questions found')) {
-                            // Extract count from message like "X questions found for test Y"
                             const match = data.message.match(/(\d+)\s+questions?\s+found/i);
                             questionCount = match ? parseInt(match[1]) : 0;
                         } else if (data.count !== undefined) {
                             questionCount = data.count;
-                        } else if (typeof data === 'object' && data.id) {
-                            // Single question object
-                            questionCount = 1;
                         }
                         
                         testStatuses[testId] = {
                             hasContent: questionCount > 0,
                             questionCount: questionCount,
-                            status: questionCount > 0 ? 'available' : 'empty',
-                            responseFormat: Array.isArray(data) ? 'array' : 'object'
+                            status: questionCount > 0 ? 'available' : 'empty'
                         };
-                        
-                        console.log(`Test ${testId}: ${questionCount} questions (${testStatuses[testId].responseFormat} format)`);
-                    } else if (response.status === 404) {
-                        // 404 typically means no questions for this test
+                    } else {
                         testStatuses[testId] = {
                             hasContent: false,
                             questionCount: 0,
                             status: 'empty'
                         };
-                        console.log(`Test ${testId}: No questions (404)`);
-                    } else {
-                        throw new Error(`HTTP ${response.status}`);
                     }
                 } catch (error) {
-                    console.log(`Test ${testId} check failed:`, error.message);
                     testStatuses[testId] = {
                         hasContent: false,
                         questionCount: 0,
@@ -713,35 +1147,71 @@
             return testStatuses;
         }
         
-        // Render tests with dynamic status checking
-        function renderTestsWithStatus(testStatuses) {
+        // Render tests with user progress integration
+        function renderTestsWithUserProgress(testStatuses) {
             const container = document.getElementById('testsContainer');
             container.innerHTML = '<div class="tests-grid"></div>';
             const testsGrid = container.querySelector('.tests-grid');
             
             let testsHTML = '';
             
-            // Render each test based on its actual content status
+            // Render each test with user progress
             for (let testId = 1; testId <= 10; testId++) {
                 const status = testStatuses[testId] || { hasContent: false, questionCount: 0, status: 'empty' };
+                const userAttempts = userTestAttempts.filter(attempt => attempt.test_id === testId);
+                const hasCompleted = userAttempts.length > 0;
+                const bestScore = hasCompleted ? Math.max(...userAttempts.map(a => a.score)) : 0;
+                const latestAttempt = hasCompleted ? userAttempts[userAttempts.length - 1] : null;
                 
-                if (testId === 1 || status.hasContent) {
-                    // Render individual test cards for tests with content
-                    const cardClass = status.hasContent ? 'available' : 'locked';
-                    const statusText = status.hasContent ? 'Ready to Start' : 'No Content';
-                    const statusClass = status.hasContent ? 'status-available' : 'status-locked';
-                    const buttonText = status.hasContent ? 'Start Test' : 'Add Content';
-                    const buttonClass = status.hasContent ? 'btn-start' : 'btn-locked';
-                    const buttonAction = status.hasContent ? `startTest(${testId})` : `window.open('admin.html', '_blank')`;
+                if (status.hasContent || testId === 1) {
+                    const cardClass = hasCompleted ? 'completed' : (status.hasContent ? 'available' : 'locked');
+                    const statusText = hasCompleted ? `Completed (${bestScore}%)` : (status.hasContent ? 'Ready to Start' : 'No Content');
+                    const statusClass = hasCompleted ? 'status-completed' : (status.hasContent ? 'status-available' : 'status-locked');
+                    
+                    let actionButtons = '';
+                    if (status.hasContent) {
+                        if (hasCompleted) {
+                            actionButtons = `
+                                <button class="btn btn-test-action btn-review" onclick="viewTestResults(${testId})">
+                                    <i class="fas fa-chart-line me-1"></i>Review
+                                </button>
+                                <button class="btn btn-test-action btn-retake" onclick="startTest(${testId})">
+                                    <i class="fas fa-redo me-1"></i>Retake
+                                </button>
+                            `;
+                        } else {
+                            actionButtons = `
+                                <button class="btn btn-test-action btn-start" onclick="startTest(${testId})">
+                                    <i class="fas fa-play me-1"></i>Start Test
+                                </button>
+                            `;
+                        }
+                    } else {
+                        actionButtons = `
+                            <button class="btn btn-test-action btn-locked" disabled>
+                                <i class="fas fa-lock me-1"></i>Add Content
+                            </button>
+                        `;
+                    }
+
+                    // Calculate progress for this test
+                    const progress = hasCompleted ? 100 : 0;
                     
                     testsHTML += `
                         <div class="test-card ${cardClass}">
                             <div class="test-header">
-                                <div class="test-number">${testId}</div>
+                                <div class="test-number ${hasCompleted ? 'completed' : ''}">${testId}</div>
                                 <div class="test-info">
-                                    <h4 class="test-title">LNAT Practice Test ${testId}</h4>
+                                    <h4 class="test-title">Practice Test ${testId}</h4>
                                     <span class="test-status ${statusClass}">${statusText}</span>
                                 </div>
+                                ${hasCompleted ? `
+                                    <div class="test-score-display">
+                                        <div class="test-score">${bestScore}%</div>
+                                        <div class="test-score-label">Best Score</div>
+                                        <div class="test-attempts">${userAttempts.length} attempt${userAttempts.length > 1 ? 's' : ''}</div>
+                                    </div>
+                                ` : ''}
                             </div>
                             <div class="test-details">
                                 <div class="test-detail">
@@ -753,91 +1223,50 @@
                                     <span class="detail-value">95 minutes</span>
                                 </div>
                                 <div class="test-detail">
-                                    <span class="detail-label">Status:</span>
-                                    <span class="detail-value ${status.hasContent ? 'text-success' : 'text-warning'}">
-                                        ${status.hasContent ? 'Content Loaded' : 'Needs Content'}
-                                    </span>
+                                    <span class="detail-label">Progress:</span>
+                                    <span class="detail-value">${progress}%</span>
                                 </div>
+                                ${hasCompleted && latestAttempt ? `
+                                    <div class="test-detail">
+                                        <span class="detail-label">Last Completed:</span>
+                                        <span class="detail-value">${formatDate(latestAttempt.completed_at)}</span>
+                                    </div>
+                                ` : ''}
+                            </div>
+                            <div class="progress-bar-mini">
+                                <div class="progress-fill-mini" style="width: ${progress}%"></div>
                             </div>
                             <div class="test-actions">
-                                <button class="btn btn-test-action ${buttonClass}" 
-                                        onclick="${buttonAction}" 
-                                        ${!status.hasContent && testId !== 1 ? 'disabled' : ''}>
-                                    <i class="fas fa-${status.hasContent ? 'play' : 'upload'} me-2"></i>${buttonText} ${testId}
-                                </button>
+                                ${actionButtons}
                             </div>
                         </div>
                     `;
                 }
             }
             
-            // Count tests with content
-            const testsWithContent = Object.values(testStatuses).filter(s => s.hasContent).length;
-            const testsWithoutContent = 10 - testsWithContent;
-            
-            // Add summary card for empty tests if there are any
-            if (testsWithoutContent > 0) {
-                const emptyTestNumbers = [];
-                for (let i = 1; i <= 10; i++) {
-                    if (!testStatuses[i] || !testStatuses[i].hasContent) {
-                        emptyTestNumbers.push(i);
-                    }
-                }
-                
-                testsHTML += `
-                    <div class="test-card locked">
-                        <div class="test-header">
-                            <div class="test-number">${emptyTestNumbers.length}</div>
-                            <div class="test-info">
-                                <h4 class="test-title">Tests Awaiting Content</h4>
-                                <span class="test-status status-locked">Ready for Upload</span>
-                            </div>
-                        </div>
-                        <div class="test-details">
-                            <div class="test-detail">
-                                <span class="detail-label">Empty Tests:</span>
-                                <span class="detail-value">${emptyTestNumbers.join(', ')}</span>
-                            </div>
-                            <div class="test-detail">
-                                <span class="detail-label">Infrastructure:</span>
-                                <span class="detail-value text-success">Complete</span>
-                            </div>
-                            <div class="test-detail">
-                                <span class="detail-label">Upload Tool:</span>
-                                <span class="detail-value text-success">Excel Import Ready</span>
-                            </div>
-                        </div>
-                        <div class="test-actions">
-                            <button class="btn btn-test-action" 
-                                    style="background: var(--accent-gold); color: var(--primary-color);" 
-                                    onclick="window.open('admin.html', '_blank')">
-                                <i class="fas fa-upload me-2"></i>Add Content (Admin)
-                            </button>
-                        </div>
-                    </div>
-                `;
-            }
-            
             testsGrid.innerHTML = testsHTML;
-            console.log(`Rendered ${testsWithContent} tests with content, ${testsWithoutContent} awaiting content`);
+            console.log(`Rendered tests with user progress`);
+        }
+
+        function updateTestsAvailableCount(testStatuses) {
+            const availableCount = Object.values(testStatuses).filter(s => s.hasContent).length;
+            document.getElementById('testsAvailable').textContent = availableCount;
         }
         
-        // Fallback rendering when API is not available
+        // Fallback rendering
         function renderTestsFallback() {
             const container = document.getElementById('testsContainer');
-            
             container.innerHTML = `
-                <div class="alert alert-info mb-4">
-                    <i class="fas fa-info-circle me-2"></i>
-                    <strong>API Unavailable:</strong> Showing cached test information. Your backend may be starting up.
+                <div class="alert alert-warning mb-4">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    <strong>Connection Issue:</strong> Using cached data. Some features may be limited.
                 </div>
                 <div class="tests-grid">
-                    <!-- Test 1 - Available (Offline Mode) -->
                     <div class="test-card available">
                         <div class="test-header">
                             <div class="test-number">1</div>
                             <div class="test-info">
-                                <h4 class="test-title">LNAT Practice Test 1</h4>
+                                <h4 class="test-title">Practice Test 1</h4>
                                 <span class="test-status status-available">Available</span>
                             </div>
                         </div>
@@ -850,88 +1279,354 @@
                                 <span class="detail-label">Time Limit:</span>
                                 <span class="detail-value">95 minutes</span>
                             </div>
-                            <div class="test-detail">
-                                <span class="detail-label">Content:</span>
-                                <span class="detail-value text-success">Loaded</span>
-                            </div>
                         </div>
                         <div class="test-actions">
                             <button class="btn btn-test-action btn-start" onclick="startTest(1)">
-                                <i class="fas fa-play me-2"></i>Start Test 1
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <!-- Tests 2-10 - Infrastructure Ready -->
-                    <div class="test-card locked">
-                        <div class="test-header">
-                            <div class="test-number">2-10</div>
-                            <div class="test-info">
-                                <h4 class="test-title">Additional Tests</h4>
-                                <span class="test-status status-locked">Awaiting Content</span>
-                            </div>
-                        </div>
-                        <div class="test-details">
-                            <div class="test-detail">
-                                <span class="detail-label">Infrastructure:</span>
-                                <span class="detail-value text-success">Ready</span>
-                            </div>
-                            <div class="test-detail">
-                                <span class="detail-label">Content Needed:</span>
-                                <span class="detail-value">9 Tests</span>
-                            </div>
-                        </div>
-                        <div class="test-actions">
-                            <button class="btn btn-test-action" style="background: var(--accent-gold); color: var(--primary-color);" onclick="window.open('admin.html', '_blank')">
-                                <i class="fas fa-upload me-2"></i>Add Content (Admin)
+                                <i class="fas fa-play me-1"></i>Start Test
                             </button>
                         </div>
                     </div>
                 </div>
             `;
-            
-            console.log('Rendered fallback tests');
         }
         
-        // Update progress statistics
+        // Update progress statistics with real data
         function updateProgressStats() {
             const completedTests = userTestAttempts.length;
-            const averageScore = completedTests > 0 
-                ? Math.round(userTestAttempts.reduce((sum, attempt) => sum + attempt.score, 0) / completedTests)
-                : 0;
-            const bestScore = completedTests > 0 
-                ? Math.max(...userTestAttempts.map(attempt => attempt.score))
-                : 0;
+            const uniqueTests = [...new Set(userTestAttempts.map(a => a.test_id))].length;
+            const totalScore = userTestAttempts.reduce((sum, attempt) => sum + attempt.score, 0);
+            const averageScore = completedTests > 0 ? Math.round(totalScore / completedTests) : 0;
+            const bestScore = completedTests > 0 ? Math.max(...userTestAttempts.map(attempt => attempt.score)) : 0;
+            
+            // Calculate improvement
+            let improvement = 0;
+            if (userTestAttempts.length >= 2) {
+                const firstScore = userTestAttempts[0].score;
+                const latestScore = userTestAttempts[userTestAttempts.length - 1].score;
+                improvement = Math.round(((latestScore - firstScore) / firstScore) * 100);
+            }
+
+            // Calculate study streak (simplified)
+            const studyStreak = Math.min(uniqueTests * 2, 14); // Simplified calculation
             
             // Animate progress numbers
-            animateNumber('testsCompleted', completedTests);
-            animateNumber('averageScore', averageScore);
-            animateNumber('improvement', bestScore);
+            animateNumber('testsCompleted', uniqueTests);
+            animateNumber('averageScore', averageScore, '%');
+            animateNumber('bestScore', bestScore, '%');
+            animateNumber('studyStreak', studyStreak);
+
+            // Update trends
+            updateTrend('testsCompletedTrend', uniqueTests > 0 ? 'up' : '', uniqueTests > 0 ? `+${uniqueTests} this week` : '');
+            updateTrend('averageScoreTrend', improvement > 0 ? 'up' : improvement < 0 ? 'down' : '', improvement !== 0 ? `${improvement > 0 ? '+' : ''}${improvement}%` : '');
+            updateTrend('bestScoreTrend', bestScore > averageScore ? 'up' : '', bestScore > 0 ? `${bestScore - averageScore > 0 ? '+' : ''}${bestScore - averageScore}% above avg` : '');
+            updateTrend('studyStreakTrend', studyStreak > 0 ? 'up' : '', studyStreak > 0 ? 'Keep it up!' : '');
             
-            // Update course progress
-            const progress = Math.min(completedTests * 10, 100);
-            document.getElementById('courseProgress').textContent = `${progress}% Complete`;
+            // Update mini stats
+            const totalTime = userTestAttempts.reduce((sum, attempt) => sum + (attempt.time_spent || 0), 0);
+            const accuracy = completedTests > 0 ? Math.round((userTestAttempts.reduce((sum, attempt) => sum + (attempt.correct_answers || 0), 0) / userTestAttempts.reduce((sum, attempt) => sum + (attempt.total_questions || 42), 0)) * 100) : 0;
+            
+            document.getElementById('totalTime').textContent = `${Math.round(totalTime / 3600)}h`;
+            document.getElementById('accuracy').textContent = `${accuracy}%`;
+            document.getElementById('improvement').textContent = improvement > 0 ? `+${improvement}%` : improvement < 0 ? `${improvement}%` : '0%';
+            
+            // Update next goal
+            const nextTestId = Math.max(1, uniqueTests + 1);
+            document.getElementById('nextGoal').textContent = nextTestId <= 10 ? `Test ${nextTestId}` : 'Complete!';
+
+            // Update performance chart
+            updatePerformanceChart();
+        }
+
+        function updateTrend(elementId, direction, text) {
+            const element = document.getElementById(elementId);
+            element.className = `progress-trend trend-${direction}`;
+            element.textContent = text;
+        }
+
+        function updatePerformanceChart() {
+            if (userTestAttempts.length === 0) {
+                return; // Keep placeholder
+            }
+
+            const container = document.getElementById('performanceChartContainer');
+            
+            // Group attempts by test_id and get best score for each
+            const testScores = {};
+            userTestAttempts.forEach(attempt => {
+                if (!testScores[attempt.test_id] || testScores[attempt.test_id] < attempt.score) {
+                    testScores[attempt.test_id] = attempt.score;
+                }
+            });
+
+            const scores = Object.values(testScores);
+            const testNumbers = Object.keys(testScores).sort((a, b) => a - b);
+
+            if (scores.length < 2) {
+                // Show single score
+                container.innerHTML = `
+                    <div class="chart-placeholder">
+                        <i class="fas fa-chart-line fa-3x text-success mb-3"></i>
+                        <div class="h4 text-success">${scores[0]}%</div>
+                        <div class="text-muted">Your Score on Test ${testNumbers[0]}</div>
+                        <div class="mt-3">
+                            <span class="badge bg-success">Great start!</span>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            // Create simple line chart
+            const width = 260;
+            const height = 180;
+            const padding = 40;
+            const maxScore = Math.max(...scores, 100);
+            const minScore = Math.max(0, Math.min(...scores) - 10);
+
+            let chartHTML = `
+                <svg class="performance-chart-real" viewBox="0 0 ${width} ${height}">
+                    <defs>
+                        <linearGradient id="gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" style="stop-color:var(--secondary-color);stop-opacity:0.3" />
+                            <stop offset="100%" style="stop-color:var(--secondary-color);stop-opacity:0.1" />
+                        </linearGradient>
+                    </defs>
+            `;
+
+            // Create points and lines
+            const points = scores.map((score, index) => {
+                const x = padding + (index * (width - 2 * padding)) / (scores.length - 1);
+                const y = height - padding - ((score - minScore) * (height - 2 * padding)) / (maxScore - minScore);
+                return { x, y, score, test: testNumbers[index] };
+            });
+
+            // Draw area
+            let areaPath = `M ${points[0].x} ${height - padding}`;
+            points.forEach(point => {
+                areaPath += ` L ${point.x} ${point.y}`;
+            });
+            areaPath += ` L ${points[points.length - 1].x} ${height - padding} Z`;
+            
+            chartHTML += `<path d="${areaPath}" class="chart-area"/>`;
+
+            // Draw line
+            let linePath = `M ${points[0].x} ${points[0].y}`;
+            points.forEach((point, index) => {
+                if (index > 0) {
+                    linePath += ` L ${point.x} ${point.y}`;
+                }
+            });
+            chartHTML += `<path d="${linePath}" class="chart-line"/>`;
+
+            // Draw points
+            points.forEach(point => {
+                chartHTML += `<circle cx="${point.x}" cy="${point.y}" class="chart-point" title="Test ${point.test}: ${point.score}%"/>`;
+            });
+
+            chartHTML += `</svg>`;
+
+            container.innerHTML = chartHTML;
+        }
+        
+        // Generate smart recommendations based on performance
+        function generateRecommendations() {
+            const completedTests = [...new Set(userTestAttempts.map(a => a.test_id))].length;
+            const titleElement = document.getElementById('recommendationTitle');
+            const textElement = document.getElementById('studyRecommendation');
+            const actionElement = document.getElementById('recommendationAction');
+            
+            if (completedTests === 0) {
+                titleElement.textContent = 'Start Your Journey';
+                textElement.textContent = 'Begin with Practice Test 1 to establish your baseline LNAT score and identify areas for improvement.';
+                actionElement.innerHTML = '<i class="fas fa-play me-2"></i>Start Practice Test 1';
+                actionElement.onclick = () => startTest(1);
+            } else if (completedTests === 1) {
+                const latestScore = userTestAttempts[userTestAttempts.length - 1].score;
+                if (latestScore >= 75) {
+                    titleElement.textContent = 'Excellent Start!';
+                    textElement.textContent = 'Your first score shows strong potential. Continue with Test 2 to build consistency and identify any knowledge gaps.';
+                    actionElement.innerHTML = '<i class="fas fa-forward me-2"></i>Take Practice Test 2';
+                    actionElement.onclick = () => startTest(2);
+                } else if (latestScore >= 60) {
+                    titleElement.textContent = 'Good Foundation';
+                    textElement.textContent = 'You have a solid foundation. Review your Test 1 results, then tackle Test 2 to see improvement patterns.';
+                    actionElement.innerHTML = '<i class="fas fa-chart-line me-2"></i>Review Test 1 Results';
+                    actionElement.onclick = () => viewTestResults(1);
+                } else {
+                    titleElement.textContent = 'Focus on Fundamentals';
+                    textElement.textContent = 'Review the basic LNAT question types and logical reasoning principles before attempting more tests.';
+                    actionElement.innerHTML = '<i class="fas fa-book me-2"></i>Study LNAT Guide';
+                    actionElement.onclick = () => window.open('about-lnat.html', '_blank');
+                }
+            } else {
+                const recentScores = userTestAttempts.slice(-3).map(a => a.score);
+                const isImproving = recentScores.length >= 2 && recentScores[recentScores.length - 1] > recentScores[0];
+                
+                if (isImproving) {
+                    titleElement.textContent = 'Keep the Momentum!';
+                    textElement.textContent = 'Your scores are improving! Continue with the next test to maintain this positive trend.';
+                    actionElement.innerHTML = `<i class="fas fa-rocket me-2"></i>Take Test ${completedTests + 1}`;
+                    actionElement.onclick = () => startTest(completedTests + 1);
+                } else {
+                    titleElement.textContent = 'Consistency Focus';
+                    textElement.textContent = 'Work on maintaining consistent performance. Review your previous results to identify patterns.';
+                    actionElement.innerHTML = '<i class="fas fa-analytics me-2"></i>Analyze Performance';
+                    actionElement.onclick = () => showAllTests();
+                }
+            }
+        }
+
+        // Update recent activity with real data
+        function updateRecentActivity() {
+            const activityContainer = document.getElementById('recentActivity');
+            let activityHTML = '';
+
+            // Sort attempts by date
+            const sortedAttempts = [...userTestAttempts].sort((a, b) => new Date(b.completed_at) - new Date(a.completed_at));
+
+            sortedAttempts.slice(0, 5).forEach(attempt => {
+                const isGoodScore = attempt.score >= 70;
+                const isGreatScore = attempt.score >= 85;
+                
+                activityHTML += `
+                    <div class="activity-item">
+                        <div class="activity-icon ${isGreatScore ? 'activity-improvement' : 'activity-completed'}">
+                            <i class="fas fa-${isGreatScore ? 'star' : 'check'}"></i>
+                        </div>
+                        <div class="activity-info">
+                            <div class="activity-title">Completed Practice Test ${attempt.test_id}</div>
+                            <div class="activity-time">${formatDate(attempt.completed_at)}</div>
+                        </div>
+                        <div class="activity-score">${attempt.score}%</div>
+                    </div>
+                `;
+            });
+
+            if (activityHTML === '') {
+                activityHTML = `
+                    <div class="activity-item">
+                        <div class="activity-icon activity-started">
+                            <i class="fas fa-user-plus"></i>
+                        </div>
+                        <div class="activity-info">
+                            <div class="activity-title">Joined Lexcello</div>
+                            <div class="activity-time">Welcome to your LNAT prep!</div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            activityContainer.innerHTML = activityHTML;
+        }
+
+        // Generate achievements based on user progress
+        function generateAchievements() {
+            const achievementsContainer = document.getElementById('achievementsContainer');
+            const completedTests = [...new Set(userTestAttempts.map(a => a.test_id))].length;
+            const bestScore = userTestAttempts.length > 0 ? Math.max(...userTestAttempts.map(a => a.score)) : 0;
+            const totalAttempts = userTestAttempts.length;
+            
+            let achievementsHTML = '';
+
+            // Welcome achievement
+            achievementsHTML += `
+                <div class="achievement-badge">
+                    <i class="fas fa-star"></i>
+                    Welcome!
+                </div>
+            `;
+
+            // Test completion achievements
+            if (completedTests >= 1) {
+                achievementsHTML += `
+                    <div class="achievement-badge">
+                        <i class="fas fa-play"></i>
+                        First Test
+                    </div>
+                `;
+            }
+
+            if (completedTests >= 3) {
+                achievementsHTML += `
+                    <div class="achievement-badge gold">
+                        <i class="fas fa-medal"></i>
+                        3 Tests Done
+                    </div>
+                `;
+            }
+
+            if (completedTests >= 5) {
+                achievementsHTML += `
+                    <div class="achievement-badge gold">
+                        <i class="fas fa-trophy"></i>
+                        Halfway There
+                    </div>
+                `;
+            }
+
+            // Score achievements
+            if (bestScore >= 70) {
+                achievementsHTML += `
+                    <div class="achievement-badge">
+                        <i class="fas fa-thumbs-up"></i>
+                        70%+ Score
+                    </div>
+                `;
+            }
+
+            if (bestScore >= 85) {
+                achievementsHTML += `
+                    <div class="achievement-badge gold">
+                        <i class="fas fa-star"></i>
+                        85%+ Score
+                    </div>
+                `;
+            }
+
+            // Persistence achievements
+            if (totalAttempts >= 5) {
+                achievementsHTML += `
+                    <div class="achievement-badge silver">
+                        <i class="fas fa-dumbbell"></i>
+                        Dedicated
+                    </div>
+                `;
+            }
+
+            achievementsContainer.innerHTML = achievementsHTML;
         }
         
         // Animate numbers counting up
-        function animateNumber(elementId, target) {
+        function animateNumber(elementId, target, suffix = '') {
             const element = document.getElementById(elementId);
-            const isPercentage = elementId === 'improvement';
             let current = 0;
             const increment = Math.max(1, Math.floor(target / 30));
             
             const timer = setInterval(() => {
                 current += increment;
                 if (current >= target) {
-                    element.textContent = isPercentage ? `${target}%` : target;
+                    element.textContent = target + suffix;
                     clearInterval(timer);
                 } else {
-                    element.textContent = isPercentage ? `${current}%` : current;
+                    element.textContent = current + suffix;
                 }
             }, 50);
         }
+
+        // Utility functions
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            const now = new Date();
+            const diffTime = Math.abs(now - date);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            
+            if (diffDays === 1) return 'Today';
+            if (diffDays === 2) return 'Yesterday';
+            if (diffDays <= 7) return `${diffDays} days ago`;
+            return date.toLocaleDateString();
+        }
         
-        // Start a test - THIS IS THE FIXED FUNCTION
+        // Navigation functions
         function startTest(testNumber) {
             if (confirm(`Ready to start Practice Test ${testNumber}? This test must be completed in one session and will take approximately 95 minutes.`)) {
                 if (testNumber === 1) {
@@ -941,25 +1636,63 @@
                 }
             }
         }
-        
-        // Start first test from recommendation
-        function startFirstTest() {
-            startTest(1);
+
+        function viewTestResults(testNumber) {
+            // For now, redirect to results page - in a real implementation, 
+            // you'd pass the specific test results data
+            const testAttempts = userTestAttempts.filter(a => a.test_id === testNumber);
+            if (testAttempts.length > 0) {
+                // Store the test results in session storage for the results page
+                sessionStorage.setItem('testResults', JSON.stringify(testAttempts[testAttempts.length - 1]));
+                window.location.href = 'test-results.html';
+            }
+        }
+
+        function followRecommendation() {
+            // This will be set by the generateRecommendations function
+        }
+
+        function showAllTests() {
+            // Scroll to tests section
+            document.querySelector('.tests-grid').scrollIntoView({ behavior: 'smooth' });
         }
         
-        // Sign out function
         function signOut() {
             if (confirm('Are you sure you want to sign out?')) {
                 localStorage.removeItem('authToken');
+                sessionStorage.clear();
                 window.location.href = 'index.html';
             }
         }
+
+        function showLoadingError() {
+            const container = document.getElementById('testsContainer');
+            container.innerHTML = `
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    <strong>Loading Error:</strong> Unable to connect to the server. Please check your connection and try again.
+                    <button class="btn btn-outline-danger btn-sm ms-3" onclick="initializeDashboard()">
+                        <i class="fas fa-refresh me-1"></i>Retry
+                    </button>
+                </div>
+            `;
+        }
         
-        // Error handling for API calls
+        // Error handling
         window.addEventListener('unhandledrejection', function(event) {
             console.error('Unhandled promise rejection:', event.reason);
         });
+
+        // Auto-refresh data every 5 minutes
+        setInterval(async () => {
+            try {
+                await loadUserData();
+                updateProgressStats();
+                updateRecentActivity();
+            } catch (error) {
+                console.log('Auto-refresh failed:', error);
+            }
+        }, 300000); // 5 minutes
     </script>
 </body>
 </html>
-
