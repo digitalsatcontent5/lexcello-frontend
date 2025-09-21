@@ -492,64 +492,67 @@
 </head>
 <body>
     <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg fixed-top">
-        <div class="container">
-            <a class="navbar-brand" href="index.html">Lexcello</a>
+    <!-- Navigation Section - Updated with Blogs -->
+<nav class="navbar navbar-expand-lg fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="index.html">Lexcello</a>
+        
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav mx-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="#home">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#tests">Practice Tests</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="about-lnat.html">About LNAT</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="blogs.html">Blogs</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="pricing.html">Pricing</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="contact.html">Contact</a>
+                </li>
+            </ul>
             
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+            <!-- Authentication buttons (shown when not logged in) -->
+            <div class="d-flex gap-2" id="auth-buttons">
+                <button class="btn btn-outline-primary" onclick="signIn()">Sign In</button>
+                <button class="btn btn-primary" onclick="getStarted()">Get Started</button>
+            </div>
             
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav mx-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="#home">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#tests">Practice Tests</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="about-lnat.html">About LNAT</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="pricing.html">Pricing</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="contact.html">Contact</a>
-                    </li>
-                </ul>
-                
-                <!-- Authentication buttons (shown when not logged in) -->
-                <div class="d-flex gap-2" id="auth-buttons">
-                    <button class="btn btn-outline-primary" onclick="signIn()">Sign In</button>
-                    <button class="btn btn-primary" onclick="getStarted()">Get Started</button>
+            <!-- User menu (shown when logged in) -->
+            <div class="user-menu" id="user-menu" style="display: none;">
+                <div class="user-avatar" onclick="toggleUserDropdown()" id="user-avatar">
+                    U
                 </div>
-                
-                <!-- User menu (shown when logged in) -->
-                <div class="user-menu" id="user-menu" style="display: none;">
-                    <div class="user-avatar" onclick="toggleUserDropdown()" id="user-avatar">
-                        U
-                    </div>
-                    <div class="user-dropdown" id="user-dropdown">
-                        <a href="dashboard.html">
-                            <i class="fas fa-tachometer-alt me-2"></i>Dashboard
-                        </a>
-                        <a href="profile.html">
-                            <i class="fas fa-user me-2"></i>Profile
-                        </a>
-                        <a href="test-history.html">
-                            <i class="fas fa-history me-2"></i>Test History
-                        </a>
-                        <div class="divider"></div>
-                        <a href="#" onclick="signOut()">
-                            <i class="fas fa-sign-out-alt me-2"></i>Sign Out
-                        </a>
-                    </div>
+                <div class="user-dropdown" id="user-dropdown">
+                    <a href="dashboard.html">
+                        <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                    </a>
+                    <a href="profile.html">
+                        <i class="fas fa-user me-2"></i>Profile
+                    </a>
+                    <a href="test-history.html">
+                        <i class="fas fa-history me-2"></i>Test History
+                    </a>
+                    <div class="divider"></div>
+                    <a href="#" onclick="signOut()">
+                        <i class="fas fa-sign-out-alt me-2"></i>Sign Out
+                    </a>
                 </div>
             </div>
         </div>
-    </nav>
-
+    </div>
+</nav>
     <!-- Hero Section -->
     <section class="hero" id="home">
         <div class="container">
@@ -1191,6 +1194,7 @@
     </script>
 </body>
 </html>
+
 
 
 
