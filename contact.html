@@ -184,6 +184,34 @@
             color: #20BA5A !important;
         }
         
+        /* Floating WhatsApp Button */
+        .whatsapp-float {
+            position: fixed;
+            width: 60px;
+            height: 60px;
+            bottom: 40px;
+            right: 40px;
+            background-color: #25d366;
+            color: #FFF;
+            border-radius: 50px;
+            text-align: center;
+            font-size: 30px;
+            box-shadow: 2px 2px 3px #999;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .whatsapp-float:hover {
+            background-color: #20ba5a;
+            transform: scale(1.1);
+            color: white;
+            text-decoration: none;
+        }
+        
         /* Contact Form */
         .contact-form {
             background: white;
@@ -342,6 +370,14 @@
             .contact-icon {
                 margin-right: 0;
                 margin-bottom: 15px;
+            }
+            
+            .whatsapp-float {
+                width: 50px;
+                height: 50px;
+                bottom: 20px;
+                right: 20px;
+                font-size: 24px;
             }
         }
     </style>
@@ -571,8 +607,8 @@
                     <h5 class="fw-bold mb-3">Lexcello</h5>
                     <p class="text-light">Expert LNAT preparation platform designed to help aspiring law students excel in their admissions journey.</p>
                     <div class="footer-links">
-                        <a href="https://wa.me/918106461788?text=Hello,%20I%20have%20a%20question%20about%20LNAT%20preparation" target="_blank">
-                            <i class="fab fa-whatsapp me-2"></i>WhatsApp
+                        <a href="https://wa.me/918106461788?text=Hello,%20I%20have%20a%20question%20about%20LNAT%20preparation" target="_blank" title="WhatsApp">
+                            <i class="fab fa-whatsapp"></i>
                         </a>
                         <a href="https://instagram.com/lexcello_lnat" target="_blank"><i class="fab fa-instagram me-2"></i>Instagram</a>
                         <a href="https://www.linkedin.com/in/lexcello-lnat-preparation-9417ba385/" target="_blank"><i class="fab fa-linkedin me-2"></i>LinkedIn</a>
@@ -614,6 +650,11 @@
             </div>
         </div>
     </footer>
+
+    <!-- Floating WhatsApp Button -->
+    <a href="https://wa.me/918106461788?text=Hello,%20I%20need%20help%20with%20LNAT%20preparation" class="whatsapp-float" target="_blank" title="Chat on WhatsApp">
+        <i class="fab fa-whatsapp"></i>
+    </a>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     
