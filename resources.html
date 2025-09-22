@@ -211,6 +211,56 @@
             color: var(--primary-hover);
         }
         
+        /* Custom layout for 5 cards */
+        .five-card-layout {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .five-card-layout .resource-card {
+            min-height: 280px;
+        }
+        
+        @media (min-width: 992px) {
+            .five-card-layout {
+                display: grid;
+                grid-template-columns: repeat(6, 1fr);
+                gap: 2rem;
+            }
+            
+            /* First row: 3 cards taking 2 columns each */
+            .five-card-layout .resource-card:nth-child(1) {
+                grid-column: 1 / 3;
+            }
+            
+            .five-card-layout .resource-card:nth-child(2) {
+                grid-column: 3 / 5;
+            }
+            
+            .five-card-layout .resource-card:nth-child(3) {
+                grid-column: 5 / 7;
+            }
+            
+            /* Second row: 2 cards centered (taking columns 2-4 and 4-6) */
+            .five-card-layout .resource-card:nth-child(4) {
+                grid-column: 2 / 4;
+            }
+            
+            .five-card-layout .resource-card:nth-child(5) {
+                grid-column: 4 / 6;
+            }
+        }
+        
+        @media (max-width: 767px) {
+            .five-card-layout {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+        }
+        
         /* Quick Tips Section */
         .quick-tips {
             background: white;
@@ -360,114 +410,79 @@
         </div>
     </section>
 
-    <!-- Study Guides Section -->
+    <!-- Resources Section -->
     <section class="resources-section">
         <div class="container">
             <div class="resource-category">
                 <div class="category-header">
-                    <h2>Study Guides & Preparation Materials</h2>
-                    <p>Essential guides to master every aspect of the LNAT</p>
+                    <h2>Essential LNAT Resources</h2>
+                    <p>Everything you need to master the LNAT and achieve your target score</p>
                 </div>
                 
-                <div class="row g-4">
-                    <div class="col-lg-4 col-md-6">
-                        <div class="resource-card">
-                            <div class="resource-icon">
-                                <i class="fas fa-book-open"></i>
-                            </div>
-                            <h4>Complete LNAT Study Guide</h4>
-                            <div class="resource-meta">
-                                <span>45 pages</span>
-                                <span class="resource-tag">Essential</span>
-                            </div>
-                            <p>Comprehensive guide covering all LNAT sections, question types, and proven strategies for success.</p>
-                            <a href="#" class="resource-action">Download Guide <i class="fas fa-download ms-1"></i></a>
+                <div class="five-card-layout">
+                    <div class="resource-card">
+                        <div class="resource-icon">
+                            <i class="fas fa-clock"></i>
                         </div>
+                        <h4>Time Management Strategies</h4>
+                        <div class="resource-meta">
+                            <span>15 pages</span>
+                            <span class="resource-tag">Strategy</span>
+                        </div>
+                        <p>Master the art of time management with proven techniques to complete all 42 questions in 95 minutes.</p>
+                        <a href="time-management-strategies.pdf" class="resource-action">Download Guide <i class="fas fa-download ms-1"></i></a>
                     </div>
                     
-                    <div class="col-lg-4 col-md-6">
-                        <div class="resource-card">
-                            <div class="resource-icon">
-                                <i class="fas fa-clock"></i>
-                            </div>
-                            <h4>Time Management Strategies</h4>
-                            <div class="resource-meta">
-                                <span>15 pages</span>
-                                <span class="resource-tag">Strategy</span>
-                            </div>
-                            <p>Master the art of time management with proven techniques to complete all 42 questions in 95 minutes.</p>
-                            <a href="time-management-strategies.pdf" class="resource-action">Download Guide <i class="fas fa-download ms-1"></i></a>
+                    <div class="resource-card">
+                        <div class="resource-icon">
+                            <i class="fas fa-brain"></i>
                         </div>
+                        <h4>Critical Reasoning Mastery</h4>
+                        <div class="resource-meta">
+                            <span>28 pages</span>
+                            <span class="resource-tag">Advanced</span>
+                        </div>
+                        <p>Advanced techniques for tackling complex logical reasoning questions with confidence.</p>
+                        <a href="#" class="resource-action">Download Guide <i class="fas fa-download ms-1"></i></a>
                     </div>
                     
-                    <div class="col-lg-4 col-md-6">
-                        <div class="resource-card">
-                            <div class="resource-icon">
-                                <i class="fas fa-brain"></i>
-                            </div>
-                            <h4>Critical Reasoning Mastery</h4>
-                            <div class="resource-meta">
-                                <span>28 pages</span>
-                                <span class="resource-tag">Advanced</span>
-                            </div>
-                            <p>Advanced techniques for tackling complex logical reasoning questions with confidence.</p>
-                            <a href="#" class="resource-action">Download Guide <i class="fas fa-download ms-1"></i></a>
+                    <div class="resource-card">
+                        <div class="resource-icon">
+                            <i class="fas fa-file-alt"></i>
                         </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Practice Materials Section -->
-            <div class="resource-category">
-                <div class="category-header">
-                    <h2>Practice Materials & Sample Questions</h2>
-                    <p>Authentic practice questions to test your knowledge</p>
-                </div>
-                
-                <div class="row g-4">
-                    <div class="col-lg-4 col-md-6">
-                        <div class="resource-card">
-                            <div class="resource-icon">
-                                <i class="fas fa-file-alt"></i>
-                            </div>
-                            <h4>50 Sample Questions</h4>
-                            <div class="resource-meta">
-                                <span>Detailed answers</span>
-                                <span class="resource-tag">Practice</span>
-                            </div>
-                            <p>Collection of authentic LNAT-style questions with comprehensive explanations and reasoning.</p>
-                            <a href="#" class="resource-action">Download Questions <i class="fas fa-download ms-1"></i></a>
+                        <h4>50 Sample Questions</h4>
+                        <div class="resource-meta">
+                            <span>Detailed answers</span>
+                            <span class="resource-tag">Practice</span>
                         </div>
+                        <p>Collection of authentic LNAT-style questions with comprehensive explanations and reasoning.</p>
+                        <a href="#" class="resource-action">Download Questions <i class="fas fa-download ms-1"></i></a>
                     </div>
                     
-                    <div class="col-lg-4 col-md-6">
-                        <div class="resource-card">
-                            <div class="resource-icon">
-                                <i class="fas fa-calendar-alt"></i>
-                            </div>
-                            <h4>Study Schedule Template</h4>
-                            <div class="resource-meta">
-                                <span>6-week plan</span>
-                                <span class="resource-tag">Planning</span>
-                            </div>
-                            <p>Structured 6-week study plan to systematically prepare for your LNAT examination.</p>
-                            <a href="LNAT-Study-Schedule-Template.pdf" class="resource-action">Download Template <i class="fas fa-download ms-1"></i></a>
+                    <div class="resource-card">
+                        <div class="resource-icon">
+                            <i class="fas fa-calendar-alt"></i>
                         </div>
+                        <h4>Study Schedule Template</h4>
+                        <div class="resource-meta">
+                            <span>6-week plan</span>
+                            <span class="resource-tag">Planning</span>
+                        </div>
+                        <p>Structured 6-week study plan to systematically prepare for your LNAT examination.</p>
+                        <a href="LNAT-Study-Schedule-Template.pdf" class="resource-action">Download Template <i class="fas fa-download ms-1"></i></a>
                     </div>
                     
-                    <div class="col-lg-4 col-md-6">
-                        <div class="resource-card">
-                            <div class="resource-icon">
-                                <i class="fas fa-chart-line"></i>
-                            </div>
-                            <h4>LNAT Error Log</h4>
-                            <div class="resource-meta">
-                                <span>Excel template</span>
-                                <span class="resource-tag">Analytics</span>
-                            </div>
-                            <p>Track your LNAT practice test errors and identify patterns in incorrect answers to focus your study efforts effectively.</p>
-                            <a href="error-log.html" class="resource-action">Open Error Log <i class="fas fa-external-link-alt ms-1"></i></a>
+                    <div class="resource-card">
+                        <div class="resource-icon">
+                            <i class="fas fa-chart-line"></i>
                         </div>
+                        <h4>LNAT Error Log</h4>
+                        <div class="resource-meta">
+                            <span>Excel template</span>
+                            <span class="resource-tag">Analytics</span>
+                        </div>
+                        <p>Track your LNAT practice test errors and identify patterns in incorrect answers to focus your study efforts effectively.</p>
+                        <a href="error-log.html" class="resource-action">Open Error Log <i class="fas fa-external-link-alt ms-1"></i></a>
                     </div>
                 </div>
             </div>
