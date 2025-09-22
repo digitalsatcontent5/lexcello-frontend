@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /test-results.html
+Disallow: /dashboard.html
+Disallow: /test-history.html
+
+Sitemap: https://lexcello.com/sitemap.xml
