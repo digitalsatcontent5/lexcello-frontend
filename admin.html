@@ -34,6 +34,7 @@
             color: white;
             padding: 30px;
             text-align: center;
+            position: relative;
         }
         
         .header h1 {
@@ -354,183 +355,375 @@
             background-color: #fff3e0 !important;
             color: #ef6c00;
         }
+
+        /* SECURITY OVERLAY STYLES */
+        .security-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .security-overlay.hidden {
+            display: none !important;
+        }
+
+        .login-form {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .login-form h2 {
+            color: #2c3e50;
+            margin-bottom: 30px;
+            text-align: center;
+            font-size: 1.8em;
+        }
+
+        .login-error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            display: none;
+        }
+
+        .logout-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(231, 76, 60, 0.9);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: none;
+        }
+
+        .logout-btn:hover {
+            background: rgba(231, 76, 60, 1);
+            transform: translateY(-1px);
+        }
+
+        .main-content {
+            transition: filter 0.3s;
+        }
+
+        .main-content.locked {
+            filter: blur(5px);
+            pointer-events: none;
+        }
+
+        @keyframes shake {
+            0%, 20%, 40%, 60%, 80% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
+        }
+
+        /* USER MANAGEMENT STYLES */
+        .user-item {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.3s;
+        }
+        
+        .user-item:hover {
+            background: #f8f9fa;
+        }
+        
+        .user-item:last-child {
+            border-bottom: none;
+        }
+        
+        .user-info {
+            flex: 1;
+            margin-right: 15px;
+        }
+        
+        .user-email {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #2c3e50;
+        }
+        
+        .user-details {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .subscription-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .subscription-active {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .subscription-inactive {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .subscription-expired {
+            background: #fff3cd;
+            color: #856404;
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>LNAT Admin Panel</h1>
-            <p>Question Management System - All 10 Practice Tests</p>
+    <!-- SECURITY OVERLAY -->
+    <div id="security-overlay" class="security-overlay">
+        <div class="login-form">
+            <h2>🔐 Admin Access</h2>
+            <div id="login-error" class="login-error"></div>
+            <form id="security-login-form">
+                <div class="form-group">
+                    <label for="admin-password">Enter Admin Password:</label>
+                    <input type="password" id="admin-password" required placeholder="Admin password">
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Access Admin Panel</button>
+            </form>
+            <p style="text-align: center; margin-top: 20px; font-size: 12px; color: #666;">
+                Authorized personnel only
+            </p>
         </div>
-        
-        <div class="admin-panel">
-            <div class="tabs">
-                <button class="tab active" onclick="showTab('add-question')">Add Question</button>
-                <button class="tab" onclick="showTab('manage-questions')">Manage Questions</button>
-                <button class="tab" onclick="showTab('import-questions')">Import Questions</button>
-                <button class="tab" onclick="showTab('dashboard')">Dashboard</button>
+    </div>
+
+    <!-- MAIN ADMIN PANEL -->
+    <div id="main-content" class="main-content locked">
+        <div class="container">
+            <div class="header">
+                <h1>LNAT Admin Panel</h1>
+                <p>Question Management System - All 10 Practice Tests</p>
+                <button id="logout-btn" class="logout-btn" onclick="securityLogout()">Logout</button>
             </div>
             
-            <div id="status-message" class="status-message"></div>
-            
-            <!-- Add Question Tab -->
-            <div id="add-question" class="tab-content active">
-                <h2>Add New Question</h2>
-                <form id="question-form">
+            <div class="admin-panel">
+                <div class="tabs">
+                    <button class="tab active" onclick="showTab('add-question')">Add Question</button>
+                    <button class="tab" onclick="showTab('manage-questions')">Manage Questions</button>
+                    <button class="tab" onclick="showTab('import-questions')">Import Questions</button>
+                    <button class="tab" onclick="showTab('user-management')">User Management</button>
+                    <button class="tab" onclick="showTab('dashboard')">Dashboard</button>
+                </div>
+                
+                <div id="status-message" class="status-message"></div>
+                
+                <!-- Add Question Tab -->
+                <div id="add-question" class="tab-content active">
+                    <h2>Add New Question</h2>
+                    <form id="question-form">
+                        <div class="form-group">
+                            <label for="test-select">Test:</label>
+                            <select id="test-select" required>
+                                <option value="">Loading tests...</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="passage-title">Passage Title:</label>
+                            <input type="text" id="passage-title" required placeholder="e.g., AI and Medical Ethics">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="passage-text">Passage Text:</label>
+                            <textarea id="passage-text" required placeholder="Enter the reading passage here..."></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="question-text">Question:</label>
+                            <textarea id="question-text" required placeholder="Enter the question here..."></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Answer Options:</label>
+                            <div class="options-container">
+                                <div class="option-input">
+                                    <input type="radio" name="correct-answer" value="1" id="correct-1">
+                                    <label for="correct-1">A.</label>
+                                    <input type="text" id="option-1" placeholder="Option A" required>
+                                </div>
+                                <div class="option-input">
+                                    <input type="radio" name="correct-answer" value="2" id="correct-2">
+                                    <label for="correct-2">B.</label>
+                                    <input type="text" id="option-2" placeholder="Option B" required>
+                                </div>
+                                <div class="option-input">
+                                    <input type="radio" name="correct-answer" value="3" id="correct-3">
+                                    <label for="correct-3">C.</label>
+                                    <input type="text" id="option-3" placeholder="Option C" required>
+                                </div>
+                                <div class="option-input">
+                                    <input type="radio" name="correct-answer" value="4" id="correct-4">
+                                    <label for="correct-4">D.</label>
+                                    <input type="text" id="option-4" placeholder="Option D" required>
+                                </div>
+                                <div class="option-input">
+                                    <input type="radio" name="correct-answer" value="5" id="correct-5">
+                                    <label for="correct-5">E.</label>
+                                    <input type="text" id="option-5" placeholder="Option E" required>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="explanation">Explanation:</label>
+                            <textarea id="explanation" required placeholder="Explain why the correct answer is right and why other options are wrong..."></textarea>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary">Add Question</button>
+                        <button type="button" class="btn btn-warning" onclick="previewQuestion()">Preview</button>
+                        <button type="button" class="btn btn-danger" onclick="clearForm()">Clear</button>
+                    </form>
+                </div>
+                
+                <!-- Manage Questions Tab -->
+                <div id="manage-questions" class="tab-content">
+                    <h2>Manage Existing Questions</h2>
+                    
                     <div class="form-group">
-                        <label for="test-select">Test:</label>
-                        <select id="test-select" required>
+                        <label for="test-filter">Filter by Test:</label>
+                        <select id="test-filter" onchange="loadQuestions()">
                             <option value="">Loading tests...</option>
                         </select>
                     </div>
                     
-                    <div class="form-group">
-                        <label for="passage-title">Passage Title:</label>
-                        <input type="text" id="passage-title" required placeholder="e.g., AI and Medical Ethics">
+                    <!-- Bulk Delete Section -->
+                    <div class="bulk-actions">
+                        <h4>⚠️ Danger Zone</h4>
+                        <p>Use these actions carefully - they cannot be undone!</p>
+                        <button onclick="deleteAllQuestionsForTest()" class="btn btn-danger btn-sm">Delete All Questions for Selected Test</button>
                     </div>
                     
-                    <div class="form-group">
-                        <label for="passage-text">Passage Text:</label>
-                        <textarea id="passage-text" required placeholder="Enter the reading passage here..."></textarea>
+                    <div id="questions-list" class="question-list">
+                        <p style="padding: 20px; text-align: center; color: #666;">Select a test to load questions...</p>
+                    </div>
+                </div>
+                
+                <!-- Import Questions Tab -->
+                <div id="import-questions" class="tab-content">
+                    <h2>Import Questions from Excel</h2>
+                    
+                    <div class="import-instructions" style="background: #e3f2fd; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+                        <h4>📋 Excel Format Required:</h4>
+                        <p><strong>Columns (in this exact order):</strong></p>
+                        <code>test_id | passage_title | passage_text | question_text | option_1 | option_2 | option_3 | option_4 | option_5 | correct_answer | explanation</code>
+                        <p style="margin-top: 10px;"><strong>Notes:</strong></p>
+                        <ul>
+                            <li>Row 1 must contain the exact column headers above</li>
+                            <li>correct_answer should be 1-5 (1=A, 2=B, 3=C, 4=D, 5=E)</li>
+                            <li>test_id should be 1-10 depending on which test</li>
+                            <li>Each test typically contains 40-42 questions</li>
+                            <li>Make sure all tests (1-10) exist in database before importing</li>
+                        </ul>
                     </div>
                     
-                    <div class="form-group">
-                        <label for="question-text">Question:</label>
-                        <textarea id="question-text" required placeholder="Enter the question here..."></textarea>
+                    <div class="file-upload" id="file-upload">
+                        <p><strong>Drop Excel file here or click to browse</strong></p>
+                        <p>Supported formats: .xlsx, .xls</p>
+                        <input type="file" id="file-input" accept=".xlsx,.xls" style="display: none;">
                     </div>
                     
-                    <div class="form-group">
-                        <label>Answer Options:</label>
-                        <div class="options-container">
-                            <div class="option-input">
-                                <input type="radio" name="correct-answer" value="1" id="correct-1">
-                                <label for="correct-1">A.</label>
-                                <input type="text" id="option-1" placeholder="Option A" required>
-                            </div>
-                            <div class="option-input">
-                                <input type="radio" name="correct-answer" value="2" id="correct-2">
-                                <label for="correct-2">B.</label>
-                                <input type="text" id="option-2" placeholder="Option B" required>
-                            </div>
-                            <div class="option-input">
-                                <input type="radio" name="correct-answer" value="3" id="correct-3">
-                                <label for="correct-3">C.</label>
-                                <input type="text" id="option-3" placeholder="Option C" required>
-                            </div>
-                            <div class="option-input">
-                                <input type="radio" name="correct-answer" value="4" id="correct-4">
-                                <label for="correct-4">D.</label>
-                                <input type="text" id="option-4" placeholder="Option D" required>
-                            </div>
-                            <div class="option-input">
-                                <input type="radio" name="correct-answer" value="5" id="correct-5">
-                                <label for="correct-5">E.</label>
-                                <input type="text" id="option-5" placeholder="Option E" required>
-                            </div>
+                    <div id="import-preview" style="display: none; margin-top: 20px;">
+                        <h3>Import Preview</h3>
+                        <div id="file-info" style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 15px;"></div>
+                        <div id="import-data"></div>
+                        <div style="margin-top: 20px;">
+                            <button class="btn btn-success" onclick="processImport()">Import All Questions</button>
+                            <button class="btn btn-secondary" onclick="cancelImport()">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- User Management Tab -->
+                <div id="user-management" class="tab-content">
+                    <h2>User Management</h2>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-number" id="total-users">-</div>
+                            <div class="stat-label">Total Users</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="active-subscriptions">-</div>
+                            <div class="stat-label">Active Subscriptions</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="total-attempts">-</div>
+                            <div class="stat-label">Total Test Attempts</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="new-users-week">-</div>
+                            <div class="stat-label">New Users This Week</div>
                         </div>
                     </div>
                     
-                    <div class="form-group">
-                        <label for="explanation">Explanation:</label>
-                        <textarea id="explanation" required placeholder="Explain why the correct answer is right and why other options are wrong..."></textarea>
+                    <div style="margin-bottom: 20px;">
+                        <h3>All Registered Users</h3>
+                        <button class="btn btn-primary" onclick="loadUsers()">Refresh Users</button>
+                        <button class="btn btn-warning" onclick="exportUsers()">Export Users</button>
                     </div>
                     
-                    <button type="submit" class="btn btn-primary">Add Question</button>
-                    <button type="button" class="btn btn-warning" onclick="previewQuestion()">Preview</button>
-                    <button type="button" class="btn btn-danger" onclick="clearForm()">Clear</button>
-                </form>
-            </div>
-            
-            <!-- Manage Questions Tab -->
-            <div id="manage-questions" class="tab-content">
-                <h2>Manage Existing Questions</h2>
-                
-                <div class="form-group">
-                    <label for="test-filter">Filter by Test:</label>
-                    <select id="test-filter" onchange="loadQuestions()">
-                        <option value="">Loading tests...</option>
-                    </select>
+                    <div id="users-list" class="question-list">
+                        <p style="padding: 20px; text-align: center; color: #666;">Click "Refresh Users" to load user data...</p>
+                    </div>
                 </div>
                 
-                <!-- Bulk Delete Section -->
-                <div class="bulk-actions">
-                    <h4>⚠️ Danger Zone</h4>
-                    <p>Use these actions carefully - they cannot be undone!</p>
-                    <button onclick="deleteAllQuestionsForTest()" class="btn btn-danger btn-sm">Delete All Questions for Selected Test</button>
-                </div>
-                
-                <div id="questions-list" class="question-list">
-                    <p style="padding: 20px; text-align: center; color: #666;">Select a test to load questions...</p>
-                </div>
-            </div>
-            
-            <!-- Import Questions Tab -->
-            <div id="import-questions" class="tab-content">
-                <h2>Import Questions from Excel</h2>
-                
-                <div class="import-instructions" style="background: #e3f2fd; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
-                    <h4>📋 Excel Format Required:</h4>
-                    <p><strong>Columns (in this exact order):</strong></p>
-                    <code>test_id | passage_title | passage_text | question_text | option_1 | option_2 | option_3 | option_4 | option_5 | correct_answer | explanation</code>
-                    <p style="margin-top: 10px;"><strong>Notes:</strong></p>
-                    <ul>
-                        <li>Row 1 must contain the exact column headers above</li>
-                        <li>correct_answer should be 1-5 (1=A, 2=B, 3=C, 4=D, 5=E)</li>
-                        <li>test_id should be 1-10 depending on which test</li>
-                        <li>Each test typically contains 40-42 questions</li>
-                        <li>Make sure all tests (1-10) exist in database before importing</li>
-                    </ul>
-                </div>
-                
-                <div class="file-upload" id="file-upload">
-                    <p><strong>Drop Excel file here or click to browse</strong></p>
-                    <p>Supported formats: .xlsx, .xls</p>
-                    <input type="file" id="file-input" accept=".xlsx,.xls" style="display: none;">
-                </div>
-                
-                <div id="import-preview" style="display: none; margin-top: 20px;">
-                    <h3>Import Preview</h3>
-                    <div id="file-info" style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 15px;"></div>
-                    <div id="import-data"></div>
+                <!-- Dashboard Tab -->
+                <div id="dashboard" class="tab-content">
+                    <h2>Dashboard - All 10 LNAT Practice Tests</h2>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-number" id="total-questions">-</div>
+                            <div class="stat-label">Total Questions</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="total-tests">10</div>
+                            <div class="stat-label">Available Tests</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="populated-tests">-</div>
+                            <div class="stat-label">Tests with Content</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="avg-questions">-</div>
+                            <div class="stat-label">Avg Questions/Test</div>
+                        </div>
+                    </div>
+                    
                     <div style="margin-top: 20px;">
-                        <button class="btn btn-success" onclick="processImport()">Import All Questions</button>
-                        <button class="btn btn-secondary" onclick="cancelImport()">Cancel</button>
+                        <h3>Test Status Overview</h3>
+                        <div id="test-status-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 15px;">
+                            <!-- Will be populated by loadDashboard() -->
+                        </div>
                     </div>
-                </div>
-            </div>
-            
-            <!-- Dashboard Tab -->
-            <div id="dashboard" class="tab-content">
-                <h2>Dashboard - All 10 LNAT Practice Tests</h2>
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-number" id="total-questions">-</div>
-                        <div class="stat-label">Total Questions</div>
+                    
+                    <div style="margin-top: 30px;">
+                        <button class="btn btn-primary" onclick="loadDashboard()">Refresh Stats</button>
+                        <button class="btn btn-warning" onclick="exportQuestions()">Export All Questions</button>
                     </div>
-                    <div class="stat-card">
-                        <div class="stat-number" id="total-tests">10</div>
-                        <div class="stat-label">Available Tests</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number" id="populated-tests">-</div>
-                        <div class="stat-label">Tests with Content</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number" id="avg-questions">-</div>
-                        <div class="stat-label">Avg Questions/Test</div>
-                    </div>
-                </div>
-                
-                <div style="margin-top: 20px;">
-                    <h3>Test Status Overview</h3>
-                    <div id="test-status-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 15px;">
-                        <!-- Will be populated by loadDashboard() -->
-                    </div>
-                </div>
-                
-                <div style="margin-top: 30px;">
-                    <button class="btn btn-primary" onclick="loadDashboard()">Refresh Stats</button>
-                    <button class="btn btn-warning" onclick="exportQuestions()">Export All Questions</button>
                 </div>
             </div>
         </div>
@@ -539,8 +732,86 @@
     <script>
         const API_BASE = 'https://lexcello-backend.onrender.com';
         
+        // SECURITY CONFIGURATION - CHANGE THIS PASSWORD!
+        const ADMIN_PASSWORD = 'SecureAdminPass2024!';
+        
+        // Security state
+        let isSecurityAuthenticated = false;
+        
+        // Security elements
+        const securityOverlay = document.getElementById('security-overlay');
+        const mainContent = document.getElementById('main-content');
+        const logoutBtn = document.getElementById('logout-btn');
+        const loginError = document.getElementById('login-error');
+        
+        // Check authentication on page load
+        function checkSecurityAuth() {
+            const stored = localStorage.getItem('lexcello_admin_auth');
+            if (stored === 'authenticated') {
+                securityAuthenticate();
+            }
+        }
+        
+        // Authenticate user
+        function securityAuthenticate() {
+            isSecurityAuthenticated = true;
+            securityOverlay.classList.add('hidden');
+            mainContent.classList.remove('locked');
+            logoutBtn.style.display = 'block';
+            localStorage.setItem('lexcello_admin_auth', 'authenticated');
+        }
+        
+        // Logout user
+        function securityLogout() {
+            if (confirm('Are you sure you want to logout?')) {
+                isSecurityAuthenticated = false;
+                securityOverlay.classList.remove('hidden');
+                mainContent.classList.add('locked');
+                logoutBtn.style.display = 'none';
+                localStorage.removeItem('lexcello_admin_auth');
+                document.getElementById('admin-password').value = '';
+                loginError.style.display = 'none';
+            }
+        }
+        
+        // Login form handler
+        document.getElementById('security-login-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const enteredPassword = document.getElementById('admin-password').value;
+            
+            if (enteredPassword === ADMIN_PASSWORD) {
+                securityAuthenticate();
+                loginError.style.display = 'none';
+                loadTests();
+                loadDashboard();
+            } else {
+                loginError.textContent = 'Incorrect password. Access denied.';
+                loginError.style.display = 'block';
+                document.getElementById('admin-password').value = '';
+                document.getElementById('admin-password').focus();
+                
+                // Add shake animation
+                document.querySelector('.login-form').style.animation = 'shake 0.5s';
+                setTimeout(() => {
+                    document.querySelector('.login-form').style.animation = '';
+                }, 500);
+            }
+        });
+        
+        // Protect functions - require authentication
+        function requireAuth() {
+            if (!isSecurityAuthenticated) {
+                showMessage('Authentication required!', 'error');
+                return false;
+            }
+            return true;
+        }
+        
         // Load Tests Dynamically
         async function loadTests() {
+            if (!requireAuth()) return;
+            
             try {
                 const response = await fetch(`${API_BASE}/api/tests`);
                 const data = await response.json();
@@ -584,6 +855,8 @@
         
         // Tab Management
         function showTab(tabName) {
+            if (!requireAuth()) return;
+            
             document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
             
@@ -594,6 +867,8 @@
                 loadQuestions();
             } else if (tabName === 'dashboard') {
                 loadDashboard();
+            } else if (tabName === 'user-management') {
+                loadUsers();
             }
         }
         
@@ -612,6 +887,8 @@
         // Form Submission
         document.getElementById('question-form').addEventListener('submit', async (e) => {
             e.preventDefault();
+            
+            if (!requireAuth()) return;
             
             const formData = {
                 testId: parseInt(document.getElementById('test-select').value),
@@ -655,6 +932,8 @@
         
         // Load Questions
         async function loadQuestions() {
+            if (!requireAuth()) return;
+            
             const testFilter = document.getElementById('test-filter').value;
             const questionsList = document.getElementById('questions-list');
             
@@ -700,6 +979,8 @@
         
         // Delete Single Question
         async function deleteQuestion(questionId) {
+            if (!requireAuth()) return;
+            
             if (!confirm('Are you sure you want to delete this question? This action cannot be undone.')) {
                 return;
             }
@@ -724,6 +1005,8 @@
         
         // Delete All Questions for Test
         async function deleteAllQuestionsForTest() {
+            if (!requireAuth()) return;
+            
             const testId = document.getElementById('test-filter').value;
             
             if (!testId) {
@@ -786,6 +1069,8 @@
         
         // Handle Excel File Upload
         async function handleFileUpload(file) {
+            if (!requireAuth()) return;
+            
             console.log('File selected:', file.name, 'Size:', file.size, 'Type:', file.type);
             
             if (!file.name.match(/\.(xlsx|xls)$/)) {
@@ -1046,6 +1331,8 @@
         
         // Process Import
         async function processImport() {
+            if (!requireAuth()) return;
+            
             if (!importData || importData.length === 0) {
                 showMessage('No valid questions to import', 'error');
                 return;
@@ -1110,9 +1397,93 @@
             document.getElementById('file-input').value = '';
             importData = null;
         }
+
+        // Load Users for User Management
+        async function loadUsers() {
+            if (!requireAuth()) return;
+            
+            const usersList = document.getElementById('users-list');
+            usersList.innerHTML = '<p style="padding: 20px; text-align: center; color: #666;">Loading users...</p>';
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/admin/users`);
+                const data = await response.json();
+                
+                if (data.users) {
+                    displayUsers(data.users);
+                    updateUserStats(data.users);
+                } else {
+                    usersList.innerHTML = '<p style="padding: 20px; text-align: center; color: #666;">No users found or API endpoint not available.</p>';
+                }
+            } catch (error) {
+                console.error('Error loading users:', error);
+                usersList.innerHTML = `<p style="padding: 20px; text-align: center; color: #e74c3c;">Error loading users: ${error.message}<br><br>Make sure the /api/admin/users endpoint is implemented on your backend.</p>`;
+            }
+        }
+        
+        // Display Users
+        function displayUsers(users) {
+            const usersList = document.getElementById('users-list');
+            
+            if (users.length === 0) {
+                usersList.innerHTML = '<p style="padding: 20px; text-align: center; color: #666;">No users registered yet.</p>';
+                return;
+            }
+            
+            usersList.innerHTML = users.map(user => {
+                const subscriptionStatus = user.subscription_status || 'inactive';
+                const subscriptionClass = subscriptionStatus === 'active' ? 'subscription-active' : 
+                                        subscriptionStatus === 'expired' ? 'subscription-expired' : 'subscription-inactive';
+                
+                const subscriptionExpiry = user.subscription_expires ? 
+                    new Date(user.subscription_expires).toLocaleDateString() : 'N/A';
+                
+                return `
+                    <div class="user-item">
+                        <div class="user-info">
+                            <div class="user-email">${user.email}</div>
+                            <div class="user-details">
+                                ID: ${user.id} | 
+                                Registered: ${new Date(user.created_at).toLocaleDateString()} | 
+                                Subscription Expires: ${subscriptionExpiry}
+                            </div>
+                        </div>
+                        <div>
+                            <span class="subscription-badge ${subscriptionClass}">
+                                ${subscriptionStatus}
+                            </span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        // Update User Statistics
+        function updateUserStats(users) {
+            document.getElementById('total-users').textContent = users.length;
+            
+            const activeSubscriptions = users.filter(user => 
+                user.subscription_status === 'active'
+            ).length;
+            document.getElementById('active-subscriptions').textContent = activeSubscriptions;
+            
+            // Calculate new users this week
+            const oneWeekAgo = new Date();
+            oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+            
+            const newUsersThisWeek = users.filter(user => 
+                new Date(user.created_at) > oneWeekAgo
+            ).length;
+            document.getElementById('new-users-week').textContent = newUsersThisWeek;
+            
+            // You can add test attempts count if you have the data
+            document.getElementById('total-attempts').textContent = '0'; // Placeholder
+        }
         
         // Enhanced Dashboard Loading
         async function loadDashboard() {
+            if (!requireAuth()) return;
+            
             try {
                 showMessage('Loading dashboard statistics...', 'success');
                 
@@ -1184,21 +1555,32 @@
         
         // Utility Functions
         function clearForm() {
+            if (!requireAuth()) return;
             document.getElementById('question-form').reset();
         }
         
         function previewQuestion() {
+            if (!requireAuth()) return;
             showMessage('Preview functionality coming soon!', 'warning');
         }
         
         function exportQuestions() {
+            if (!requireAuth()) return;
             showMessage('Export functionality coming soon!', 'warning');
         }
         
-        // Initialize - LOAD TESTS ON PAGE LOAD
+        function exportUsers() {
+            if (!requireAuth()) return;
+            showMessage('Export users functionality coming soon!', 'warning');
+        }
+        
+        // Initialize - Check authentication on page load
         document.addEventListener('DOMContentLoaded', () => {
-            loadTests();
-            loadDashboard();
+            checkSecurityAuth();
+            
+            // Security warning in console
+            console.log('%cSTOP!', 'color: red; font-size: 50px; font-weight: bold;');
+            console.log('%cThis is a browser feature intended for developers. Unauthorized access is prohibited.', 'color: red; font-size: 16px;');
         });
     </script>
 </body>
