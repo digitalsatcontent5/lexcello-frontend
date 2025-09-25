@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title">Loading Article... - Lexcello</title>
+    <meta name="description" content="" id="page-description">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="" id="og-title">
+    <meta property="og:description" content="" id="og-description">
+    <meta property="og:url" content="" id="og-url">
+    <meta property="og:image" content="" id="og-image">
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="" id="twitter-title">
+    <meta name="twitter:description" content="" id="twitter-description">
+    <meta name="twitter:image" content="" id="twitter-image">
+    
+    <!-- Add your existing CSS files here -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+        
+        .article-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 80px 0;
+            text-align: center;
+        }
+        
+        .article-meta {
+            margin: 20px 0;
+            color: rgba(255,255,255,0.9);
+            font-size: 0.95em;
+        }
+        
+        .category-badge {
+            background: rgba(255,255,255,0.2);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            margin-right: 15px;
+        }
+        
+        .article-content {
+            max-width: 800px;
+            margin: 60px auto;
+            padding: 0 20px;
+        }
+        
+        .article-content h2 {
+            color: #2c3e50;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+        
+        .article-content h3 {
+            color: #34495e;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+        
+        .article-content h4 {
+            color: #34495e;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+        
+        .article-content p {
+            margin-bottom: 20px;
+            font-size: 1.1em;
+        }
+        
+        .article-content ul,
+        .article-content ol {
+            margin: 20px 0 20px 30px;
+        }
+        
+        .article-content li {
+            margin-bottom: 8px;
+        }
+        
+        .article-content blockquote {
+            border-left: 4px solid #3498db;
+            padding-left: 20px;
+            margin: 30px 0;
+            font-style: italic;
+            color: #555;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .article-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+        }
+        
+        .article-content th,
+        .article-content td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        
+        .article-content th {
+            background: #f8f9fa;
+            font-weight: 600;
+        }
+        
+        .loading-spinner {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 60vh;
+        }
+        
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .error-message {
+            text-align: center;
+            padding: 60px 20px;
+            color: #e74c3c;
+        }
+        
+        .back-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(255,255,255,0.9);
+            border: none;
+            border-radius: 50px;
+            padding: 12px 20px;
+            color: #333;
+            text-decoration: none;
+            font-weight: 500;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+        
+        .back-button:hover {
+            background: white;
+            color: #3498db;
+            text-decoration: none;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
+        
+        .related-articles {
+            background: #f8f9fa;
+            padding: 40px 20px;
+            margin-top: 60px;
+        }
+        
+        .related-articles h3 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #2c3e50;
+        }
+        
+        .related-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .related-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        
+        .related-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .related-card h4 {
+            margin-bottom: 10px;
+        }
+        
+        .related-card a {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .related-card a:hover {
+            text-decoration: underline;
+        }
+    </style>
+    
+    <!-- JSON-LD Schema for SEO -->
+    <script type="application/ld+json" id="article-schema"></script>
+</head>
+<body>
+    <a href="/resources" class="back-button">
+        <i class="fas fa-arrow-left me-2"></i>Back to Resources
+    </a>
+
+    <div id="loading" class="loading-spinner">
+        <div class="spinner"></div>
+    </div>
+
+    <div id="error-container" class="error-message" style="display: none;">
+        <h2>Article Not Found</h2>
+        <p>The article you're looking for could not be found.</p>
+        <a href="/resources" class="btn btn-primary">Return to Resources</a>
+    </div>
+
+    <div id="article-container" style="display: none;">
+        <div class="article-header">
+            <div class="container">
+                <span class="category-badge" id="article-category"></span>
+                <span id="read-time"></span>
+                <h1 id="article-title"></h1>
+                <div class="article-meta">
+                    <span id="article-author"></span> • 
+                    <span id="article-date"></span>
+                </div>
+                <p id="article-excerpt" style="margin-top: 20px; font-size: 1.2em; opacity: 0.9;"></p>
+            </div>
+        </div>
+
+        <div class="article-content">
+            <div id="article-body"></div>
+        </div>
+
+        <div class="related-articles" id="related-articles" style="display: none;">
+            <div class="container">
+                <h3>Related Articles</h3>
+                <div class="related-grid" id="related-grid"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Get slug from URL path
+        const slug = window.location.pathname.split('/').pop();
+        const API_BASE = 'https://lexcello-backend.onrender.com';
+        
+        async function loadArticle() {
+            try {
+                const response = await fetch(`${API_BASE}/api/articles/${slug}`);
+                
+                if (!response.ok) {
+                    throw new Error('Article not found');
+                }
+                
+                const data = await response.json();
+                displayArticle(data.article, data.relatedArticles);
+                
+            } catch (error) {
+                console.error('Error loading article:', error);
+                showError();
+            }
+        }
+        
+        function displayArticle(article, relatedArticles) {
+            // Hide loading spinner
+            document.getElementById('loading').style.display = 'none';
+            
+            // Show article container
+            document.getElementById('article-container').style.display = 'block';
+            
+            // Set page title and meta
+            document.getElementById('page-title').textContent = article.meta_title || article.title;
+            document.getElementById('page-description').setAttribute('content', article.meta_description || article.excerpt);
+            document.title = article.meta_title || article.title;
+            
+            // Set Open Graph meta
+            document.getElementById('og-title').setAttribute('content', article.title);
+            document.getElementById('og-description').setAttribute('content', article.excerpt);
+            document.getElementById('og-url').setAttribute('content', window.location.href);
+            if (article.featured_image_url) {
+                document.getElementById('og-image').setAttribute('content', article.featured_image_url);
+            }
+            
+            // Set Twitter meta
+            document.getElementById('twitter-title').setAttribute('content', article.title);
+            document.getElementById('twitter-description').setAttribute('content', article.excerpt);
+            if (article.featured_image_url) {
+                document.getElementById('twitter-image').setAttribute('content', article.featured_image_url);
+            }
+            
+            // Set article content
+            document.getElementById('article-category').textContent = article.category;
+            document.getElementById('read-time').textContent = `${article.read_time} min read`;
+            document.getElementById('article-title').textContent = article.title;
+            document.getElementById('article-author').textContent = article.author;
+            document.getElementById('article-date').textContent = new Date(article.created_at).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            document.getElementById('article-excerpt').textContent = article.excerpt;
+            document.getElementById('article-body').innerHTML = article.content;
+            
+            // Add JSON-LD schema
+            const schema = {
+                "@context": "https://schema.org",
+                "@type": "Article",
+                "headline": article.title,
+                "description": article.excerpt,
+                "author": {
+                    "@type": "Organization",
+                    "name": article.author
+                },
+                "publisher": {
+                    "@type": "Organization",
+                    "name": "Lexcello"
+                },
+                "datePublished": article.created_at,
+                "dateModified": article.updated_at || article.created_at,
+                "mainEntityOfPage": {
+                    "@type": "WebPage",
+                    "@id": window.location.href
+                }
+            };
+            document.getElementById('article-schema').textContent = JSON.stringify(schema);
+            
+            // Show related articles if available
+            if (relatedArticles && relatedArticles.length > 0) {
+                displayRelatedArticles(relatedArticles);
+            }
+        }
+        
+        function displayRelatedArticles(articles) {
+            const relatedContainer = document.getElementById('related-articles');
+            const relatedGrid = document.getElementById('related-grid');
+            
+            relatedGrid.innerHTML = articles.map(article => `
+                <div class="related-card">
+                    <h4><a href="/articles/${article.slug}">${article.title}</a></h4>
+                    <p>${article.excerpt}</p>
+                    <small class="text-muted">${article.read_time} min read • ${article.category}</small>
+                </div>
+            `).join('');
+            
+            relatedContainer.style.display = 'block';
+        }
+        
+        function showError() {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('error-container').style.display = 'block';
+        }
+        
+        // Load article on page load
+        document.addEventListener('DOMContentLoaded', loadArticle);
+    </script>
+</body>
+</html>
