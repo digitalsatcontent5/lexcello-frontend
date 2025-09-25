@@ -1,0 +1,2 @@
+/articles/:slug  /article-template.html  200
+/articles  /articles-index.html  200
