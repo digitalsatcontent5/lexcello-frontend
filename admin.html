@@ -526,6 +526,7 @@
                     <button class="tab active" onclick="showTab('add-question')">Add Question</button>
                     <button class="tab" onclick="showTab('manage-questions')">Manage Questions</button>
                     <button class="tab" onclick="showTab('import-questions')">Import Questions</button>
+                    <button class="tab" onclick="showTab('article-management')">Article Management</button>
                     <button class="tab" onclick="showTab('user-management')">User Management</button>
                     <button class="tab" onclick="showTab('dashboard')">Dashboard</button>
                 </div>
@@ -658,6 +659,97 @@
                     </div>
                 </div>
                 
+                <!-- Article Management Tab -->
+                <div id="article-management" class="tab-content">
+                    <h2>Article Management</h2>
+                    
+                    <div class="tabs" style="border-bottom: 1px solid #eee; margin-bottom: 20px;">
+                        <button class="tab" onclick="showArticleSection('add-article')" id="tab-add-article">Add Article</button>
+                        <button class="tab active" onclick="showArticleSection('manage-articles')" id="tab-manage-articles">Manage Articles</button>
+                    </div>
+                    
+                    <!-- Add Article Section -->
+                    <div id="add-article" class="article-section" style="display: none;">
+                        <form id="article-form">
+                            <div class="form-group">
+                                <label for="article-title">Article Title:</label>
+                                <input type="text" id="article-title" required placeholder="e.g., 5 Common LNAT Mistakes to Avoid">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="article-slug">URL Slug:</label>
+                                <input type="text" id="article-slug" required placeholder="e.g., 5-common-lnat-mistakes-to-avoid">
+                                <small style="color: #666; font-size: 12px;">This will be the URL: lexcello.com/articles/[slug]</small>
+                                <button type="button" class="btn btn-secondary btn-sm" onclick="generateSlug()" style="margin-top: 5px;">Auto-generate from title</button>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="article-category">Category:</label>
+                                <select id="article-category" required>
+                                    <option value="">Select category...</option>
+                                    <option value="Tips">Tips</option>
+                                    <option value="Success Story">Success Story</option>
+                                    <option value="Strategy">Strategy</option>
+                                    <option value="Admissions">Admissions</option>
+                                    <option value="Analytics">Analytics</option>
+                                    <option value="Resources">Resources</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="article-excerpt">Excerpt (Brief Description):</label>
+                                <textarea id="article-excerpt" required placeholder="A brief summary that will appear on the resources page..."></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="article-content">Article Content (HTML):</label>
+                                <textarea id="article-content" required placeholder="Enter your article content using HTML tags like <h2>, <p>, <ul>, etc..." style="min-height: 300px;"></textarea>
+                                <small style="color: #666; font-size: 12px;">
+                                    Use HTML tags: &lt;h2&gt; for headings, &lt;p&gt; for paragraphs, &lt;ul&gt;&lt;li&gt; for lists, etc.
+                                </small>
+                            </div>
+                            
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                                <div class="form-group">
+                                    <label for="article-read-time">Read Time (minutes):</label>
+                                    <input type="number" id="article-read-time" required min="1" max="60" placeholder="5">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="article-author">Author:</label>
+                                    <input type="text" id="article-author" value="Lexcello Team" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="article-meta-title">SEO Meta Title (optional):</label>
+                                <input type="text" id="article-meta-title" placeholder="Will use article title if left empty">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="article-meta-description">SEO Meta Description (optional):</label>
+                                <textarea id="article-meta-description" placeholder="Will use excerpt if left empty"></textarea>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary">Create Article</button>
+                            <button type="button" class="btn btn-warning" onclick="previewArticle()">Preview</button>
+                            <button type="button" class="btn btn-danger" onclick="clearArticleForm()">Clear</button>
+                        </form>
+                    </div>
+                    
+                    <!-- Manage Articles Section -->
+                    <div id="manage-articles" class="article-section">
+                        <div style="margin-bottom: 20px;">
+                            <button class="btn btn-primary" onclick="loadArticles()">Refresh Articles</button>
+                            <button class="btn btn-success" onclick="showArticleSection('add-article')">Add New Article</button>
+                        </div>
+                        
+                        <div id="articles-list" class="question-list">
+                            <p style="padding: 20px; text-align: center; color: #666;">Click "Refresh Articles" to load articles...</p>
+                        </div>
+                    </div>
+                </div>
+                
                 <!-- User Management Tab -->
                 <div id="user-management" class="tab-content">
                     <h2>User Management</h2>
@@ -733,7 +825,7 @@
         const API_BASE = 'https://lexcello-backend.onrender.com';
         
         // SECURITY CONFIGURATION - CHANGE THIS PASSWORD!
-        const ADMIN_PASSWORD = 'Ramesh12!@';
+        const ADMIN_PASSWORD = 'SecureAdminPass2024!';
         
         // Security state
         let isSecurityAuthenticated = false;
@@ -869,6 +961,9 @@
                 loadDashboard();
             } else if (tabName === 'user-management') {
                 loadUsers();
+            } else if (tabName === 'article-management') {
+                // Default to showing manage articles section
+                showArticleSection('manage-articles');
             }
         }
         
@@ -1398,6 +1493,178 @@
             importData = null;
         }
 
+        // Article Management Functions
+        function showArticleSection(sectionName) {
+            // Hide all article sections
+            document.querySelectorAll('.article-section').forEach(section => {
+                section.style.display = 'none';
+            });
+            
+            // Remove active class from all article tabs
+            document.querySelectorAll('#article-management .tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected section and mark tab as active
+            document.getElementById(sectionName).style.display = 'block';
+            document.getElementById('tab-' + sectionName.replace('-', '-')).classList.add('active');
+        }
+        
+        // Generate URL slug from title
+        function generateSlug() {
+            const title = document.getElementById('article-title').value;
+            if (!title) {
+                showMessage('Please enter a title first', 'error');
+                return;
+            }
+            
+            const slug = title
+                .toLowerCase()
+                .replace(/[^a-z0-9\s-]/g, '')
+                .replace(/\s+/g, '-')
+                .replace(/-+/g, '-')
+                .trim('-');
+                
+            document.getElementById('article-slug').value = slug;
+        }
+        
+        // Submit article form
+        document.getElementById('article-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            if (!requireAuth()) return;
+            
+            const formData = {
+                title: document.getElementById('article-title').value,
+                slug: document.getElementById('article-slug').value,
+                excerpt: document.getElementById('article-excerpt').value,
+                content: document.getElementById('article-content').value,
+                category: document.getElementById('article-category').value,
+                readTime: parseInt(document.getElementById('article-read-time').value),
+                author: document.getElementById('article-author').value,
+                metaTitle: document.getElementById('article-meta-title').value,
+                metaDescription: document.getElementById('article-meta-description').value,
+                status: 'published'
+            };
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/admin/articles`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    showMessage('Article created successfully!', 'success');
+                    clearArticleForm();
+                    showArticleSection('manage-articles');
+                    loadArticles();
+                } else {
+                    showMessage(`Error: ${result.error}`, 'error');
+                }
+            } catch (error) {
+                showMessage(`Network error: ${error.message}`, 'error');
+            }
+        });
+        
+        // Load all articles
+        async function loadArticles() {
+            if (!requireAuth()) return;
+            
+            const articlesList = document.getElementById('articles-list');
+            articlesList.innerHTML = '<p style="padding: 20px; text-align: center; color: #666;">Loading articles...</p>';
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/admin/articles`);
+                const data = await response.json();
+                
+                if (data.articles && data.articles.length > 0) {
+                    displayArticles(data.articles);
+                } else {
+                    articlesList.innerHTML = '<p style="padding: 20px; text-align: center; color: #666;">No articles found. Create your first article!</p>';
+                }
+            } catch (error) {
+                console.error('Error loading articles:', error);
+                articlesList.innerHTML = `<p style="padding: 20px; text-align: center; color: #e74c3c;">Error loading articles: ${error.message}<br><br>Make sure your backend server is running and the articles table exists.</p>`;
+            }
+        }
+        
+        // Display articles list
+        function displayArticles(articles) {
+            const articlesList = document.getElementById('articles-list');
+            
+            articlesList.innerHTML = articles.map(article => `
+                <div class="question-item">
+                    <div class="question-info">
+                        <div class="question-preview">${article.title}</div>
+                        <div class="question-meta">
+                            Category: ${article.category} | 
+                            Status: ${article.status} | 
+                            Read Time: ${article.read_time || 'N/A'} min | 
+                            Author: ${article.author} |
+                            Created: ${new Date(article.created_at).toLocaleDateString()}
+                        </div>
+                    </div>
+                    <div>
+                        <button onclick="viewArticle('${article.slug}')" class="btn btn-primary btn-sm">View</button>
+                        <button onclick="editArticle(${article.id})" class="btn btn-warning btn-sm">Edit</button>
+                        <button onclick="deleteArticle(${article.id})" class="btn btn-danger btn-sm">Delete</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        // View article in new tab
+        function viewArticle(slug) {
+            window.open(`/articles/${slug}`, '_blank');
+        }
+        
+        // Edit article (placeholder for now)
+        function editArticle(articleId) {
+            showMessage('Edit functionality coming soon!', 'warning');
+        }
+        
+        // Delete article
+        async function deleteArticle(articleId) {
+            if (!requireAuth()) return;
+            
+            if (!confirm('Are you sure you want to delete this article? This action cannot be undone.')) {
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/admin/articles/${articleId}`, {
+                    method: 'DELETE'
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    showMessage('Article deleted successfully!', 'success');
+                    loadArticles();
+                } else {
+                    showMessage(`Error: ${result.error}`, 'error');
+                }
+            } catch (error) {
+                showMessage(`Network error: ${error.message}`, 'error');
+            }
+        }
+        
+        // Clear article form
+        function clearArticleForm() {
+            document.getElementById('article-form').reset();
+            document.getElementById('article-author').value = 'Lexcello Team'; // Reset to default
+        }
+        
+        // Preview article (placeholder)
+        function previewArticle() {
+            showMessage('Preview functionality coming soon!', 'warning');
+        }
+        
         // Load Users for User Management
         async function loadUsers() {
             if (!requireAuth()) return;
@@ -1585,4 +1852,3 @@
     </script>
 </body>
 </html>
-
