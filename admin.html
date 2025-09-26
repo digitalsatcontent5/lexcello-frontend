@@ -491,6 +491,13 @@
             background: #fff3cd;
             color: #856404;
         }
+
+        /* Two-column grid for form fields */
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
     </style>
 </head>
 <body>
@@ -683,17 +690,24 @@
                                 <button type="button" class="btn btn-secondary btn-sm" onclick="generateSlug()" style="margin-top: 5px;">Auto-generate from title</button>
                             </div>
                             
-                            <div class="form-group">
-                                <label for="article-category">Category:</label>
-                                <select id="article-category" required>
-                                    <option value="">Select category...</option>
-                                    <option value="Tips">Tips</option>
-                                    <option value="Success Story">Success Story</option>
-                                    <option value="Strategy">Strategy</option>
-                                    <option value="Admissions">Admissions</option>
-                                    <option value="Analytics">Analytics</option>
-                                    <option value="Resources">Resources</option>
-                                </select>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="article-category">Category:</label>
+                                    <select id="article-category" required>
+                                        <option value="">Select category...</option>
+                                        <option value="Tips">Tips</option>
+                                        <option value="Success Story">Success Story</option>
+                                        <option value="Strategy">Strategy</option>
+                                        <option value="Admissions">Admissions</option>
+                                        <option value="Analytics">Analytics</option>
+                                        <option value="Resources">Resources</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="article-tags">Tags (comma-separated):</label>
+                                    <input type="text" id="article-tags" placeholder="e.g., LNAT, tips, strategy">
+                                </div>
                             </div>
                             
                             <div class="form-group">
@@ -709,7 +723,7 @@
                                 </small>
                             </div>
                             
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                            <div class="form-row">
                                 <div class="form-group">
                                     <label for="article-read-time">Read Time (minutes):</label>
                                     <input type="number" id="article-read-time" required min="1" max="60" placeholder="5">
@@ -719,6 +733,11 @@
                                     <label for="article-author">Author:</label>
                                     <input type="text" id="article-author" value="Lexcello Team" required>
                                 </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="article-featured-image">Featured Image URL (optional):</label>
+                                <input type="url" id="article-featured-image" placeholder="https://example.com/image.jpg">
                             </div>
                             
                             <div class="form-group">
@@ -1528,27 +1547,32 @@
             document.getElementById('article-slug').value = slug;
         }
         
-        // Submit article form
+        // Submit article form - FIXED VERSION
         document.getElementById('article-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             
             if (!requireAuth()) return;
             
-            // Replace the current formData object with this:
-const formData = {
-    title: document.getElementById('article-title').value,
-    slug: document.getElementById('article-slug').value,
-    excerpt: document.getElementById('article-excerpt').value,
-    content: document.getElementById('article-content').value,
-    category: document.getElementById('article-category').value,
-    tags: [], // Add empty array for tags
-    readTime: parseInt(document.getElementById('article-read-time').value),
-    author: document.getElementById('article-author').value,
-    metaTitle: document.getElementById('article-meta-title').value,
-    metaDescription: document.getElementById('article-meta-description').value,
-    featuredImageUrl: null, // Add null for featured image
-    status: 'published'
-};
+            // Process tags
+            const tagsInput = document.getElementById('article-tags').value;
+            const tags = tagsInput ? tagsInput.split(',').map(tag => tag.trim()).filter(tag => tag) : [];
+            
+            const formData = {
+                title: document.getElementById('article-title').value,
+                slug: document.getElementById('article-slug').value,
+                excerpt: document.getElementById('article-excerpt').value,
+                content: document.getElementById('article-content').value,
+                category: document.getElementById('article-category').value,
+                tags: tags, // Fixed: Now included
+                readTime: parseInt(document.getElementById('article-read-time').value),
+                author: document.getElementById('article-author').value,
+                metaTitle: document.getElementById('article-meta-title').value,
+                metaDescription: document.getElementById('article-meta-description').value,
+                featuredImageUrl: document.getElementById('article-featured-image').value || null, // Fixed: Now included
+                status: 'published'
+            };
+            
+            console.log('Submitting article data:', formData); // Debug log
             
             try {
                 const response = await fetch(`${API_BASE}/api/admin/articles`, {
@@ -1567,9 +1591,11 @@ const formData = {
                     showArticleSection('manage-articles');
                     loadArticles();
                 } else {
+                    console.error('API Error:', result);
                     showMessage(`Error: ${result.error}`, 'error');
                 }
             } catch (error) {
+                console.error('Network Error:', error);
                 showMessage(`Network error: ${error.message}`, 'error');
             }
         });
@@ -1855,5 +1881,3 @@ const formData = {
     </script>
 </body>
 </html>
-
-
