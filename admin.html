@@ -1534,18 +1534,21 @@
             
             if (!requireAuth()) return;
             
-            const formData = {
-                title: document.getElementById('article-title').value,
-                slug: document.getElementById('article-slug').value,
-                excerpt: document.getElementById('article-excerpt').value,
-                content: document.getElementById('article-content').value,
-                category: document.getElementById('article-category').value,
-                readTime: parseInt(document.getElementById('article-read-time').value),
-                author: document.getElementById('article-author').value,
-                metaTitle: document.getElementById('article-meta-title').value,
-                metaDescription: document.getElementById('article-meta-description').value,
-                status: 'published'
-            };
+            // Replace the current formData object with this:
+const formData = {
+    title: document.getElementById('article-title').value,
+    slug: document.getElementById('article-slug').value,
+    excerpt: document.getElementById('article-excerpt').value,
+    content: document.getElementById('article-content').value,
+    category: document.getElementById('article-category').value,
+    tags: [], // Add empty array for tags
+    readTime: parseInt(document.getElementById('article-read-time').value),
+    author: document.getElementById('article-author').value,
+    metaTitle: document.getElementById('article-meta-title').value,
+    metaDescription: document.getElementById('article-meta-description').value,
+    featuredImageUrl: null, // Add null for featured image
+    status: 'published'
+};
             
             try {
                 const response = await fetch(`${API_BASE}/api/admin/articles`, {
@@ -1852,4 +1855,5 @@
     </script>
 </body>
 </html>
+
 
