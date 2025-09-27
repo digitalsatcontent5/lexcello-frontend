@@ -1059,7 +1059,7 @@
             questionsList.innerHTML = '<p style="padding: 20px; text-align: center; color: #666;">Loading questions...</p>';
             
             try {
-                const response = await fetch(`${API_BASE}/api/tests/${testFilter}/questions`);
+                const response = await fetch(`${API_BASE}/api/admin/tests/${testFilter}/questions`);
                 const data = await response.json();
                 
                 if (data.questions && data.questions.length > 0) {
@@ -1881,5 +1881,6 @@
     </script>
 </body>
 </html>
+
 
 
