@@ -859,12 +859,23 @@
             initiatePayment();
         }
         
-        function initiatePayment() {
-            // For now, simulate payment success and redirect to dashboard
-            // In production, this would integrate with Stripe or another payment processor
-            
-            alert('Payment processing would happen here. For demo purposes, redirecting to dashboard.');
-            window.location.href = 'dashboard.html';
+        function handleSubscription() {
+    if (!currentUser) {
+        // Not logged in, redirect to registration
+        window.location.href = 'register.html';
+        return;
+    }
+    
+    // Check if user already has premium subscription
+    if (currentUser.subscriptionStatus === 'premium') {
+        // Already subscribed, go to dashboard
+        window.location.href = 'dashboard.html';
+        return;
+    }
+    
+    // Start payment process - redirect to payment page
+    window.location.href = 'payment.html';
+}
             
             // TODO: Integrate with Stripe
             // const stripe = Stripe('your-publishable-key');
@@ -873,6 +884,7 @@
     </script>
 </body>
 </html>
+
 
 
 
