@@ -876,7 +876,7 @@
             // Check tests 1-10 for content
             for (let testId = 1; testId <= 10; testId++) {
                 try {
-                    const response = await fetch(`${API_BASE_URL}/tests/${testId}/questions`);
+                    const response = await fetch(`${API_BASE_URL}/tests/${testId}/status`);
                     
                     if (response.ok) {
                         const data = await response.json();
@@ -1231,3 +1231,4 @@
     </script>
 </body>
 </html>
+
