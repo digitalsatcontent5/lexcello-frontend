@@ -870,8 +870,17 @@
 
         // Initialize test when page loads
         document.addEventListener('DOMContentLoaded', function() {
-            checkAccessOrStartTest();
-        });
+    // Protection for premium tests - redirect unauthenticated users immediately
+    if (TEST_ID > 1) {
+        const token = localStorage.getItem('authToken');
+        if (!token) {
+            window.location.href = 'pricing.html';
+            return;
+        }
+    }
+    
+    checkAccessOrStartTest();
+});
 
         // Check authentication and determine access level
         async function checkAccessOrStartTest() {
@@ -1353,4 +1362,5 @@
     </script>
 </body>
 </html>
+
 
