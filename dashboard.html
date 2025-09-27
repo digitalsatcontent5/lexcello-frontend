@@ -982,7 +982,52 @@
                 showLoadingError();
             }
         }
+// Function to check user subscription status
+async function checkUserSubscriptionStatus() {
+    const token = localStorage.getItem('authToken');
+    
+    if (!token || !currentUser) {
+        return { isPaid: false, isDemo: true };
+    }
 
+    try {
+        // Use existing profile endpoint to get current subscription status
+        const response = await fetch(`${API_BASE_URL}/auth/profile`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+        
+        if (response.ok) {
+            const userData = await response.json();
+            const subscriptionStatus = userData.subscriptionStatus || 'inactive';
+            const isPaid = subscriptionStatus === 'premium' || subscriptionStatus === 'active';
+            
+            // Check if subscription has expired
+            let isExpired = false;
+            if (userData.subscriptionExpiresAt) {
+                const expirationDate = new Date(userData.subscriptionExpiresAt);
+                isExpired = expirationDate < new Date();
+            }
+            
+            return {
+                isPaid: isPaid && !isExpired,
+                subscriptionStatus: subscriptionStatus,
+                subscriptionType: isPaid ? 'premium' : 'free',
+                expiresAt: userData.subscriptionExpiresAt,
+                isExpired: isExpired,
+                isDemo: false
+            };
+        } else {
+            return { isPaid: false, isDemo: false };
+        }
+    } catch (error) {
+        console.error('Subscription check failed:', error);
+        return { isPaid: false, isDemo: false };
+    }
+}
         async function checkAuthStatus() {
             const token = localStorage.getItem('authToken');
             if (token) {
@@ -1811,4 +1856,5 @@
     </script>
 </body>
 </html>
+
 
