@@ -1799,10 +1799,10 @@
                     // Load questions for each test to get detailed stats
                     for (const test of testData.tests) {
                         try {
-                            const questionsResponse = await fetch(`${API_BASE}/api/tests/${test.id}/questions`);
+                            const questionsResponse = await fetch(`${API_BASE}/api/tests/${test.id}/status`);
                             const questionsData = await questionsResponse.json();
                             
-                            const questionCount = questionsData.questions ? questionsData.questions.length : 0;
+                            const questionCount = questionsData.questionCount || 0;
                             totalQuestions += questionCount;
                             
                             if (questionCount > 0) {
@@ -1881,6 +1881,7 @@
     </script>
 </body>
 </html>
+
 
 
 
