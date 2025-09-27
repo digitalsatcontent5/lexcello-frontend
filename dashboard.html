@@ -1793,15 +1793,27 @@ async function checkUserSubscriptionStatus() {
         }
         
         // Navigation functions
-        function startTest(testNumber) {
-            if (confirm(`Ready to start Practice Test ${testNumber}? This test must be completed in one session and will take approximately 95 minutes.`)) {
-                if (testNumber === 1) {
-                    window.location.href = 'practice-test-1.html';
-                } else {
-                    window.location.href = `practice-test-1.html?test=${testNumber}`;
-                }
-            }
+function startTest(testNumber) {
+    if (!currentUser) {
+        showNotification('Please sign in to access practice tests', 'info');
+        window.location.href = 'login.html';
+        return;
+    }
+    
+    if (testNumber > 1 && currentUser.subscriptionStatus !== 'premium') {
+        showNotification('Premium subscription required for this test', 'info');
+        window.location.href = 'pricing.html';
+        return;
+    }
+    
+    if (confirm(`Ready to start Practice Test ${testNumber}? This test must be completed in one session and will take approximately 95 minutes.`)) {
+        if (testNumber === 1) {
+            window.location.href = 'practice-test-1.html';
+        } else {
+            window.location.href = `practice-test-1.html?test=${testNumber}`;
         }
+    }
+}
 
         function viewTestResults(testNumber) {
             // For now, redirect to results page - in a real implementation, 
@@ -1858,6 +1870,7 @@ async function checkUserSubscriptionStatus() {
     </script>
 </body>
 </html>
+
 
 
 
