@@ -1034,20 +1034,21 @@
         }
         
         // Start test from homepage
-        function startTestFromHomepage(testNumber) {
-            if (currentUser) {
-                // Check if user has premium access for tests beyond the first one
-                if (testNumber > 1 && currentUser.subscriptionStatus !== 'premium') {
-                    showNotification('Premium subscription required for this test', 'info');
-                    window.location.href = 'pricing.html';
-                } else {
-                    window.location.href = `practice-test-1.html${testNumber > 1 ? '?test=' + testNumber : ''}`;
-                }
-            } else {
-                showNotification('Please sign in to access practice tests', 'info');
-                window.location.href = 'login.html';
-            }
-        }
+function startTestFromHomepage(testNumber) {
+    if (!currentUser) {
+        showNotification('Please sign in to access practice tests', 'info');
+        window.location.href = 'login.html';
+        return;
+    }
+    
+    if (testNumber > 1 && currentUser.subscriptionStatus !== 'premium') {
+        showNotification('Premium subscription required for this test', 'info');
+        window.location.href = 'pricing.html';
+        return;
+    }
+    
+    window.location.href = `practice-test-1.html${testNumber > 1 ? '?test=' + testNumber : ''}`;
+}
         
         // Authentication functions
         async function checkAuthStatus() {
@@ -1233,5 +1234,6 @@
     </script>
 </body>
 </html>
+
 
 
