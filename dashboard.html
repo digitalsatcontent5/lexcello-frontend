@@ -1157,7 +1157,7 @@ async function checkUserSubscriptionStatus() {
             
             for (let testId = 1; testId <= 10; testId++) {
                 try {
-                    const response = await fetch(`${API_BASE_URL}/tests/${testId}/questions`);
+                    const response = await fetch(`${API_BASE_URL}/tests/${testId}/status`);
                     
                     if (response.ok) {
                         const data = await response.json();
@@ -1856,4 +1856,5 @@ async function checkUserSubscriptionStatus() {
     </script>
 </body>
 </html>
+
 
