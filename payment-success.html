@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Successful - Lexcello</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #1a365d;
+            --secondary-color: #2b6cb0;
+            --success-color: #28a745;
+            --text-dark: #1a202c;
+            --bg-light: #f7fafc;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-light);
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+        }
+        
+        .success-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .success-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+            text-align: center;
+        }
+        
+        .success-header {
+            background: linear-gradient(135deg, var(--success-color), #20c997);
+            color: white;
+            padding: 40px 20px;
+        }
+        
+        .success-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            animation: checkmark 0.6s ease-in-out;
+        }
+        
+        .success-body {
+            padding: 40px 30px;
+        }
+        
+        .btn-dashboard {
+            background: var(--secondary-color);
+            border: none;
+            padding: 15px 30px;
+            font-weight: 600;
+            border-radius: 8px;
+            color: white;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+            margin: 10px;
+        }
+        
+        .btn-dashboard:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-1px);
+        }
+        
+        .btn-home {
+            background: transparent;
+            border: 2px solid var(--secondary-color);
+            padding: 15px 30px;
+            font-weight: 600;
+            border-radius: 8px;
+            color: var(--secondary-color);
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+            margin: 10px;
+        }
+        
+        .btn-home:hover {
+            background: var(--secondary-color);
+            color: white;
+            transform: translateY(-1px);
+        }
+        
+        .features-list {
+            list-style: none;
+            padding: 0;
+            margin: 20px 0;
+            text-align: left;
+        }
+        
+        .features-list li {
+            padding: 8px 0;
+            display: flex;
+            align-items: center;
+        }
+        
+        .features-list li i {
+            color: var(--success-color);
+            margin-right: 10px;
+            width: 20px;
+        }
+        
+        @keyframes checkmark {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.2);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        
+        .confetti {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1000;
+        }
+        
+        .confetti-piece {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: var(--success-color);
+            animation: confetti-fall 3s linear infinite;
+        }
+        
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(-100vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="confetti" id="confetti"></div>
+    
+    <div class="container">
+        <div class="success-container">
+            <div class="success-card">
+                <div class="success-header">
+                    <div class="success-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h1>Payment Successful!</h1>
+                    <p class="mb-0">Welcome to Lexcello Premium</p>
+                </div>
+                
+                <div class="success-body">
+                    <h4 class="text-success mb-3">Congratulations!</h4>
+                    <p class="lead">Your payment has been processed successfully and your premium subscription is now active.</p>
+                    
+                    <div class="alert alert-success">
+                        <i class="fas fa-crown me-2"></i>
+                        <strong>Premium Access Activated</strong><br>
+                        You now have access to all premium features!
+                    </div>
+                    
+                    <h5>What's included in your premium subscription:</h5>
+                    <ul class="features-list">
+                        <li><i class="fas fa-check"></i>Access to all 10 comprehensive LNAT practice tests</li>
+                        <li><i class="fas fa-check"></i>Detailed performance analytics and insights</li>
+                        <li><i class="fas fa-check"></i>Expert explanations for every question</li>
+                        <li><i class="fas fa-check"></i>Progress tracking and improvement recommendations</li>
+                        <li><i class="fas fa-check"></i>Unlimited test attempts and review sessions</li>
+                    </ul>
+                    
+                    <div class="mt-4">
+                        <a href="dashboard.html" class="btn-dashboard">
+                            <i class="fas fa-tachometer-alt me-2"></i>Go to Dashboard
+                        </a>
+                        <a href="index.html" class="btn-home">
+                            <i class="fas fa-home me-2"></i>Back to Home
+                        </a>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <small class="text-muted">
+                            Transaction details have been sent to your email address.
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Create confetti effect
+        function createConfetti() {
+            const confettiContainer = document.getElementById('confetti');
+            const colors = ['#28a745', '#20c997', '#17a2b8', '#ffc107', '#fd7e14'];
+            
+            for (let i = 0; i < 50; i++) {
+                const confettiPiece = document.createElement('div');
+                confettiPiece.className = 'confetti-piece';
+                confettiPiece.style.left = Math.random() * 100 + '%';
+                confettiPiece.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confettiPiece.style.animationDelay = Math.random() * 3 + 's';
+                confettiPiece.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                confettiContainer.appendChild(confettiPiece);
+            }
+            
+            // Remove confetti after animation
+            setTimeout(() => {
+                confettiContainer.innerHTML = '';
+            }, 6000);
+        }
+        
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            createConfetti();
+            
+            // Get URL parameters to show transaction details if available
+            const urlParams = new URLSearchParams(window.location.search);
+            const txnid = urlParams.get('txnid');
+            const amount = urlParams.get('amount');
+            
+            if (txnid) {
+                console.log('Transaction ID:', txnid);
+                // You could fetch and display transaction details here
+            }
+        });
+    </script>
+</body>
+</html>
