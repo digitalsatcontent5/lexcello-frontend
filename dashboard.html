@@ -1278,7 +1278,13 @@
             
             for (let testId = 1; testId <= 10; testId++) {
                 try {
-                    const response = await fetch(`${API_BASE_URL}/tests/${testId}/questions`);
+                    const token = localStorage.getItem('authToken');
+const response = await fetch(`${API_BASE_URL}/tests/${testId}/questions`, {
+    headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+    }
+});
                     
                     if (response.ok) {
                         const data = await response.json();
@@ -2020,4 +2026,5 @@
     </script>
 </body>
 </html>
+
 
