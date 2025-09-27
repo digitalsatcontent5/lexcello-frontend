@@ -263,6 +263,11 @@
             border-left-color: #e2e8f0;
             opacity: 0.7;
         }
+
+        .test-card.premium-required {
+            border-left-color: var(--accent-gold);
+            background: linear-gradient(135deg, #fffaf0, #ffffff);
+        }
         
         .test-header {
             display: flex;
@@ -286,6 +291,16 @@
 
         .test-number.completed {
             background: var(--success-color);
+        }
+
+        .test-number.premium {
+            background: var(--accent-gold);
+            color: var(--primary-color);
+        }
+
+        .test-number.locked {
+            background: #e2e8f0;
+            color: #a0aec0;
         }
         
         .test-info {
@@ -320,6 +335,21 @@
         .status-locked {
             background: #e2e8f0;
             color: #718096;
+        }
+
+        .status-premium-required {
+            background: #fef5e7;
+            color: #744210;
+        }
+
+        .premium-badge {
+            background: var(--accent-gold);
+            color: var(--primary-color);
+            font-size: 0.7rem;
+            padding: 4px 8px;
+            border-radius: 8px;
+            font-weight: 700;
+            margin-left: 8px;
         }
 
         .test-score-display {
@@ -425,6 +455,45 @@
             background: #e2e8f0;
             color: #a0aec0;
             cursor: not-allowed;
+        }
+
+        .btn-upgrade {
+            background: var(--accent-gold);
+            color: var(--primary-color);
+        }
+
+        .btn-upgrade:hover {
+            background: #b7791f;
+            color: white;
+        }
+
+        /* Subscription Alert */
+        .subscription-alert {
+            background: linear-gradient(135deg, var(--accent-gold), #f7c41f);
+            color: var(--primary-color);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border: none;
+        }
+
+        .subscription-alert h5 {
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .subscription-alert .btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            font-weight: 600;
+            padding: 10px 20px;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+
+        .subscription-alert .btn:hover {
+            background: var(--primary-hover);
         }
         
         /* Performance Chart */
@@ -825,6 +894,21 @@
 
     <!-- Main Dashboard Content -->
     <div class="container">
+        <!-- Subscription Alert (shown for non-premium users) -->
+        <div class="alert subscription-alert" id="subscriptionAlert" style="display: none;">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <h5><i class="fas fa-star me-2"></i>Unlock Your Full LNAT Potential</h5>
+                    <p class="mb-0">Get access to all 10 practice tests with detailed analytics, explanations, and performance tracking. Join thousands of successful LNAT candidates.</p>
+                </div>
+                <div class="col-lg-4 text-lg-end">
+                    <button class="btn" onclick="upgradeToPremium()">
+                        <i class="fas fa-crown me-2"></i>Upgrade to Premium
+                    </button>
+                </div>
+            </div>
+        </div>
+
         <div class="row">
             <div class="col-lg-8">
                 <!-- Practice Tests Section -->
@@ -867,8 +951,6 @@
                         </div>
                     </div>
                 </div>
-
-
 
                 <!-- Achievements -->
                 <div class="content-section">
@@ -926,7 +1008,7 @@
                         </div>
                         <div class="test-detail">
                             <span class="detail-label">Account Status:</span>
-                            <span class="detail-value text-success">Active</span>
+                            <span class="detail-value" id="accountStatus">Loading...</span>
                         </div>
                         <div class="test-detail">
                             <span class="detail-label">Tests Available:</span>
@@ -963,6 +1045,7 @@
         let currentUser = null;
         let userTestAttempts = [];
         let availableTests = {};
+        let userSubscription = { isPaid: false, isDemo: true };
         
         // Authentication check and initialization
         document.addEventListener('DOMContentLoaded', async function() {
@@ -972,62 +1055,74 @@
         async function initializeDashboard() {
             try {
                 await checkAuthStatus();
+                await checkSubscriptionStatus();
                 await loadUserData();
                 await loadTests();
                 updateProgressStats();
                 updateRecentActivity();
                 generateAchievements();
+                updateSubscriptionUI();
             } catch (error) {
                 console.error('Dashboard initialization error:', error);
                 showLoadingError();
             }
         }
-// Function to check user subscription status
-async function checkUserSubscriptionStatus() {
-    const token = localStorage.getItem('authToken');
-    
-    if (!token || !currentUser) {
-        return { isPaid: false, isDemo: true };
-    }
 
-    try {
-        // Use existing profile endpoint to get current subscription status
-        const response = await fetch(`${API_BASE_URL}/auth/profile`, {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            }
-        });
-        
-        if (response.ok) {
-            const userData = await response.json();
-            const subscriptionStatus = userData.subscriptionStatus || 'inactive';
-            const isPaid = subscriptionStatus === 'premium' || subscriptionStatus === 'active';
+        // Function to check user subscription status
+        async function checkSubscriptionStatus() {
+            const token = localStorage.getItem('authToken');
             
-            // Check if subscription has expired
-            let isExpired = false;
-            if (userData.subscriptionExpiresAt) {
-                const expirationDate = new Date(userData.subscriptionExpiresAt);
-                isExpired = expirationDate < new Date();
+            if (!token || !currentUser) {
+                userSubscription = { isPaid: false, isDemo: true, subscriptionType: 'free' };
+                return userSubscription;
             }
-            
-            return {
-                isPaid: isPaid && !isExpired,
-                subscriptionStatus: subscriptionStatus,
-                subscriptionType: isPaid ? 'premium' : 'free',
-                expiresAt: userData.subscriptionExpiresAt,
-                isExpired: isExpired,
-                isDemo: false
-            };
-        } else {
-            return { isPaid: false, isDemo: false };
+
+            try {
+                // Use existing profile endpoint to get current subscription status
+                const response = await fetch(`${API_BASE_URL}/auth/profile`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                if (response.ok) {
+                    const userData = await response.json();
+                    const subscriptionStatus = userData.subscriptionStatus || 'inactive';
+                    const isPaid = subscriptionStatus === 'premium' || subscriptionStatus === 'active';
+                    
+                    // Check if subscription has expired
+                    let isExpired = false;
+                    if (userData.subscriptionExpiresAt) {
+                        const expirationDate = new Date(userData.subscriptionExpiresAt);
+                        isExpired = expirationDate < new Date();
+                    }
+                    
+                    userSubscription = {
+                        isPaid: isPaid && !isExpired,
+                        subscriptionStatus: subscriptionStatus,
+                        subscriptionType: isPaid && !isExpired ? 'premium' : 'free',
+                        expiresAt: userData.subscriptionExpiresAt,
+                        isExpired: isExpired,
+                        isDemo: false
+                    };
+
+                    // Update currentUser with latest subscription info
+                    currentUser.subscriptionStatus = subscriptionStatus;
+                    currentUser.subscriptionExpiresAt = userData.subscriptionExpiresAt;
+                    
+                } else {
+                    userSubscription = { isPaid: false, isDemo: false, subscriptionType: 'free' };
+                }
+            } catch (error) {
+                console.error('Subscription check failed:', error);
+                userSubscription = { isPaid: false, isDemo: false, subscriptionType: 'free' };
+            }
+
+            return userSubscription;
         }
-    } catch (error) {
-        console.error('Subscription check failed:', error);
-        return { isPaid: false, isDemo: false };
-    }
-}
+
         async function checkAuthStatus() {
             const token = localStorage.getItem('authToken');
             if (token) {
@@ -1047,11 +1142,16 @@ async function checkUserSubscriptionStatus() {
                         // Token invalid, remove it
                         localStorage.removeItem('authToken');
                         currentUser = null;
+                        window.location.href = 'login.html';
                     }
                 } catch (error) {
                     console.error('Auth check failed:', error);
                     currentUser = null;
+                    window.location.href = 'login.html';
                 }
+            } else {
+                // No token, redirect to login
+                window.location.href = 'login.html';
             }
         }
 
@@ -1063,6 +1163,27 @@ async function checkUserSubscriptionStatus() {
                 document.getElementById('userName').textContent = firstName;
                 document.getElementById('userAvatar').textContent = firstName.charAt(0).toUpperCase();
                 document.getElementById('welcomeMessage').textContent = `Welcome back, ${firstName}!`;
+            }
+        }
+
+        function updateSubscriptionUI() {
+            const subscriptionAlert = document.getElementById('subscriptionAlert');
+            const accountStatus = document.getElementById('accountStatus');
+            
+            if (userSubscription.isPaid) {
+                subscriptionAlert.style.display = 'none';
+                accountStatus.innerHTML = '<span class="text-success">Premium Active</span>';
+                
+                // Update welcome message for premium users
+                const welcomeSubtext = document.getElementById('welcomeSubtext');
+                welcomeSubtext.textContent = 'You have premium access to all LNAT practice tests. Continue your preparation and track your progress.';
+            } else {
+                subscriptionAlert.style.display = 'block';
+                accountStatus.innerHTML = '<span class="text-warning">Free Account</span>';
+                
+                // Update welcome message for free users
+                const welcomeSubtext = document.getElementById('welcomeSubtext');
+                welcomeSubtext.textContent = 'You have access to Practice Test 1. Upgrade to premium to unlock all 10 tests and advanced features.';
             }
         }
         
@@ -1136,13 +1257,13 @@ async function checkUserSubscriptionStatus() {
             }
         }
         
-        // Load available tests with content checking
+        // Load available tests with subscription checking
         async function loadTests() {
             try {
                 console.log('Loading tests...');
                 const testStatuses = await checkTestContent();
                 availableTests = testStatuses;
-                renderTestsWithUserProgress(testStatuses);
+                renderTestsWithSubscriptionCheck(testStatuses);
                 updateTestsAvailableCount(testStatuses);
                 
             } catch (error) {
@@ -1198,21 +1319,25 @@ async function checkUserSubscriptionStatus() {
             return testStatuses;
         }
         
-        // Render tests with user progress integration
-        function renderTestsWithUserProgress(testStatuses) {
+        // Render tests with subscription-based access control
+        function renderTestsWithSubscriptionCheck(testStatuses) {
             const container = document.getElementById('testsContainer');
             container.innerHTML = '<div class="tests-grid"></div>';
             const testsGrid = container.querySelector('.tests-grid');
             
             let testsHTML = '';
             
-            // Render each test with user progress
+            // Render each test with subscription-based access control
             for (let testId = 1; testId <= 10; testId++) {
                 const status = testStatuses[testId] || { hasContent: false, questionCount: 0, status: 'empty' };
                 const userAttempts = userTestAttempts.filter(attempt => attempt.test_id === testId);
                 const hasCompleted = userAttempts.length > 0;
                 
-                // FIXED: Proper score conversion for best score calculation
+                // Check if user has access to this test
+                const hasAccess = testId === 1 || userSubscription.isPaid;
+                const isPremiumTest = testId > 1;
+                
+                // Calculate best score
                 let bestScore = 0;
                 if (hasCompleted) {
                     const validScores = userAttempts.map(attempt => {
@@ -1230,33 +1355,51 @@ async function checkUserSubscriptionStatus() {
                 
                 const latestAttempt = hasCompleted ? userAttempts[userAttempts.length - 1] : null;
                 
+                // Only show tests that have content OR are Test 1
                 if (status.hasContent || testId === 1) {
-                    const cardClass = hasCompleted ? 'completed' : (status.hasContent ? 'available' : 'locked');
-                    const statusText = hasCompleted ? `Completed (${Math.round(bestScore)}%)` : (status.hasContent ? 'Ready to Start' : 'No Content');
-                    const statusClass = hasCompleted ? 'status-completed' : (status.hasContent ? 'status-available' : 'status-locked');
+                    let cardClass, statusText, statusClass, actionButtons;
                     
-                    let actionButtons = '';
-                    if (status.hasContent) {
-                        if (hasCompleted) {
-                            actionButtons = `
-                                <button class="btn btn-test-action btn-review" onclick="viewTestResults(${testId})">
-                                    <i class="fas fa-chart-line me-1"></i>Review
-                                </button>
-                                <button class="btn btn-test-action btn-retake" onclick="startTest(${testId})">
-                                    <i class="fas fa-redo me-1"></i>Retake
-                                </button>
-                            `;
-                        } else {
-                            actionButtons = `
-                                <button class="btn btn-test-action btn-start" onclick="startTest(${testId})">
-                                    <i class="fas fa-play me-1"></i>Start Test
-                                </button>
-                            `;
-                        }
+                    if (!hasAccess && isPremiumTest) {
+                        // Premium test, user doesn't have access
+                        cardClass = 'premium-required';
+                        statusText = 'Premium Required';
+                        statusClass = 'status-premium-required';
+                        actionButtons = `
+                            <button class="btn btn-test-action btn-upgrade" onclick="upgradeToPremium()">
+                                <i class="fas fa-crown me-1"></i>Upgrade to Access
+                            </button>
+                        `;
+                    } else if (hasCompleted && hasAccess) {
+                        // User has completed this test and has access
+                        cardClass = 'completed';
+                        statusText = `Completed (${Math.round(bestScore)}%)`;
+                        statusClass = 'status-completed';
+                        actionButtons = `
+                            <button class="btn btn-test-action btn-review" onclick="viewTestResults(${testId})">
+                                <i class="fas fa-chart-line me-1"></i>Review
+                            </button>
+                            <button class="btn btn-test-action btn-retake" onclick="startTest(${testId})">
+                                <i class="fas fa-redo me-1"></i>Retake
+                            </button>
+                        `;
+                    } else if (status.hasContent && hasAccess) {
+                        // Test available and user has access
+                        cardClass = 'available';
+                        statusText = 'Ready to Start';
+                        statusClass = 'status-available';
+                        actionButtons = `
+                            <button class="btn btn-test-action btn-start" onclick="startTest(${testId})">
+                                <i class="fas fa-play me-1"></i>Start Test
+                            </button>
+                        `;
                     } else {
+                        // Test has no content
+                        cardClass = 'locked';
+                        statusText = 'Coming Soon';
+                        statusClass = 'status-locked';
                         actionButtons = `
                             <button class="btn btn-test-action btn-locked" disabled>
-                                <i class="fas fa-lock me-1"></i>Add Content
+                                <i class="fas fa-clock me-1"></i>Coming Soon
                             </button>
                         `;
                     }
@@ -1264,12 +1407,16 @@ async function checkUserSubscriptionStatus() {
                     // Calculate progress for this test
                     const progress = hasCompleted ? 100 : 0;
                     
+                    // Premium badge for tests 2-10
+                    const premiumBadge = isPremiumTest && !userSubscription.isPaid ? 
+                        '<span class="premium-badge">PREMIUM</span>' : '';
+                    
                     testsHTML += `
                         <div class="test-card ${cardClass}">
                             <div class="test-header">
-                                <div class="test-number ${hasCompleted ? 'completed' : ''}">${testId}</div>
+                                <div class="test-number ${hasCompleted ? 'completed' : isPremiumTest && !userSubscription.isPaid ? 'premium' : status.hasContent ? '' : 'locked'}">${testId}</div>
                                 <div class="test-info">
-                                    <h4 class="test-title">Practice Test ${testId}</h4>
+                                    <h4 class="test-title">Practice Test ${testId}${premiumBadge}</h4>
                                     <span class="test-status ${statusClass}">${statusText}</span>
                                 </div>
                                 ${hasCompleted ? `
@@ -1283,15 +1430,15 @@ async function checkUserSubscriptionStatus() {
                             <div class="test-details">
                                 <div class="test-detail">
                                     <span class="detail-label">Questions:</span>
-                                    <span class="detail-value">${status.questionCount}</span>
+                                    <span class="detail-value">${status.questionCount || 42}</span>
                                 </div>
                                 <div class="test-detail">
                                     <span class="detail-label">Time Limit:</span>
                                     <span class="detail-value">95 minutes</span>
                                 </div>
                                 <div class="test-detail">
-                                    <span class="detail-label">Progress:</span>
-                                    <span class="detail-value">${progress}%</span>
+                                    <span class="detail-label">Access:</span>
+                                    <span class="detail-value">${hasAccess ? 'Available' : 'Premium Required'}</span>
                                 </div>
                                 ${hasCompleted && latestAttempt ? `
                                     <div class="test-detail">
@@ -1312,12 +1459,13 @@ async function checkUserSubscriptionStatus() {
             }
             
             testsGrid.innerHTML = testsHTML;
-            console.log(`Rendered tests with user progress`);
+            console.log(`Rendered tests with subscription checking`);
         }
 
         function updateTestsAvailableCount(testStatuses) {
-            const availableCount = Object.values(testStatuses).filter(s => s.hasContent).length;
-            document.getElementById('testsAvailable').textContent = availableCount;
+            const totalWithContent = Object.values(testStatuses).filter(s => s.hasContent).length;
+            const userAccessCount = userSubscription.isPaid ? totalWithContent : Math.min(1, totalWithContent);
+            document.getElementById('testsAvailable').textContent = `${userAccessCount}${userSubscription.isPaid ? '' : ' (+ ' + (totalWithContent - userAccessCount) + ' premium)'}`;
         }
         
         // Fallback rendering
@@ -1357,12 +1505,12 @@ async function checkUserSubscriptionStatus() {
             `;
         }
         
-        // FIXED: Update progress statistics with proper number conversion
+        // Update progress statistics with proper number conversion
         function updateProgressStats() {
             const completedTests = userTestAttempts.length;
             const uniqueTests = [...new Set(userTestAttempts.map(a => a.test_id))].length;
             
-            // FIXED: Ensure scores are properly converted to numbers and filter invalid ones
+            // Ensure scores are properly converted to numbers and filter invalid ones
             const validScores = userTestAttempts
                 .map(attempt => {
                     let score = attempt.score;
@@ -1438,7 +1586,7 @@ async function checkUserSubscriptionStatus() {
             // Group attempts by test_id and get best score for each
             const testScores = {};
             userTestAttempts.forEach(attempt => {
-                // FIXED: Ensure score is properly converted to number
+                // Ensure score is properly converted to number
                 let score = attempt.score;
                 if (typeof score === 'string') {
                     score = score.replace('%', '');
@@ -1628,7 +1776,7 @@ async function checkUserSubscriptionStatus() {
             const sortedAttempts = [...userTestAttempts].sort((a, b) => new Date(b.completed_at) - new Date(a.completed_at));
 
             sortedAttempts.slice(0, 5).forEach(attempt => {
-                // FIXED: Ensure score is properly converted to number
+                // Ensure score is properly converted to number
                 let score = attempt.score;
                 if (typeof score === 'string') {
                     score = score.replace('%', '');
@@ -1677,7 +1825,7 @@ async function checkUserSubscriptionStatus() {
             const achievementsContainer = document.getElementById('achievementsContainer');
             const completedTests = [...new Set(userTestAttempts.map(a => a.test_id))].length;
             
-            // FIXED: Ensure best score calculation uses proper number conversion
+            // Ensure best score calculation uses proper number conversion
             let bestScore = 0;
             if (userTestAttempts.length > 0) {
                 const validScores = userTestAttempts.map(a => {
@@ -1790,8 +1938,14 @@ async function checkUserSubscriptionStatus() {
             return date.toLocaleDateString();
         }
         
-        // Navigation functions
+        // Navigation functions with subscription checking
         function startTest(testNumber) {
+            // Check if user has access to this test
+            if (testNumber > 1 && !userSubscription.isPaid) {
+                upgradeToPremium();
+                return;
+            }
+
             if (confirm(`Ready to start Practice Test ${testNumber}? This test must be completed in one session and will take approximately 95 minutes.`)) {
                 if (testNumber === 1) {
                     window.location.href = 'practice-test-1.html';
@@ -1802,14 +1956,22 @@ async function checkUserSubscriptionStatus() {
         }
 
         function viewTestResults(testNumber) {
-            // For now, redirect to results page - in a real implementation, 
-            // you'd pass the specific test results data
+            // Check if user has access to this test
+            if (testNumber > 1 && !userSubscription.isPaid) {
+                upgradeToPremium();
+                return;
+            }
+
             const testAttempts = userTestAttempts.filter(a => a.test_id === testNumber);
             if (testAttempts.length > 0) {
                 // Store the test results in session storage for the results page
                 sessionStorage.setItem('testResults', JSON.stringify(testAttempts[testAttempts.length - 1]));
                 window.location.href = 'test-results.html';
             }
+        }
+
+        function upgradeToPremium() {
+            window.location.href = 'pricing.html';
         }
 
         function showAllTests() {
@@ -1846,9 +2008,11 @@ async function checkUserSubscriptionStatus() {
         // Auto-refresh data every 5 minutes
         setInterval(async () => {
             try {
+                await checkSubscriptionStatus();
                 await loadUserData();
                 updateProgressStats();
                 updateRecentActivity();
+                updateSubscriptionUI();
             } catch (error) {
                 console.log('Auto-refresh failed:', error);
             }
@@ -1856,5 +2020,3 @@ async function checkUserSubscriptionStatus() {
     </script>
 </body>
 </html>
-
-
