@@ -959,7 +959,16 @@
                 console.log(`Loading test in ${testMode} mode...`);
                 
                 // Fetch questions from API
-                const response = await fetch(`${API_BASE_URL}/api/tests/${TEST_ID}/questions`);
+                const token = localStorage.getItem('authToken');
+const headers = { 'Content-Type': 'application/json' };
+if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+}
+
+const response = await fetch(`${API_BASE_URL}/api/tests/${TEST_ID}/questions`, {
+    method: 'GET',
+    headers: headers
+});
                 
                 if (!response.ok) {
                     throw new Error(`Failed to fetch questions: ${response.status}`);
@@ -1362,5 +1371,6 @@
     </script>
 </body>
 </html>
+
 
 
