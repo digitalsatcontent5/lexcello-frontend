@@ -263,11 +263,6 @@
             border-left-color: #e2e8f0;
             opacity: 0.7;
         }
-
-        .test-card.premium-required {
-            border-left-color: var(--accent-gold);
-            background: linear-gradient(135deg, #fffaf0, #ffffff);
-        }
         
         .test-header {
             display: flex;
@@ -291,16 +286,6 @@
 
         .test-number.completed {
             background: var(--success-color);
-        }
-
-        .test-number.premium {
-            background: var(--accent-gold);
-            color: var(--primary-color);
-        }
-
-        .test-number.locked {
-            background: #e2e8f0;
-            color: #a0aec0;
         }
         
         .test-info {
@@ -335,21 +320,6 @@
         .status-locked {
             background: #e2e8f0;
             color: #718096;
-        }
-
-        .status-premium-required {
-            background: #fef5e7;
-            color: #744210;
-        }
-
-        .premium-badge {
-            background: var(--accent-gold);
-            color: var(--primary-color);
-            font-size: 0.7rem;
-            padding: 4px 8px;
-            border-radius: 8px;
-            font-weight: 700;
-            margin-left: 8px;
         }
 
         .test-score-display {
@@ -455,45 +425,6 @@
             background: #e2e8f0;
             color: #a0aec0;
             cursor: not-allowed;
-        }
-
-        .btn-upgrade {
-            background: var(--accent-gold);
-            color: var(--primary-color);
-        }
-
-        .btn-upgrade:hover {
-            background: #b7791f;
-            color: white;
-        }
-
-        /* Subscription Alert */
-        .subscription-alert {
-            background: linear-gradient(135deg, var(--accent-gold), #f7c41f);
-            color: var(--primary-color);
-            border-radius: 15px;
-            padding: 25px;
-            margin-bottom: 30px;
-            border: none;
-        }
-
-        .subscription-alert h5 {
-            font-weight: 700;
-            margin-bottom: 10px;
-        }
-
-        .subscription-alert .btn {
-            background: var(--primary-color);
-            color: white;
-            border: none;
-            font-weight: 600;
-            padding: 10px 20px;
-            border-radius: 8px;
-            margin-top: 10px;
-        }
-
-        .subscription-alert .btn:hover {
-            background: var(--primary-hover);
         }
         
         /* Performance Chart */
@@ -828,43 +759,6 @@
                 flex-direction: column;
             }
         }
-        /* Test Card Status Styles - Add these before line 831 */
-.test-card.premium-required {
-    border-left-color: var(--accent-gold);
-    background: linear-gradient(135deg, #fffaf0, #ffffff);
-}
-
-.test-card.coming-soon {
-    border-left-color: #cbd5e0;
-    background: linear-gradient(135deg, #f7fafc, #ffffff);
-    opacity: 0.85;
-}
-
-.test-number.coming-soon {
-    background: #cbd5e0;
-    color: #4a5568;
-}
-
-.status-coming-soon {
-    background: #edf2f7;
-    color: #4a5568;
-}
-
-.btn-coming-soon {
-    background: #cbd5e0;
-    color: #4a5568;
-    cursor: not-allowed;
-}
-
-.coming-soon-badge {
-    background: #cbd5e0;
-    color: #4a5568;
-    font-size: 0.7rem;
-    padding: 4px 8px;
-    border-radius: 8px;
-    font-weight: 700;
-    margin-left: 8px;
-}
     </style>
 </head>
 <body>
@@ -931,21 +825,6 @@
 
     <!-- Main Dashboard Content -->
     <div class="container">
-        <!-- Subscription Alert (shown for non-premium users) -->
-        <div class="alert subscription-alert" id="subscriptionAlert" style="display: none;">
-            <div class="row align-items-center">
-                <div class="col-lg-8">
-                    <h5><i class="fas fa-star me-2"></i>Unlock Your Full LNAT Potential</h5>
-                    <p class="mb-0">Get access to all 10 practice tests with detailed analytics, explanations, and performance tracking. Join thousands of successful LNAT candidates.</p>
-                </div>
-                <div class="col-lg-4 text-lg-end">
-                    <button class="btn" onclick="upgradeToPremium()">
-                        <i class="fas fa-crown me-2"></i>Upgrade to Premium
-                    </button>
-                </div>
-            </div>
-        </div>
-
         <div class="row">
             <div class="col-lg-8">
                 <!-- Practice Tests Section -->
@@ -988,6 +867,8 @@
                         </div>
                     </div>
                 </div>
+
+
 
                 <!-- Achievements -->
                 <div class="content-section">
@@ -1045,7 +926,7 @@
                         </div>
                         <div class="test-detail">
                             <span class="detail-label">Account Status:</span>
-                            <span class="detail-value" id="accountStatus">Loading...</span>
+                            <span class="detail-value text-success">Active</span>
                         </div>
                         <div class="test-detail">
                             <span class="detail-label">Tests Available:</span>
@@ -1082,7 +963,6 @@
         let currentUser = null;
         let userTestAttempts = [];
         let availableTests = {};
-        let userSubscription = { isPaid: false, isDemo: true };
         
         // Authentication check and initialization
         document.addEventListener('DOMContentLoaded', async function() {
@@ -1092,74 +972,62 @@
         async function initializeDashboard() {
             try {
                 await checkAuthStatus();
-                await checkSubscriptionStatus();
                 await loadUserData();
                 await loadTests();
                 updateProgressStats();
                 updateRecentActivity();
                 generateAchievements();
-                updateSubscriptionUI();
             } catch (error) {
                 console.error('Dashboard initialization error:', error);
                 showLoadingError();
             }
         }
+// Function to check user subscription status
+async function checkUserSubscriptionStatus() {
+    const token = localStorage.getItem('authToken');
+    
+    if (!token || !currentUser) {
+        return { isPaid: false, isDemo: true };
+    }
 
-        // Function to check user subscription status
-        async function checkSubscriptionStatus() {
-            const token = localStorage.getItem('authToken');
+    try {
+        // Use existing profile endpoint to get current subscription status
+        const response = await fetch(`${API_BASE_URL}/auth/profile`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+        
+        if (response.ok) {
+            const userData = await response.json();
+            const subscriptionStatus = userData.subscriptionStatus || 'inactive';
+            const isPaid = subscriptionStatus === 'premium' || subscriptionStatus === 'active';
             
-            if (!token || !currentUser) {
-                userSubscription = { isPaid: false, isDemo: true, subscriptionType: 'free' };
-                return userSubscription;
+            // Check if subscription has expired
+            let isExpired = false;
+            if (userData.subscriptionExpiresAt) {
+                const expirationDate = new Date(userData.subscriptionExpiresAt);
+                isExpired = expirationDate < new Date();
             }
-
-            try {
-                // Use existing profile endpoint to get current subscription status
-                const response = await fetch(`${API_BASE_URL}/auth/profile`, {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
-                    }
-                });
-                
-                if (response.ok) {
-                    const userData = await response.json();
-                    const subscriptionStatus = userData.subscriptionStatus || 'inactive';
-                    const isPaid = subscriptionStatus === 'premium' || subscriptionStatus === 'active';
-                    
-                    // Check if subscription has expired
-                    let isExpired = false;
-                    if (userData.subscriptionExpiresAt) {
-                        const expirationDate = new Date(userData.subscriptionExpiresAt);
-                        isExpired = expirationDate < new Date();
-                    }
-                    
-                    userSubscription = {
-                        isPaid: isPaid && !isExpired,
-                        subscriptionStatus: subscriptionStatus,
-                        subscriptionType: isPaid && !isExpired ? 'premium' : 'free',
-                        expiresAt: userData.subscriptionExpiresAt,
-                        isExpired: isExpired,
-                        isDemo: false
-                    };
-
-                    // Update currentUser with latest subscription info
-                    currentUser.subscriptionStatus = subscriptionStatus;
-                    currentUser.subscriptionExpiresAt = userData.subscriptionExpiresAt;
-                    
-                } else {
-                    userSubscription = { isPaid: false, isDemo: false, subscriptionType: 'free' };
-                }
-            } catch (error) {
-                console.error('Subscription check failed:', error);
-                userSubscription = { isPaid: false, isDemo: false, subscriptionType: 'free' };
-            }
-
-            return userSubscription;
+            
+            return {
+                isPaid: isPaid && !isExpired,
+                subscriptionStatus: subscriptionStatus,
+                subscriptionType: isPaid ? 'premium' : 'free',
+                expiresAt: userData.subscriptionExpiresAt,
+                isExpired: isExpired,
+                isDemo: false
+            };
+        } else {
+            return { isPaid: false, isDemo: false };
         }
-
+    } catch (error) {
+        console.error('Subscription check failed:', error);
+        return { isPaid: false, isDemo: false };
+    }
+}
         async function checkAuthStatus() {
             const token = localStorage.getItem('authToken');
             if (token) {
@@ -1179,16 +1047,11 @@
                         // Token invalid, remove it
                         localStorage.removeItem('authToken');
                         currentUser = null;
-                        window.location.href = 'login.html';
                     }
                 } catch (error) {
                     console.error('Auth check failed:', error);
                     currentUser = null;
-                    window.location.href = 'login.html';
                 }
-            } else {
-                // No token, redirect to login
-                window.location.href = 'login.html';
             }
         }
 
@@ -1200,27 +1063,6 @@
                 document.getElementById('userName').textContent = firstName;
                 document.getElementById('userAvatar').textContent = firstName.charAt(0).toUpperCase();
                 document.getElementById('welcomeMessage').textContent = `Welcome back, ${firstName}!`;
-            }
-        }
-
-        function updateSubscriptionUI() {
-            const subscriptionAlert = document.getElementById('subscriptionAlert');
-            const accountStatus = document.getElementById('accountStatus');
-            
-            if (userSubscription.isPaid) {
-                subscriptionAlert.style.display = 'none';
-                accountStatus.innerHTML = '<span class="text-success">Premium Active</span>';
-                
-                // Update welcome message for premium users
-                const welcomeSubtext = document.getElementById('welcomeSubtext');
-                welcomeSubtext.textContent = 'You have premium access to all LNAT practice tests. Continue your preparation and track your progress.';
-            } else {
-                subscriptionAlert.style.display = 'block';
-                accountStatus.innerHTML = '<span class="text-warning">Free Account</span>';
-                
-                // Update welcome message for free users
-                const welcomeSubtext = document.getElementById('welcomeSubtext');
-                welcomeSubtext.textContent = 'You have access to Practice Test 1. Upgrade to premium to unlock all 10 tests and advanced features.';
             }
         }
         
@@ -1294,13 +1136,13 @@
             }
         }
         
-        // Load available tests with subscription checking
+        // Load available tests with content checking
         async function loadTests() {
             try {
                 console.log('Loading tests...');
                 const testStatuses = await checkTestContent();
                 availableTests = testStatuses;
-                renderTestsWithSubscriptionCheck(testStatuses);
+                renderTestsWithUserProgress(testStatuses);
                 updateTestsAvailableCount(testStatuses);
                 
             } catch (error) {
@@ -1315,13 +1157,7 @@
             
             for (let testId = 1; testId <= 10; testId++) {
                 try {
-                    const token = localStorage.getItem('authToken');
-const response = await fetch(`${API_BASE_URL}/tests/${testId}/questions`, {
-    headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
-    }
-});
+                    const response = await fetch(`${API_BASE_URL}/tests/${testId}/questions`);
                     
                     if (response.ok) {
                         const data = await response.json();
@@ -1362,25 +1198,21 @@ const response = await fetch(`${API_BASE_URL}/tests/${testId}/questions`, {
             return testStatuses;
         }
         
-        // Render tests with subscription-based access control
-        function renderTestsWithSubscriptionCheck(testStatuses) {
+        // Render tests with user progress integration
+        function renderTestsWithUserProgress(testStatuses) {
             const container = document.getElementById('testsContainer');
             container.innerHTML = '<div class="tests-grid"></div>';
             const testsGrid = container.querySelector('.tests-grid');
             
             let testsHTML = '';
             
-            // Render each test with subscription-based access control
+            // Render each test with user progress
             for (let testId = 1; testId <= 10; testId++) {
                 const status = testStatuses[testId] || { hasContent: false, questionCount: 0, status: 'empty' };
                 const userAttempts = userTestAttempts.filter(attempt => attempt.test_id === testId);
                 const hasCompleted = userAttempts.length > 0;
                 
-                // Check if user has access to this test
-                const hasAccess = testId === 1 || userSubscription.isPaid;
-                const isPremiumTest = testId > 1;
-                
-                // Calculate best score
+                // FIXED: Proper score conversion for best score calculation
                 let bestScore = 0;
                 if (hasCompleted) {
                     const validScores = userAttempts.map(attempt => {
@@ -1398,78 +1230,46 @@ const response = await fetch(`${API_BASE_URL}/tests/${testId}/questions`, {
                 
                 const latestAttempt = hasCompleted ? userAttempts[userAttempts.length - 1] : null;
                 
-               // Show all tests 1-10, regardless of content availability
-                if (testId <= 10) {
-                    let cardClass, statusText, statusClass, actionButtons;
+                if (status.hasContent || testId === 1) {
+                    const cardClass = hasCompleted ? 'completed' : (status.hasContent ? 'available' : 'locked');
+                    const statusText = hasCompleted ? `Completed (${Math.round(bestScore)}%)` : (status.hasContent ? 'Ready to Start' : 'No Content');
+                    const statusClass = hasCompleted ? 'status-completed' : (status.hasContent ? 'status-available' : 'status-locked');
                     
-                    if (!status.hasContent) {
-                    // Test has no content - show Coming Soon
-                    cardClass = 'locked';
-                    statusText = 'Coming Soon';
-                    statusClass = 'status-locked';
-                    actionButtons = `
-                        <button class="btn btn-test-action btn-locked" disabled>
-                            <i class="fas fa-clock me-1"></i>Coming Soon
-                        </button>
-                    `;
-                } else if (!hasAccess && isPremiumTest) {
-                    // Premium test, user doesn't have access
-                    cardClass = 'premium-required';
-                    statusText = 'Premium Required';
-                    statusClass = 'status-premium-required';
-                    actionButtons = `
-                        <button class="btn btn-test-action btn-upgrade" onclick="upgradeToPremium()">
-                            <i class="fas fa-crown me-1"></i>Upgrade to Access
-                        </button>
-                    `;
-                } else if (hasCompleted && hasAccess) {
-                    // User has completed this test and has access
-                    cardClass = 'completed';
-                    statusText = `Completed (${Math.round(bestScore)}%)`;
-                    statusClass = 'status-completed';
-                    actionButtons = `
-                        <button class="btn btn-test-action btn-review" onclick="viewTestResults(${testId})">
-                            <i class="fas fa-chart-line me-1"></i>Review
-                        </button>
-                        <button class="btn btn-test-action btn-retake" onclick="startTest(${testId})">
-                            <i class="fas fa-redo me-1"></i>Retake
-                        </button>
-                    `;
-                } else if (status.hasContent && hasAccess) {
-                    // Test available and user has access
-                    cardClass = 'available';
+                    let actionButtons = '';
+                    if (status.hasContent) {
+                        if (hasCompleted) {
+                            actionButtons = `
+                                <button class="btn btn-test-action btn-review" onclick="viewTestResults(${testId})">
+                                    <i class="fas fa-chart-line me-1"></i>Review
+                                </button>
+                                <button class="btn btn-test-action btn-retake" onclick="startTest(${testId})">
+                                    <i class="fas fa-redo me-1"></i>Retake
+                                </button>
+                            `;
+                        } else {
+                            actionButtons = `
+                                <button class="btn btn-test-action btn-start" onclick="startTest(${testId})">
+                                    <i class="fas fa-play me-1"></i>Start Test
+                                </button>
+                            `;
+                        }
+                    } else {
+                        actionButtons = `
+                            <button class="btn btn-test-action btn-locked" disabled>
+                                <i class="fas fa-lock me-1"></i>Add Content
+                            </button>
+                        `;
+                    }
 
                     // Calculate progress for this test
-                        statusText = 'Ready to Start';
-                    statusClass = 'status-available';
-                    actionButtons = `
-                        <button class="btn btn-test-action btn-start" onclick="startTest(${testId})">
-                            <i class="fas fa-play me-1"></i>Start Test
-                        </button>
-                    `;
-                } else {
-                    // Test has no content
-                    cardClass = 'locked';
-                    statusText = 'Coming Soon';
-                    statusClass = 'status-locked';
-                    actionButtons = `
-                        <button class="btn btn-test-action btn-locked" disabled>
-                            <i class="fas fa-clock me-1"></i>Coming Soon
-                        </button>
-                    `;
-                }
                     const progress = hasCompleted ? 100 : 0;
-                    
-                    // Premium badge for tests 2-10
-                    const premiumBadge = isPremiumTest && !userSubscription.isPaid ? 
-                        '<span class="premium-badge">PREMIUM</span>' : '';
                     
                     testsHTML += `
                         <div class="test-card ${cardClass}">
                             <div class="test-header">
-                                <div class="test-number ${hasCompleted ? 'completed' : isPremiumTest && !userSubscription.isPaid ? 'premium' : status.hasContent ? '' : 'locked'}">${testId}</div>
+                                <div class="test-number ${hasCompleted ? 'completed' : ''}">${testId}</div>
                                 <div class="test-info">
-                                    <h4 class="test-title">Practice Test ${testId}${premiumBadge}</h4>
+                                    <h4 class="test-title">Practice Test ${testId}</h4>
                                     <span class="test-status ${statusClass}">${statusText}</span>
                                 </div>
                                 ${hasCompleted ? `
@@ -1483,15 +1283,15 @@ const response = await fetch(`${API_BASE_URL}/tests/${testId}/questions`, {
                             <div class="test-details">
                                 <div class="test-detail">
                                     <span class="detail-label">Questions:</span>
-                                    <span class="detail-value">${status.questionCount || 42}</span>
+                                    <span class="detail-value">${status.questionCount}</span>
                                 </div>
                                 <div class="test-detail">
                                     <span class="detail-label">Time Limit:</span>
                                     <span class="detail-value">95 minutes</span>
                                 </div>
                                 <div class="test-detail">
-                                    <span class="detail-label">Access:</span>
-                                    <span class="detail-value">${hasAccess ? 'Available' : 'Premium Required'}</span>
+                                    <span class="detail-label">Progress:</span>
+                                    <span class="detail-value">${progress}%</span>
                                 </div>
                                 ${hasCompleted && latestAttempt ? `
                                     <div class="test-detail">
@@ -1512,13 +1312,12 @@ const response = await fetch(`${API_BASE_URL}/tests/${testId}/questions`, {
             }
             
             testsGrid.innerHTML = testsHTML;
-            console.log(`Rendered tests with subscription checking`);
+            console.log(`Rendered tests with user progress`);
         }
 
         function updateTestsAvailableCount(testStatuses) {
-            const totalWithContent = Object.values(testStatuses).filter(s => s.hasContent).length;
-            const userAccessCount = userSubscription.isPaid ? totalWithContent : Math.min(1, totalWithContent);
-            document.getElementById('testsAvailable').textContent = `${userAccessCount}${userSubscription.isPaid ? '' : ' (+ ' + (totalWithContent - userAccessCount) + ' premium)'}`;
+            const availableCount = Object.values(testStatuses).filter(s => s.hasContent).length;
+            document.getElementById('testsAvailable').textContent = availableCount;
         }
         
         // Fallback rendering
@@ -1558,12 +1357,12 @@ const response = await fetch(`${API_BASE_URL}/tests/${testId}/questions`, {
             `;
         }
         
-        // Update progress statistics with proper number conversion
+        // FIXED: Update progress statistics with proper number conversion
         function updateProgressStats() {
             const completedTests = userTestAttempts.length;
             const uniqueTests = [...new Set(userTestAttempts.map(a => a.test_id))].length;
             
-            // Ensure scores are properly converted to numbers and filter invalid ones
+            // FIXED: Ensure scores are properly converted to numbers and filter invalid ones
             const validScores = userTestAttempts
                 .map(attempt => {
                     let score = attempt.score;
@@ -1639,7 +1438,7 @@ const response = await fetch(`${API_BASE_URL}/tests/${testId}/questions`, {
             // Group attempts by test_id and get best score for each
             const testScores = {};
             userTestAttempts.forEach(attempt => {
-                // Ensure score is properly converted to number
+                // FIXED: Ensure score is properly converted to number
                 let score = attempt.score;
                 if (typeof score === 'string') {
                     score = score.replace('%', '');
@@ -1829,7 +1628,7 @@ const response = await fetch(`${API_BASE_URL}/tests/${testId}/questions`, {
             const sortedAttempts = [...userTestAttempts].sort((a, b) => new Date(b.completed_at) - new Date(a.completed_at));
 
             sortedAttempts.slice(0, 5).forEach(attempt => {
-                // Ensure score is properly converted to number
+                // FIXED: Ensure score is properly converted to number
                 let score = attempt.score;
                 if (typeof score === 'string') {
                     score = score.replace('%', '');
@@ -1878,7 +1677,7 @@ const response = await fetch(`${API_BASE_URL}/tests/${testId}/questions`, {
             const achievementsContainer = document.getElementById('achievementsContainer');
             const completedTests = [...new Set(userTestAttempts.map(a => a.test_id))].length;
             
-            // Ensure best score calculation uses proper number conversion
+            // FIXED: Ensure best score calculation uses proper number conversion
             let bestScore = 0;
             if (userTestAttempts.length > 0) {
                 const validScores = userTestAttempts.map(a => {
@@ -1991,14 +1790,8 @@ const response = await fetch(`${API_BASE_URL}/tests/${testId}/questions`, {
             return date.toLocaleDateString();
         }
         
-        // Navigation functions with subscription checking
+        // Navigation functions
         function startTest(testNumber) {
-            // Check if user has access to this test
-            if (testNumber > 1 && !userSubscription.isPaid) {
-                upgradeToPremium();
-                return;
-            }
-
             if (confirm(`Ready to start Practice Test ${testNumber}? This test must be completed in one session and will take approximately 95 minutes.`)) {
                 if (testNumber === 1) {
                     window.location.href = 'practice-test-1.html';
@@ -2009,22 +1802,14 @@ const response = await fetch(`${API_BASE_URL}/tests/${testId}/questions`, {
         }
 
         function viewTestResults(testNumber) {
-            // Check if user has access to this test
-            if (testNumber > 1 && !userSubscription.isPaid) {
-                upgradeToPremium();
-                return;
-            }
-
+            // For now, redirect to results page - in a real implementation, 
+            // you'd pass the specific test results data
             const testAttempts = userTestAttempts.filter(a => a.test_id === testNumber);
             if (testAttempts.length > 0) {
                 // Store the test results in session storage for the results page
                 sessionStorage.setItem('testResults', JSON.stringify(testAttempts[testAttempts.length - 1]));
                 window.location.href = 'test-results.html';
             }
-        }
-
-        function upgradeToPremium() {
-            window.location.href = 'pricing.html';
         }
 
         function showAllTests() {
@@ -2061,153 +1846,14 @@ const response = await fetch(`${API_BASE_URL}/tests/${testId}/questions`, {
         // Auto-refresh data every 5 minutes
         setInterval(async () => {
             try {
-                await checkSubscriptionStatus();
                 await loadUserData();
                 updateProgressStats();
                 updateRecentActivity();
-                updateSubscriptionUI();
             } catch (error) {
                 console.log('Auto-refresh failed:', error);
             }
         }, 300000); // 5 minutes
     </script>
-    <script>
-// Configuration for test status
-const TEST_CONFIG = {
-    POPULATED_TESTS: [1, 2, 3, 4, 5],  // Tests that have content
-    COMING_SOON_TESTS: [6, 7, 8, 9, 10], // Tests that are coming soon
-    TOTAL_TESTS: 10
-};
-
-// Function to check if a test number is in the populated tests array
-function isTestPopulated(testNumber) {
-    return TEST_CONFIG.POPULATED_TESTS.includes(testNumber);
-}
-
-// Function to generate test cards
-function generateTestCards(isPremiumUser = false) {
-    const testsContainer = document.getElementById('testsContainer');
-    testsContainer.className = 'tests-grid';
-    testsContainer.innerHTML = ''; // Clear loading state
-
-    // Generate cards for all tests
-    for (let testNumber = 1; testNumber <= TEST_CONFIG.TOTAL_TESTS; testNumber++) {
-        const isPopulated = isTestPopulated(testNumber);
-        
-        // Determine test card status and appearance
-        let cardClass, statusText, statusClass, actionButtons;
-        
-        if (!isPopulated) {
-            // Coming Soon tests (6-10)
-            cardClass = 'locked';
-            statusText = 'Coming Soon';
-            statusClass = 'status-locked';
-            actionButtons = `
-                <button class="btn btn-test-action btn-locked" disabled>
-                    <i class="fas fa-clock me-1"></i>Coming Soon
-                </button>`;
-        } else if (!isPremiumUser) {
-            // Premium Required tests (1-5 for non-premium users)
-            cardClass = 'premium-required';
-            statusText = 'Premium Required';
-            statusClass = 'status-premium-required';
-            actionButtons = `
-                <button class="btn btn-test-action btn-upgrade" onclick="upgradeToPremium()">
-                    <i class="fas fa-crown me-1"></i>Upgrade to Access
-                </button>`;
-        } else {
-            // Available tests (1-5 for premium users)
-            cardClass = 'available';
-            statusText = 'Available';
-            statusClass = 'status-available';
-            actionButtons = `
-                <button class="btn btn-test-action btn-start" onclick="startTest(${testNumber})">
-                    <i class="fas fa-play me-1"></i>Start Test
-                </button>`;
-        }
-
-        // Create test card HTML
-        const cardHTML = `
-            <div class="test-card ${cardClass}">
-                <div class="test-header">
-                    <div class="test-number ${cardClass}">
-                        ${testNumber}
-                    </div>
-                    <div class="test-info">
-                        <h3 class="test-title">Practice Test ${testNumber}</h3>
-                        <span class="test-status ${statusClass}">${statusText}</span>
-                        ${!isPopulated ? '' : '<span class="premium-badge"><i class="fas fa-crown me-1"></i>Premium</span>'}
-                    </div>
-                </div>
-                
-                <div class="test-details">
-                    <div class="test-detail">
-                        <span class="detail-label">Questions</span>
-                        <span class="detail-value">42</span>
-                    </div>
-                    <div class="test-detail">
-                        <span class="detail-label">Time Limit</span>
-                        <span class="detail-value">95 mins</span>
-                    </div>
-                    ${isPopulated ? `
-                    <div class="test-detail">
-                        <span class="detail-label">Difficulty</span>
-                        <span class="detail-value">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            ${testNumber > 3 ? '<i class="fas fa-star"></i>' : ''}
-                            ${testNumber > 4 ? '<i class="fas fa-star"></i>' : ''}
-                        </span>
-                    </div>
-                    ` : ''}
-                </div>
-                
-                <div class="test-actions">
-                    ${actionButtons}
-                </div>
-            </div>`;
-
-        testsContainer.innerHTML += cardHTML;
-    }
-}
-
-// Add this to your existing loadUserData function or wherever you check user status
-function loadUserData() {
-    // Simulate API call to get user data
-    // Replace this with your actual API call
-    fetch('/api/user-data')
-        .then(response => response.json())
-        .then(userData => {
-            const isPremiumUser = userData.isPremium; // Get premium status from user data
-            generateTestCards(isPremiumUser);
-        })
-        .catch(error => {
-            console.error('Error loading user data:', error);
-            // If there's an error, default to non-premium display
-            generateTestCards(false);
-        });
-}
-
-// Add these functions for handling button clicks
-function upgradeToPremium() {
-    window.location.href = '/pricing.html'; // Replace with your pricing page URL
-}
-
-function startTest(testNumber) {
-    window.location.href = `/practice-test-${testNumber}.html`; // Replace with your test page URL format
-}
-
-// Initialize the dashboard
-document.addEventListener('DOMContentLoaded', function() {
-    loadUserData();
-});
-</script>
 </body>
 </html>
-
-
-
-
-
 
