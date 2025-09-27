@@ -26,6 +26,7 @@
             --text-dark: #1a202c;
             --text-light: #4a5568;
             --bg-light: #f7fafc;
+            --success-color: #48bb78;
         }
         
         body {
@@ -747,8 +748,8 @@
             const ctaButton = document.getElementById('ctaButton');
             
             if (currentUser) {
-                // Check if user has subscription
-                if (currentUser.hasSubscription) {
+                // Check if user has premium subscription
+                if (currentUser.subscriptionStatus === 'premium') {
                     ctaButton.innerHTML = '<i class="fas fa-check me-2"></i>Access Your Dashboard';
                     ctaButton.className = 'cta-button btn-subscribed';
                     ctaButton.onclick = () => window.location.href = 'dashboard.html';
@@ -801,7 +802,13 @@
         
         function getStarted() {
             if (currentUser) {
-                window.location.href = 'dashboard.html';
+                // Check subscription status
+                if (currentUser.subscriptionStatus === 'premium') {
+                    window.location.href = 'dashboard.html';
+                } else {
+                    // User is logged in but needs premium - start payment process
+                    window.location.href = 'payment.html';
+                }
             } else {
                 window.location.href = 'register.html';
             }
@@ -849,44 +856,16 @@
                 return;
             }
             
-            if (currentUser.hasSubscription) {
+            // Check if user already has premium subscription
+            if (currentUser.subscriptionStatus === 'premium') {
                 // Already subscribed, go to dashboard
                 window.location.href = 'dashboard.html';
                 return;
             }
             
-            // Start payment process
-            initiatePayment();
-        }
-        
-        function handleSubscription() {
-    if (!currentUser) {
-        // Not logged in, redirect to registration
-        window.location.href = 'register.html';
-        return;
-    }
-    
-    // Check if user already has premium subscription
-    if (currentUser.subscriptionStatus === 'premium') {
-        // Already subscribed, go to dashboard
-        window.location.href = 'dashboard.html';
-        return;
-    }
-    
-    // Start payment process - redirect to payment page
-    window.location.href = 'payment.html';
-}
-            
-            // TODO: Integrate with Stripe
-            // const stripe = Stripe('your-publishable-key');
-            // stripe.checkout.session({...})
+            // Start payment process - redirect to payment page
+            window.location.href = 'payment.html';
         }
     </script>
 </body>
 </html>
-
-
-
-
-
-
