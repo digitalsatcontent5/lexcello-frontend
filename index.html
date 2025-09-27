@@ -1034,7 +1034,13 @@
         // Start test from homepage
         function startTestFromHomepage(testNumber) {
             if (currentUser) {
-                window.location.href = `practice-test-1.html${testNumber > 1 ? '?test=' + testNumber : ''}`;
+                // Check if user has premium access for tests beyond the first one
+                if (testNumber > 1 && currentUser.subscriptionStatus !== 'premium') {
+                    showNotification('Premium subscription required for this test', 'info');
+                    window.location.href = 'pricing.html';
+                } else {
+                    window.location.href = `practice-test-1.html${testNumber > 1 ? '?test=' + testNumber : ''}`;
+                }
             } else {
                 showNotification('Please sign in to access practice tests', 'info');
                 window.location.href = 'login.html';
@@ -1135,16 +1141,28 @@
         function getStarted() {
             // Check if user is logged in
             if (currentUser) {
-                window.location.href = 'dashboard.html';
+                // Check subscription status
+                if (currentUser.subscriptionStatus === 'premium') {
+                    window.location.href = 'dashboard.html';
+                } else {
+                    // User is logged in but needs premium - go to pricing
+                    window.location.href = 'pricing.html';
+                }
             } else {
                 window.location.href = 'register.html';
             }
         }
         
         function startPracticeTest() {
-            // Check if user is logged in for premium features
+            // Check if user is logged in
             if (currentUser) {
-                window.location.href = 'practice-test-1.html';
+                // Check if user has premium access
+                if (currentUser.subscriptionStatus === 'premium') {
+                    window.location.href = 'practice-test-1.html';
+                } else {
+                    showNotification('Premium subscription required for full access', 'info');
+                    window.location.href = 'pricing.html';
+                }
             } else {
                 showNotification('Please sign in to access practice tests', 'info');
                 window.location.href = 'login.html';
@@ -1156,9 +1174,14 @@
         }
         
         function viewTestDetails(testNumber) {
-            // For any test that has content, redirect to the test
+            // For any test that has content, redirect based on subscription
             if (currentUser) {
-                window.location.href = `practice-test-1.html${testNumber > 1 ? '?test=' + testNumber : ''}`;
+                if (testNumber === 1 || currentUser.subscriptionStatus === 'premium') {
+                    window.location.href = `practice-test-1.html${testNumber > 1 ? '?test=' + testNumber : ''}`;
+                } else {
+                    showNotification('Premium subscription required for this test', 'info');
+                    window.location.href = 'pricing.html';
+                }
             } else {
                 showNotification('Please sign in to access practice tests', 'info');
                 window.location.href = 'login.html';
@@ -1167,7 +1190,13 @@
         
         function startPreparation() {
             if (currentUser) {
-                window.location.href = 'dashboard.html';
+                // Check subscription status
+                if (currentUser.subscriptionStatus === 'premium') {
+                    window.location.href = 'dashboard.html';
+                } else {
+                    // User needs to upgrade
+                    window.location.href = 'pricing.html';
+                }
             } else {
                 window.location.href = 'register.html';
             }
@@ -1202,13 +1231,3 @@
     </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
