@@ -883,7 +883,9 @@
                         let questionCount = 0;
                         
                         // Handle different response formats
-                        if (Array.isArray(data)) {
+                    if (data.questionCount !== undefined) {
+                        questionCount = data.questionCount;
+                        } else if (Array.isArray(data)) {
                             questionCount = data.length;
                         } else if (data.questions && Array.isArray(data.questions)) {
                             questionCount = data.questions.length;
@@ -1231,4 +1233,5 @@
     </script>
 </body>
 </html>
+
 
