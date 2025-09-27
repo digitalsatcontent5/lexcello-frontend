@@ -1365,7 +1365,7 @@ const response = await fetch(`${API_BASE_URL}/tests/${testId}/questions`, {
                 if (testId <= 10) {
                     let cardClass, statusText, statusClass, actionButtons;
                     
-                    if (!status.hasContent && testId > 1) {
+                    if (!status.hasContent) {
                     // Test has no content - show Coming Soon
                     cardClass = 'locked';
                     statusText = 'Coming Soon';
@@ -2036,6 +2036,7 @@ const response = await fetch(`${API_BASE_URL}/tests/${testId}/questions`, {
     </script>
 </body>
 </html>
+
 
 
 
