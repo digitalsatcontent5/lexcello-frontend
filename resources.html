@@ -709,18 +709,162 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     
     <script>
-        // Navigation functions
-        function signIn() {
-            window.location.href = 'login.html';
-        }
+    const API_BASE = 'https://lexcello-backend.onrender.com';
+
+    // Function to load articles dynamically
+    async function loadArticles() {
+        const articlesContainer = document.getElementById('articles-container');
+        const viewAllButton = document.getElementById('view-all-button');
         
-        function getStarted() {
-            window.location.href = 'register.html';
-        }
+        // Show loading state
+        articlesContainer.innerHTML = `
+            <div class="col-12 text-center">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading articles...</span>
+                </div>
+                <p class="mt-3 text-muted">Loading latest articles...</p>
+            </div>
+        `;
         
-        function startPracticeTest() {
-            window.location.href = 'index.html#tests';
+        try {
+            const response = await fetch(`${API_BASE}/api/articles?limit=6`);
+            
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+            
+            const data = await response.json();
+            
+            if (data.articles && data.articles.length > 0) {
+                displayArticles(data.articles);
+                
+                // Show "View All" button if there are more articles
+                if (data.total > 6) {
+                    viewAllButton.style.display = 'block';
+                }
+            } else {
+                showEmptyState();
+            }
+            
+        } catch (error) {
+            console.error('Error loading articles:', error);
+            showErrorState(error.message);
         }
-    </script>
+    }
+
+    // Function to display articles
+    function displayArticles(articles) {
+        const articlesContainer = document.getElementById('articles-container');
+        
+        articlesContainer.innerHTML = articles.map(article => {
+            // Map category to appropriate icon
+            const categoryIcons = {
+                'Tips': 'fas fa-lightbulb',
+                'Success Story': 'fas fa-graduation-cap',
+                'Strategy': 'fas fa-calendar-check',
+                'Admissions': 'fas fa-university',
+                'Analytics': 'fas fa-chart-bar',
+                'Resources': 'fas fa-book'
+            };
+            
+            const icon = categoryIcons[article.category] || 'fas fa-file-alt';
+            const readTime = article.read_time ? `${article.read_time} min read` : 'Quick read';
+            
+            return `
+                <div class="col-lg-4 col-md-6">
+                    <div class="resource-card">
+                        <div class="resource-icon">
+                            <i class="${icon}"></i>
+                        </div>
+                        <h4>${escapeHtml(article.title)}</h4>
+                        <div class="resource-meta">
+                            <span>${readTime}</span>
+                            <span class="resource-tag">${escapeHtml(article.category || 'Article')}</span>
+                        </div>
+                        <p>${escapeHtml(article.excerpt || 'Click to read this insightful article about LNAT preparation.')}</p>
+                        <a href="/articles/${article.slug}" class="resource-action">
+                            Read Article <i class="fas fa-arrow-right ms-1"></i>
+                        </a>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    // Function to show empty state
+    function showEmptyState() {
+        const articlesContainer = document.getElementById('articles-container');
+        
+        articlesContainer.innerHTML = `
+            <div class="col-12 text-center">
+                <div class="resource-card" style="max-width: 500px; margin: 0 auto;">
+                    <div class="resource-icon">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <h4>No Articles Yet</h4>
+                    <p>We're working on creating helpful LNAT articles for you. Check back soon for expert tips, strategies, and success stories!</p>
+                    <a href="contact.html" class="resource-action">
+                        Suggest Article Topics <i class="fas fa-arrow-right ms-1"></i>
+                    </a>
+                </div>
+            </div>
+        `;
+        
+        // Hide the view all button
+        document.getElementById('view-all-button').style.display = 'none';
+    }
+
+    // Function to show error state
+    function showErrorState(errorMessage) {
+        const articlesContainer = document.getElementById('articles-container');
+        
+        articlesContainer.innerHTML = `
+            <div class="col-12 text-center">
+                <div class="resource-card" style="max-width: 500px; margin: 0 auto; border-left: 4px solid #dc3545;">
+                    <div class="resource-icon" style="background: linear-gradient(135deg, #dc3545, #c82333);">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <h4>Unable to Load Articles</h4>
+                    <p>We're experiencing technical difficulties loading our latest articles. Please try again later.</p>
+                    <p class="text-muted small">Error: ${escapeHtml(errorMessage)}</p>
+                    <button onclick="loadArticles()" class="btn btn-outline-primary">
+                        <i class="fas fa-redo me-2"></i>Try Again
+                    </button>
+                </div>
+            </div>
+        `;
+    }
+
+    // Utility function to escape HTML and prevent XSS
+    function escapeHtml(text) {
+        if (!text) return '';
+        const map = {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#039;'
+        };
+        return text.replace(/[&<>"']/g, m => map[m]);
+    }
+
+    // Navigation functions (keeping the existing ones)
+    function signIn() {
+        window.location.href = 'login.html';
+    }
+    
+    function getStarted() {
+        window.location.href = 'register.html';
+    }
+    
+    function startPracticeTest() {
+        window.location.href = 'index.html#tests';
+    }
+
+    // Load articles when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        loadArticles();
+    });
+</script>
 </body>
 </html>
