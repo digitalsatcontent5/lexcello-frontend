@@ -1365,50 +1365,42 @@ const response = await fetch(`${API_BASE_URL}/tests/${testId}/questions`, {
                 if (testId <= 10) {
                     let cardClass, statusText, statusClass, actionButtons;
                     
-                    if (!hasAccess && isPremiumTest) {
-                        // Premium test, user doesn't have access
-                        cardClass = 'premium-required';
-                        statusText = 'Premium Required';
-                        statusClass = 'status-premium-required';
-                        actionButtons = `
-                            <button class="btn btn-test-action btn-upgrade" onclick="upgradeToPremium()">
-                                <i class="fas fa-crown me-1"></i>Upgrade to Access
-                            </button>
-                        `;
-                    } else if (hasCompleted && hasAccess) {
-                        // User has completed this test and has access
-                        cardClass = 'completed';
-                        statusText = `Completed (${Math.round(bestScore)}%)`;
-                        statusClass = 'status-completed';
-                        actionButtons = `
-                            <button class="btn btn-test-action btn-review" onclick="viewTestResults(${testId})">
-                                <i class="fas fa-chart-line me-1"></i>Review
-                            </button>
-                            <button class="btn btn-test-action btn-retake" onclick="startTest(${testId})">
-                                <i class="fas fa-redo me-1"></i>Retake
-                            </button>
-                        `;
-                    } else if (status.hasContent && hasAccess) {
-                        // Test available and user has access
-                        cardClass = 'available';
-                        statusText = 'Ready to Start';
-                        statusClass = 'status-available';
-                        actionButtons = `
-                            <button class="btn btn-test-action btn-start" onclick="startTest(${testId})">
-                                <i class="fas fa-play me-1"></i>Start Test
-                            </button>
-                        `;
-                    } else {
-                        // Test has no content
-                        cardClass = 'locked';
-                        statusText = 'Coming Soon';
-                        statusClass = 'status-locked';
-                        actionButtons = `
-                            <button class="btn btn-test-action btn-locked" disabled>
-                                <i class="fas fa-clock me-1"></i>Coming Soon
-                            </button>
-                        `;
-                    }
+                    if (!status.hasContent && testId > 1) {
+                    // Test has no content - show Coming Soon
+                    cardClass = 'locked';
+                    statusText = 'Coming Soon';
+                    statusClass = 'status-locked';
+                    actionButtons = `
+                        <button class="btn btn-test-action btn-locked" disabled>
+                            <i class="fas fa-clock me-1"></i>Coming Soon
+                        </button>
+                    `;
+                } else if (!hasAccess && isPremiumTest) {
+                    // Premium test, user doesn't have access
+                    cardClass = 'premium-required';
+                    statusText = 'Premium Required';
+                    statusClass = 'status-premium-required';
+                    actionButtons = `
+                        <button class="btn btn-test-action btn-upgrade" onclick="upgradeToPremium()">
+                            <i class="fas fa-crown me-1"></i>Upgrade to Access
+                        </button>
+                    `;
+                } else if (hasCompleted && hasAccess) {
+                    // User has completed this test and has access
+                    cardClass = 'completed';
+                    statusText = `Completed (${Math.round(bestScore)}%)`;
+                    statusClass = 'status-completed';
+                    actionButtons = `
+                        <button class="btn btn-test-action btn-review" onclick="viewTestResults(${testId})">
+                            <i class="fas fa-chart-line me-1"></i>Review
+                        </button>
+                        <button class="btn btn-test-action btn-retake" onclick="startTest(${testId})">
+                            <i class="fas fa-redo me-1"></i>Retake
+                        </button>
+                    `;
+                } else if (status.hasContent && hasAccess) {
+                    // Test available and user has access
+                    cardClass = 'available';
 
                     // Calculate progress for this test
                     const progress = hasCompleted ? 100 : 0;
@@ -2026,5 +2018,6 @@ const response = await fetch(`${API_BASE_URL}/tests/${testId}/questions`, {
     </script>
 </body>
 </html>
+
 
 
