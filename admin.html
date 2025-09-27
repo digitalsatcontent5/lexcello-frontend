@@ -924,7 +924,7 @@
             if (!requireAuth()) return;
             
             try {
-                const response = await fetch(`${API_BASE}/api/tests`);
+                const response = await fetch(`${API_BASE}/api/admin/tests/${testFilter}/questions`);
                 const data = await response.json();
                 
                 if (data.tests && data.tests.length > 0) {
@@ -1881,6 +1881,7 @@
     </script>
 </body>
 </html>
+
 
 
 
