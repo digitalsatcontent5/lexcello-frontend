@@ -828,6 +828,43 @@
                 flex-direction: column;
             }
         }
+        /* Test Card Status Styles - Add these before line 831 */
+.test-card.premium-required {
+    border-left-color: var(--accent-gold);
+    background: linear-gradient(135deg, #fffaf0, #ffffff);
+}
+
+.test-card.coming-soon {
+    border-left-color: #cbd5e0;
+    background: linear-gradient(135deg, #f7fafc, #ffffff);
+    opacity: 0.85;
+}
+
+.test-number.coming-soon {
+    background: #cbd5e0;
+    color: #4a5568;
+}
+
+.status-coming-soon {
+    background: #edf2f7;
+    color: #4a5568;
+}
+
+.btn-coming-soon {
+    background: #cbd5e0;
+    color: #4a5568;
+    cursor: not-allowed;
+}
+
+.coming-soon-badge {
+    background: #cbd5e0;
+    color: #4a5568;
+    font-size: 0.7rem;
+    padding: 4px 8px;
+    border-radius: 8px;
+    font-weight: 700;
+    margin-left: 8px;
+}
     </style>
 </head>
 <body>
@@ -2034,8 +2071,141 @@ const response = await fetch(`${API_BASE_URL}/tests/${testId}/questions`, {
             }
         }, 300000); // 5 minutes
     </script>
+    <script>
+// Configuration for test status
+const TEST_CONFIG = {
+    POPULATED_TESTS: [1, 2, 3, 4, 5],  // Tests that have content
+    COMING_SOON_TESTS: [6, 7, 8, 9, 10], // Tests that are coming soon
+    TOTAL_TESTS: 10
+};
+
+// Function to check if a test number is in the populated tests array
+function isTestPopulated(testNumber) {
+    return TEST_CONFIG.POPULATED_TESTS.includes(testNumber);
+}
+
+// Function to generate test cards
+function generateTestCards(isPremiumUser = false) {
+    const testsContainer = document.getElementById('testsContainer');
+    testsContainer.className = 'tests-grid';
+    testsContainer.innerHTML = ''; // Clear loading state
+
+    // Generate cards for all tests
+    for (let testNumber = 1; testNumber <= TEST_CONFIG.TOTAL_TESTS; testNumber++) {
+        const isPopulated = isTestPopulated(testNumber);
+        
+        // Determine test card status and appearance
+        let cardClass, statusText, statusClass, actionButtons;
+        
+        if (!isPopulated) {
+            // Coming Soon tests (6-10)
+            cardClass = 'locked';
+            statusText = 'Coming Soon';
+            statusClass = 'status-locked';
+            actionButtons = `
+                <button class="btn btn-test-action btn-locked" disabled>
+                    <i class="fas fa-clock me-1"></i>Coming Soon
+                </button>`;
+        } else if (!isPremiumUser) {
+            // Premium Required tests (1-5 for non-premium users)
+            cardClass = 'premium-required';
+            statusText = 'Premium Required';
+            statusClass = 'status-premium-required';
+            actionButtons = `
+                <button class="btn btn-test-action btn-upgrade" onclick="upgradeToPremium()">
+                    <i class="fas fa-crown me-1"></i>Upgrade to Access
+                </button>`;
+        } else {
+            // Available tests (1-5 for premium users)
+            cardClass = 'available';
+            statusText = 'Available';
+            statusClass = 'status-available';
+            actionButtons = `
+                <button class="btn btn-test-action btn-start" onclick="startTest(${testNumber})">
+                    <i class="fas fa-play me-1"></i>Start Test
+                </button>`;
+        }
+
+        // Create test card HTML
+        const cardHTML = `
+            <div class="test-card ${cardClass}">
+                <div class="test-header">
+                    <div class="test-number ${cardClass}">
+                        ${testNumber}
+                    </div>
+                    <div class="test-info">
+                        <h3 class="test-title">Practice Test ${testNumber}</h3>
+                        <span class="test-status ${statusClass}">${statusText}</span>
+                        ${!isPopulated ? '' : '<span class="premium-badge"><i class="fas fa-crown me-1"></i>Premium</span>'}
+                    </div>
+                </div>
+                
+                <div class="test-details">
+                    <div class="test-detail">
+                        <span class="detail-label">Questions</span>
+                        <span class="detail-value">42</span>
+                    </div>
+                    <div class="test-detail">
+                        <span class="detail-label">Time Limit</span>
+                        <span class="detail-value">95 mins</span>
+                    </div>
+                    ${isPopulated ? `
+                    <div class="test-detail">
+                        <span class="detail-label">Difficulty</span>
+                        <span class="detail-value">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            ${testNumber > 3 ? '<i class="fas fa-star"></i>' : ''}
+                            ${testNumber > 4 ? '<i class="fas fa-star"></i>' : ''}
+                        </span>
+                    </div>
+                    ` : ''}
+                </div>
+                
+                <div class="test-actions">
+                    ${actionButtons}
+                </div>
+            </div>`;
+
+        testsContainer.innerHTML += cardHTML;
+    }
+}
+
+// Add this to your existing loadUserData function or wherever you check user status
+function loadUserData() {
+    // Simulate API call to get user data
+    // Replace this with your actual API call
+    fetch('/api/user-data')
+        .then(response => response.json())
+        .then(userData => {
+            const isPremiumUser = userData.isPremium; // Get premium status from user data
+            generateTestCards(isPremiumUser);
+        })
+        .catch(error => {
+            console.error('Error loading user data:', error);
+            // If there's an error, default to non-premium display
+            generateTestCards(false);
+        });
+}
+
+// Add these functions for handling button clicks
+function upgradeToPremium() {
+    window.location.href = '/pricing.html'; // Replace with your pricing page URL
+}
+
+function startTest(testNumber) {
+    window.location.href = `/practice-test-${testNumber}.html`; // Replace with your test page URL format
+}
+
+// Initialize the dashboard
+document.addEventListener('DOMContentLoaded', function() {
+    loadUserData();
+});
+</script>
 </body>
 </html>
+
 
 
 
