@@ -1355,8 +1355,8 @@
                 
                 const latestAttempt = hasCompleted ? userAttempts[userAttempts.length - 1] : null;
                 
-                // Only show tests that have content OR are Test 1
-                if (status.hasContent || testId === 1) {
+               // Show all tests 1-10, regardless of content availability
+                if (testId <= 10) {
                     let cardClass, statusText, statusClass, actionButtons;
                     
                     if (!hasAccess && isPremiumTest) {
@@ -2020,3 +2020,4 @@
     </script>
 </body>
 </html>
+
