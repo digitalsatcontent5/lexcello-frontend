@@ -1403,6 +1403,24 @@ const response = await fetch(`${API_BASE_URL}/tests/${testId}/questions`, {
                     cardClass = 'available';
 
                     // Calculate progress for this test
+                        statusText = 'Ready to Start';
+                    statusClass = 'status-available';
+                    actionButtons = `
+                        <button class="btn btn-test-action btn-start" onclick="startTest(${testId})">
+                            <i class="fas fa-play me-1"></i>Start Test
+                        </button>
+                    `;
+                } else {
+                    // Test has no content
+                    cardClass = 'locked';
+                    statusText = 'Coming Soon';
+                    statusClass = 'status-locked';
+                    actionButtons = `
+                        <button class="btn btn-test-action btn-locked" disabled>
+                            <i class="fas fa-clock me-1"></i>Coming Soon
+                        </button>
+                    `;
+                }
                     const progress = hasCompleted ? 100 : 0;
                     
                     // Premium badge for tests 2-10
@@ -2018,6 +2036,7 @@ const response = await fetch(`${API_BASE_URL}/tests/${testId}/questions`, {
     </script>
 </body>
 </html>
+
 
 
 
