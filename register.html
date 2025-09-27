@@ -517,11 +517,11 @@
                     localStorage.setItem('authToken', data.token);
                     localStorage.setItem('userData', JSON.stringify(data.user));
                     
-                    showAlert('Account created successfully! Redirecting...', 'success');
+                    showAlert('Account created successfully! Choose your plan to get started...', 'success');
                     
-                    // Redirect to dashboard after short delay
+                    // Redirect to pricing page after registration
                     setTimeout(() => {
-                        window.location.href = 'dashboard.html';
+                        window.location.href = 'pricing.html';
                     }, 1500);
                 } else {
                     showAlert(data.error || 'Registration failed', 'danger');
@@ -570,8 +570,19 @@
                 })
                 .then(response => {
                     if (response.ok) {
-                        // User is already logged in, redirect to dashboard
-                        window.location.href = 'dashboard.html';
+                        // User is already logged in, check subscription status and redirect accordingly
+                        return response.json();
+                    }
+                })
+                .then(userData => {
+                    if (userData) {
+                        // Check if user has premium subscription
+                        if (userData.subscriptionStatus === 'premium') {
+                            window.location.href = 'dashboard.html';
+                        } else {
+                            // User is logged in but needs to purchase - redirect to pricing
+                            window.location.href = 'pricing.html';
+                        }
                     }
                 })
                 .catch(() => {
@@ -585,4 +596,3 @@
 </body>
 
 </html>
-
