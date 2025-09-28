@@ -1068,16 +1068,37 @@
         }
 
         async function fetchQuestionDetails() {
-            try {
-                const response = await fetch(`${API_BASE_URL}/api/tests/1/questions`);
-                if (response.ok) {
-                    const data = await response.json();
-                    questions = data.questions || data || [];
-                }
-            } catch (error) {
-                console.error('Error fetching question details:', error);
-            }
+    try {
+        const token = localStorage.getItem('authToken');
+        
+        if (!token) {
+            console.log('No auth token found, skipping question details fetch');
+            return;
         }
+        
+        const response = await fetch(`${API_BASE_URL}/api/tests/1/questions`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+        
+        if (response.ok) {
+            const data = await response.json();
+            questions = data.questions || data || [];
+            console.log('Fetched questions:', questions);
+            console.log('Questions length:', questions.length);
+        } else if (response.status === 401) {
+            console.log('Authentication failed, user may need to login');
+            // Could redirect to login or show a message
+        } else {
+            console.error('Failed to fetch questions:', response.status, response.statusText);
+        }
+    } catch (error) {
+        console.error('Error fetching question details:', error);
+    }
+}
 
         function displayResults() {
             document.getElementById('loadingScreen').style.display = 'none';
@@ -1575,4 +1596,5 @@
     </script>
 </body>
 </html>
+
 
