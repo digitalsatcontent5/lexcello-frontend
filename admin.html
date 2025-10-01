@@ -1461,7 +1461,9 @@
                 }
                 questionsByTest[question.testId].push(question);
             });
-            
+            // ADD THESE TWO LINES HERE
+    console.log('Questions to import:', questionsByTest);
+    console.log('Sample question:', questionsByTest[Object.keys(questionsByTest)[0]][0]);
             try {
                 let totalImported = 0;
                 
@@ -1881,6 +1883,7 @@
     </script>
 </body>
 </html>
+
 
 
 
