@@ -1779,41 +1779,45 @@
         }
         
         // Display Users
-        function displayUsers(users) {
-            const usersList = document.getElementById('users-list');
-            
-            if (users.length === 0) {
-                usersList.innerHTML = '<p style="padding: 20px; text-align: center; color: #666;">No users registered yet.</p>';
-                return;
-            }
-            
-            usersList.innerHTML = users.map(user => {
-                const subscriptionStatus = user.subscription_status || 'inactive';
-                const subscriptionClass = subscriptionStatus === 'active' ? 'subscription-active' : 
-                                        subscriptionStatus === 'expired' ? 'subscription-expired' : 'subscription-inactive';
-                
-                const subscriptionExpiry = user.subscription_expires ? 
-                    new Date(user.subscription_expires).toLocaleDateString() : 'N/A';
-                
-                return `
-                    <div class="user-item">
-                        <div class="user-info">
-                            <div class="user-email">${user.email}</div>
-                            <div class="user-details">
-                                ID: ${user.id} | 
-                                Registered: ${new Date(user.created_at).toLocaleDateString()} | 
-                                Subscription Expires: ${subscriptionExpiry}
-                            </div>
-                        </div>
-                        <div>
-                            <span class="subscription-badge ${subscriptionClass}">
-                                ${subscriptionStatus}
-                            </span>
-                        </div>
+function displayUsers(users) {
+    const usersList = document.getElementById('users-list');
+    
+    if (users.length === 0) {
+        usersList.innerHTML = '<p style="padding: 20px; text-align: center; color: #666;">No users registered yet.</p>';
+        return;
+    }
+    
+    usersList.innerHTML = users.map(user => {
+        const subscriptionStatus = user.subscription_status || 'inactive';
+        const subscriptionClass = subscriptionStatus === 'active' || subscriptionStatus === 'premium' ? 'subscription-active' : 
+                                subscriptionStatus === 'expired' ? 'subscription-expired' : 'subscription-inactive';
+        
+        const subscriptionExpiry = user.subscription_expires ? 
+            new Date(user.subscription_expires).toLocaleDateString() : 'N/A';
+        
+        return `
+            <div class="user-item">
+                <div class="user-info">
+                    <div class="user-email">${user.email}</div>
+                    <div class="user-details">
+                        Name: ${user.first_name || 'N/A'} ${user.last_name || ''} | 
+                        Phone: ${user.phone || 'N/A'} | 
+                        ID: ${user.id} | 
+                        Registered: ${new Date(user.created_at).toLocaleDateString()} | 
+                        Subscription Expires: ${subscriptionExpiry}
                     </div>
-                `;
-            }).join('');
-        }
+                </div>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <span class="subscription-badge ${subscriptionClass}">
+                        ${subscriptionStatus}
+                    </span>
+                    <button onclick="showEditUserModal(${user.id})" class="btn btn-warning btn-sm">Edit</button>
+                    <button onclick="deleteUser(${user.id}, '${user.email}')" class="btn btn-danger btn-sm">Delete</button>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
         
         // Update User Statistics
         function updateUserStats(users) {
@@ -1986,6 +1990,7 @@ async function submitAddUser(event) {
     </script>
 </body>
 </html>
+
 
 
 
