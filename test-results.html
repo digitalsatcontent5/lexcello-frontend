@@ -1354,7 +1354,8 @@ ${essay.essayContent}
             const flaggedCount = testResults.flagged_questions ? testResults.flagged_questions.length : 0;
             
             // Calculate additional metrics
-            const answeredQuestions = testResults.user_answers ? Object.keys(testResults.user_answers).length : 0;
+            const answeredQuestions = testResults.userAnswers ? Object.keys(testResults.userAnswers).length : 
+                         testResults.user_answers ? Object.keys(testResults.user_answers).length : 0;
             const accuracyRate = answeredQuestions > 0 ? Math.round((correctCount / answeredQuestions) * 100) : 0;
             const avgTimePerQuestion = timeSpent > 0 ? Math.round(timeSpent / totalQuestions) : 0;
             const percentileRank = calculatePercentile(percentage);
@@ -1933,6 +1934,7 @@ function generateAnswerChoicesHTML(options, userAnswer, correctAnswer, wasAnswer
     </script>
 </body>
 </html>
+
 
 
 
