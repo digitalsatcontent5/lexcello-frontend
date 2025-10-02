@@ -1926,10 +1926,54 @@
             showMessage('Export functionality coming soon!', 'warning');
         }
         
-        function exportUsers() {
-            if (!requireAuth()) return;
-            showMessage('Export users functionality coming soon!', 'warning');
+        // Add User Modal Functions
+function showAddUserModal() {
+    if (!requireAuth()) return;
+    document.getElementById('addUserModal').style.display = 'block';
+}
+
+function closeAddUserModal() {
+    document.getElementById('addUserModal').style.display = 'none';
+    document.getElementById('addUserForm').reset();
+}
+
+async function submitAddUser(event) {
+    event.preventDefault();
+    if (!requireAuth()) return;
+    
+    const userData = {
+        email: document.getElementById('newUserEmail').value.trim(),
+        password: document.getElementById('newUserPassword').value,
+        firstName: document.getElementById('newUserFirstName').value.trim() || null,
+        lastName: document.getElementById('newUserLastName').value.trim() || null,
+        phone: document.getElementById('newUserPhone').value.trim() || null,
+        subscriptionStatus: document.getElementById('newUserSubscriptionStatus').value,
+        subscriptionPlan: document.getElementById('newUserSubscriptionPlan').value.trim() || null
+    };
+    
+    try {
+        const response = await fetch(`${API_BASE}/api/admin/users`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(userData)
+        });
+        
+        const result = await response.json();
+        
+        if (response.ok) {
+            showMessage('User created successfully!', 'success');
+            closeAddUserModal();
+            loadUsers(); // Refresh the user list
+        } else {
+            showMessage(`Error: ${result.error}`, 'error');
         }
+    } catch (error) {
+        console.error('Error creating user:', error);
+        showMessage(`Network error: ${error.message}`, 'error');
+    }
+}
         
         // Initialize - Check authentication on page load
         document.addEventListener('DOMContentLoaded', () => {
@@ -1942,6 +1986,7 @@
     </script>
 </body>
 </html>
+
 
 
 
