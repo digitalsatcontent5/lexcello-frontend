@@ -1846,16 +1846,20 @@ function startTest(testNumber) {
     }
 }
 
-        function viewTestResults(testNumber) {
-            // For now, redirect to results page - in a real implementation, 
-            // you'd pass the specific test results data
-            const testAttempts = userTestAttempts.filter(a => a.test_id === testNumber);
-            if (testAttempts.length > 0) {
-                // Store the test results in session storage for the results page
-                sessionStorage.setItem('testResults', JSON.stringify(testAttempts[testAttempts.length - 1]));
-                window.location.href = 'test-results.html';
-            }
-        }
+       function viewTestResults(testNumber) {
+    const testAttempts = userTestAttempts.filter(a => a.test_id === testNumber);
+    if (testAttempts.length > 0) {
+        // Store the test results with explicit test ID
+        const latestAttempt = testAttempts[testAttempts.length - 1];
+        // Ensure test_id is set
+        latestAttempt.test_id = testNumber;
+        sessionStorage.setItem('testResults', JSON.stringify(latestAttempt));
+        // Pass test number in URL as backup
+        window.location.href = `test-results.html?test=${testNumber}`;
+    } else {
+        showNotification('No test results found for this test', 'error');
+    }
+}
 
         function showAllTests() {
             // Scroll to tests section
@@ -1913,3 +1917,4 @@ function startTest(testNumber) {
     </script>
 </body>
 </html>
+
