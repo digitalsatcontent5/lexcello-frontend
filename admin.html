@@ -2038,7 +2038,116 @@ async function submitAddUser(event) {
         showMessage(`Network error: ${error.message}`, 'error');
     }
 }
+// Edit User Modal Functions
+async function showEditUserModal(userId) {
+    if (!requireAuth()) return;
+    
+    try {
+        // Fetch user data
+        const response = await fetch(`${API_BASE}/api/admin/users`);
+        const data = await response.json();
         
+        const user = data.users.find(u => u.id === userId);
+        
+        if (!user) {
+            showMessage('User not found', 'error');
+            return;
+        }
+        
+        // Populate form
+        document.getElementById('editUserId').value = user.id;
+        document.getElementById('editUserEmail').value = user.email;
+        document.getElementById('editUserFirstName').value = user.first_name || '';
+        document.getElementById('editUserLastName').value = user.last_name || '';
+        document.getElementById('editUserPhone').value = user.phone || '';
+        document.getElementById('editUserSubscriptionStatus').value = user.subscription_status || 'inactive';
+        document.getElementById('editUserSubscriptionPlan').value = user.subscription_plan || '';
+        document.getElementById('editUserPassword').value = ''; // Always empty for security
+        
+        // Show modal
+        document.getElementById('editUserModal').style.display = 'block';
+    } catch (error) {
+        console.error('Error loading user data:', error);
+        showMessage('Error loading user data', 'error');
+    }
+}
+
+function closeEditUserModal() {
+    document.getElementById('editUserModal').style.display = 'none';
+    document.getElementById('editUserForm').reset();
+}
+
+async function submitEditUser(event) {
+    event.preventDefault();
+    if (!requireAuth()) return;
+    
+    const userId = document.getElementById('editUserId').value;
+    const password = document.getElementById('editUserPassword').value;
+    
+    const userData = {
+        email: document.getElementById('editUserEmail').value.trim(),
+        firstName: document.getElementById('editUserFirstName').value.trim() || null,
+        lastName: document.getElementById('editUserLastName').value.trim() || null,
+        phone: document.getElementById('editUserPhone').value.trim() || null,
+        subscriptionStatus: document.getElementById('editUserSubscriptionStatus').value,
+        subscriptionPlan: document.getElementById('editUserSubscriptionPlan').value.trim() || null
+    };
+    
+    // Only include password if user entered one
+    if (password) {
+        userData.password = password;
+    }
+    
+    try {
+        const response = await fetch(`${API_BASE}/api/admin/users/${userId}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(userData)
+        });
+        
+        const result = await response.json();
+        
+        if (response.ok) {
+            showMessage('User updated successfully!', 'success');
+            closeEditUserModal();
+            loadUsers(); // Refresh the user list
+        } else {
+            showMessage(`Error: ${result.error}`, 'error');
+        }
+    } catch (error) {
+        console.error('Error updating user:', error);
+        showMessage(`Network error: ${error.message}`, 'error');
+    }
+}
+
+// Delete User Function
+async function deleteUser(userId, userEmail) {
+    if (!requireAuth()) return;
+    
+    if (!confirm(`Are you sure you want to delete user "${userEmail}"?\n\nThis will permanently delete:\n- The user account\n- All test attempts\n- All payment transactions\n\nThis action cannot be undone.`)) {
+        return;
+    }
+    
+    try {
+        const response = await fetch(`${API_BASE}/api/admin/users/${userId}`, {
+            method: 'DELETE'
+        });
+        
+        const result = await response.json();
+        
+        if (response.ok) {
+            showMessage('User and all related data deleted successfully!', 'success');
+            loadUsers(); // Refresh the user list
+        } else {
+            showMessage(`Error: ${result.error}`, 'error');
+        }
+    } catch (error) {
+        console.error('Error deleting user:', error);
+        showMessage(`Network error: ${error.message}`, 'error');
+    }
+}        
         // Initialize - Check authentication on page load
         document.addEventListener('DOMContentLoaded', () => {
             checkSecurityAuth();
@@ -2050,4 +2159,5 @@ async function submitAddUser(event) {
     </script>
 </body>
 </html>
+
 
