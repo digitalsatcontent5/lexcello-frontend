@@ -1259,79 +1259,74 @@ const response = await fetch(`${API_BASE_URL}/api/tests/${TEST_ID}/questions`, {
         }
 
         async function submitTest() {
-            try {
-                clearInterval(timerInterval);
-                
-                const modal = bootstrap.Modal.getInstance(document.getElementById('submitModal'));
-                if (modal) modal.hide();
-                
-                showLoading();
-                document.querySelector('#loadingScreen h4').textContent = 'Submitting Your Test...';
-                document.querySelector('#loadingScreen p').textContent = 'Calculating your results';
-                
-                const answersArray = Object.entries(userAnswers).map(([questionId, letter]) => {
-                    const letterToNumber = { 'A': 1, 'B': 2, 'C': 3, 'D': 4, 'E': 5 };
-                    return {
-                        questionId: parseInt(questionId),
-                        selectedAnswer: letterToNumber[letter]
-                    };
-                });
-                
-                const submissionData = { answers: answersArray };
-                
-                const response = await fetch(`${API_BASE_URL}/api/tests/${TEST_ID}/submit`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        ...(currentUser ? { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` } : {})
-                    },
-                    body: JSON.stringify(submissionData)
-                });
-                
-                if (!response.ok) {
-                    throw new Error(`Submission failed: ${response.status}`);
-                }
-                
-                const results = await response.json();
-                
-                const totalTestTime = testMode === 'guest' ? 20 * 60 : 95 * 60;
-                const timeSpent = totalTestTime - timeLeft;
-                
-                const transformedResults = {
-                    total_questions: questions.length,
-                    correct_answers: results.score || 0,
-                    percentage: results.percentage || 0,
-                    time_spent: timeSpent,
-                    user_answers: userAnswers,
-                    flagged_questions: Array.from(flaggedQuestions),
-                    questions: results.results ? results.results.map((result, index) => {
-                        const question = questions.find(q => q.id === result.questionId);
-                        return {
-                            id: result.questionId,
-                            questionText: question?.question || 'Question not found',
-                            correct_answer: ['A', 'B', 'C', 'D', 'E'][result.correctAnswer - 1],
-                            explanation: result.explanation || 'No explanation available',
-                            isCorrect: result.isCorrect
-                        };
-                    }) : [],
-                    isGuestMode: testMode === 'guest',
-                    testMode: testMode
-                };
-                
-                sessionStorage.setItem('testResults', JSON.stringify(transformedResults));
-                window.location.href = 'test-results.html';
-                
-            } catch (error) {
-                console.error('Error submitting test:', error);
-                hideLoading();
-                alert('There was an error submitting your test. Please check your connection and try again.');
-                
-                if (timeLeft > 0) {
-                    startTimer();
-                }
-            }
+    try {
+        clearInterval(timerInterval);
+        
+        const modal = bootstrap.Modal.getInstance(document.getElementById('submitModal'));
+        if (modal) modal.hide();
+        
+        showLoading();
+        document.querySelector('#loadingScreen h4').textContent = 'Submitting Your Test...';
+        document.querySelector('#loadingScreen p').textContent = 'Calculating your results';
+        
+        // Convert letter answers to numbers for API submission
+        const answersArray = Object.entries(userAnswers).map(([questionId, letter]) => {
+            const letterToNumber = { 'A': 1, 'B': 2, 'C': 3, 'D': 4, 'E': 5 };
+            return {
+                questionId: parseInt(questionId),
+                selectedAnswer: letterToNumber[letter]
+            };
+        });
+        
+        const submissionData = { answers: answersArray };
+        
+        const response = await fetch(`${API_BASE_URL}/api/tests/${TEST_ID}/submit`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                ...(currentUser ? { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` } : {})
+            },
+            body: JSON.stringify(submissionData)
+        });
+        
+        if (!response.ok) {
+            throw new Error(`Submission failed: ${response.status}`);
         }
-
+        
+        const results = await response.json();
+        
+        const totalTestTime = testMode === 'guest' ? 20 * 60 : 95 * 60;
+        const timeSpent = totalTestTime - timeLeft;
+        
+        // Transform results with proper user answers mapping
+        const transformedResults = {
+            test_id: TEST_ID,
+            total_questions: questions.length,
+            correct_answers: results.score || 0,
+            percentage: results.percentage || 0,
+            time_spent: timeSpent,
+            user_answers: userAnswers,  // Keep as letters with question IDs as keys
+            flagged_questions: Array.from(flaggedQuestions),
+            isGuestMode: testMode === 'guest',
+            testMode: testMode
+        };
+        
+        console.log('Saving results to sessionStorage:', transformedResults);
+        console.log('User answers being saved:', userAnswers);
+        
+        sessionStorage.setItem('testResults', JSON.stringify(transformedResults));
+        window.location.href = 'test-results.html';
+        
+    } catch (error) {
+        console.error('Error submitting test:', error);
+        hideLoading();
+        alert('There was an error submitting your test. Please check your connection and try again.');
+        
+        if (timeLeft > 0) {
+            startTimer();
+        }
+    }
+}
         function autoSubmitTest() {
             alert('Time is up! Your test will be automatically submitted.');
             submitTest();
@@ -1371,6 +1366,7 @@ const response = await fetch(`${API_BASE_URL}/api/tests/${TEST_ID}/questions`, {
     </script>
 </body>
 </html>
+
 
 
 
