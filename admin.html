@@ -860,7 +860,67 @@
     </div>
 </div>
                 </div>
-                
+  <!-- Edit User Modal -->
+<div id="editUserModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 10001; overflow-y: auto;">
+    <div style="background: white; max-width: 600px; margin: 50px auto; border-radius: 12px; padding: 30px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 2px solid #eee; padding-bottom: 15px;">
+            <h3 style="margin: 0; color: #2c3e50;">Edit User</h3>
+            <button onclick="closeEditUserModal()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #666;">&times;</button>
+        </div>
+        
+        <form id="editUserForm" onsubmit="submitEditUser(event)">
+            <input type="hidden" id="editUserId">
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="editUserEmail">Email *</label>
+                    <input type="email" id="editUserEmail" class="form-control" required placeholder="user@example.com">
+                </div>
+                <div class="form-group">
+                    <label for="editUserPassword">New Password (leave blank to keep current)</label>
+                    <input type="password" id="editUserPassword" class="form-control" placeholder="Minimum 6 characters" minlength="6">
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="editUserFirstName">First Name</label>
+                    <input type="text" id="editUserFirstName" class="form-control" placeholder="Optional">
+                </div>
+                <div class="form-group">
+                    <label for="editUserLastName">Last Name</label>
+                    <input type="text" id="editUserLastName" class="form-control" placeholder="Optional">
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="editUserPhone">Phone</label>
+                    <input type="tel" id="editUserPhone" class="form-control" placeholder="Optional">
+                </div>
+                <div class="form-group">
+                    <label for="editUserSubscriptionStatus">Subscription Status *</label>
+                    <select id="editUserSubscriptionStatus" class="form-control" required>
+                        <option value="inactive">Inactive</option>
+                        <option value="active">Active</option>
+                        <option value="premium">Premium (Full Access)</option>
+                        <option value="expired">Expired</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="editUserSubscriptionPlan">Subscription Plan</label>
+                <input type="text" id="editUserSubscriptionPlan" class="form-control" placeholder="e.g., Monthly, Annual (Optional)">
+            </div>
+            
+            <div style="margin-top: 25px; padding-top: 20px; border-top: 1px solid #eee; display: flex; gap: 10px; justify-content: flex-end;">
+                <button type="button" class="btn btn-secondary" onclick="closeEditUserModal()">Cancel</button>
+                <button type="submit" class="btn btn-warning">Update User</button>
+            </div>
+        </form>
+    </div>
+</div>              
                 <!-- Dashboard Tab -->
                 <div id="dashboard" class="tab-content">
                     <h2>Dashboard - All 10 LNAT Practice Tests</h2>
@@ -1990,6 +2050,7 @@ async function submitAddUser(event) {
     </script>
 </body>
 </html>
+
 
 
 
