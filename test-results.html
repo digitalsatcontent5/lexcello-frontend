@@ -1120,7 +1120,20 @@
 
             </div>
         </div>
-
+<!-- Essay Section B -->
+        <div id="essaySectionB" class="insights-section" style="display: none;">
+            <div class="insights-header">
+                <h3><i class="fas fa-pencil-alt me-2"></i>Section B: Essay</h3>
+            </div>
+            <div class="insights-content">
+                <div id="essayContent" class="p-4">
+                    <div class="text-center text-muted py-4">
+                        <i class="fas fa-spinner fa-spin fa-2x mb-3"></i>
+                        <p>Loading essay...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
         <!-- Performance Insights -->
         <div class="insights-section">
             <div class="insights-header">
@@ -1179,20 +1192,27 @@
         });
 
         async function loadResults() {
-            try {
-                const resultsData = sessionStorage.getItem('testResults');
-                
-                if (!resultsData) {
-                    throw new Error('No test results found');
-                }
-                
-                testResults = JSON.parse(resultsData);
+    try {
+        // Try to load Section A results first (new flow)
+        let resultsData = sessionStorage.getItem('sectionAResults');
+        
+        // Fallback to old format for backward compatibility
+        if (!resultsData) {
+            resultsData = sessionStorage.getItem('testResults');
+        }
+        
+        if (!resultsData) {
+            throw new Error('No test results found');
+        }
+        
+        testResults = JSON.parse(resultsData);
                 console.log('Test results:', testResults);
                 console.log('User answers object:', testResults.user_answers);
 console.log('User answers keys:', testResults.user_answers ? Object.keys(testResults.user_answers) : 'No user_answers');
 console.log('First few entries:', testResults.user_answers ? Object.entries(testResults.user_answers).slice(0, 5) : 'None');
                 await fetchQuestionDetails();
-                displayResults();
+await fetchEssaySubmission();
+displayResults();
                 
             } catch (error) {
                 console.error('Error loading results:', error);
@@ -1242,6 +1262,75 @@ console.log('First few entries:', testResults.user_answers ? Object.entries(test
         console.error('Error fetching question details:', error);
     }
 }
+        async function fetchEssaySubmission() {
+            try {
+                const token = localStorage.getItem('authToken');
+                
+                if (!token) {
+                    console.log('No auth token, skipping essay fetch');
+                    return;
+                }
+                
+                const testId = testResults.testId || testResults.test_id || 1;
+                
+                const response = await fetch(`${API_BASE_URL}/api/user/essays/${testId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.hasSubmission) {
+                        displayEssay(data.essay);
+                    }
+                } else if (response.status === 404) {
+                    console.log('No essay submission found for this test');
+                }
+            } catch (error) {
+                console.error('Error fetching essay:', error);
+            }
+        }
+
+        function displayEssay(essay) {
+            const essaySection = document.getElementById('essaySectionB');
+            const essayContent = document.getElementById('essayContent');
+            
+            essayContent.innerHTML = `
+                <div class="mb-4">
+                    <h5 class="text-primary mb-3">
+                        <i class="fas fa-bookmark me-2"></i>Selected Topic:
+                    </h5>
+                    <div class="p-3 bg-light rounded border-start border-4 border-warning">
+                        <strong>${essay.topic}</strong>
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="text-primary mb-0">
+                            <i class="fas fa-file-alt me-2"></i>Your Essay:
+                        </h5>
+                        <div class="text-muted">
+                            <i class="fas fa-spell-check me-1"></i>${essay.wordCount || 0} words
+                        </div>
+                    </div>
+                    <div class="p-4 bg-white rounded border" style="white-space: pre-wrap; line-height: 1.8; font-family: Georgia, serif;">
+${essay.essayContent}
+                    </div>
+                </div>
+                
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle me-2"></i>
+                    <strong>Note:</strong> Section B essays are not scored automatically. Your essay demonstrates your ability to construct logical arguments in written form.
+                </div>
+            `;
+            
+            essaySection.style.display = 'block';
+        }
+
         function displayResults() {
             document.getElementById('loadingScreen').style.display = 'none';
             document.getElementById('resultsContent').style.display = 'block';
@@ -1254,8 +1343,8 @@ console.log('First few entries:', testResults.user_answers ? Object.entries(test
             
             // Update test title
             const testId = testResults.test_id || 1;
-document.getElementById('testTitle').textContent = isDemo ? 
-    'LNAT Demo Test (4 Questions)' : `LNAT Practice Test ${testId}`;
+            document.getElementById('testTitle').textContent = isDemo ? 
+                'LNAT Demo Test (4 Questions)' : `LNAT Practice Test ${testId}`;
             
             // Calculate comprehensive stats
             const totalQuestions = testResults.total_questions || questions.length || (isDemo ? 4 : 42);
@@ -1320,7 +1409,6 @@ document.getElementById('testTitle').textContent = isDemo ?
             gradeTitle.textContent = title;
             gradeText.textContent = description;
         }
-
         function updateStatsDisplay(correct, total, timeSpent, flagged, accuracy, avgTime) {
             document.getElementById('correctCount').textContent = correct;
             document.getElementById('totalQuestions').textContent = total;
@@ -1845,6 +1933,7 @@ function generateAnswerChoicesHTML(options, userAnswer, correctAnswer, wasAnswer
     </script>
 </body>
 </html>
+
 
 
 
