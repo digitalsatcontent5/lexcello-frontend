@@ -1408,19 +1408,29 @@ if (hasCompleted) {
             const uniqueTests = [...new Set(userTestAttempts.map(a => a.test_id))].length;
             
             // FIXED: Ensure scores are properly converted to numbers and filter invalid ones
-            const validScores = userTestAttempts
-                .map(attempt => {
-                    let score = attempt.score;
-                    // Handle different score formats
-                    if (typeof score === 'string') {
-                        score = score.replace('%', ''); // Remove % if present
-                        score = parseFloat(score);
-                    } else {
-                        score = Number(score);
-                    }
-                    return isNaN(score) ? 0 : score;
-                })
-                .filter(score => score > 0);
+const validScores = userTestAttempts
+    .map(attempt => {
+        let score = attempt.score;
+        
+        // If score is undefined or invalid, calculate from correct_answers
+        if (score === undefined || score === null || isNaN(score)) {
+            if (attempt.correct_answers !== undefined && attempt.total_questions > 0) {
+                score = Math.round((attempt.correct_answers / attempt.total_questions) * 100);
+            } else {
+                score = 0;
+            }
+        } else {
+            // Handle different score formats
+            if (typeof score === 'string') {
+                score = score.replace('%', ''); // Remove % if present
+                score = parseFloat(score);
+            } else {
+                score = Number(score);
+            }
+        }
+        return isNaN(score) ? 0 : score;
+    })
+    .filter(score => score > 0);
             
             const totalScore = validScores.reduce((sum, score) => sum + score, 0);
             const averageScore = validScores.length > 0 ? Math.round(totalScore / validScores.length) : 0;
@@ -1948,6 +1958,7 @@ function startTest(testNumber) {
     </script>
 </body>
 </html>
+
 
 
 
