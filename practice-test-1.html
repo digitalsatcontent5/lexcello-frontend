@@ -1294,28 +1294,27 @@ const response = await fetch(`${API_BASE_URL}/api/tests/${TEST_ID}/questions`, {
         }
         
         const results = await response.json();
-        
-        const totalTestTime = testMode === 'guest' ? 20 * 60 : 95 * 60;
-        const timeSpent = totalTestTime - timeLeft;
-        
-        // Transform results with proper user answers mapping
-        const transformedResults = {
-            test_id: TEST_ID,
-            total_questions: questions.length,
-            correct_answers: results.score || 0,
-            percentage: results.percentage || 0,
-            time_spent: timeSpent,
-            user_answers: userAnswers,  // Keep as letters with question IDs as keys
-            flagged_questions: Array.from(flaggedQuestions),
-            isGuestMode: testMode === 'guest',
-            testMode: testMode
-        };
-        
-        console.log('Saving results to sessionStorage:', transformedResults);
-        console.log('User answers being saved:', userAnswers);
-        
-        sessionStorage.setItem('testResults', JSON.stringify(transformedResults));
-        window.location.href = 'test-results.html';
+
+const totalTestTime = testMode === 'guest' ? 20 * 60 : 95 * 60;
+const timeSpent = totalTestTime - timeLeft;
+
+// Save Section A results to sessionStorage
+sessionStorage.setItem('sectionAResults', JSON.stringify({
+    testId: TEST_ID,
+    score: results.score,
+    totalQuestions: questions.length,
+    percentage: results.percentage,
+    timeSpent: timeSpent,
+    results: results.results,
+    userAnswers: userAnswers,
+    flaggedQuestions: Array.from(flaggedQuestions),
+    isGuestMode: testMode === 'guest',
+    testMode: testMode
+}));
+
+// Redirect to Essay Section B
+alert(`Section A Complete! Score: ${results.percentage}%\n\nNow proceeding to Section B: Essay Writing`);
+window.location.href = `essay-section.html?test=${TEST_ID}`;
         
     } catch (error) {
         console.error('Error submitting test:', error);
@@ -1366,6 +1365,7 @@ const response = await fetch(`${API_BASE_URL}/api/tests/${TEST_ID}/questions`, {
     </script>
 </body>
 </html>
+
 
 
 
