@@ -13,7 +13,7 @@
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Test Results - Practice Test 1 | Lexcello</title>
+    <title>Test Results - Practice Test | Lexcello</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     
@@ -299,7 +299,7 @@
             opacity: 0.8;
         }
 
-        /* New Analytics Charts Section */
+        /* Analytics Section */
         .analytics-section {
             background: white;
             border-radius: 15px;
@@ -323,11 +323,6 @@
 
         .analytics-content {
             padding: 30px;
-        }
-
-        .chart-container {
-            margin: 30px 0;
-            text-align: center;
         }
 
         .performance-breakdown {
@@ -586,49 +581,6 @@
             line-height: 1.5;
         }
 
-        .answer-comparison {
-            background: #f8f9fa;
-            border-radius: 12px;
-            padding: 20px;
-            margin: 15px 0;
-        }
-
-        .answer-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin: 12px 0;
-        }
-
-        .answer-label {
-            font-weight: 600;
-            min-width: 140px;
-            color: var(--text-dark);
-        }
-
-        .answer-value {
-            flex: 1;
-            padding: 12px 18px;
-            border-radius: 8px;
-            margin-left: 20px;
-            line-height: 1.4;
-        }
-
-        .your-answer {
-            background: #e3f2fd;
-            border-left: 4px solid #2196f3;
-        }
-
-        .correct-answer {
-            background: #e8f5e8;
-            border-left: 4px solid var(--success-color);
-        }
-
-        .incorrect-answer {
-            background: #ffebee;
-            border-left: 4px solid var(--danger-color);
-        }
-
         .explanation {
             background: linear-gradient(135deg, #f0f8ff, #e6f3ff);
             border-left: 4px solid var(--secondary-color);
@@ -650,139 +602,119 @@
             margin: 0;
             line-height: 1.6;
         }
-/* Answer Choices Styling */
-.answer-choices-section {
-    margin: 20px 0;
-    background: #f8f9fa;
-    border-radius: 12px;
-    padding: 20px;
-    border: 1px solid #e2e8f0;
-}
 
-.answer-choices-title {
-    color: var(--primary-color);
-    font-weight: 700;
-    margin-bottom: 15px;
-    font-size: 1rem;
-}
+        /* Answer Choices Styling */
+        .answer-choices-section {
+            margin: 20px 0;
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid #e2e8f0;
+        }
 
-.answer-choices-grid {
-    display: grid;
-    gap: 12px;
-}
+        .answer-choices-title {
+            color: var(--primary-color);
+            font-weight: 700;
+            margin-bottom: 15px;
+            font-size: 1rem;
+        }
 
-.answer-choice {
-    background: white;
-    border: 2px solid #e2e8f0;
-    border-radius: 8px;
-    padding: 15px;
-    transition: all 0.3s ease;
-    position: relative;
-}
+        .answer-choices-grid {
+            display: grid;
+            gap: 12px;
+        }
 
-.choice-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 8px;
-}
+        .answer-choice {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 15px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
 
-.choice-letter {
-    background: #6c757d;
-    color: white;
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    font-size: 0.9rem;
-}
+        .choice-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
 
-.choice-icon {
-    font-size: 1.1rem;
-}
+        .choice-letter {
+            background: #6c757d;
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
 
-.choice-text {
-    line-height: 1.5;
-    color: var(--text-dark);
-}
+        .choice-icon {
+            font-size: 1.1rem;
+        }
 
-/* Correct answer that user selected */
-.choice-correct-selected {
-    border-color: var(--success-color);
-    background: linear-gradient(135deg, #d4edda, #c3e6cb);
-}
+        .choice-text {
+            line-height: 1.5;
+            color: var(--text-dark);
+        }
 
-.choice-correct-selected .choice-letter {
-    background: var(--success-color);
-}
+        /* Correct answer that user selected */
+        .choice-correct-selected {
+            border-color: var(--success-color);
+            background: linear-gradient(135deg, #d4edda, #c3e6cb);
+        }
 
-.choice-correct-selected .choice-icon {
-    color: var(--success-color);
-}
+        .choice-correct-selected .choice-letter {
+            background: var(--success-color);
+        }
 
-/* Correct answer (but user didn't select) */
-.choice-correct {
-    border-color: var(--success-color);
-    background: #f8fff9;
-}
+        .choice-correct-selected .choice-icon {
+            color: var(--success-color);
+        }
 
-.choice-correct .choice-letter {
-    background: var(--success-color);
-}
+        /* Correct answer (but user didn't select) */
+        .choice-correct {
+            border-color: var(--success-color);
+            background: #f8fff9;
+        }
 
-.choice-correct .choice-icon {
-    color: var(--success-color);
-}
+        .choice-correct .choice-letter {
+            background: var(--success-color);
+        }
 
-/* User's incorrect selection */
-.choice-user-incorrect {
-    border-color: var(--danger-color);
-    background: linear-gradient(135deg, #f8d7da, #f5c6cb);
-}
+        .choice-correct .choice-icon {
+            color: var(--success-color);
+        }
 
-.choice-user-incorrect .choice-letter {
-    background: var(--danger-color);
-}
+        /* User's incorrect selection */
+        .choice-user-incorrect {
+            border-color: var(--danger-color);
+            background: linear-gradient(135deg, #f8d7da, #f5c6cb);
+        }
 
-.choice-user-incorrect .choice-icon {
-    color: var(--danger-color);
-}
+        .choice-user-incorrect .choice-letter {
+            background: var(--danger-color);
+        }
 
-/* Neutral options */
-.choice-neutral {
-    border-color: #e2e8f0;
-    background: white;
-}
+        .choice-user-incorrect .choice-icon {
+            color: var(--danger-color);
+        }
 
-.choice-neutral:hover {
-    border-color: #cbd5e0;
-    background: #f7fafc;
-}
+        /* Neutral options */
+        .choice-neutral {
+            border-color: #e2e8f0;
+            background: white;
+        }
 
-/* Responsive design for answer choices */
-@media (max-width: 768px) {
-    .answer-choices-section {
-        padding: 15px;
-    }
-    
-    .answer-choice {
-        padding: 12px;
-    }
-    
-    .choice-letter {
-        width: 24px;
-        height: 24px;
-        font-size: 0.8rem;
-    }
-    
-    .choice-text {
-        font-size: 0.9rem;
-    }
-}
-        /* Filter Summary */
+        .choice-neutral:hover {
+            border-color: #cbd5e0;
+            background: #f7fafc;
+        }
+
         .filter-summary {
             background: #f8f9fa;
             padding: 15px 25px;
@@ -924,17 +856,6 @@
                 gap: 10px;
             }
 
-            .answer-row {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .answer-value {
-                margin-left: 0;
-                margin-top: 8px;
-                width: 100%;
-            }
-
             .review-filters {
                 flex-wrap: wrap;
                 gap: 5px;
@@ -953,6 +874,24 @@
 
             .performance-breakdown {
                 grid-template-columns: 1fr;
+            }
+
+            .answer-choices-section {
+                padding: 15px;
+            }
+            
+            .answer-choice {
+                padding: 12px;
+            }
+            
+            .choice-letter {
+                width: 24px;
+                height: 24px;
+                font-size: 0.8rem;
+            }
+            
+            .choice-text {
+                font-size: 0.9rem;
             }
         }
     </style>
@@ -1120,7 +1059,8 @@
 
             </div>
         </div>
-<!-- Essay Section B -->
+
+        <!-- Essay Section B -->
         <div id="essaySectionB" class="insights-section" style="display: none;">
             <div class="insights-header">
                 <h3><i class="fas fa-pencil-alt me-2"></i>Section B: Essay</h3>
@@ -1134,6 +1074,7 @@
                 </div>
             </div>
         </div>
+
         <!-- Performance Insights -->
         <div class="insights-section">
             <div class="insights-header">
@@ -1185,6 +1126,7 @@
         
         let testResults = null;
         let questions = [];
+        let userAnswersMap = {};  // KEY FIX: Build answer map from backend results
 
         document.addEventListener('DOMContentLoaded', function() {
             loadResults();
@@ -1192,89 +1134,86 @@
         });
 
         async function loadResults() {
-    try {
-        // Try to load Section A results first (new flow)
-        let resultsData = sessionStorage.getItem('sectionAResults');
-        
-        // Fallback to old format for backward compatibility
-        if (!resultsData) {
-            resultsData = sessionStorage.getItem('testResults');
-        }
-        
-        if (!resultsData) {
-            throw new Error('No test results found');
-        }
-        
-        testResults = JSON.parse(resultsData);
-                console.log('Test results:', testResults);
-                console.log('User answers object:', testResults.user_answers);
-console.log('User answers keys:', testResults.user_answers ? Object.keys(testResults.user_answers) : 'No user_answers');
-console.log('First few entries:', testResults.user_answers ? Object.entries(testResults.user_answers).slice(0, 5) : 'None');
+            try {
+                // Load Section A results
+                const resultsData = sessionStorage.getItem('sectionAResults');
+                
+                if (!resultsData) {
+                    throw new Error('No test results found');
+                }
+                
+                testResults = JSON.parse(resultsData);
+                console.log('✓ Test results loaded:', testResults);
+
+                // KEY FIX: Build userAnswersMap from backend's results array
+                // Backend returns: results = [{questionId, selectedAnswer, correctAnswer, isCorrect}, ...]
+                if (testResults.results && Array.isArray(testResults.results)) {
+                    testResults.results.forEach(result => {
+                        userAnswersMap[result.questionId] = {
+                            selected: result.selectedAnswer,  // Number 1-5
+                            correct: result.correctAnswer,    // Number 1-5
+                            isCorrect: result.isCorrect
+                        };
+                    });
+                    console.log('✓ Built user answers map from backend results:', userAnswersMap);
+                } else {
+                    console.error('⚠ No results array in testResults');
+                }
+
+                // Fetch question details for display
                 await fetchQuestionDetails();
-await fetchEssaySubmission();
-displayResults();
+                
+                // Fetch essay if exists
+                await fetchEssaySubmission();
+                
+                // Display everything
+                displayResults();
                 
             } catch (error) {
-                console.error('Error loading results:', error);
+                console.error('❌ Error loading results:', error);
                 showError();
             }
         }
 
         async function fetchQuestionDetails() {
-    try {
-        const token = localStorage.getItem('authToken');
-        
-        if (!token) {
-            console.log('No auth token found, skipping question details fetch');
-            return;
-        }
-        
-        // Get the test ID from results or URL
-        let testId = testResults.test_id || 1;
-        
-        // Also check URL parameter as backup
-        const urlParams = new URLSearchParams(window.location.search);
-        const urlTestId = urlParams.get('test');
-        if (urlTestId) {
-            testId = parseInt(urlTestId);
-        }
-        
-        console.log('Fetching questions for test:', testId);
-        
-        const response = await fetch(`${API_BASE_URL}/api/tests/${testId}/questions`, {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            }
-        });
-        
-        if (response.ok) {
-            const data = await response.json();
-            questions = data.questions || data || [];
-            console.log(`Fetched ${questions.length} questions for test ${testId}`);
-        } else if (response.status === 401) {
-            console.log('Authentication failed, user may need to login');
-        } else {
-            console.error('Failed to fetch questions:', response.status, response.statusText);
-        }
-    } catch (error) {
-        console.error('Error fetching question details:', error);
-    }
-}
-        async function fetchEssaySubmission() {
             try {
                 const token = localStorage.getItem('authToken');
                 
                 if (!token) {
-                    console.log('No auth token, skipping essay fetch');
+                    console.log('No auth token, skipping question details');
                     return;
                 }
                 
                 const testId = testResults.testId || testResults.test_id || 1;
+                console.log(`Fetching questions for test ${testId}...`);
+                
+                const response = await fetch(`${API_BASE_URL}/api/tests/${testId}/questions`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    questions = data.questions || [];
+                    console.log(`✓ Fetched ${questions.length} questions`);
+                } else {
+                    console.error('Failed to fetch questions:', response.status);
+                }
+            } catch (error) {
+                console.error('Error fetching questions:', error);
+            }
+        }
+
+        async function fetchEssaySubmission() {
+            try {
+                const token = localStorage.getItem('authToken');
+                if (!token) return;
+                
+                const testId = testResults.testId || testResults.test_id || 1;
                 
                 const response = await fetch(`${API_BASE_URL}/api/user/essays/${testId}`, {
-                    method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${token}`,
                         'Content-Type': 'application/json'
@@ -1286,8 +1225,6 @@ displayResults();
                     if (data.hasSubmission) {
                         displayEssay(data.essay);
                     }
-                } else if (response.status === 404) {
-                    console.log('No essay submission found for this test');
                 }
             } catch (error) {
                 console.error('Error fetching essay:', error);
@@ -1324,7 +1261,7 @@ ${essay.essayContent}
                 
                 <div class="alert alert-info">
                     <i class="fas fa-info-circle me-2"></i>
-                    <strong>Note:</strong> Section B essays are not scored automatically. Your essay demonstrates your ability to construct logical arguments in written form.
+                    <strong>Note:</strong> Section B essays are not scored automatically.
                 </div>
             `;
             
@@ -1342,25 +1279,22 @@ ${essay.essayContent}
             modeBadge.className = `test-mode-badge ${isDemo ? 'mode-demo' : 'mode-full'}`;
             
             // Update test title
-            const testId = testResults.test_id || 1;
+            const testId = testResults.testId || testResults.test_id || 1;
             document.getElementById('testTitle').textContent = isDemo ? 
                 'LNAT Demo Test (4 Questions)' : `LNAT Practice Test ${testId}`;
             
-            // Calculate comprehensive stats
-            const totalQuestions = testResults.total_questions || questions.length || (isDemo ? 4 : 42);
-            const correctCount = testResults.correct_answers || 0;
-            const percentage = Math.round((correctCount / totalQuestions) * 100);
-            const timeSpent = testResults.time_spent || 0;
-            const flaggedCount = testResults.flagged_questions ? testResults.flagged_questions.length : 0;
-            
-            // Calculate additional metrics
-            const answeredQuestions = testResults.userAnswers ? Object.keys(testResults.userAnswers).length : 
-                         testResults.user_answers ? Object.keys(testResults.user_answers).length : 0;
+            // Calculate stats
+            const totalQuestions = testResults.totalQuestions || Object.keys(userAnswersMap).length;
+            const correctCount = testResults.score || Object.values(userAnswersMap).filter(a => a.isCorrect).length;
+            const percentage = testResults.percentage || Math.round((correctCount / totalQuestions) * 100);
+            const timeSpent = testResults.timeSpent || 0;
+            const flaggedCount = testResults.flaggedQuestions ? testResults.flaggedQuestions.length : 0;
+            const answeredQuestions = Object.keys(userAnswersMap).length;
             const accuracyRate = answeredQuestions > 0 ? Math.round((correctCount / answeredQuestions) * 100) : 0;
             const avgTimePerQuestion = timeSpent > 0 ? Math.round(timeSpent / totalQuestions) : 0;
             const percentileRank = calculatePercentile(percentage);
             
-            // Update all display elements
+            // Update all displays
             updateScoreDisplay(percentage);
             updateGradeDisplay(percentage);
             updateStatsDisplay(correctCount, totalQuestions, timeSpent, flaggedCount, accuracyRate, avgTimePerQuestion);
@@ -1372,8 +1306,7 @@ ${essay.essayContent}
 
         function updateScoreDisplay(percentage) {
             document.getElementById('scorePercentage').textContent = percentage + '%';
-            const scoreCircle = document.getElementById('scoreCircle');
-            scoreCircle.style.setProperty('--score-percentage', percentage + '%');
+            document.getElementById('scoreCircle').style.setProperty('--score-percentage', percentage + '%');
         }
 
         function updateGradeDisplay(percentage) {
@@ -1410,6 +1343,7 @@ ${essay.essayContent}
             gradeTitle.textContent = title;
             gradeText.textContent = description;
         }
+
         function updateStatsDisplay(correct, total, timeSpent, flagged, accuracy, avgTime) {
             document.getElementById('correctCount').textContent = correct;
             document.getElementById('totalQuestions').textContent = total;
@@ -1418,7 +1352,6 @@ ${essay.essayContent}
             document.getElementById('accuracyRate').textContent = accuracy + '%';
             document.getElementById('avgTimePerQuestion').textContent = avgTime + 's';
             
-            // Calculate and display enhanced metrics
             const difficultyScore = calculateDifficultyScore(correct, total);
             const confidenceIndex = calculateConfidenceIndex(timeSpent, total, flagged);
             
@@ -1434,13 +1367,11 @@ ${essay.essayContent}
             const incorrect = answered - correct;
             const unanswered = total - answered;
             
-            // Update breakdown percentages
             document.getElementById('correctPercentage').textContent = Math.round((correct / total) * 100) + '%';
             document.getElementById('incorrectPercentage').textContent = Math.round((incorrect / total) * 100) + '%';
             document.getElementById('unansweredPercentage').textContent = Math.round((unanswered / total) * 100) + '%';
             document.getElementById('flaggedPercentage').textContent = Math.round((flagged / total) * 100) + '%';
             
-            // Calculate and update progress bars
             const timeEfficiency = calculateTimeEfficiency(timeSpent, total);
             const completionRate = Math.round((answered / total) * 100);
             const consistencyScore = calculateConsistencyScore(correct, answered);
@@ -1456,7 +1387,6 @@ ${essay.essayContent}
         }
 
         function calculatePercentile(percentage) {
-            // Simplified percentile calculation based on typical LNAT score distributions
             if (percentage >= 90) return 95;
             if (percentage >= 85) return 85;
             if (percentage >= 80) return 75;
@@ -1470,7 +1400,6 @@ ${essay.essayContent}
         }
 
         function calculateDifficultyScore(correct, total) {
-            // Simulate difficulty handling based on performance
             const percentage = (correct / total) * 100;
             if (percentage >= 85) return 'Advanced';
             if (percentage >= 70) return 'Intermediate';
@@ -1479,64 +1408,60 @@ ${essay.essayContent}
         }
 
         function calculateConfidenceIndex(timeSpent, total, flagged) {
-            // Calculate confidence based on time spent and flagging behavior
             const avgTime = timeSpent / total;
             const flagRate = flagged / total;
             
             let confidence = 100;
-            if (avgTime < 60) confidence -= 20; // Too fast
-            if (avgTime > 200) confidence -= 15; // Too slow
-            if (flagRate > 0.3) confidence -= 25; // Too many flags
+            if (avgTime < 60) confidence -= 20;
+            if (avgTime > 200) confidence -= 15;
+            if (flagRate > 0.3) confidence -= 25;
             if (flagRate > 0.5) confidence -= 35;
             
             return Math.max(confidence, 0) + '%';
         }
 
         function calculateTimeEfficiency(timeSpent, total) {
-            const idealTime = total * 135; // 2.25 minutes per question
+            const idealTime = total * 135;
             const efficiency = Math.min((idealTime / timeSpent) * 100, 100);
             return Math.round(efficiency);
         }
 
         function calculateConsistencyScore(correct, answered) {
-            // Simulate consistency based on correct answers
             const accuracy = (correct / answered) * 100;
-            return Math.round(accuracy * 0.8 + 20); // Scale and adjust
+            return Math.round(accuracy * 0.8 + 20);
         }
 
         function generateInsights(percentage, timeSpent, flaggedCount, answeredCount, totalQuestions, isDemo) {
             const insights = [];
             
-            // Performance insights
             if (percentage >= 85) {
                 insights.push({
                     type: 'positive',
                     title: 'Exceptional Critical Reasoning',
-                    description: 'Your score demonstrates strong analytical skills. Continue practicing to maintain this high level of performance.'
+                    description: 'Your score demonstrates strong analytical skills. Continue practicing to maintain this high level.'
                 });
             } else if (percentage >= 70) {
                 insights.push({
                     type: 'positive',
                     title: 'Solid Foundation',
-                    description: 'Good grasp of LNAT concepts. Focus on consistency and tackling more challenging question types.'
+                    description: 'Good grasp of LNAT concepts. Focus on consistency and challenging question types.'
                 });
             } else {
                 insights.push({
                     type: 'warning',
                     title: 'Room for Improvement',
-                    description: 'Consider reviewing fundamental logical reasoning techniques and practicing with more questions.'
+                    description: 'Review fundamental logical reasoning techniques and practice more questions.'
                 });
             }
 
-            // Time management insights
-            const avgTimeExpected = isDemo ? 300 : 135; // 5 min per question for demo, 2.25 min for full test
+            const avgTimeExpected = isDemo ? 300 : 135;
             const avgTimeActual = timeSpent / totalQuestions;
             
             if (avgTimeActual < avgTimeExpected * 0.7) {
                 insights.push({
                     type: 'warning',
                     title: 'Consider Slowing Down',
-                    description: 'You completed questions quickly. Take more time to carefully analyze each passage and question.'
+                    description: 'Take more time to carefully analyze each passage and question.'
                 });
             } else if (avgTimeActual > avgTimeExpected * 1.3) {
                 insights.push({
@@ -1548,47 +1473,43 @@ ${essay.essayContent}
                 insights.push({
                     type: 'positive',
                     title: 'Good Time Management',
-                    description: 'Your pacing was appropriate for the LNAT format. Well done!'
+                    description: 'Your pacing was appropriate for the LNAT format.'
                 });
             }
 
-            // Completion insights
             if (answeredCount < totalQuestions) {
                 insights.push({
                     type: 'warning',
                     title: 'Answer All Questions',
-                    description: `You left ${totalQuestions - answeredCount} question${totalQuestions - answeredCount > 1 ? 's' : ''} unanswered. Remember, there's no penalty for guessing in LNAT.`
+                    description: `You left ${totalQuestions - answeredCount} question(s) unanswered. No penalty for guessing!`
                 });
             }
 
-            // Flag usage insights
             if (flaggedCount > 0) {
                 const flagRate = flaggedCount / totalQuestions;
                 if (flagRate > 0.3) {
                     insights.push({
                         type: 'info',
                         title: 'Review Strategy Usage',
-                        description: `You flagged ${flaggedCount} questions. Consider focusing on building confidence in your initial answers.`
+                        description: `You flagged ${flaggedCount} questions. Build confidence in initial answers.`
                     });
                 } else {
                     insights.push({
                         type: 'positive',
                         title: 'Strategic Question Review',
-                        description: `You flagged ${flaggedCount} question${flaggedCount > 1 ? 's' : ''} for review. Good strategy for managing uncertainty.`
+                        description: `Good strategy flagging ${flaggedCount} question(s) for review.`
                     });
                 }
             }
 
-            // Demo-specific insights
             if (isDemo) {
                 insights.push({
                     type: 'info',
                     title: 'Ready for Full Practice',
-                    description: 'You\'ve completed the demo successfully. The full test with 42 questions will provide comprehensive LNAT preparation.'
+                    description: 'Demo complete! Full test with 42 questions provides comprehensive preparation.'
                 });
             }
 
-            // Render insights
             const insightsContainer = document.getElementById('insightsContent');
             insightsContainer.innerHTML = insights.map(insight => `
                 <div class="insight-item">
@@ -1603,281 +1524,161 @@ ${essay.essayContent}
             `).join('');
         }
 
-        function convertToLetter(answer) {
-            // If it's already a letter, return as is
-            if (typeof answer === 'string' && answer.match(/^[A-E]$/)) {
-                return answer;
-            }
-            
-            // Convert number to letter
-            const letterMap = {
-                1: 'A',
-                2: 'B', 
-                3: 'C',
-                4: 'D',
-                5: 'E'
-            };
-            
-            return letterMap[answer] || answer;
-        }
-
         function displayQuestionReview() {
-    const reviewList = document.getElementById('questionReviewList');
-    let reviewHTML = '';
-    
-    const questionsToReview = questions || [];
-    
-    if (questionsToReview.length === 0) {
-        reviewHTML = `
-            <div class="question-item">
-                <div class="text-center text-muted py-5">
-                    <i class="fas fa-info-circle fa-2x mb-3"></i>
-                    <p>Question details not available for review.</p>
-                </div>
-            </div>
-        `;
-    } else {
-        questionsToReview.forEach((question, index) => {
-            const questionId = question.id || (index + 1);
-const questionNumber = index + 1; // Question number in the test (1-42)
-
-// Try multiple ways to find the user's answer
-let userAnswer = null;
-if (testResults.user_answers) {
-    // Try by question ID first
-    userAnswer = testResults.user_answers[questionId];
-    
-    // If not found, try by question number
-    if (userAnswer === null || userAnswer === undefined) {
-        userAnswer = testResults.user_answers[questionNumber];
-    }
-    
-    // If still not found, try string versions
-    if (userAnswer === null || userAnswer === undefined) {
-        userAnswer = testResults.user_answers[String(questionId)] || testResults.user_answers[String(questionNumber)];
-    }
-}
-
-console.log(`Q${questionNumber} (ID: ${questionId}): User answered: ${userAnswer}, Correct: ${question.correct_answer}`);
-            const correctAnswer = question.correct_answer || 'A';
+            const reviewList = document.getElementById('questionReviewList');
             
-            // Convert answers to letters for comparison
-            const userAnswerLetter = convertToLetter(userAnswer);
-            const correctAnswerLetter = convertToLetter(correctAnswer);
-            
-            const wasAnswered = userAnswer !== null && userAnswer !== undefined;
-            const wasFlagged = testResults.flagged_questions && testResults.flagged_questions.includes(questionId);
-            
-            // Improved comparison logic
-            let isCorrect = false;
-            if (wasAnswered) {
-                isCorrect = (userAnswerLetter === correctAnswerLetter) || 
-                           (userAnswer === correctAnswer) ||
-                           (String(userAnswer) === String(correctAnswer));
+            if (questions.length === 0) {
+                reviewList.innerHTML = `
+                    <div class="question-item">
+                        <div class="text-center text-muted py-5">
+                            <i class="fas fa-info-circle fa-2x mb-3"></i>
+                            <p>Question details not available.</p>
+                        </div>
+                    </div>
+                `;
+                return;
             }
+
+            let reviewHTML = '';
             
-            let statusClass, statusText;
-            if (!wasAnswered) {
-                statusClass = 'status-unanswered';
-                statusText = 'Not Answered';
-            } else if (isCorrect) {
-                statusClass = 'status-correct';
-                statusText = 'Correct';
-            } else {
-                statusClass = 'status-incorrect';
-                statusText = 'Incorrect';
-            }
-            
-            // Create data attributes for filtering
-            const filterClasses = [];
-            
-            if (wasAnswered) {
-                if (isCorrect) {
-                    filterClasses.push('correct');
-                } else {
-                    filterClasses.push('incorrect');
+            questions.forEach((question, index) => {
+                const questionId = question.id;
+                const userAnswer = userAnswersMap[questionId];
+                
+                if (!userAnswer) {
+                    console.log(`⚠ No answer found for question ${questionId}`);
+                    return;
                 }
-            } else {
-                filterClasses.push('unanswered');
-            }
-            
-            if (wasFlagged) {
-                filterClasses.push('flagged');
-            }
-            
-            // Build answer choices HTML
-            const answerChoicesHTML = generateAnswerChoicesHTML(question.options, userAnswerLetter, correctAnswerLetter, wasAnswered);
-            
-            reviewHTML += `
-                <div class="question-item" data-filter="${filterClasses.join(' ')}">
-                    <div class="question-header">
-                        <div class="question-number">
-                            Question ${index + 1}
-                            ${wasFlagged ? '<i class="fas fa-flag flag-indicator"></i>' : ''}
-                        </div>
-                        <div class="answer-status ${statusClass}">${statusText}</div>
-                    </div>
-                    
-                    <div class="question-text">
-                        ${question.question_text || question.questionText || question.text || 'Question text not available'}
-                    </div>
-                    
-                    <div class="answer-choices-section">
-                        <h6 class="answer-choices-title">
-                            <i class="fas fa-list me-2"></i>Answer Choices:
-                        </h6>
-                        ${answerChoicesHTML}
-                    </div>
-                    
-                    ${question.explanation ? `
-                        <div class="explanation">
-                            <h6><i class="fas fa-lightbulb"></i>Explanation</h6>
-                            <p>${question.explanation}</p>
-                        </div>
-                    ` : ''}
-                </div>
-            `;
-        });
-    }
-    
-    reviewList.innerHTML = reviewHTML;
-    updateFilterSummary('all');
-}
 
-function generateAnswerChoicesHTML(options, userAnswer, correctAnswer, wasAnswered) {
-    if (!options || !Array.isArray(options)) {
-        return '<p class="text-muted">Answer choices not available</p>';
-    }
-    
-    const letters = ['A', 'B', 'C', 'D', 'E'];
-    let choicesHTML = '<div class="answer-choices-grid">';
-    
-    options.forEach((option, index) => {
-        const letter = letters[index];
-        const isUserChoice = wasAnswered && letter === userAnswer;
-        const isCorrectChoice = letter === correctAnswer;
-        
-        let choiceClass = 'answer-choice';
-        let icon = '';
-        
-        if (isCorrectChoice && isUserChoice) {
-            // User selected correct answer
-            choiceClass += ' choice-correct-selected';
-            icon = '<i class="fas fa-check-circle choice-icon"></i>';
-        } else if (isCorrectChoice) {
-            // This is the correct answer (but user didn't select it)
-            choiceClass += ' choice-correct';
-            icon = '<i class="fas fa-check choice-icon"></i>';
-        } else if (isUserChoice) {
-            // User selected this (but it's incorrect)
-            choiceClass += ' choice-user-incorrect';
-            icon = '<i class="fas fa-times-circle choice-icon"></i>';
-        } else {
-            // Other options
-            choiceClass += ' choice-neutral';
+                const correctAnswer = question.correct_answer;
+                const isCorrect = userAnswer.isCorrect;
+                
+                // Convert to letters for display
+                const letters = ['A', 'B', 'C', 'D', 'E'];
+                const userAnswerLetter = letters[userAnswer.selected - 1];
+                const correctAnswerLetter = letters[correctAnswer - 1];
+                
+                const wasFlagged = testResults.flaggedQuestions && 
+                                 testResults.flaggedQuestions.includes(questionId);
+                
+                let statusClass = isCorrect ? 'status-correct' : 'status-incorrect';
+                let statusText = isCorrect ? 'Correct' : 'Incorrect';
+                
+                const filterClasses = [];
+                filterClasses.push(isCorrect ? 'correct' : 'incorrect');
+                if (wasFlagged) filterClasses.push('flagged');
+                
+                const answerChoicesHTML = generateAnswerChoicesHTML(
+                    question.options, 
+                    userAnswer.selected, 
+                    correctAnswer
+                );
+                
+                reviewHTML += `
+                    <div class="question-item" data-filter="${filterClasses.join(' ')}">
+                        <div class="question-header">
+                            <div class="question-number">
+                                Question ${index + 1}
+                                ${wasFlagged ? '<i class="fas fa-flag flag-indicator"></i>' : ''}
+                            </div>
+                            <div class="answer-status ${statusClass}">${statusText}</div>
+                        </div>
+                        
+                        <div class="question-text">
+                            ${question.question_text}
+                        </div>
+                        
+                        <div class="answer-choices-section">
+                            <h6 class="answer-choices-title">
+                                <i class="fas fa-list me-2"></i>Answer Choices:
+                            </h6>
+                            ${answerChoicesHTML}
+                        </div>
+                        
+                        ${question.explanation ? `
+                            <div class="explanation">
+                                <h6><i class="fas fa-lightbulb"></i>Explanation</h6>
+                                <p>${question.explanation}</p>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            });
+            
+            reviewList.innerHTML = reviewHTML;
+            updateFilterSummary('all');
         }
-        
-        choicesHTML += `
-            <div class="${choiceClass}">
-                <div class="choice-header">
-                    <span class="choice-letter">${letter}</span>
-                    ${icon}
-                </div>
-                <div class="choice-text">${option}</div>
-            </div>
-        `;
-    });
-    
-    choicesHTML += '</div>';
-    return choicesHTML;
-}
-        function generateAnswerChoicesHTML(options, userAnswer, correctAnswer, wasAnswered) {
-    if (!options || !Array.isArray(options)) {
-        return '<p class="text-muted">Answer choices not available</p>';
-    }
-    
-    const letters = ['A', 'B', 'C', 'D', 'E'];
-    let choicesHTML = '<div class="answer-choices-grid">';
-    
-    options.forEach((option, index) => {
-        const letter = letters[index];
-        const isUserChoice = wasAnswered && letter === userAnswer;
-        const isCorrectChoice = letter === correctAnswer;
-        
-        let choiceClass = 'answer-choice';
-        let icon = '';
-        
-        if (isCorrectChoice && isUserChoice) {
-            // User selected correct answer
-            choiceClass += ' choice-correct-selected';
-            icon = '<i class="fas fa-check-circle choice-icon"></i>';
-        } else if (isCorrectChoice) {
-            // This is the correct answer (but user didn't select it)
-            choiceClass += ' choice-correct';
-            icon = '<i class="fas fa-check choice-icon"></i>';
-        } else if (isUserChoice) {
-            // User selected this (but it's incorrect)
-            choiceClass += ' choice-user-incorrect';
-            icon = '<i class="fas fa-times-circle choice-icon"></i>';
-        } else {
-            // Other options
-            choiceClass += ' choice-neutral';
+
+        function generateAnswerChoicesHTML(options, userSelected, correctAnswer) {
+            if (!options || !Array.isArray(options)) {
+                return '<p class="text-muted">Options not available</p>';
+            }
+            
+            const letters = ['A', 'B', 'C', 'D', 'E'];
+            let html = '<div class="answer-choices-grid">';
+            
+            options.forEach((option, index) => {
+                const answerNumber = index + 1;
+                const letter = letters[index];
+                const isUserChoice = userSelected === answerNumber;
+                const isCorrectChoice = correctAnswer === answerNumber;
+                
+                let choiceClass = 'answer-choice';
+                let icon = '';
+                
+                if (isCorrectChoice && isUserChoice) {
+                    choiceClass += ' choice-correct-selected';
+                    icon = '<i class="fas fa-check-circle choice-icon"></i>';
+                } else if (isCorrectChoice) {
+                    choiceClass += ' choice-correct';
+                    icon = '<i class="fas fa-check choice-icon"></i>';
+                } else if (isUserChoice) {
+                    choiceClass += ' choice-user-incorrect';
+                    icon = '<i class="fas fa-times-circle choice-icon"></i>';
+                } else {
+                    choiceClass += ' choice-neutral';
+                }
+                
+                html += `
+                    <div class="${choiceClass}">
+                        <div class="choice-header">
+                            <span class="choice-letter">${letter}</span>
+                            ${icon}
+                        </div>
+                        <div class="choice-text">${option}</div>
+                    </div>
+                `;
+            });
+            
+            html += '</div>';
+            return html;
         }
-        
-        choicesHTML += `
-            <div class="${choiceClass}">
-                <div class="choice-header">
-                    <span class="choice-letter">${letter}</span>
-                    ${icon}
-                </div>
-                <div class="choice-text">${option}</div>
-            </div>
-        `;
-    });
-    
-    choicesHTML += '</div>';
-    return choicesHTML;
-}
+
         function setupFilterButtons() {
             const filterButtons = document.querySelectorAll('.filter-btn');
             
             filterButtons.forEach(button => {
                 button.addEventListener('click', function() {
-                    // Update active button
                     filterButtons.forEach(btn => btn.classList.remove('active'));
                     this.classList.add('active');
                     
-                    // Filter questions
                     const filter = this.getAttribute('data-filter');
                     const questionItems = document.querySelectorAll('.question-item');
                     let visibleCount = 0;
                     
-                    console.log(`Filtering by: ${filter}`); // Debug log
-                    
                     questionItems.forEach(item => {
                         const itemFilters = item.getAttribute('data-filter') || '';
-                        console.log(`Item filters: "${itemFilters}", Looking for: "${filter}"`); // Debug log
-                        
-                        let shouldShow = false;
-                        
-                        if (filter === 'all') {
-                            shouldShow = true;
-                        } else {
-                            // Split the item filters and check if our target filter is included
-                            const filterArray = itemFilters.split(' ').filter(f => f.length > 0);
-                            shouldShow = filterArray.includes(filter);
-                        }
+                        const filterArray = itemFilters.split(' ').filter(f => f.length > 0);
+                        const shouldShow = filter === 'all' || filterArray.includes(filter);
                         
                         if (shouldShow) {
                             item.classList.remove('hidden');
                             visibleCount++;
-                            console.log(`Showing item with filters: ${itemFilters}`); // Debug log
                         } else {
                             item.classList.add('hidden');
                         }
                     });
                     
-                    console.log(`Total visible after filtering: ${visibleCount}`); // Debug log
                     updateFilterSummary(filter, visibleCount);
                 });
             });
@@ -1887,9 +1688,7 @@ function generateAnswerChoicesHTML(options, userAnswer, correctAnswer, wasAnswer
             const filterSummary = document.getElementById('filterSummary');
             const totalQuestions = document.querySelectorAll('.question-item').length;
             
-            if (count === null) {
-                count = totalQuestions;
-            }
+            if (count === null) count = totalQuestions;
             
             let summaryText = '';
             switch(filter) {
@@ -1934,11 +1733,3 @@ function generateAnswerChoicesHTML(options, userAnswer, correctAnswer, wasAnswer
     </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
