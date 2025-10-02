@@ -962,8 +962,11 @@
     <script>
         const API_BASE = 'https://lexcello-backend.onrender.com';
         
-        // SECURITY CONFIGURATION - CHANGE THIS PASSWORD!
-        const ADMIN_PASSWORD = 'Ramesh12!@';
+        // Admin credentials - username: password
+        const ADMIN_CREDENTIALS = {
+            'admin': 'Ramesh12!@',
+            'fastprep': 'academy'
+            };
         
         // Security state
         let isSecurityAuthenticated = false;
@@ -1010,24 +1013,15 @@
             
             const enteredPassword = document.getElementById('admin-password').value;
             
-            if (enteredPassword === ADMIN_PASSWORD) {
-                securityAuthenticate();
-                loginError.style.display = 'none';
-                loadTests();
-                loadDashboard();
-            } else {
-                loginError.textContent = 'Incorrect password. Access denied.';
-                loginError.style.display = 'block';
-                document.getElementById('admin-password').value = '';
-                document.getElementById('admin-password').focus();
-                
-                // Add shake animation
-                document.querySelector('.login-form').style.animation = 'shake 0.5s';
-                setTimeout(() => {
-                    document.querySelector('.login-form').style.animation = '';
-                }, 500);
-            }
-        });
+            <form id="security-login-form">
+    <div class="form-group">
+        <label for="admin-username">Username:</label>
+        <input type="text" id="admin-username" required placeholder="admin or fastprep">
+    </div>
+    <div class="form-group">
+        <label for="admin-password">Password:</label>
+        <input type="password" id="admin-password" required placeholder="Password">
+    </div>
         
         // Protect functions - require authentication
         function requireAuth() {
@@ -2159,5 +2153,6 @@ async function deleteUser(userId, userEmail) {
     </script>
 </body>
 </html>
+
 
 
