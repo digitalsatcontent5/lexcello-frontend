@@ -1207,7 +1207,19 @@
             return;
         }
         
-        const response = await fetch(`${API_BASE_URL}/api/tests/1/questions`, {
+        // Get the test ID from results or URL
+        let testId = testResults.test_id || 1;
+        
+        // Also check URL parameter as backup
+        const urlParams = new URLSearchParams(window.location.search);
+        const urlTestId = urlParams.get('test');
+        if (urlTestId) {
+            testId = parseInt(urlTestId);
+        }
+        
+        console.log('Fetching questions for test:', testId);
+        
+        const response = await fetch(`${API_BASE_URL}/api/tests/${testId}/questions`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -1218,11 +1230,9 @@
         if (response.ok) {
             const data = await response.json();
             questions = data.questions || data || [];
-            console.log('Fetched questions:', questions);
-            console.log('Questions length:', questions.length);
+            console.log(`Fetched ${questions.length} questions for test ${testId}`);
         } else if (response.status === 401) {
             console.log('Authentication failed, user may need to login');
-            // Could redirect to login or show a message
         } else {
             console.error('Failed to fetch questions:', response.status, response.statusText);
         }
@@ -1230,7 +1240,6 @@
         console.error('Error fetching question details:', error);
     }
 }
-
         function displayResults() {
             document.getElementById('loadingScreen').style.display = 'none';
             document.getElementById('resultsContent').style.display = 'block';
@@ -1242,8 +1251,9 @@
             modeBadge.className = `test-mode-badge ${isDemo ? 'mode-demo' : 'mode-full'}`;
             
             // Update test title
-            document.getElementById('testTitle').textContent = isDemo ? 
-                'LNAT Demo Test (4 Questions)' : 'LNAT Practice Test 1';
+            const testId = testResults.test_id || 1;
+document.getElementById('testTitle').textContent = isDemo ? 
+    'LNAT Demo Test (4 Questions)' : `LNAT Practice Test ${testId}`;
             
             // Calculate comprehensive stats
             const totalQuestions = testResults.total_questions || questions.length || (isDemo ? 4 : 42);
@@ -1814,6 +1824,7 @@ function generateAnswerChoicesHTML(options, userAnswer, correctAnswer, wasAnswer
     </script>
 </body>
 </html>
+
 
 
 
