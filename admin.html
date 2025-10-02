@@ -1038,7 +1038,14 @@ document.getElementById('security-login-form').addEventListener('submit', (e) =>
         }, 500);
     }
 }); 
-                    
+       // Protect functions - require authentication
+function requireAuth() {
+    if (!isSecurityAuthenticated) {
+        showMessage('Authentication required!', 'error');
+        return false;
+    }
+    return true;
+}             
         // Load Tests Dynamically
         async function loadTests() {
             if (!requireAuth()) return;
@@ -2160,6 +2167,7 @@ async function deleteUser(userId, userEmail) {
     </script>
 </body>
 </html>
+
 
 
 
