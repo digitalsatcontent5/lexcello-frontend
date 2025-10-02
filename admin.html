@@ -795,12 +795,71 @@
                     <div style="margin-bottom: 20px;">
                         <h3>All Registered Users</h3>
                         <button class="btn btn-primary" onclick="loadUsers()">Refresh Users</button>
-                        <button class="btn btn-warning" onclick="exportUsers()">Export Users</button>
+                        <button class="btn btn-success" onclick="showAddUserModal()">Add User</button>
                     </div>
                     
                     <div id="users-list" class="question-list">
                         <p style="padding: 20px; text-align: center; color: #666;">Click "Refresh Users" to load user data...</p>
                     </div>
+                    <!-- Add User Modal -->
+<div id="addUserModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 10001; overflow-y: auto;">
+    <div style="background: white; max-width: 600px; margin: 50px auto; border-radius: 12px; padding: 30px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 2px solid #eee; padding-bottom: 15px;">
+            <h3 style="margin: 0; color: #2c3e50;">Add New User</h3>
+            <button onclick="closeAddUserModal()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #666;">&times;</button>
+        </div>
+        
+        <form id="addUserForm" onsubmit="submitAddUser(event)">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="newUserEmail">Email *</label>
+                    <input type="email" id="newUserEmail" class="form-control" required placeholder="user@example.com">
+                </div>
+                <div class="form-group">
+                    <label for="newUserPassword">Password *</label>
+                    <input type="password" id="newUserPassword" class="form-control" required placeholder="Minimum 6 characters" minlength="6">
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="newUserFirstName">First Name</label>
+                    <input type="text" id="newUserFirstName" class="form-control" placeholder="Optional">
+                </div>
+                <div class="form-group">
+                    <label for="newUserLastName">Last Name</label>
+                    <input type="text" id="newUserLastName" class="form-control" placeholder="Optional">
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="newUserPhone">Phone</label>
+                    <input type="tel" id="newUserPhone" class="form-control" placeholder="Optional">
+                </div>
+                <div class="form-group">
+                    <label for="newUserSubscriptionStatus">Subscription Status *</label>
+                    <select id="newUserSubscriptionStatus" class="form-control" required>
+                        <option value="inactive">Inactive (Default)</option>
+                        <option value="active">Active</option>
+                        <option value="premium">Premium (Full Access)</option>
+                        <option value="expired">Expired</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="newUserSubscriptionPlan">Subscription Plan</label>
+                <input type="text" id="newUserSubscriptionPlan" class="form-control" placeholder="e.g., Monthly, Annual (Optional)">
+            </div>
+            
+            <div style="margin-top: 25px; padding-top: 20px; border-top: 1px solid #eee; display: flex; gap: 10px; justify-content: flex-end;">
+                <button type="button" class="btn btn-secondary" onclick="closeAddUserModal()">Cancel</button>
+                <button type="submit" class="btn btn-success">Create User</button>
+            </div>
+        </form>
+    </div>
+</div>
                 </div>
                 
                 <!-- Dashboard Tab -->
@@ -1884,6 +1943,7 @@
     </script>
 </body>
 </html>
+
 
 
 
