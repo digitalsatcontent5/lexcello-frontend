@@ -1246,20 +1246,32 @@ async function checkUserSubscriptionStatus() {
                 const hasCompleted = userAttempts.length > 0;
                 
                 // FIXED: Proper score conversion for best score calculation
-                let bestScore = 0;
-                if (hasCompleted) {
-                    const validScores = userAttempts.map(attempt => {
-                        let score = attempt.score;
-                        if (typeof score === 'string') {
-                            score = score.replace('%', '');
-                            score = parseFloat(score);
-                        } else {
-                            score = Number(score);
-                        }
-                        return isNaN(score) ? 0 : score;
-                    });
-                    bestScore = Math.max(...validScores);
-                }
+let bestScore = 0;
+if (hasCompleted) {
+    bestScore = Math.max(...userAttempts.map(attempt => {
+        // Calculate percentage score from correct_answers and total_questions
+        let score = attempt.score;
+        
+        // If score is undefined or invalid, calculate from correct_answers
+        if (score === undefined || score === null || isNaN(score)) {
+            if (attempt.correct_answers !== undefined && attempt.total_questions > 0) {
+                score = Math.round((attempt.correct_answers / attempt.total_questions) * 100);
+            } else {
+                score = 0;
+            }
+        } else {
+            // Handle string format like "85%" or "85"
+            if (typeof score === 'string') {
+                score = score.replace('%', '');
+                score = parseFloat(score);
+            } else {
+                score = Number(score);
+            }
+        }
+        
+        return isNaN(score) ? 0 : score;
+    }));
+}
                 
                 const latestAttempt = hasCompleted ? userAttempts[userAttempts.length - 1] : null;
                 
@@ -1917,4 +1929,5 @@ function startTest(testNumber) {
     </script>
 </body>
 </html>
+
 
