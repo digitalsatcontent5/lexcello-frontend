@@ -1548,7 +1548,26 @@ document.getElementById('testTitle').textContent = isDemo ?
     } else {
         questionsToReview.forEach((question, index) => {
             const questionId = question.id || (index + 1);
-            const userAnswer = testResults.user_answers ? testResults.user_answers[questionId] : null;
+const questionNumber = index + 1; // Question number in the test (1-42)
+
+// Try multiple ways to find the user's answer
+let userAnswer = null;
+if (testResults.user_answers) {
+    // Try by question ID first
+    userAnswer = testResults.user_answers[questionId];
+    
+    // If not found, try by question number
+    if (userAnswer === null || userAnswer === undefined) {
+        userAnswer = testResults.user_answers[questionNumber];
+    }
+    
+    // If still not found, try string versions
+    if (userAnswer === null || userAnswer === undefined) {
+        userAnswer = testResults.user_answers[String(questionId)] || testResults.user_answers[String(questionNumber)];
+    }
+}
+
+console.log(`Q${questionNumber} (ID: ${questionId}): User answered: ${userAnswer}, Correct: ${question.correct_answer}`);
             const correctAnswer = question.correct_answer || 'A';
             
             // Convert answers to letters for comparison
@@ -1824,6 +1843,7 @@ function generateAnswerChoicesHTML(options, userAnswer, correctAnswer, wasAnswer
     </script>
 </body>
 </html>
+
 
 
 
