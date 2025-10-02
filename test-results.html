@@ -1188,7 +1188,9 @@
                 
                 testResults = JSON.parse(resultsData);
                 console.log('Test results:', testResults);
-                
+                console.log('User answers object:', testResults.user_answers);
+console.log('User answers keys:', testResults.user_answers ? Object.keys(testResults.user_answers) : 'No user_answers');
+console.log('First few entries:', testResults.user_answers ? Object.entries(testResults.user_answers).slice(0, 5) : 'None');
                 await fetchQuestionDetails();
                 displayResults();
                 
@@ -1843,6 +1845,7 @@ function generateAnswerChoicesHTML(options, userAnswer, correctAnswer, wasAnswer
     </script>
 </body>
 </html>
+
 
 
 
