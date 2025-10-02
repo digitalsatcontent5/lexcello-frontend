@@ -1481,23 +1481,32 @@ if (hasCompleted) {
             const container = document.getElementById('performanceChartContainer');
             
             // Group attempts by test_id and get best score for each
-            const testScores = {};
-            userTestAttempts.forEach(attempt => {
-                // FIXED: Ensure score is properly converted to number
-                let score = attempt.score;
-                if (typeof score === 'string') {
-                    score = score.replace('%', '');
-                    score = parseFloat(score);
-                } else {
-                    score = Number(score);
-                }
-                if (isNaN(score)) score = 0;
-                
-                if (!testScores[attempt.test_id] || testScores[attempt.test_id] < score) {
-                    testScores[attempt.test_id] = score;
-                }
-            });
-
+const testScores = {};
+userTestAttempts.forEach(attempt => {
+    // FIXED: Calculate score from correct_answers if score is undefined
+    let score = attempt.score;
+    
+    if (score === undefined || score === null || isNaN(score)) {
+        if (attempt.correct_answers !== undefined && attempt.total_questions > 0) {
+            score = Math.round((attempt.correct_answers / attempt.total_questions) * 100);
+        } else {
+            score = 0;
+        }
+    } else {
+        if (typeof score === 'string') {
+            score = score.replace('%', '');
+            score = parseFloat(score);
+        } else {
+            score = Number(score);
+        }
+    }
+    
+    if (isNaN(score)) score = 0;
+    
+    if (!testScores[attempt.test_id] || testScores[attempt.test_id] < score) {
+        testScores[attempt.test_id] = score;
+    }
+});
             const scores = Object.values(testScores);
             const testNumbers = Object.keys(testScores).sort((a, b) => a - b);
 
@@ -1939,6 +1948,7 @@ function startTest(testNumber) {
     </script>
 </body>
 </html>
+
 
 
 
