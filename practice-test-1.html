@@ -1332,13 +1332,14 @@ window.location.href = `essay-section.html?test=${TEST_ID}`;
         }
 
         // Prevent accidental navigation
-        window.addEventListener('beforeunload', function(e) {
-            if (timeLeft > 0 && questions.length > 0) {
-                e.preventDefault();
-                e.returnValue = 'Are you sure you want to leave? Your test progress will be lost.';
-                return e.returnValue;
-            }
-        });
+window.addEventListener('beforeunload', function(e) {
+    // Don't show warning if test is being submitted (timer cleared)
+    if (timeLeft > 0 && questions.length > 0 && timerInterval !== null) {
+        e.preventDefault();
+        e.returnValue = 'Are you sure you want to leave? Your test progress will be lost.';
+        return e.returnValue;
+    }
+});
 
         // Keyboard shortcuts
         document.addEventListener('keydown', function(e) {
@@ -1365,6 +1366,7 @@ window.location.href = `essay-section.html?test=${TEST_ID}`;
     </script>
 </body>
 </html>
+
 
 
 
