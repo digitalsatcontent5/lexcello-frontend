@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Section B: Essay - Lexcello LNAT Practice</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #1a365d;
+            --secondary-color: #2b6cb0;
+            --accent-gold: #d69e2e;
+            --success-color: #48bb78;
+            --warning-color: #ed8936;
+            --danger-color: #e53e3e;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f7fafc;
+            padding-top: 80px;
+        }
+        
+        .navbar {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 1rem 0;
+        }
+        
+        .navbar-brand {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--primary-color) !important;
+        }
+        
+        .section-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 40px 0;
+            margin-bottom: 30px;
+        }
+        
+        .section-header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .timer-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: rgba(255,255,255,0.15);
+            padding: 15px 25px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .timer {
+            font-size: 2rem;
+            font-weight: 800;
+            color: white;
+        }
+        
+        .timer.warning {
+            color: var(--warning-color);
+        }
+        
+        .timer.danger {
+            color: var(--danger-color);
+            animation: pulse 1s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+        
+        .prompt-selection {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+        }
+        
+        .prompt-card {
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .prompt-card:hover {
+            border-color: var(--secondary-color);
+            background: #f0f8ff;
+            transform: translateY(-2px);
+        }
+        
+        .prompt-card.selected {
+            border-color: var(--secondary-color);
+            background: #e6f3ff;
+            border-width: 3px;
+        }
+        
+        .prompt-number {
+            display: inline-block;
+            background: var(--secondary-color);
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 35px;
+            font-weight: 700;
+            margin-right: 10px;
+        }
+        
+        .prompt-card.selected .prompt-number {
+            background: var(--success-color);
+        }
+        
+        .essay-editor {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+        }
+        
+        .selected-topic-display {
+            background: linear-gradient(135deg, var(--accent-gold), #f7c41f);
+            color: var(--primary-color);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        
+        #essayTextarea {
+            width: 100%;
+            min-height: 500px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 20px;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            font-family: 'Georgia', serif;
+            resize: vertical;
+        }
+        
+        #essayTextarea:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+        }
+        
+        .editor-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 2px solid #e2e8f0;
+            margin-bottom: 20px;
+        }
+        
+        .word-counter {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+        
+        .counter-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .counter-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+        
+        .counter-value.target {
+            color: var(--success-color);
+        }
+        
+        .counter-value.warning {
+            color: var(--warning-color);
+        }
+        
+        .counter-label {
+            font-size: 0.85rem;
+            color: #718096;
+        }
+        
+        .progress-bar-word {
+            width: 200px;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .progress-fill-word {
+            height: 100%;
+            background: linear-gradient(90deg, var(--secondary-color), var(--success-color));
+            transition: width 0.3s ease;
+        }
+        
+        .autosave-status {
+            font-size: 0.9rem;
+            color: #718096;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .autosave-status.saved {
+            color: var(--success-color);
+        }
+        
+        .btn-submit {
+            background: var(--success-color);
+            color: white;
+            padding: 15px 40px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            border: none;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-submit:hover {
+            background: #38a169;
+            transform: translateY(-2px);
+        }
+        
+        .btn-submit:disabled {
+            background: #a0aec0;
+            cursor: not-allowed;
+        }
+        
+        .instructions {
+            background: #fff8dc;
+            border-left: 4px solid var(--accent-gold);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .instructions h5 {
+            color: var(--primary-color);
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .instructions ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+        
+        @media (max-width: 768px) {
+            .section-header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .timer {
+                font-size: 1.5rem;
+            }
+            
+            #essayTextarea {
+                min-height: 400px;
+            }
+            
+            .word-counter {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">Lexcello</a>
+            <div class="ms-auto">
+                <span class="text-muted">Section B: Essay</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Section Header -->
+    <section class="section-header">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1><i class="fas fa-pencil-alt me-2"></i>Section B: Essay Writing</h1>
+                    <p class="mb-0">Choose one topic and write a well-reasoned argumentative essay</p>
+                </div>
+                <div class="col-md-4 text-end">
+                    <div class="timer-container">
+                        <i class="fas fa-clock fa-2x"></i>
+                        <div>
+                            <div class="timer" id="timer">40:00</div>
+                            <div style="font-size: 0.9rem; opacity: 0.9;">Remaining</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Loading State -->
+        <div id="loadingState" class="loading">
+            <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <div class="mt-3 h5">Loading essay topics...</div>
+        </div>
+
+        <!-- Instructions -->
+        <div id="instructionsSection" class="instructions hidden">
+            <h5><i class="fas fa-info-circle me-2"></i>Essay Writing Instructions</h5>
+            <ul>
+                <li>Select ONE of the three topics below</li>
+                <li>You have 40 minutes to complete your essay</li>
+                <li>Aim for 500-750 words (recommended length)</li>
+                <li>Present a clear argument with supporting evidence</li>
+                <li>Consider and address counterarguments</li>
+                <li>Your essay is auto-saved every 30 seconds</li>
+            </ul>
+        </div>
+
+        <!-- Prompt Selection -->
+        <div id="promptSelection" class="prompt-selection hidden">
+            <h3 class="mb-4">Select Your Essay Topic</h3>
+            <div id="promptsContainer">
+                <!-- Prompts will be loaded here -->
+            </div>
+        </div>
+
+        <!-- Essay Editor -->
+        <div id="essayEditor" class="essay-editor hidden">
+            <div class="selected-topic-display">
+                <i class="fas fa-bookmark me-2"></i>
+                <strong>Selected Topic:</strong> <span id="selectedTopicText"></span>
+            </div>
+
+            <div class="editor-toolbar">
+                <div class="word-counter">
+                    <div class="counter-item">
+                        <div class="counter-value" id="wordCount">0</div>
+                        <div class="counter-label">Words</div>
+                    </div>
+                    <div class="progress-bar-word">
+                        <div class="progress-fill-word" id="wordProgress" style="width: 0%"></div>
+                    </div>
+                    <div class="counter-item">
+                        <div class="counter-value target">500-750</div>
+                        <div class="counter-label">Target</div>
+                    </div>
+                </div>
+                
+                <div class="autosave-status" id="autosaveStatus">
+                    <i class="fas fa-save"></i>
+                    <span>Not saved</span>
+                </div>
+            </div>
+
+            <textarea id="essayTextarea" placeholder="Begin writing your essay here. Take a clear stance and support your argument with reasoning and examples..."></textarea>
+
+            <div class="text-center mt-4">
+                <button class="btn btn-submit" id="submitBtn" disabled>
+                    <i class="fas fa-paper-plane me-2"></i>Submit Essay
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Configuration
+        const API_BASE_URL = 'https://lexcello-backend.onrender.com/api';
+        const ESSAY_TIME_LIMIT = 40 * 60; // 40 minutes in seconds
+        const AUTOSAVE_INTERVAL = 30000; // 30 seconds
+        const MIN_WORDS = 500;
+        const MAX_WORDS = 750;
+        
+        let testId = null;
+        let selectedPrompt = null;
+        let timeRemaining = ESSAY_TIME_LIMIT;
+        let timerInterval = null;
+        let autosaveInterval = null;
+        let essayPrompts = [];
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Get test ID from URL or sessionStorage
+            const urlParams = new URLSearchParams(window.location.search);
+            testId = urlParams.get('test') || sessionStorage.getItem('currentTestId') || 1;
+            
+            // Check authentication
+            const token = localStorage.getItem('authToken');
+            if (!token) {
+                alert('Please sign in to continue');
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            // Load essay prompts
+            await loadEssayPrompts();
+            
+            // Start timer
+            startTimer();
+            
+            // Setup event listeners
+            setupEventListeners();
+        });
+
+        async function loadEssayPrompts() {
+            try {
+                const token = localStorage.getItem('authToken');
+                const response = await fetch(`${API_BASE_URL}/tests/${testId}/essay-prompts`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to load essay prompts');
+                }
+
+                const data = await response.json();
+                essayPrompts = data.prompts;
+                
+                renderPrompts();
+                
+                // Show UI
+                document.getElementById('loadingState').classList.add('hidden');
+                document.getElementById('instructionsSection').classList.remove('hidden');
+                document.getElementById('promptSelection').classList.remove('hidden');
+                
+            } catch (error) {
+                console.error('Error loading prompts:', error);
+                alert('Failed to load essay topics. Please try again.');
+                window.location.href = 'dashboard.html';
+            }
+        }
+
+        function renderPrompts() {
+            const container = document.getElementById('promptsContainer');
+            container.innerHTML = '';
+            
+            essayPrompts.forEach(prompt => {
+                const promptCard = document.createElement('div');
+                promptCard.className = 'prompt-card';
+                promptCard.innerHTML = `
+                    <span class="prompt-number">${prompt.promptNumber}</span>
+                    <strong>Topic ${prompt.promptNumber}:</strong> ${prompt.topic}
+                `;
+                promptCard.onclick = () => selectPrompt(prompt, promptCard);
+                container.appendChild(promptCard);
+            });
+        }
+
+        function selectPrompt(prompt, cardElement) {
+            // Remove previous selection
+            document.querySelectorAll('.prompt-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            // Add selection to clicked card
+            cardElement.classList.add('selected');
+            selectedPrompt = prompt;
+            
+            // Show editor
+            setTimeout(() => {
+                document.getElementById('promptSelection').classList.add('hidden');
+                document.getElementById('essayEditor').classList.remove('hidden');
+                document.getElementById('selectedTopicText').textContent = prompt.topic;
+                document.getElementById('essayTextarea').focus();
+                
+                // Start autosave
+                startAutosave();
+            }, 300);
+        }
+
+        function setupEventListeners() {
+            const textarea = document.getElementById('essayTextarea');
+            const submitBtn = document.getElementById('submitBtn');
+            
+            textarea.addEventListener('input', () => {
+                updateWordCount();
+                updateSubmitButton();
+            });
+            
+            submitBtn.addEventListener('click', submitEssay);
+        }
+
+        function updateWordCount() {
+            const textarea = document.getElementById('essayTextarea');
+            const text = textarea.value.trim();
+            const words = text ? text.split(/\s+/).length : 0;
+            
+            const wordCountEl = document.getElementById('wordCount');
+            wordCountEl.textContent = words;
+            
+            // Update color based on word count
+            if (words >= MIN_WORDS && words <= MAX_WORDS) {
+                wordCountEl.className = 'counter-value target';
+            } else if (words > MAX_WORDS) {
+                wordCountEl.className = 'counter-value warning';
+            } else {
+                wordCountEl.className = 'counter-value';
+            }
+            
+            // Update progress bar
+            const progress = Math.min((words / MAX_WORDS) * 100, 100);
+            document.getElementById('wordProgress').style.width = progress + '%';
+        }
+
+        function updateSubmitButton() {
+            const textarea = document.getElementById('essayTextarea');
+            const submitBtn = document.getElementById('submitBtn');
+            const text = textarea.value.trim();
+            const words = text ? text.split(/\s+/).length : 0;
+            
+            // Enable submit if there's content
+            submitBtn.disabled = words < 100; // Minimum 100 words to submit
+        }
+
+        function startTimer() {
+            const timerEl = document.getElementById('timer');
+            
+            timerInterval = setInterval(() => {
+                timeRemaining--;
+                
+                const minutes = Math.floor(timeRemaining / 60);
+                const seconds = timeRemaining % 60;
+                timerEl.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+                
+                // Warning states
+                if (timeRemaining <= 300) { // 5 minutes
+                    timerEl.classList.add('danger');
+                } else if (timeRemaining <= 600) { // 10 minutes
+                    timerEl.classList.add('warning');
+                }
+                
+                if (timeRemaining <= 0) {
+                    clearInterval(timerInterval);
+                    autoSubmitEssay();
+                }
+            }, 1000);
+        }
+
+        function startAutosave() {
+            autosaveInterval = setInterval(() => {
+                saveToLocalStorage();
+            }, AUTOSAVE_INTERVAL);
+        }
+
+        function saveToLocalStorage() {
+            const textarea = document.getElementById('essayTextarea');
+            const essayData = {
+                testId: testId,
+                promptId: selectedPrompt.id,
+                selectedPromptNumber: selectedPrompt.promptNumber,
+                topic: selectedPrompt.topic,
+                content: textarea.value,
+                savedAt: new Date().toISOString()
+            };
+            
+            localStorage.setItem(`essay_draft_test_${testId}`, JSON.stringify(essayData));
+            
+            // Update status
+            const statusEl = document.getElementById('autosaveStatus');
+            statusEl.classList.add('saved');
+            statusEl.innerHTML = '<i class="fas fa-check-circle"></i><span>Auto-saved</span>';
+            
+            setTimeout(() => {
+                statusEl.classList.remove('saved');
+                statusEl.innerHTML = '<i class="fas fa-save"></i><span>Saving...</span>';
+            }, 2000);
+        }
+
+        async function submitEssay() {
+            if (!confirm('Are you sure you want to submit your essay? You cannot edit it after submission.')) {
+                return;
+            }
+            
+            const textarea = document.getElementById('essayTextarea');
+            const text = textarea.value.trim();
+            const words = text ? text.split(/\s+/).length : 0;
+            
+            if (words < 100) {
+                alert('Please write at least 100 words before submitting.');
+                return;
+            }
+            
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Submitting...';
+            
+            try {
+                const token = localStorage.getItem('authToken');
+                const timeSpent = ESSAY_TIME_LIMIT - timeRemaining;
+                
+                const response = await fetch(`${API_BASE_URL}/tests/${testId}/essay-submit`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        promptId: selectedPrompt.id,
+                        selectedPromptNumber: selectedPrompt.promptNumber,
+                        essayContent: text,
+                        wordCount: words,
+                        timeSpentSeconds: timeSpent
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to submit essay');
+                }
+
+                // Clear autosave
+                clearInterval(autosaveInterval);
+                clearInterval(timerInterval);
+                localStorage.removeItem(`essay_draft_test_${testId}`);
+                
+                // Redirect to results
+                alert('Essay submitted successfully!');
+                window.location.href = `test-results.html?test=${testId}`;
+                
+            } catch (error) {
+                console.error('Error submitting essay:', error);
+                alert('Failed to submit essay. Please try again.');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-paper-plane me-2"></i>Submit Essay';
+            }
+        }
+
+        function autoSubmitEssay() {
+            alert('Time is up! Your essay will be submitted automatically.');
+            submitEssay();
+        }
+
+        // Clean up on page unload
+        window.addEventListener('beforeunload', function(e) {
+            saveToLocalStorage();
+        });
+    </script>
+</body>
+</html>
