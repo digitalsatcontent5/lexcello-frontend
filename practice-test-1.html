@@ -1128,7 +1128,26 @@ const response = await fetch(`${API_BASE_URL}/api/tests/${TEST_ID}/questions`, {
             
             // Update passage panel
             document.getElementById('passageTitle').textContent = question.passage.title;
-            document.getElementById('passageText').innerHTML = question.passage.text;
+            
+            // Format passage text with proper paragraph breaks
+            let formattedPassage = question.passage.text;
+            
+            // Convert \n to actual line breaks
+            formattedPassage = formattedPassage.replace(/\\n/g, '\n');
+            
+            // Split by double newlines (paragraph breaks) and wrap each paragraph in <p> tags
+            const paragraphs = formattedPassage.split(/\n\n+/).filter(p => p.trim());
+            if (paragraphs.length > 1) {
+                formattedPassage = paragraphs.map(p => `<p class="mb-3">${p.trim()}</p>`).join('');
+            } else {
+                // If no double newlines, try single newlines
+                const lines = formattedPassage.split(/\n/).filter(l => l.trim());
+                if (lines.length > 1) {
+                    formattedPassage = lines.map(l => `<p class="mb-3">${l.trim()}</p>`).join('');
+                }
+            }
+            
+            document.getElementById('passageText').innerHTML = formattedPassage;
             
             // Update question panel
             document.getElementById('questionText').textContent = question.question;
@@ -1370,6 +1389,7 @@ window.addEventListener('beforeunload', function(e) {
     </script>
 </body>
 </html>
+
 
 
 
