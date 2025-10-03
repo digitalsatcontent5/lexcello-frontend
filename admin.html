@@ -1200,23 +1200,26 @@ function requireAuth() {
         }
         
         // Display Questions with Delete Buttons
-        function displayQuestionsWithDelete(questions, testId) {
-            const questionsList = document.getElementById('questions-list');
-            
-            questionsList.innerHTML = questions.map(q => `
-                <div class="question-item">
-                    <div class="question-info">
-                        <div class="question-preview">Q${q.questionNumber || q.question_number}: ${q.questionText || q.question_text}</div>
-                        <div class="question-meta">
-                            Passage: ${q.passageTitle || q.passage_title || 'No title'} | 
-                            Correct Answer: ${q.correctAnswer || q.correct_answer} | 
-                            ID: ${q.id}
-                        </div>
-                    </div>
-                    <button onclick="deleteQuestion(${q.id})" class="btn btn-danger btn-sm">Delete</button>
+function displayQuestionsWithDelete(questions, testId) {
+    const questionsList = document.getElementById('questions-list');
+    
+    questionsList.innerHTML = questions.map(q => `
+        <div class="question-item">
+            <div class="question-info">
+                <div class="question-preview">Q${q.questionNumber || q.question_number || 'N/A'}: ${(q.questionText || q.question_text || '').substring(0, 100)}...</div>
+                <div class="question-meta">
+                    Passage: ${q.passageTitle || q.passage_title || 'No title'} | 
+                    Correct Answer: ${q.correctAnswer || q.correct_answer} | 
+                    ID: ${q.id}
                 </div>
-            `).join('');
-        }
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <button onclick="showEditQuestionModal(${q.id})" class="btn btn-warning btn-sm">Edit</button>
+                <button onclick="deleteQuestion(${q.id})" class="btn btn-danger btn-sm">Delete</button>
+            </div>
+        </div>
+    `).join('');
+}
         
         // Delete Single Question
         async function deleteQuestion(questionId) {
@@ -1276,7 +1279,144 @@ function requireAuth() {
                 showMessage(`Network error: ${error.message}`, 'error');
             }
         }
+        // Show Edit Question Modal
+        async function showEditQuestionModal(questionId) {
+            if (!requireAuth()) return;
+            
+            try {
+                // Fetch question data
+                const response = await fetch(`${API_BASE}/api/admin/questions/${questionId}`);
+                
+                if (!response.ok) {
+                    throw new Error('Failed to fetch question data');
+                }
+                
+                const data = await response.json();
+                const question = data.question;
+                
+                if (!question) {
+                    showMessage('Question not found', 'error');
+                    return;
+                }
+                
+                // Load tests into dropdown
+                const testResponse = await fetch(`${API_BASE}/api/tests`);
+                const testData = await testResponse.json();
+                
+                const editTestSelect = document.getElementById('editTestSelect');
+                if (testData.tests && testData.tests.length > 0) {
+                    editTestSelect.innerHTML = testData.tests.map(test => 
+                        `<option value="${test.id}">${test.title}</option>`
+                    ).join('');
+                }
+                
+                // Populate form with question data
+                document.getElementById('editQuestionId').value = question.id;
+                document.getElementById('editTestSelect').value = question.test_id;
+                document.getElementById('editPassageTitle').value = question.passage_title || '';
+                document.getElementById('editPassageText').value = question.passage_text || '';
+                document.getElementById('editQuestionText').value = question.question_text || '';
+                
+                // Handle options - could be JSON array or separate fields
+                let options = [];
+                if (typeof question.options === 'string') {
+                    try {
+                        options = JSON.parse(question.options);
+                    } catch (e) {
+                        options = [
+                            question.option_1 || '',
+                            question.option_2 || '',
+                            question.option_3 || '',
+                            question.option_4 || '',
+                            question.option_5 || ''
+                        ];
+                    }
+                } else if (Array.isArray(question.options)) {
+                    options = question.options;
+                } else {
+                    options = [
+                        question.option_1 || '',
+                        question.option_2 || '',
+                        question.option_3 || '',
+                        question.option_4 || '',
+                        question.option_5 || ''
+                    ];
+                }
+                
+                // Populate options
+                for (let i = 0; i < 5; i++) {
+                    document.getElementById(`edit-option-${i + 1}`).value = options[i] || '';
+                }
+                
+                // Set correct answer radio button
+                const correctAnswer = question.correct_answer || question.correctAnswer;
+                if (correctAnswer) {
+                    document.getElementById(`edit-correct-${correctAnswer}`).checked = true;
+                }
+                
+                document.getElementById('editExplanation').value = question.explanation || '';
+                
+                // Show modal
+                document.getElementById('editQuestionModal').style.display = 'block';
+                
+            } catch (error) {
+                console.error('Error loading question:', error);
+                showMessage('Error loading question: ' + error.message, 'error');
+            }
+        }
         
+        // Close Edit Question Modal
+        function closeEditQuestionModal() {
+            document.getElementById('editQuestionModal').style.display = 'none';
+            document.getElementById('editQuestionForm').reset();
+        }
+        
+        // Submit Edit Question
+        async function submitEditQuestion(event) {
+            event.preventDefault();
+            if (!requireAuth()) return;
+            
+            const questionId = document.getElementById('editQuestionId').value;
+            
+            const questionData = {
+                testId: parseInt(document.getElementById('editTestSelect').value),
+                passageTitle: document.getElementById('editPassageTitle').value.trim(),
+                passageText: document.getElementById('editPassageText').value.trim(),
+                questionText: document.getElementById('editQuestionText').value.trim(),
+                options: [
+                    document.getElementById('edit-option-1').value.trim(),
+                    document.getElementById('edit-option-2').value.trim(),
+                    document.getElementById('edit-option-3').value.trim(),
+                    document.getElementById('edit-option-4').value.trim(),
+                    document.getElementById('edit-option-5').value.trim()
+                ],
+                correctAnswer: parseInt(document.querySelector('input[name="edit-correct-answer"]:checked').value),
+                explanation: document.getElementById('editExplanation').value.trim()
+            };
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/admin/questions/${questionId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(questionData)
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    showMessage('Question updated successfully!', 'success');
+                    closeEditQuestionModal();
+                    loadQuestions(); // Refresh the question list
+                } else {
+                    showMessage(`Error: ${result.error}`, 'error');
+                }
+            } catch (error) {
+                console.error('Error updating question:', error);
+                showMessage(`Network error: ${error.message}`, 'error');
+            }
+        }
         // File Upload and Import Functionality
         const fileUpload = document.getElementById('file-upload');
         const fileInput = document.getElementById('file-input');
@@ -2243,6 +2383,7 @@ async function deleteUser(userId, userEmail) {
 </div>
 </body>
 </html>
+
 
 
 
