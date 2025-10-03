@@ -1318,30 +1318,39 @@ function displayQuestionsWithDelete(questions, testId) {
                 document.getElementById('editQuestionText').value = question.question_text || '';
                 
                 // Handle options - could be JSON array or separate fields
-                let options = [];
-                if (typeof question.options === 'string') {
-                    try {
-                        options = JSON.parse(question.options);
-                    } catch (e) {
-                        options = [
-                            question.option_1 || '',
-                            question.option_2 || '',
-                            question.option_3 || '',
-                            question.option_4 || '',
-                            question.option_5 || ''
-                        ];
-                    }
-                } else if (Array.isArray(question.options)) {
-                    options = question.options;
-                } else {
-                    options = [
-                        question.option_1 || '',
-                        question.option_2 || '',
-                        question.option_3 || '',
-                        question.option_4 || '',
-                        question.option_5 || ''
-                    ];
-                }
+let options = [];
+if (question.options_json) {
+    // Try options_json first (common column name)
+    try {
+        options = typeof question.options_json === 'string' 
+            ? JSON.parse(question.options_json) 
+            : question.options_json;
+    } catch (e) {
+        console.error('Error parsing options_json:', e);
+    }
+} else if (question.options) {
+    // Try options column
+    try {
+        options = typeof question.options === 'string' 
+            ? JSON.parse(question.options) 
+            : question.options;
+    } catch (e) {
+        console.error('Error parsing options:', e);
+    }
+}
+
+// Fallback to individual option columns if parsing failed
+if (!options || options.length !== 5) {
+    options = [
+        question.option_1 || '',
+        question.option_2 || '',
+        question.option_3 || '',
+        question.option_4 || '',
+        question.option_5 || ''
+    ];
+}
+
+console.log('Loaded options:', options); // Debug log
                 
                 // Populate options
                 for (let i = 0; i < 5; i++) {
@@ -2383,6 +2392,7 @@ async function deleteUser(userId, userEmail) {
 </div>
 </body>
 </html>
+
 
 
 
