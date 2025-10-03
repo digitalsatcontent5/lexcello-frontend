@@ -2165,8 +2165,85 @@ async function deleteUser(userId, userEmail) {
             console.log('%cThis is a browser feature intended for developers. Unauthorized access is prohibited.', 'color: red; font-size: 16px;');
         });
     </script>
+    <!-- Edit Question Modal -->
+<div id="editQuestionModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 10001; overflow-y: auto;">
+    <div style="background: white; max-width: 900px; margin: 30px auto; border-radius: 12px; padding: 40px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 2px solid #eee; padding-bottom: 15px;">
+            <h2 style="margin: 0; color: #2c3e50;">Edit Question</h2>
+            <button onclick="closeEditQuestionModal()" style="background: none; border: none; font-size: 30px; cursor: pointer; color: #666;">&times;</button>
+        </div>
+        
+        <form id="editQuestionForm" onsubmit="submitEditQuestion(event)">
+            <input type="hidden" id="editQuestionId">
+            
+            <div class="form-group">
+                <label for="editTestSelect">Test:</label>
+                <select id="editTestSelect" required>
+                    <option value="">Loading tests...</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="editPassageTitle">Passage Title:</label>
+                <input type="text" id="editPassageTitle" required placeholder="e.g., AI and Medical Ethics">
+            </div>
+            
+            <div class="form-group">
+                <label for="editPassageText">Passage Text:</label>
+                <textarea id="editPassageText" required placeholder="Enter the reading passage here..."></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="editQuestionText">Question:</label>
+                <textarea id="editQuestionText" required placeholder="Enter the question here..."></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label>Answer Options:</label>
+                <div class="options-container">
+                    <div class="option-input">
+                        <input type="radio" name="edit-correct-answer" value="1" id="edit-correct-1">
+                        <label for="edit-correct-1">A.</label>
+                        <input type="text" id="edit-option-1" placeholder="Option A" required>
+                    </div>
+                    <div class="option-input">
+                        <input type="radio" name="edit-correct-answer" value="2" id="edit-correct-2">
+                        <label for="edit-correct-2">B.</label>
+                        <input type="text" id="edit-option-2" placeholder="Option B" required>
+                    </div>
+                    <div class="option-input">
+                        <input type="radio" name="edit-correct-answer" value="3" id="edit-correct-3">
+                        <label for="edit-correct-3">C.</label>
+                        <input type="text" id="edit-option-3" placeholder="Option C" required>
+                    </div>
+                    <div class="option-input">
+                        <input type="radio" name="edit-correct-answer" value="4" id="edit-correct-4">
+                        <label for="edit-correct-4">D.</label>
+                        <input type="text" id="edit-option-4" placeholder="Option D" required>
+                    </div>
+                    <div class="option-input">
+                        <input type="radio" name="edit-correct-answer" value="5" id="edit-correct-5">
+                        <label for="edit-correct-5">E.</label>
+                        <input type="text" id="edit-option-5" placeholder="Option E" required>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="editExplanation">Explanation:</label>
+                <textarea id="editExplanation" required placeholder="Explain why the correct answer is right..."></textarea>
+            </div>
+            
+            <div style="margin-top: 25px; padding-top: 20px; border-top: 1px solid #eee; display: flex; gap: 10px; justify-content: flex-end;">
+                <button type="button" class="btn btn-secondary" onclick="closeEditQuestionModal()">Cancel</button>
+                <button type="submit" class="btn btn-warning">Update Question</button>
+            </div>
+        </form>
+    </div>
+</div>
 </body>
 </html>
+
 
 
 
