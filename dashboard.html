@@ -1887,18 +1887,34 @@ function startTest(testNumber) {
     }
 }
 
-       function viewTestResults(testNumber) {
-    const testAttempts = userTestAttempts.filter(a => a.test_id === testNumber);
-    if (testAttempts.length > 0) {
-        // Store the test results with explicit test ID
-        const latestAttempt = testAttempts[testAttempts.length - 1];
-        // Ensure test_id is set
-        latestAttempt.test_id = testNumber;
-        sessionStorage.setItem('testResults', JSON.stringify(latestAttempt));
-        // Pass test number in URL as backup
-        window.location.href = `test-results.html?test=${testNumber}`;
-    } else {
-        showNotification('No test results found for this test', 'error');
+       async function viewTestResults(testNumber) {
+    try {
+        const token = localStorage.getItem('authToken');
+        if (!token) {
+            showNotification('Please sign in to view results', 'error');
+            return;
+        }
+
+        // Fetch the full test attempt data from the backend
+        const response = await fetch(`${API_BASE_URL}/user/test-attempts/${testNumber}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (response.ok) {
+            const attemptData = await response.json();
+            // Store in sessionStorage with the correct key that test-results.html expects
+            sessionStorage.setItem('sectionAResults', JSON.stringify(attemptData));
+            // Navigate to results page
+            window.location.href = `test-results.html?test=${testNumber}`;
+        } else {
+            showNotification('Could not load test results', 'error');
+        }
+    } catch (error) {
+        console.error('Error loading test results:', error);
+        showNotification('Failed to load test results', 'error');
     }
 }
 
@@ -1958,6 +1974,7 @@ function startTest(testNumber) {
     </script>
 </body>
 </html>
+
 
 
 
