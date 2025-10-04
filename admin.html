@@ -2910,13 +2910,91 @@ function formatDate(dateString) {
 }
 
         // View detailed test attempt
-function viewTestAttempt(attemptId, userId) {
-    showMessage(`Viewing test attempt #${attemptId}. Full implementation coming soon!`, 'warning');
+async function viewTestAttempt(attemptId, userId) {
+    if (!requireAuth()) return;
     
-    // TODO: Implement detailed view showing:
-    // - Which questions were answered correctly/incorrectly
-    // - Time spent per question
-    // - Selected answers vs correct answers
+    try {
+        const response = await fetch(`${API_BASE}/api/admin/test-attempts/${attemptId}`);
+        const data = await response.json();
+        
+        if (!data.success) {
+            showMessage('Failed to load test attempt details', 'error');
+            return;
+        }
+        
+        const attempt = data.attempt;
+        
+        const modal = document.createElement('div');
+        modal.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 10003; overflow-y: auto; padding: 20px;';
+        
+        let answersHTML = '';
+        if (attempt.answers && attempt.answers.length > 0) {
+            answersHTML = attempt.answers.map((ans, idx) => {
+                const isCorrect = ans.is_correct;
+                const bgColor = isCorrect ? '#d4edda' : '#f8d7da';
+                const icon = isCorrect ? '✓' : '✗';
+                
+                return `
+                    <div style="background: ${bgColor}; padding: 15px; border-radius: 8px; margin-bottom: 10px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <strong style="font-size: 1.1em;">${icon} Question ${idx + 1}</strong>
+                            <span style="font-weight: 600;">${isCorrect ? 'Correct' : 'Incorrect'}</span>
+                        </div>
+                        <div style="margin-top: 10px; color: #2c3e50;">
+                            <strong>Question:</strong> ${ans.question_text ? ans.question_text.substring(0, 150) + '...' : 'N/A'}
+                        </div>
+                        <div style="margin-top: 8px;">
+                            <strong>Selected:</strong> Option ${ans.selected_answer} | 
+                            <strong>Correct:</strong> Option ${ans.correct_answer}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        } else {
+            answersHTML = '<p style="text-align: center; color: #666; padding: 20px;">No answer details available</p>';
+        }
+        
+        modal.innerHTML = `
+            <div style="background: white; max-width: 900px; margin: 0 auto; border-radius: 12px; padding: 30px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #eee; padding-bottom: 15px; margin-bottom: 25px;">
+                    <h2 style="margin: 0;">Test Attempt Details</h2>
+                    <button onclick="this.closest('[style*=fixed]').remove()" style="background: none; border: none; font-size: 30px; cursor: pointer; color: #666;">&times;</button>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 25px;">
+                    <div style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 15px; border-radius: 8px; text-align: center;">
+                        <div style="font-size: 1.8em; font-weight: bold;">${attempt.score}/${attempt.total_questions}</div>
+                        <div style="font-size: 0.9em; opacity: 0.9;">Score</div>
+                    </div>
+                    <div style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 15px; border-radius: 8px; text-align: center;">
+                        <div style="font-size: 1.8em; font-weight: bold;">${attempt.percentage}%</div>
+                        <div style="font-size: 0.9em; opacity: 0.9;">Percentage</div>
+                    </div>
+                    <div style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 15px; border-radius: 8px; text-align: center;">
+                        <div style="font-size: 1.8em; font-weight: bold;">${formatTime(attempt.time_taken)}</div>
+                        <div style="font-size: 0.9em; opacity: 0.9;">Time Spent</div>
+                    </div>
+                    <div style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 15px; border-radius: 8px; text-align: center;">
+                        <div style="font-size: 1.8em; font-weight: bold;">${attempt.test_title.split(' ').pop()}</div>
+                        <div style="font-size: 0.9em; opacity: 0.9;">Test Number</div>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 20px;">
+                    <h3 style="margin-bottom: 15px;">Question-by-Question Breakdown</h3>
+                    <div style="max-height: 500px; overflow-y: auto;">
+                        ${answersHTML}
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(modal);
+        
+    } catch (error) {
+        console.error('Error loading test attempt:', error);
+        showMessage('Failed to load test attempt details', 'error');
+    }
 }
     </script>
     <!-- Edit Question Modal -->
@@ -3071,6 +3149,7 @@ function viewTestAttempt(attemptId, userId) {
 </div>
 </body>
 </html>
+
 
 
 
