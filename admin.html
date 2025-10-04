@@ -498,6 +498,210 @@
             grid-template-columns: 1fr 1fr;
             gap: 20px;
         }
+        /* Student Progress Tracking Styles */
+.progress-section {
+    margin-bottom: 30px;
+}
+
+.filter-bar {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 25px;
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.filter-bar select,
+.filter-bar input {
+    padding: 10px;
+    border: 2px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.search-box {
+    flex: 1;
+    min-width: 200px;
+}
+
+.student-card {
+    background: white;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 15px;
+    transition: all 0.3s;
+    cursor: pointer;
+}
+
+.student-card:hover {
+    border-color: #3498db;
+    box-shadow: 0 5px 15px rgba(52, 152, 219, 0.2);
+    transform: translateY(-2px);
+}
+
+.student-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.student-name {
+    font-size: 1.2em;
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.student-email {
+    font-size: 0.9em;
+    color: #666;
+    margin-top: 3px;
+}
+
+.student-metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.metric-box {
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    padding: 12px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.metric-value {
+    font-size: 1.8em;
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+.metric-label {
+    font-size: 0.85em;
+    color: #666;
+    margin-top: 5px;
+}
+
+.progress-bar-container {
+    background: #e9ecef;
+    border-radius: 20px;
+    height: 10px;
+    overflow: hidden;
+    margin-top: 8px;
+}
+
+.progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #667eea, #764ba2);
+    border-radius: 20px;
+    transition: width 0.5s ease;
+}
+
+.score-badge {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.9em;
+}
+
+.score-excellent {
+    background: #d4edda;
+    color: #155724;
+}
+
+.score-good {
+    background: #d1ecf1;
+    color: #0c5460;
+}
+
+.score-average {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.score-poor {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.detail-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 10002;
+    overflow-y: auto;
+    padding: 20px;
+}
+
+.detail-content {
+    background: white;
+    max-width: 1200px;
+    margin: 0 auto;
+    border-radius: 12px;
+    padding: 30px;
+}
+
+.detail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 20px;
+    margin-bottom: 25px;
+}
+
+.test-history-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.test-history-table th,
+.test-history-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+.test-history-table th {
+    background: #f8f9fa;
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.test-history-table tr:hover {
+    background: #f8f9fa;
+}
+
+.question-analysis {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 20px;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: #666;
+}
+
+.empty-state-icon {
+    font-size: 4em;
+    margin-bottom: 20px;
+    opacity: 0.3;
+}
     </style>
 </head>
 <body>
@@ -539,6 +743,7 @@
                     <button class="tab" onclick="showTab('import-questions')">Import Questions</button>
                     <button class="tab" onclick="showTab('article-management')">Article Management</button>
                     <button class="tab" onclick="showTab('user-management')">User Management</button>
+                    <button class="tab" onclick="showTab('student-progress')">Student Progress</button> <!-- ADD THIS -->
                     <button class="tab" onclick="showTab('dashboard')">Dashboard</button>
                 </div>
                 
@@ -958,7 +1163,67 @@
                         <button class="btn btn-primary" onclick="loadDashboard()">Refresh Stats</button>
                         <button class="btn btn-warning" onclick="exportQuestions()">Export All Questions</button>
                     </div>
-                </div>
+                 </div>
+                <!-- Student Progress Tab -->
+<div id="student-progress" class="tab-content">
+    <h2>Student Progress & Analytics</h2>
+    
+    <!-- Statistics Overview -->
+    <div class="stats-grid" style="margin-bottom: 30px;">
+        <div class="stat-card">
+            <div class="stat-number" id="total-students">-</div>
+            <div class="stat-label">Total Students</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number" id="active-students">-</div>
+            <div class="stat-label">Active This Week</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number" id="avg-student-score">-</div>
+            <div class="stat-label">Average Score</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number" id="total-test-attempts">-</div>
+            <div class="stat-label">Total Attempts</div>
+        </div>
+    </div>
+    
+    <!-- Filters -->
+    <div class="filter-bar">
+        <input type="text" id="student-search" class="search-box" placeholder="Search by name or email...">
+        <select id="subscription-filter">
+            <option value="">All Subscriptions</option>
+            <option value="premium">Premium</option>
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+            <option value="expired">Expired</option>
+        </select>
+        <select id="performance-filter">
+            <option value="">All Performance Levels</option>
+            <option value="excellent">Excellent (80%+)</option>
+            <option value="good">Good (60-79%)</option>
+            <option value="average">Average (40-59%)</option>
+            <option value="poor">Poor (<40%)</option>
+        </select>
+        <select id="sort-by">
+            <option value="tests_desc">Most Tests Taken</option>
+            <option value="score_desc">Highest Score</option>
+            <option value="score_asc">Lowest Score</option>
+            <option value="recent">Recently Active</option>
+        </select>
+        <button class="btn btn-primary" onclick="loadStudentProgress()">Refresh</button>
+        <button class="btn btn-success" onclick="exportStudentData()">Export CSV</button>
+    </div>
+    
+    <!-- Students List -->
+    <div id="students-progress-list">
+        <div class="empty-state">
+            <div class="empty-state-icon">📊</div>
+            <h3>No Student Data Yet</h3>
+            <p>Click "Refresh" to load student progress and test performance data</p>
+        </div>
+    </div>
+</div>
             </div>
         </div>
     </div>
@@ -2313,6 +2578,336 @@ async function deleteUser(userId, userEmail) {
             console.log('%cSTOP!', 'color: red; font-size: 50px; font-weight: bold;');
             console.log('%cThis is a browser feature intended for developers. Unauthorized access is prohibited.', 'color: red; font-size: 16px;');
         });
+        // ============= STUDENT PROGRESS FUNCTIONS =============
+
+let studentProgressData = [];
+let filteredStudents = [];
+
+// Load Student Progress Data
+async function loadStudentProgress() {
+    if (!requireAuth()) return;
+    
+    const listContainer = document.getElementById('students-progress-list');
+    listContainer.innerHTML = '<p style="padding: 40px; text-align: center; color: #666;">Loading student data...</p>';
+    
+    try {
+        const response = await fetch(`${API_BASE}/api/admin/student-analytics`);
+        const data = await response.json();
+        
+        if (data.success && data.students) {
+            studentProgressData = data.students;
+            filteredStudents = [...studentProgressData];
+            
+            updateProgressStats(studentProgressData);
+            displayStudentProgress(filteredStudents);
+        } else {
+            listContainer.innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-state-icon">⚠️</div>
+                    <h3>No Student Activity Found</h3>
+                    <p>There are no students with completed tests yet.</p>
+                </div>
+            `;
+        }
+    } catch (error) {
+        console.error('Error loading student progress:', error);
+        listContainer.innerHTML = `
+            <div class="empty-state">
+                <div class="empty-state-icon">❌</div>
+                <h3>Error Loading Data</h3>
+                <p style="color: #e74c3c;">${error.message}</p>
+                <button class="btn btn-primary" onclick="loadStudentProgress()" style="margin-top: 15px;">Retry</button>
+            </div>
+        `;
+    }
+}
+
+// Update Statistics
+function updateProgressStats(students) {
+    document.getElementById('total-students').textContent = students.length;
+    
+    const oneWeekAgo = new Date();
+    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+    
+    const activeThisWeek = students.filter(s => 
+        s.last_test_date && new Date(s.last_test_date) > oneWeekAgo
+    ).length;
+    document.getElementById('active-students').textContent = activeThisWeek;
+    
+    const avgScore = students.length > 0 
+        ? Math.round(students.reduce((sum, s) => sum + (s.average_score || 0), 0) / students.length)
+        : 0;
+    document.getElementById('avg-student-score').textContent = avgScore + '%';
+    
+    const totalAttempts = students.reduce((sum, s) => sum + (s.total_tests_taken || 0), 0);
+    document.getElementById('total-test-attempts').textContent = totalAttempts;
+}
+
+// Display Student Progress Cards
+function displayStudentProgress(students) {
+    const listContainer = document.getElementById('students-progress-list');
+    
+    if (students.length === 0) {
+        listContainer.innerHTML = `
+            <div class="empty-state">
+                <div class="empty-state-icon">🔍</div>
+                <h3>No Results Found</h3>
+                <p>Try adjusting your filters</p>
+            </div>
+        `;
+        return;
+    }
+    
+    listContainer.innerHTML = students.map(student => {
+        const scoreClass = getScoreClass(student.average_score);
+        const improvement = student.best_score - student.worst_score;
+        
+        return `
+            <div class="student-card" onclick="showStudentDetail(${student.id})">
+                <div class="student-header">
+                    <div>
+                        <div class="student-name">${student.name || 'Unknown Student'}</div>
+                        <div class="student-email">${student.email}</div>
+                    </div>
+                    <div>
+                        <span class="score-badge ${scoreClass}">
+                            ${student.average_score}% Avg
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="student-metrics">
+                    <div class="metric-box">
+                        <div class="metric-value">${student.total_tests_taken}</div>
+                        <div class="metric-label">Tests Taken</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-value">${student.best_score}%</div>
+                        <div class="metric-label">Best Score</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-value">${improvement}%</div>
+                        <div class="metric-label">Improvement</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-value">${formatTime(student.total_time_spent)}</div>
+                        <div class="metric-label">Study Time</div>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 15px;">
+                    <div style="display: flex; justify-content: space-between; font-size: 0.85em; color: #666; margin-bottom: 5px;">
+                        <span>Progress to 100%</span>
+                        <span>${student.average_score}%</span>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" style="width: ${student.average_score}%"></div>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 12px; font-size: 0.85em; color: #666;">
+                    Last active: ${formatDate(student.last_test_date)}
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+// Show Student Detail Modal
+async function showStudentDetail(userId) {
+    if (!requireAuth()) return;
+    
+    document.getElementById('studentDetailModal').style.display = 'block';
+    
+    document.getElementById('test-history-body').innerHTML = `
+        <tr><td colspan="6" style="text-align: center; padding: 30px;">Loading...</td></tr>
+    `;
+    
+    try {
+        const response = await fetch(`${API_BASE}/api/admin/student-analytics/${userId}`);
+        const data = await response.json();
+        
+        if (data.user && data.test_history) {
+            displayStudentDetailData(data);
+        }
+    } catch (error) {
+        console.error('Error loading student detail:', error);
+        showMessage('Error loading student details: ' + error.message, 'error');
+    }
+}
+
+// Display Student Detail Data
+function displayStudentDetailData(data) {
+    const { user, test_history, performance_summary } = data;
+    
+    document.getElementById('modal-student-name').textContent = user.name || 'Unknown Student';
+    document.getElementById('modal-student-email').textContent = user.email;
+    
+    document.getElementById('modal-tests-taken').textContent = test_history.length;
+    document.getElementById('modal-avg-score').textContent = 
+        test_history.length > 0 
+            ? Math.round(test_history.reduce((sum, t) => sum + t.percentage, 0) / test_history.length) + '%'
+            : '0%';
+    document.getElementById('modal-best-score').textContent = 
+        test_history.length > 0 
+            ? Math.max(...test_history.map(t => t.percentage)) + '%'
+            : '0%';
+    document.getElementById('modal-total-time').textContent = 
+        formatTime(test_history.reduce((sum, t) => sum + (t.time_spent || 0), 0));
+    
+    const historyBody = document.getElementById('test-history-body');
+    if (test_history.length === 0) {
+        historyBody.innerHTML = `
+            <tr><td colspan="6" style="text-align: center; padding: 30px; color: #666;">
+                No test history available
+            </td></tr>
+        `;
+    } else {
+        historyBody.innerHTML = test_history.map(test => {
+            const scoreClass = getScoreClass(test.percentage);
+            return `
+                <tr>
+                    <td><strong>${test.test_title}</strong></td>
+                    <td>${test.score}/${test.total_questions}</td>
+                    <td><span class="score-badge ${scoreClass}">${test.percentage}%</span></td>
+                    <td>${formatTime(test.time_spent)}</td>
+                    <td>${formatDate(test.submitted_at)}</td>
+                    <td><button class="btn btn-sm btn-primary" onclick="alert('Details for attempt ${test.id}')">View</button></td>
+                </tr>
+            `;
+        }).join('');
+    }
+    
+    if (performance_summary) {
+        const analysisDiv = document.getElementById('question-performance-data');
+        analysisDiv.innerHTML = `
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 15px;">
+                <div style="background: white; padding: 15px; border-radius: 8px; text-align: center;">
+                    <div style="font-size: 2em; font-weight: bold; color: #27ae60;">${performance_summary.total_correct}</div>
+                    <div style="color: #666; font-size: 0.9em;">Correct Answers</div>
+                </div>
+                <div style="background: white; padding: 15px; border-radius: 8px; text-align: center;">
+                    <div style="font-size: 2em; font-weight: bold; color: #3498db;">${performance_summary.total_questions_attempted}</div>
+                    <div style="color: #666; font-size: 0.9em;">Questions Attempted</div>
+                </div>
+                <div style="background: white; padding: 15px; border-radius: 8px; text-align: center;">
+                    <div style="font-size: 2em; font-weight: bold; color: #667eea;">${performance_summary.overall_accuracy}%</div>
+                    <div style="color: #666; font-size: 0.9em;">Overall Accuracy</div>
+                </div>
+            </div>
+        `;
+    }
+}
+
+// Close Student Detail Modal
+function closeStudentDetail() {
+    document.getElementById('studentDetailModal').style.display = 'none';
+}
+
+// Filter and Sort Functions
+document.getElementById('student-search')?.addEventListener('input', applyFilters);
+document.getElementById('subscription-filter')?.addEventListener('change', applyFilters);
+document.getElementById('performance-filter')?.addEventListener('change', applyFilters);
+document.getElementById('sort-by')?.addEventListener('change', applyFilters);
+
+function applyFilters() {
+    let filtered = [...studentProgressData];
+    
+    const searchTerm = document.getElementById('student-search').value.toLowerCase();
+    if (searchTerm) {
+        filtered = filtered.filter(s => 
+            (s.name?.toLowerCase() || '').includes(searchTerm) ||
+            (s.email?.toLowerCase() || '').includes(searchTerm)
+        );
+    }
+    
+    const subFilter = document.getElementById('subscription-filter').value;
+    if (subFilter) {
+        filtered = filtered.filter(s => s.subscription_status === subFilter);
+    }
+    
+    const perfFilter = document.getElementById('performance-filter').value;
+    if (perfFilter) {
+        filtered = filtered.filter(s => {
+            const score = s.average_score;
+            switch(perfFilter) {
+                case 'excellent': return score >= 80;
+                case 'good': return score >= 60 && score < 80;
+                case 'average': return score >= 40 && score < 60;
+                case 'poor': return score < 40;
+                default: return true;
+            }
+        });
+    }
+    
+    const sortBy = document.getElementById('sort-by').value;
+    switch(sortBy) {
+        case 'tests_desc':
+            filtered.sort((a, b) => b.total_tests_taken - a.total_tests_taken);
+            break;
+        case 'score_desc':
+            filtered.sort((a, b) => b.average_score - a.average_score);
+            break;
+        case 'score_asc':
+            filtered.sort((a, b) => a.average_score - b.average_score);
+            break;
+        case 'recent':
+            filtered.sort((a, b) => new Date(b.last_test_date) - new Date(a.last_test_date));
+            break;
+    }
+    
+    filteredStudents = filtered;
+    displayStudentProgress(filteredStudents);
+}
+
+// Export Student Data to CSV
+function exportStudentData() {
+    if (!requireAuth()) return;
+    
+    if (filteredStudents.length === 0) {
+        alert('No student data to export');
+        return;
+    }
+    
+    let csv = 'Name,Email,Tests Taken,Average Score,Best Score,Worst Score,Total Study Time,Subscription,Last Active\n';
+    
+    filteredStudents.forEach(student => {
+        csv += `"${student.name}","${student.email}",${student.total_tests_taken},${student.average_score}%,${student.best_score}%,${student.worst_score}%,${formatTime(student.total_time_spent)},"${student.subscription_status}","${formatDate(student.last_test_date)}"\n`;
+    });
+    
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `student-progress-${new Date().toISOString().split('T')[0]}.csv`;
+    a.click();
+}
+
+// Utility Functions for Student Progress
+function getScoreClass(score) {
+    if (score >= 80) return 'score-excellent';
+    if (score >= 60) return 'score-good';
+    if (score >= 40) return 'score-average';
+    return 'score-poor';
+}
+
+function formatTime(seconds) {
+    if (!seconds) return '0m';
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    if (hours > 0) return `${hours}h ${minutes}m`;
+    return `${minutes}m`;
+}
+
+function formatDate(dateString) {
+    if (!dateString) return 'Never';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', { 
+        year: 'numeric', 
+        month: 'short', 
+        day: 'numeric' 
+    });
+}
     </script>
     <!-- Edit Question Modal -->
 <div id="editQuestionModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 10001; overflow-y: auto;">
@@ -2390,8 +2985,83 @@ async function deleteUser(userId, userEmail) {
         </form>
     </div>
 </div>
+    <!-- Student Detail Modal -->
+<div id="studentDetailModal" class="detail-modal">
+    <div class="detail-content">
+        <div class="detail-header">
+            <div>
+                <h2 id="modal-student-name">Student Details</h2>
+                <p id="modal-student-email" style="color: #666; margin-top: 5px;"></p>
+            </div>
+            <button onclick="closeStudentDetail()" style="background: none; border: none; font-size: 30px; cursor: pointer; color: #666;">&times;</button>
+        </div>
+        
+        <!-- Student Summary -->
+        <div class="stats-grid" style="margin-bottom: 25px;">
+            <div class="stat-card">
+                <div class="stat-number" id="modal-tests-taken">-</div>
+                <div class="stat-label">Tests Taken</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="modal-avg-score">-</div>
+                <div class="stat-label">Average Score</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="modal-best-score">-</div>
+                <div class="stat-label">Best Score</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="modal-total-time">-</div>
+                <div class="stat-label">Total Study Time</div>
+            </div>
+        </div>
+        
+        <!-- Performance Chart Placeholder -->
+        <div class="chart-container">
+            <h3>Performance Trend</h3>
+            <div id="performance-chart" style="height: 200px; display: flex; align-items: center; justify-content: center; color: #666;">
+                Performance visualization will be displayed here
+            </div>
+        </div>
+        
+        <!-- Test History -->
+        <div style="margin-top: 30px;">
+            <h3>Test History</h3>
+            <table class="test-history-table">
+                <thead>
+                    <tr>
+                        <th>Test</th>
+                        <th>Score</th>
+                        <th>Percentage</th>
+                        <th>Time Spent</th>
+                        <th>Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="test-history-body">
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding: 30px; color: #666;">
+                            Loading test history...
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Question-Level Analysis -->
+        <div class="question-analysis" id="question-analysis">
+            <h3>Question-Level Performance</h3>
+            <div id="question-performance-data">
+                <p style="text-align: center; color: #666; padding: 20px;">
+                    Detailed question analysis will appear here
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>
+
 
 
 
