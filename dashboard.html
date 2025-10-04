@@ -1122,7 +1122,7 @@ async function checkUserSubscriptionStatus() {
                                 correct_answers: attempt.score,
                                 total_questions: attempt.totalQuestions,
                                 time_spent: attempt.timeSpent,
-                                completed_at: attempt.completedAt,
+                                completed_at: attempt.submittedAt,
                                 user_answers: {},
                                 flagged_questions: []
                             }));
@@ -1995,5 +1995,6 @@ function startTest(testNumber) {
     </script>
 </body>
 </html>
+
 
 
