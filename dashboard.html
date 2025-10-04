@@ -1853,16 +1853,37 @@ userTestAttempts.forEach(attempt => {
 
         // Utility functions
         function formatDate(dateString) {
-            const date = new Date(dateString);
-            const now = new Date();
-            const diffTime = Math.abs(now - date);
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-            
-            if (diffDays === 1) return 'Today';
-            if (diffDays === 2) return 'Yesterday';
-            if (diffDays <= 7) return `${diffDays} days ago`;
-            return date.toLocaleDateString();
+    // Handle null, undefined, or invalid dates
+    if (!dateString) return 'Recently';
+    
+    try {
+        const date = new Date(dateString);
+        
+        // Check if date is valid
+        if (isNaN(date.getTime())) {
+            return 'Recently';
         }
+        
+        const now = new Date();
+        const diffTime = Math.abs(now - date);
+        const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+        
+        if (diffDays === 0) return 'Today';
+        if (diffDays === 1) return 'Yesterday';
+        if (diffDays <= 7) return `${diffDays} days ago`;
+        if (diffDays <= 30) return `${Math.floor(diffDays / 7)} weeks ago`;
+        
+        // Format as readable date for older items
+        return date.toLocaleDateString('en-US', { 
+            month: 'short', 
+            day: 'numeric',
+            year: date.getFullYear() !== now.getFullYear() ? 'numeric' : undefined
+        });
+    } catch (error) {
+        console.error('Date formatting error:', error);
+        return 'Recently';
+    }
+}
         
         // Navigation functions
 function startTest(testNumber) {
@@ -1974,10 +1995,5 @@ function startTest(testNumber) {
     </script>
 </body>
 </html>
-
-
-
-
-
 
 
