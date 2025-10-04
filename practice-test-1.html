@@ -874,17 +874,17 @@
 
         // Initialize test when page loads
         document.addEventListener('DOMContentLoaded', function() {
-    // Protection for premium tests - redirect unauthenticated users immediately
-    if (TEST_ID > 1) {
-        const token = localStorage.getItem('authToken');
-        if (!token) {
-            window.location.href = 'pricing.html';
-            return;
-        }
-    }
-    
-    checkAccessOrStartTest();
-});
+            // Protection for premium tests - redirect unauthenticated users immediately
+            if (TEST_ID > 1) {
+                const token = localStorage.getItem('authToken');
+                if (!token) {
+                    window.location.href = 'pricing.html';
+                    return;
+                }
+            }
+            
+            checkAccessOrStartTest();
+        });
 
         // Check authentication and determine access level
         async function checkAccessOrStartTest() {
@@ -964,15 +964,15 @@
                 
                 // Fetch questions from API
                 const token = localStorage.getItem('authToken');
-const headers = { 'Content-Type': 'application/json' };
-if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
-}
+                const headers = { 'Content-Type': 'application/json' };
+                if (token) {
+                    headers['Authorization'] = `Bearer ${token}`;
+                }
 
-const response = await fetch(`${API_BASE_URL}/api/tests/${TEST_ID}/questions`, {
-    method: 'GET',
-    headers: headers
-});
+                const response = await fetch(`${API_BASE_URL}/api/tests/${TEST_ID}/questions`, {
+                    method: 'GET',
+                    headers: headers
+                });
                 
                 if (!response.ok) {
                     throw new Error(`Failed to fetch questions: ${response.status}`);
@@ -1282,87 +1282,102 @@ const response = await fetch(`${API_BASE_URL}/api/tests/${TEST_ID}/questions`, {
         }
 
         async function submitTest() {
-    try {
-        clearInterval(timerInterval);
-        
-        const modal = bootstrap.Modal.getInstance(document.getElementById('submitModal'));
-        if (modal) modal.hide();
-        
-        showLoading();
-        document.querySelector('#loadingScreen h4').textContent = 'Submitting Your Test...';
-        document.querySelector('#loadingScreen p').textContent = 'Calculating your results';
-        
-        // Convert letter answers to numbers for API submission
-        const answersArray = Object.entries(userAnswers).map(([questionId, letter]) => {
-            const letterToNumber = { 'A': 1, 'B': 2, 'C': 3, 'D': 4, 'E': 5 };
-            return {
-                questionId: parseInt(questionId),
-                selectedAnswer: letterToNumber[letter]
-            };
-        });
-        
-        const submissionData = { answers: answersArray };
-        
-        const response = await fetch(`${API_BASE_URL}/api/tests/${TEST_ID}/submit`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                ...(currentUser ? { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` } : {})
-            },
-            body: JSON.stringify(submissionData)
-        });
-        
-        if (!response.ok) {
-            throw new Error(`Submission failed: ${response.status}`);
+            try {
+                clearInterval(timerInterval);
+                
+                const modal = bootstrap.Modal.getInstance(document.getElementById('submitModal'));
+                if (modal) modal.hide();
+                
+                showLoading();
+                document.querySelector('#loadingScreen h4').textContent = 'Submitting Your Test...';
+                document.querySelector('#loadingScreen p').textContent = 'Calculating your results';
+                
+                // Calculate time spent FIRST (in seconds)
+                const totalTestTime = testMode === 'guest' ? 20 * 60 : 95 * 60;
+                const timeSpent = totalTestTime - timeLeft;
+                
+                console.log('Time tracking:', {
+                    totalTestTime,
+                    timeLeft,
+                    timeSpent,
+                    minutes: Math.floor(timeSpent / 60)
+                });
+                
+                // Convert letter answers to numbers for API submission
+                const answersArray = Object.entries(userAnswers).map(([questionId, letter]) => {
+                    const letterToNumber = { 'A': 1, 'B': 2, 'C': 3, 'D': 4, 'E': 5 };
+                    return {
+                        questionId: parseInt(questionId),
+                        selectedAnswer: letterToNumber[letter]
+                    };
+                });
+                
+                const submissionData = {
+                    answers: answersArray,
+                    timeSpent: timeSpent,
+                    flaggedQuestions: Array.from(flaggedQuestions)
+                };
+                
+                console.log('Submitting data:', submissionData);
+                
+                const response = await fetch(`${API_BASE_URL}/api/tests/${TEST_ID}/submit`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        ...(currentUser ? { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` } : {})
+                    },
+                    body: JSON.stringify(submissionData)
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`Submission failed: ${response.status}`);
+                }
+                
+                const results = await response.json();
+
+                // Save Section A results to sessionStorage
+                sessionStorage.setItem('sectionAResults', JSON.stringify({
+                    testId: TEST_ID,
+                    score: results.score,
+                    totalQuestions: questions.length,
+                    percentage: results.percentage,
+                    timeSpent: timeSpent,
+                    results: results.results,
+                    userAnswers: userAnswers,
+                    flaggedQuestions: Array.from(flaggedQuestions),
+                    isGuestMode: testMode === 'guest',
+                    testMode: testMode
+                }));
+
+                // Redirect to Essay Section B
+                alert(`Section A Complete! Score: ${results.percentage}%\n\nNow proceeding to Section B: Essay Writing`);
+                window.location.href = `essay-section.html?test=${TEST_ID}`;
+                
+            } catch (error) {
+                console.error('Error submitting test:', error);
+                hideLoading();
+                alert('There was an error submitting your test. Please check your connection and try again.');
+                
+                if (timeLeft > 0) {
+                    startTimer();
+                }
+            }
         }
-        
-        const results = await response.json();
 
-const totalTestTime = testMode === 'guest' ? 20 * 60 : 95 * 60;
-const timeSpent = totalTestTime - timeLeft;
-
-// Save Section A results to sessionStorage
-sessionStorage.setItem('sectionAResults', JSON.stringify({
-    testId: TEST_ID,
-    score: results.score,
-    totalQuestions: questions.length,
-    percentage: results.percentage,
-    timeSpent: timeSpent,
-    results: results.results,
-    userAnswers: userAnswers,
-    flaggedQuestions: Array.from(flaggedQuestions),
-    isGuestMode: testMode === 'guest',
-    testMode: testMode
-}));
-
-// Redirect to Essay Section B
-alert(`Section A Complete! Score: ${results.percentage}%\n\nNow proceeding to Section B: Essay Writing`);
-window.location.href = `essay-section.html?test=${TEST_ID}`;
-        
-    } catch (error) {
-        console.error('Error submitting test:', error);
-        hideLoading();
-        alert('There was an error submitting your test. Please check your connection and try again.');
-        
-        if (timeLeft > 0) {
-            startTimer();
-        }
-    }
-}
         function autoSubmitTest() {
             alert('Time is up! Your test will be automatically submitted.');
             submitTest();
         }
 
         // Prevent accidental navigation
-window.addEventListener('beforeunload', function(e) {
-    // Don't show warning if test is being submitted (timer cleared)
-    if (timeLeft > 0 && questions.length > 0 && timerInterval !== null) {
-        e.preventDefault();
-        e.returnValue = 'Are you sure you want to leave? Your test progress will be lost.';
-        return e.returnValue;
-    }
-});
+        window.addEventListener('beforeunload', function(e) {
+            // Don't show warning if test is being submitted (timer cleared)
+            if (timeLeft > 0 && questions.length > 0 && timerInterval !== null) {
+                e.preventDefault();
+                e.returnValue = 'Are you sure you want to leave? Your test progress will be lost.';
+                return e.returnValue;
+            }
+        });
 
         // Keyboard shortcuts
         document.addEventListener('keydown', function(e) {
@@ -1389,11 +1404,3 @@ window.addEventListener('beforeunload', function(e) {
     </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
