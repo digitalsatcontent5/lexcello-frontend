@@ -317,16 +317,40 @@
         
         // Load dashboard data
         // Load dashboard data
+        // Load dashboard data
         async function loadDashboard() {
             try {
                 // Load teacher profile
                 const profileRes = await fetch(`${API_BASE_URL}/api/teacher/profile`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
+                
+                if (!profileRes.ok) {
+                    throw new Error('Failed to load profile');
+                }
+                
                 const profileData = await profileRes.json();
                 
                 document.getElementById('teacherInfo').textContent = 
                     `${profileData.firstName} ${profileData.lastName} - ${profileData.organization}`;
+                
+                // Check if teacher has seats
+                const maxStudents = profileData.maxStudents || 0;
+                const hasSeats = maxStudents > 0;
+                
+                // Show/hide sections based on seat availability
+                if (!hasSeats) {
+                    // No seats - show purchase banner, hide everything else
+                    document.getElementById('noSeatsWarning').style.display = 'block';
+                    document.getElementById('statsGrid').style.display = 'none';
+                    document.getElementById('studentsSection').style.display = 'none';
+                    return; // Don't load stats or students
+                }
+                
+                // Has seats - hide banner, load stats and students
+                document.getElementById('noSeatsWarning').style.display = 'none';
+                document.getElementById('statsGrid').style.display = 'grid';
+                document.getElementById('studentsSection').style.display = 'block';
                 
                 // Load dashboard stats
                 const statsRes = await fetch(`${API_BASE_URL}/api/teacher/dashboard/stats`, {
@@ -334,21 +358,10 @@
                 });
                 const statsData = await statsRes.json();
                 
-                // Check if teacher has seats
-                const maxStudents = profileData.maxStudents || 0;
-                const hasSeats = maxStudents > 0;
-                
-                // Show/hide sections based on seat availability
-                document.getElementById('noSeatsWarning').style.display = hasSeats ? 'none' : 'block';
-                document.getElementById('statsGrid').style.display = hasSeats ? 'grid' : 'none';
-                document.getElementById('studentsSection').style.display = hasSeats ? 'block' : 'none';
-                
-                if (hasSeats) {
-                    document.getElementById('totalStudents').textContent = statsData.stats.totalStudents;
-                    document.getElementById('maxStudents').textContent = maxStudents;
+                document.getElementById('totalStudents').textContent = statsData.stats.totalStudents;
+                document.getElementById('maxStudents').textContent = maxStudents;
                 document.getElementById('avgScore').textContent = statsData.stats.averageScore + '%';
-                    document.getElementById('totalAttempts').textContent = statsData.stats.totalAttempts;
-                }
+                document.getElementById('totalAttempts').textContent = statsData.stats.totalAttempts;
                 
                 // Load students
                 await loadStudents();
