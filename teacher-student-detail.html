@@ -489,10 +489,17 @@
 
     
     <script>
+        
         const API_BASE_URL = 'https://lexcello-backend.onrender.com';
         const token = localStorage.getItem('teacherToken');
         const urlParams = new URLSearchParams(window.location.search);
         const studentId = urlParams.get('id');
+        
+
+// Add these new variables
+let allQuestions = [];
+let answersMap = {};
+let currentAttempt = null;
         
         if (!token || !studentId) {
             window.location.href = 'teacher-dashboard.html';
@@ -571,67 +578,105 @@
             `;
         }
         
+        
         async function viewTestDetails(attemptId) {
-            try {
-                const response = await fetch(`${API_BASE_URL}/api/teacher/students/${studentId}/attempts/${attemptId}`, {
-                    headers: { 'Authorization': `Bearer ${token}` }
-                });
-                const data = await response.json();
-                
-                displayTestModal(data.attempt);
-                
-            } catch (error) {
-                console.error('Error loading test details:', error);
-                alert('Failed to load test details');
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/teacher/students/${studentId}/attempts/${attemptId}`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const data = await response.json();
+        
+        displayTestModal(data.attempt);
+        
+    } catch (error) {
+        console.error('Error loading test details:', error);
+        alert('Failed to load test details');
+    }
+}
+
+async function fetchAllQuestions(testId) {
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/tests/${testId}/questions`, {
+            headers: { 
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
             }
+        });
+        
+        if (response.ok) {
+            const data = await response.json();
+            allQuestions = data.questions || [];
+            console.log(`✓ Fetched ${allQuestions.length} questions`);
+        } else {
+            console.error('Failed to fetch questions:', response.status);
         }
+    } catch (error) {
+        console.error('Error fetching questions:', error);
+    }
+}
         function formatPassageText(text) {
     // Split by double line breaks for paragraphs
     const paragraphs = text.split('\n\n');
     return paragraphs.map(p => `<p style="margin-bottom: 15px;">${p.replace(/\n/g, '<br>')}</p>`).join('');
 }
-        function displayTestModal(attempt) {
-            document.getElementById('modalTestTitle').textContent = 
-                `${attempt.testTitle} - ${attempt.score}/${attempt.totalQuestions} (${attempt.percentage}%)`;
+        async function displayTestModal(attempt) {
+    currentAttempt = attempt;
+    
+    // Extract testId from attempt (adjust if your backend uses different field name)
+    const testId = attempt.testId || 1;
+    
+    // Fetch all questions for this test
+    await fetchAllQuestions(testId);
+    
+    // Build answers map
+    answersMap = {};
+    attempt.answers.forEach(answer => {
+        answersMap[answer.questionId] = answer;
+    });
+    
+    document.getElementById('modalTestTitle').textContent = 
+        `${attempt.testTitle} - ${attempt.score}/${attempt.totalQuestions} (${attempt.percentage}%)`;
+    
+    const modalContent = document.getElementById('modalContent');
+    
+    // Display only answered questions in the review
+    modalContent.innerHTML = attempt.answers.map((answer, index) => `
+        <div class="question-item ${answer.isCorrect ? 'correct' : 'incorrect'}">
+            <h4 style="margin-bottom: 15px;">Question ${index + 1} ${answer.isCorrect ? '✓' : '✗'}</h4>
             
-            const modalContent = document.getElementById('modalContent');
-            modalContent.innerHTML = attempt.answers.map((answer, index) => `
-                <div class="question-item ${answer.isCorrect ? 'correct' : 'incorrect'}">
-                    <h4 style="margin-bottom: 15px;">Question ${index + 1} ${answer.isCorrect ? '✓' : '✗'}</h4>
-                    
-                    <div class="passage-section">
-                        <div class="passage-title">${answer.passageTitle}</div>
-                        <div class="passage-text">${answer.passageText.split('\n\n').map(p => `<p style="margin-bottom: 20px;">${p.replace(/\n/g, '<br>')}</p>`).join('')}</div>
-                    </div>
-                    
-                    <div class="question-text">${answer.questionText}</div>
-                    
-                    <ul class="options-list">
-                        ${answer.options.map((opt, i) => {
-                            const optNum = i + 1;
-                            let className = 'option-item';
-                            if (optNum === answer.selectedAnswer && optNum === answer.correctAnswer) {
-                                className += ' correct selected';
-                            } else if (optNum === answer.selectedAnswer) {
-                                className += ' incorrect selected';
-                            } else if (optNum === answer.correctAnswer) {
-                                className += ' correct';
-                            }
-                            return `<li class="${className}">${String.fromCharCode(65 + i)}. ${opt}</li>`;
-                        }).join('')}
-                    </ul>
-                    
-                    <div class="explanation">
-                        <strong>Explanation:</strong><br>${answer.explanation}
-                    </div>
-                </div>
-            `).join('');
+            <div class="passage-section">
+                <div class="passage-title">${answer.passageTitle}</div>
+                <div class="passage-text">${answer.passageText.split('\n\n').map(p => `<p style="margin-bottom: 20px;">${p.replace(/\n/g, '<br>')}</p>`).join('')}</div>
+            </div>
             
-            document.getElementById('testDetailModal').style.display = 'block';
+            <div class="question-text">${answer.questionText}</div>
             
-            // Generate question navigation grid
-            generateTeacherQuestionGrid(attempt.answers);
-        }
+            <ul class="options-list">
+                ${answer.options.map((opt, i) => {
+                    const optNum = i + 1;
+                    let className = 'option-item';
+                    if (optNum === answer.selectedAnswer && optNum === answer.correctAnswer) {
+                        className += ' correct selected';
+                    } else if (optNum === answer.selectedAnswer) {
+                        className += ' incorrect selected';
+                    } else if (optNum === answer.correctAnswer) {
+                        className += ' correct';
+                    }
+                    return `<li class="${className}">${String.fromCharCode(65 + i)}. ${opt}</li>`;
+                }).join('')}
+            </ul>
+            
+            <div class="explanation">
+                <strong>Explanation:</strong><br>${answer.explanation}
+            </div>
+        </div>
+    `).join('');
+    
+    document.getElementById('testDetailModal').style.display = 'block';
+    
+    // Generate question navigation grid with ALL questions
+    generateTeacherQuestionGrid();
+}
         
         function closeModal() {
             document.getElementById('testDetailModal').style.display = 'none';
@@ -689,11 +734,11 @@
             }
         }
 
-        function generateTeacherQuestionGrid(answers) {
+        function generateTeacherQuestionGrid() {
     const grid = document.getElementById('teacherQuestionGrid');
     const floatingBtn = document.getElementById('floatingNavBtn');
     
-    if (!grid || !answers || answers.length === 0) {
+    if (!grid || allQuestions.length === 0) {
         floatingBtn.classList.remove('show');
         return;
     }
@@ -703,24 +748,16 @@
     
     grid.innerHTML = '';
     
-    // Build a map of answers by question ID
-    const answersMap = {};
-    answers.forEach(answer => {
-        answersMap[answer.questionId] = answer;
-    });
-    
-    // Assuming 42 questions total (adjust if needed)
-    const totalQuestions = 42;
-    
-    for (let i = 0; i < totalQuestions; i++) {
+    // Loop through ALL questions
+    allQuestions.forEach((question, index) => {
         const btn = document.createElement('button');
         btn.className = 'teacher-question-btn';
-        btn.textContent = i + 1;
+        btn.textContent = index + 1;
         
         // Check if this question was answered
-        const answer = answersMap[i + 1]; // Assuming questionId starts from 1
+        const answer = answersMap[question.id];
         
-        if (!answer || !answer.selectedAnswer) {
+        if (!answer || !answer.selectedAnswer || answer.selectedAnswer === null || answer.selectedAnswer === 0) {
             btn.classList.add('unanswered');
         } else if (answer.isCorrect) {
             btn.classList.add('correct');
@@ -733,14 +770,15 @@
             toggleTeacherNavModal();
             setTimeout(() => {
                 const questionItems = document.querySelectorAll('.question-item');
-                if (questionItems[i]) {
-                    questionItems[i].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                // Only scroll if the question was answered (exists in DOM)
+                if (answer && questionItems[currentAttempt.answers.indexOf(answer)]) {
+                    questionItems[currentAttempt.answers.indexOf(answer)].scrollIntoView({ behavior: 'smooth', block: 'center' });
                 }
             }, 300);
         };
         
         grid.appendChild(btn);
-    }
+    });
 }
     </script>
 </body>
