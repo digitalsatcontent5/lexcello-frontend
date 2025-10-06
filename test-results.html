@@ -1546,9 +1546,37 @@ ${essay.essayContent}
                 const userAnswer = userAnswersMap[questionId];
                 
                 if (!userAnswer) {
-                    console.log(`⚠ No answer found for question ${questionId}`);
-                    return;
-                }
+    console.log(`⚠ No answer found for question ${questionId} - marking as unanswered`);
+    
+    // Create unanswered entry
+    const wasFlagged = testResults.flaggedQuestions && 
+                     testResults.flaggedQuestions.includes(questionId);
+    
+    const filterClasses = ['unanswered'];
+    if (wasFlagged) filterClasses.push('flagged');
+    
+    reviewHTML += `
+        <div class="question-item" data-filter="${filterClasses.join(' ')}">
+            <div class="question-header">
+                <div class="question-number">
+                    Question ${index + 1}
+                    ${wasFlagged ? '<i class="fas fa-flag flag-indicator"></i>' : ''}
+                </div>
+                <div class="answer-status status-unanswered">Unanswered</div>
+            </div>
+            
+            <div class="question-text">
+                ${question.question_text}
+            </div>
+            
+            <div class="alert alert-warning mt-3">
+                <i class="fas fa-info-circle me-2"></i>
+                You did not answer this question.
+            </div>
+        </div>
+    `;
+    return;
+}
 
                 const correctAnswer = question.correct_answer;
                 const isCorrect = userAnswer.isCorrect;
@@ -1733,3 +1761,4 @@ ${essay.essayContent}
     </script>
 </body>
 </html>
+
