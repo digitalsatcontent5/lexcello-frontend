@@ -1165,6 +1165,34 @@
                         <button class="btn btn-warning" onclick="exportQuestions()">Export All Questions</button>
                     </div>
                  </div>
+                <!-- Teacher Management Tab -->
+                <div id="teacher-management" class="tab-content">
+                    <h2>Teacher Management</h2>
+                    
+                    <div class="stats-grid" style="margin-bottom: 30px;">
+                        <div class="stat-card">
+                            <div class="stat-number" id="total-teachers">-</div>
+                            <div class="stat-label">Total Teachers</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="active-teachers">-</div>
+                            <div class="stat-label">Active Teachers</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="total-students-managed">-</div>
+                            <div class="stat-label">Students Under Management</div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <button class="btn btn-success" onclick="showAddTeacherModal()">+ Create Teacher</button>
+                        <button class="btn btn-primary" onclick="loadTeachers()">Refresh Teachers</button>
+                    </div>
+                    
+                    <div id="teachers-list" class="question-list">
+                        <p style="padding: 20px; text-align: center; color: #666;">Click "Refresh Teachers" to load teacher accounts</p>
+                    </div>
+                </div>
                 <!-- Student Progress Tab -->
 <div id="student-progress" class="tab-content">
     <h2>Student Progress & Analytics</h2>
@@ -3218,6 +3246,7 @@ async function viewTestAttempt(attemptId, userId) {
 </div>
 </body>
 </html>
+
 
 
 
