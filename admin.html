@@ -3148,6 +3148,147 @@ async function viewTestAttempt(attemptId, userId) {
         showMessage('Failed to load test attempt details', 'error');
     }
 }
+        // ============= TEACHER MANAGEMENT FUNCTIONS =============
+
+function showAddTeacherModal() {
+    if (!requireAuth()) return;
+    document.getElementById('addTeacherModal').style.display = 'block';
+}
+
+function closeAddTeacherModal() {
+    document.getElementById('addTeacherModal').style.display = 'none';
+    document.getElementById('addTeacherForm').reset();
+}
+
+async function submitAddTeacher(event) {
+    event.preventDefault();
+    if (!requireAuth()) return;
+    
+    const teacherData = {
+        email: document.getElementById('newTeacherEmail').value.trim(),
+        password: document.getElementById('newTeacherPassword').value,
+        firstName: document.getElementById('newTeacherFirstName').value.trim(),
+        lastName: document.getElementById('newTeacherLastName').value.trim(),
+        organization: document.getElementById('newTeacherOrganization').value.trim(),
+        phone: document.getElementById('newTeacherPhone').value.trim() || null,
+        maxStudents: parseInt(document.getElementById('newTeacherMaxStudents').value) || 0
+    };
+    
+    try {
+        const response = await fetch(`${API_BASE}/api/admin/create-teacher`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(teacherData)
+        });
+        
+        const result = await response.json();
+        
+        if (response.ok || result.success) {
+            showMessage('Teacher created successfully!', 'success');
+            closeAddTeacherModal();
+            loadTeachers();
+        } else {
+            showMessage(`Error: ${result.error}`, 'error');
+        }
+    } catch (error) {
+        console.error('Error creating teacher:', error);
+        showMessage(`Network error: ${error.message}`, 'error');
+    }
+}
+
+async function loadTeachers() {
+    if (!requireAuth()) return;
+    
+    const teachersList = document.getElementById('teachers-list');
+    teachersList.innerHTML = '<p style="padding: 20px; text-align: center; color: #666;">Loading teachers...</p>';
+    
+    try {
+        const response = await fetch(`${API_BASE}/api/admin/teachers`);
+        const data = await response.json();
+        
+        if (data.teachers && data.teachers.length > 0) {
+            displayTeachers(data.teachers);
+            updateTeacherStats(data.teachers);
+        } else {
+            teachersList.innerHTML = '<p style="padding: 20px; text-align: center; color: #666;">No teachers found. Create your first teacher account!</p>';
+        }
+    } catch (error) {
+        console.error('Error loading teachers:', error);
+        teachersList.innerHTML = `<p style="padding: 20px; text-align: center; color: #e74c3c;">Error loading teachers: ${error.message}</p>`;
+    }
+}
+
+function displayTeachers(teachers) {
+    const teachersList = document.getElementById('teachers-list');
+    
+    teachersList.innerHTML = teachers.map(teacher => {
+        const statusClass = teacher.subscription_status === 'active' ? 'subscription-active' : 'subscription-inactive';
+        
+        return `
+            <div class="user-item">
+                <div class="user-info">
+                    <div class="user-email">${teacher.email}</div>
+                    <div class="user-details">
+                        Name: ${teacher.first_name} ${teacher.last_name} | 
+                        Organization: ${teacher.organization || 'N/A'} | 
+                        Max Students: ${teacher.max_students} | 
+                        Current Students: ${teacher.current_students || 0} |
+                        Created: ${new Date(teacher.created_at).toLocaleDateString()}
+                    </div>
+                </div>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <span class="subscription-badge ${statusClass}">
+                        ${teacher.subscription_status}
+                    </span>
+                    <button onclick="viewTeacherDetails(${teacher.id})" class="btn btn-primary btn-sm">View</button>
+                    <button onclick="deleteTeacher(${teacher.id}, '${teacher.email}')" class="btn btn-danger btn-sm">Delete</button>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+function updateTeacherStats(teachers) {
+    document.getElementById('total-teachers').textContent = teachers.length;
+    
+    const activeTeachers = teachers.filter(t => t.subscription_status === 'active').length;
+    document.getElementById('active-teachers').textContent = activeTeachers;
+    
+    const totalStudentsManaged = teachers.reduce((sum, t) => sum + (t.current_students || 0), 0);
+    document.getElementById('total-students-managed').textContent = totalStudentsManaged;
+}
+
+function viewTeacherDetails(teacherId) {
+    showMessage('Teacher details view coming soon!', 'warning');
+}
+
+async function deleteTeacher(teacherId, teacherEmail) {
+    if (!requireAuth()) return;
+    
+    if (!confirm(`Are you sure you want to delete teacher "${teacherEmail}"?\n\nThis will remove the teacher account but NOT delete their assigned students.`)) {
+        return;
+    }
+    
+    try {
+        const response = await fetch(`${API_BASE}/api/admin/teachers/${teacherId}`, {
+            method: 'DELETE'
+        });
+        
+        const result = await response.json();
+        
+        if (response.ok) {
+            showMessage('Teacher deleted successfully!', 'success');
+            loadTeachers();
+        } else {
+            showMessage(`Error: ${result.error}`, 'error');
+        }
+    } catch (error) {
+        console.error('Error deleting teacher:', error);
+        showMessage(`Network error: ${error.message}`, 'error');
+    }
+}
     </script>
     <!-- Edit Question Modal -->
 <div id="editQuestionModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 10001; overflow-y: auto;">
@@ -3301,6 +3442,7 @@ async function viewTestAttempt(attemptId, userId) {
 </div>
 </body>
 </html>
+
 
 
 
