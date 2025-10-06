@@ -395,6 +395,12 @@
             color: white;
             border-color: #e74c3c;
         }
+
+        .teacher-question-btn.unanswered {
+            background: #fff3cd;
+            color: #856404;
+            border-color: #ffc107;
+        }
     </style>
 </head>
 <body>
@@ -471,6 +477,8 @@
             <div style="display: flex; gap: 12px; margin-bottom: 15px; flex-wrap: wrap; justify-content: center;">
                 <span style="padding: 4px 8px; font-size: 0.8rem; background: #27ae60; color: white; border-radius: 4px;">Correct</span>
                 <span style="padding: 4px 8px; font-size: 0.8rem; background: #e74c3c; color: white; border-radius: 4px;">Incorrect</span>
+                <span style="padding: 4px 8px; font-size: 0.8rem; background: #fff3cd; color: #856404; border-radius: 4px;">Unanswered</span>
+
             </div>
             
             <div id="teacherQuestionGrid" style="display: grid; grid-template-columns: repeat(7, 50px); gap: 8px; justify-content: center;"></div>
@@ -696,8 +704,10 @@
                 btn.className = 'teacher-question-btn';
                 btn.textContent = index + 1;
                 
-                // Add status class
-                if (answer.isCorrect) {
+                // Add status class - check if question was answered
+                if (!answer.selectedAnswer || answer.selectedAnswer === null) {
+                    btn.classList.add('unanswered');
+                } else if (answer.isCorrect) {
                     btn.classList.add('correct');
                 } else {
                     btn.classList.add('incorrect');
@@ -705,7 +715,7 @@
                 
                 // Click to scroll to question
                 btn.onclick = () => {
-                    toggleTeacherNavModal(); // Close modal first
+                    toggleTeacherNavModal();
                     setTimeout(() => {
                         const questionItems = document.querySelectorAll('.question-item');
                         if (questionItems[index]) {
