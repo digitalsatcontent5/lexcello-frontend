@@ -262,15 +262,27 @@
         </div>
         
         <div class="dashboard-content">
+            <!-- No Seats Warning Banner -->
+            <div id="noSeatsWarning" style="display: none;">
+                <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 35px; border-radius: 15px; margin-bottom: 30px; text-align: center; box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);">
+                    <div style="font-size: 3.5em; margin-bottom: 15px;">🎓</div>
+                    <h2 style="margin: 0 0 15px 0; font-size: 28px; font-weight: 600;">Welcome to Your Teacher Portal</h2>
+                    <p style="margin: 0 0 25px 0; font-size: 18px; opacity: 0.95; line-height: 1.5;">You currently have <strong>0 student seats</strong> available.<br>Purchase seats to start adding students and tracking their progress.</p>
+                    <button onclick="window.location.href='teacher-purchase-seats.html'" style="background: white; color: #667eea; border: none; padding: 16px 45px; border-radius: 10px; font-size: 18px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.2); transition: all 0.3s ease;">
+                        🛒 Buy Student Seats
+                    </button>
+                </div>
+            </div>
+            
             <!-- Stats Cards -->
-            <div class="stats-grid">
+            <div class="stats-grid" id="statsGrid">
                 <div class="stat-card">
                     <div class="stat-number" id="totalStudents">-</div>
                     <div class="stat-label">Total Students</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-number" id="activeStudents">-</div>
-                    <div class="stat-label">Active This Week</div>
+                    <div class="stat-number" id="maxStudents">-</div>
+                    <div class="stat-label">Available Seats</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-number" id="avgScore">-</div>
@@ -291,6 +303,7 @@
             <div id="studentsContainer">
                 <div class="spinner"></div>
             </div>
+            </div>
         </div>
     </div>
 
@@ -302,6 +315,7 @@
             window.location.href = 'teacher-login.html';
         }
         
+        // Load dashboard data
         // Load dashboard data
         async function loadDashboard() {
             try {
@@ -320,10 +334,21 @@
                 });
                 const statsData = await statsRes.json();
                 
-                document.getElementById('totalStudents').textContent = statsData.stats.totalStudents;
-                document.getElementById('activeStudents').textContent = statsData.stats.activeStudents;
+                // Check if teacher has seats
+                const maxStudents = profileData.maxStudents || 0;
+                const hasSeats = maxStudents > 0;
+                
+                // Show/hide sections based on seat availability
+                document.getElementById('noSeatsWarning').style.display = hasSeats ? 'none' : 'block';
+                document.getElementById('statsGrid').style.display = hasSeats ? 'grid' : 'none';
+                document.getElementById('studentsSection').style.display = hasSeats ? 'block' : 'none';
+                
+                if (hasSeats) {
+                    document.getElementById('totalStudents').textContent = statsData.stats.totalStudents;
+                    document.getElementById('maxStudents').textContent = maxStudents;
                 document.getElementById('avgScore').textContent = statsData.stats.averageScore + '%';
-                document.getElementById('totalAttempts').textContent = statsData.stats.totalAttempts;
+                    document.getElementById('totalAttempts').textContent = statsData.stats.totalAttempts;
+                }
                 
                 // Load students
                 await loadStudents();
