@@ -1657,20 +1657,29 @@ ${essay.essayContent}
                 );
                 
                 reviewHTML += `
-                    <div class="question-item" data-filter="${filterClasses.join(' ')}">
-                        <div class="question-header">
-                            <div class="question-number">
-                                Question ${index + 1}
-                                ${wasFlagged ? '<i class="fas fa-flag flag-indicator"></i>' : ''}
-                            </div>
-                            <div class="answer-status ${statusClass}">${statusText}</div>
-                        </div>
-                        
-                        <div class="question-text">
-                            ${question.question_text}
-                        </div>
-                        
-                        <div class="answer-choices-section">
+    <div class="question-item" data-filter="${filterClasses.join(' ')}">
+        <div class="question-header">
+            <div class="question-number">
+                Question ${index + 1}
+                ${wasFlagged ? '<i class="fas fa-flag flag-indicator"></i>' : ''}
+            </div>
+            <div class="answer-status ${statusClass}">${statusText}</div>
+        </div>
+        
+        ${question.passage_title && question.passage_text ? `
+            <div class="passage-section">
+                <h6>
+                    <i class="fas fa-book-open me-2"></i>${question.passage_title}
+                </h6>
+                <div class="passage-text">${question.passage_text}</div>
+            </div>
+        ` : ''}
+        
+        <div class="question-text">
+            ${question.question_text}
+        </div>
+        
+        <div class="answer-choices-section">
                             <h6 class="answer-choices-title">
                                 <i class="fas fa-list me-2"></i>Answer Choices:
                             </h6>
@@ -1815,5 +1824,6 @@ ${essay.essayContent}
     </script>
 </body>
 </html>
+
 
 
