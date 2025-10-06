@@ -451,6 +451,8 @@
             <button class="filter-btn active" data-filter="all" onclick="filterQuestions('all', this)">All</button>
             <button class="filter-btn" data-filter="correct" onclick="filterQuestions('correct', this)">Correct</button>
             <button class="filter-btn" data-filter="incorrect" onclick="filterQuestions('incorrect', this)">Incorrect</button>
+            <button class="filter-btn" data-filter="unanswered" onclick="filterQuestions('unanswered', this)">Unanswered</button>
+
         </div>
     </div>
     <button class="close-btn" onclick="closeModal()">&times;</button>
@@ -648,6 +650,8 @@
         } else if (filter === 'correct' && item.classList.contains('correct')) {
             item.style.display = 'block';
         } else if (filter === 'incorrect' && item.classList.contains('incorrect')) {
+            item.style.display = 'block';
+        } else if (filter === 'unanswered' && item.classList.contains('unanswered')) {
             item.style.display = 'block';
         } else {
             item.style.display = 'none';
