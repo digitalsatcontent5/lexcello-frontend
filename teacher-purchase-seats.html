@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Purchase Student Seats - Lexcello</title>
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 50px auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.95;
+        }
+        
+        .content {
+            padding: 50px 40px;
+        }
+        
+        .pricing-cards {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .pricing-card {
+            border: 3px solid #e2e8f0;
+            border-radius: 15px;
+            padding: 35px 25px;
+            text-align: center;
+            transition: all 0.3s;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .pricing-card:hover {
+            border-color: #667eea;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+        
+        .pricing-card.recommended {
+            border-color: #667eea;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(118, 75, 162, 0.05));
+        }
+        
+        .recommended-badge {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 6px 20px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .seats-count {
+            font-size: 3em;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        
+        .seats-label {
+            font-size: 1.1em;
+            color: #666;
+            margin-bottom: 20px;
+        }
+        
+        .price {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        
+        .price-per-seat {
+            font-size: 0.9em;
+            color: #999;
+            margin-bottom: 25px;
+        }
+        
+        .savings {
+            background: #d4edda;
+            color: #155724;
+            padding: 10px;
+            border-radius: 8px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        
+        .select-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .select-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .features {
+            margin-top: 20px;
+            text-align: left;
+        }
+        
+        .feature {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            font-size: 0.95em;
+            color: #555;
+        }
+        
+        .feature:before {
+            content: "✓";
+            color: #667eea;
+            font-weight: bold;
+            margin-right: 10px;
+            font-size: 1.2em;
+        }
+        
+        .info-box {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        
+        .info-box h3 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .info-box p {
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        .back-link {
+            display: inline-block;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 768px) {
+            .pricing-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Purchase Student Seats</h1>
+            <p>Choose the package that works best for your institution</p>
+        </div>
+        
+        <div class="content">
+            <a href="teacher-dashboard.html" class="back-link">← Back to Dashboard</a>
+            
+            <div class="info-box">
+                <h3>Institutional Pricing</h3>
+                <p>Each seat allows you to add one student to your portal. Students get full access to all LNAT practice tests, detailed analytics, and essay practice. You can manage all your students' progress from one central dashboard.</p>
+            </div>
+            
+            <div class="pricing-cards">
+                <!-- 5 Seats Package -->
+                <div class="pricing-card recommended">
+                    <div class="recommended-badge">BEST VALUE</div>
+                    <div class="seats-count">5</div>
+                    <div class="seats-label">Student Seats</div>
+                    <div class="price">£345</div>
+                    <div class="price-per-seat">£69 per seat</div>
+                    <div class="savings">Save £50 vs individual seats!</div>
+                    <button class="select-btn" onclick="purchaseSeats(5, 345)">
+                        Select 5 Seats
+                    </button>
+                    <div class="features">
+                        <div class="feature">Bulk discount pricing</div>
+                        <div class="feature">Full dashboard access</div>
+                        <div class="feature">Track all student progress</div>
+                        <div class="feature">Detailed analytics</div>
+                    </div>
+                </div>
+                
+                <!-- 1 Seat Package -->
+                <div class="pricing-card">
+                    <div class="seats-count">1</div>
+                    <div class="seats-label">Student Seat</div>
+                    <div class="price">£69</div>
+                    <div class="price-per-seat">£69 per seat</div>
+                    <div style="height: 47px;"></div>
+                    <button class="select-btn" onclick="purchaseSeats(1, 69)">
+                        Select 1 Seat
+                    </button>
+                    <div class="features">
+                        <div class="feature">Pay as you go</div>
+                        <div class="feature">Full dashboard access</div>
+                        <div class="feature">Track student progress</div>
+                        <div class="feature">Detailed analytics</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'https://lexcello-backend.onrender.com';
+        const token = localStorage.getItem('teacherToken');
+        
+        if (!token) {
+            window.location.href = 'teacher-login.html';
+        }
+        
+        async function purchaseSeats(seatCount, amount) {
+            // For now, just alert - we'll implement PayU integration next
+            alert(`You selected ${seatCount} seat(s) for £${amount}.\n\nPayment integration coming next!`);
+        }
+    </script>
+</body>
+</html>
