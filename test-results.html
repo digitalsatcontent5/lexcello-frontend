@@ -602,7 +602,32 @@
             margin: 0;
             line-height: 1.6;
         }
+/* Passage Section Styling */
+        .passage-section {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--secondary-color);
+        }
 
+        .passage-section h6 {
+            color: var(--primary-color);
+            font-weight: 700;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+
+        .passage-text {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            white-space: pre-wrap;
+            line-height: 1.7;
+            color: var(--text-dark);
+            font-size: 0.95rem;
+        }
         /* Answer Choices Styling */
         .answer-choices-section {
             margin: 20px 0;
@@ -1548,12 +1573,18 @@ ${essay.essayContent}
                 if (!userAnswer) {
     console.log(`⚠ No answer found for question ${questionId} - marking as unanswered`);
     
-    // Create unanswered entry
     const wasFlagged = testResults.flaggedQuestions && 
                      testResults.flaggedQuestions.includes(questionId);
     
     const filterClasses = ['unanswered'];
     if (wasFlagged) filterClasses.push('flagged');
+    
+    const correctAnswer = question.correct_answer;
+    const answerChoicesHTML = generateAnswerChoicesHTML(
+        question.options, 
+        null,  // No user selection
+        correctAnswer
+    );
     
     reviewHTML += `
         <div class="question-item" data-filter="${filterClasses.join(' ')}">
@@ -1565,14 +1596,37 @@ ${essay.essayContent}
                 <div class="answer-status status-unanswered">Unanswered</div>
             </div>
             
+            ${question.passage_title && question.passage_text ? `
+                <div class="passage-section">
+                    <h6>
+                        <i class="fas fa-book-open me-2"></i>${question.passage_title}
+                    </h6>
+                    <div class="passage-text">${question.passage_text}</div>
+                </div>
+            ` : ''}
+            
             <div class="question-text">
                 ${question.question_text}
             </div>
             
-            <div class="alert alert-warning mt-3">
+            <div class="alert alert-warning mt-3 mb-3" style="background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; border-radius: 8px;">
                 <i class="fas fa-info-circle me-2"></i>
-                You did not answer this question.
+                <strong>You did not answer this question.</strong> The correct answer is shown below.
             </div>
+            
+            <div class="answer-choices-section">
+                <h6 class="answer-choices-title">
+                    <i class="fas fa-list me-2"></i>Answer Choices:
+                </h6>
+                ${answerChoicesHTML}
+            </div>
+            
+            ${question.explanation ? `
+                <div class="explanation">
+                    <h6><i class="fas fa-lightbulb"></i> Explanation</h6>
+                    <p>${question.explanation}</p>
+                </div>
+            ` : ''}
         </div>
     `;
     return;
@@ -1761,4 +1815,5 @@ ${essay.essayContent}
     </script>
 </body>
 </html>
+
 
