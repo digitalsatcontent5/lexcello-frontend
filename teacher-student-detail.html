@@ -414,7 +414,11 @@
                 alert('Failed to load test details');
             }
         }
-        
+        function formatPassageText(text) {
+    // Split by double line breaks for paragraphs
+    const paragraphs = text.split('\n\n');
+    return paragraphs.map(p => `<p style="margin-bottom: 15px;">${p.replace(/\n/g, '<br>')}</p>`).join('');
+}
         function displayTestModal(attempt) {
             document.getElementById('modalTestTitle').textContent = 
                 `${attempt.testTitle} - ${attempt.score}/${attempt.totalQuestions} (${attempt.percentage}%)`;
@@ -426,7 +430,7 @@
                     
                     <div class="passage-section">
                         <div class="passage-title">${answer.passageTitle}</div>
-                        <div class="passage-text">${answer.passageText}</div>
+                        <div class="passage-text">${answer.passageText.replace(/\n\n/g, '</p><p>').replace(/\n/g, '<br>')}</div>
                     </div>
                     
                     <div class="question-text">${answer.questionText}</div>
