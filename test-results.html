@@ -1872,11 +1872,13 @@ function generateQuestionNavigationGrid() {
                 
                 // Click to scroll to question
                 btn.onclick = () => {
-                    const questionItems = document.querySelectorAll('.question-item');
-                    if (questionItems[index]) {
-                        questionItems[index].scrollIntoView({ behavior: 'smooth', block: 'center' });
-                        questionItems[index].style.animation = 'highlight 1s ease';
-                    }
+                    toggleNavModal(); // Close modal first
+                    setTimeout(() => {
+                        const questionItems = document.querySelectorAll('.question-item');
+                        if (questionItems[index]) {
+                            questionItems[index].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
+                    }, 300);
                 };
                 
                 grid.appendChild(btn);
@@ -2003,9 +2005,21 @@ function generateQuestionNavigationGrid() {
             document.getElementById('loadingScreen').style.display = 'none';
             document.getElementById('errorScreen').style.display = 'block';
         }
+        function toggleNavModal() {
+            const modal = document.getElementById('navModal');
+            modal.classList.toggle('active');
+        }
+
+        function closeNavModalOnBackdrop(event) {
+            if (event.target.id === 'navModal') {
+                toggleNavModal();
+            }
+        }
+    </script>
     </script>
 </body>
 </html>
+
 
 
 
