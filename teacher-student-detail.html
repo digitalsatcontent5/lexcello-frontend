@@ -686,47 +686,58 @@
         }
 
         function generateTeacherQuestionGrid(answers) {
-            const grid = document.getElementById('teacherQuestionGrid');
-            const floatingBtn = document.getElementById('floatingNavBtn');
-            
-            if (!grid || !answers || answers.length === 0) {
-                floatingBtn.classList.remove('show');
-                return;
-            }
-            
-            // Show floating button
-            floatingBtn.classList.add('show');
-            
-            grid.innerHTML = '';
-            
-            answers.forEach((answer, index) => {
-                const btn = document.createElement('button');
-                btn.className = 'teacher-question-btn';
-                btn.textContent = index + 1;
-                
-                // Add status class - check if question was answered
-                if (!answer.selectedAnswer || answer.selectedAnswer === null) {
-                    btn.classList.add('unanswered');
-                } else if (answer.isCorrect) {
-                    btn.classList.add('correct');
-                } else {
-                    btn.classList.add('incorrect');
-                }
-                
-                // Click to scroll to question
-                btn.onclick = () => {
-                    toggleTeacherNavModal();
-                    setTimeout(() => {
-                        const questionItems = document.querySelectorAll('.question-item');
-                        if (questionItems[index]) {
-                            questionItems[index].scrollIntoView({ behavior: 'smooth', block: 'center' });
-                        }
-                    }, 300);
-                };
-                
-                grid.appendChild(btn);
-            });
+    const grid = document.getElementById('teacherQuestionGrid');
+    const floatingBtn = document.getElementById('floatingNavBtn');
+    
+    if (!grid || !answers || answers.length === 0) {
+        floatingBtn.classList.remove('show');
+        return;
+    }
+    
+    // Show floating button
+    floatingBtn.classList.add('show');
+    
+    grid.innerHTML = '';
+    
+    // Build a map of answers by question ID
+    const answersMap = {};
+    answers.forEach(answer => {
+        answersMap[answer.questionId] = answer;
+    });
+    
+    // Assuming 42 questions total (adjust if needed)
+    const totalQuestions = 42;
+    
+    for (let i = 0; i < totalQuestions; i++) {
+        const btn = document.createElement('button');
+        btn.className = 'teacher-question-btn';
+        btn.textContent = i + 1;
+        
+        // Check if this question was answered
+        const answer = answersMap[i + 1]; // Assuming questionId starts from 1
+        
+        if (!answer || !answer.selectedAnswer) {
+            btn.classList.add('unanswered');
+        } else if (answer.isCorrect) {
+            btn.classList.add('correct');
+        } else {
+            btn.classList.add('incorrect');
         }
+        
+        // Click to scroll to question
+        btn.onclick = () => {
+            toggleTeacherNavModal();
+            setTimeout(() => {
+                const questionItems = document.querySelectorAll('.question-item');
+                if (questionItems[i]) {
+                    questionItems[i].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }, 300);
+        };
+        
+        grid.appendChild(btn);
+    }
+}
     </script>
 </body>
 </html>
