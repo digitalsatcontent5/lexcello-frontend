@@ -266,6 +266,28 @@
             margin-top: 15px;
             border-left: 4px solid #ffc107;
         }
+        .filter-btn {
+            padding: 8px 16px;
+            border: 2px solid #e0e0e0;
+            background: white;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #2c3e50;
+        }
+
+        .filter-btn.active {
+            border-color: #3498db;
+            background: #3498db;
+            color: white;
+        }
+
+        .filter-btn:hover:not(.active) {
+            border-color: #3498db;
+            color: #3498db;
+        }
     </style>
 </head>
 <body>
@@ -310,9 +332,16 @@
     <div id="testDetailModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 id="modalTestTitle">Test Details</h2>
-                <button class="close-btn" onclick="closeModal()">&times;</button>
-            </div>
+    <div>
+        <h2 id="modalTestTitle">Test Details</h2>
+        <div style="display: flex; gap: 10px; margin-top: 15px;">
+            <button class="filter-btn active" data-filter="all" onclick="filterQuestions('all', this)">All</button>
+            <button class="filter-btn" data-filter="correct" onclick="filterQuestions('correct', this)">Correct</button>
+            <button class="filter-btn" data-filter="incorrect" onclick="filterQuestions('incorrect', this)">Incorrect</button>
+        </div>
+    </div>
+    <button class="close-btn" onclick="closeModal()">&times;</button>
+</div>
             <div id="modalContent"></div>
         </div>
     </div>
@@ -462,7 +491,25 @@
         function closeModal() {
             document.getElementById('testDetailModal').style.display = 'none';
         }
-        
+        function filterQuestions(filter, button) {
+    // Update active button
+    document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+    button.classList.add('active');
+    
+    // Filter questions
+    const questions = document.querySelectorAll('.question-item');
+    questions.forEach(item => {
+        if (filter === 'all') {
+            item.style.display = 'block';
+        } else if (filter === 'correct' && item.classList.contains('correct')) {
+            item.style.display = 'block';
+        } else if (filter === 'incorrect' && item.classList.contains('incorrect')) {
+            item.style.display = 'block';
+        } else {
+            item.style.display = 'none';
+        }
+    });
+}
         function getScoreClass(score) {
             if (score >= 80) return 'score-excellent';
             if (score >= 60) return 'score-good';
