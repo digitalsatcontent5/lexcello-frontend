@@ -622,7 +622,7 @@ async function fetchAllQuestions(testId) {
         async function displayTestModal(attempt) {
     currentAttempt = attempt;
     
-    // Extract testId from attempt (adjust if your backend uses different field name)
+    // Extract testId from attempt
     const testId = attempt.testId || 1;
     
     // Fetch all questions for this test
@@ -639,38 +639,80 @@ async function fetchAllQuestions(testId) {
     
     const modalContent = document.getElementById('modalContent');
     
-    // Display only answered questions in the review
-    modalContent.innerHTML = attempt.answers.map((answer, index) => `
-        <div class="question-item ${answer.isCorrect ? 'correct' : 'incorrect'}">
-            <h4 style="margin-bottom: 15px;">Question ${index + 1} ${answer.isCorrect ? '✓' : '✗'}</h4>
-            
-            <div class="passage-section">
-                <div class="passage-title">${answer.passageTitle}</div>
-                <div class="passage-text">${answer.passageText.split('\n\n').map(p => `<p style="margin-bottom: 20px;">${p.replace(/\n/g, '<br>')}</p>`).join('')}</div>
-            </div>
-            
-            <div class="question-text">${answer.questionText}</div>
-            
-            <ul class="options-list">
-                ${answer.options.map((opt, i) => {
-                    const optNum = i + 1;
-                    let className = 'option-item';
-                    if (optNum === answer.selectedAnswer && optNum === answer.correctAnswer) {
-                        className += ' correct selected';
-                    } else if (optNum === answer.selectedAnswer) {
-                        className += ' incorrect selected';
-                    } else if (optNum === answer.correctAnswer) {
-                        className += ' correct';
-                    }
-                    return `<li class="${className}">${String.fromCharCode(65 + i)}. ${opt}</li>`;
-                }).join('')}
-            </ul>
-            
-            <div class="explanation">
-                <strong>Explanation:</strong><br>${answer.explanation}
-            </div>
-        </div>
-    `).join('');
+    // Display ALL questions (both answered and unanswered)
+    modalContent.innerHTML = allQuestions.map((question, index) => {
+        const answer = answersMap[question.id];
+        
+        // If question was answered
+        if (answer) {
+            return `
+                <div class="question-item ${answer.isCorrect ? 'correct' : 'incorrect'}">
+                    <h4 style="margin-bottom: 15px;">Question ${index + 1} ${answer.isCorrect ? '✓' : '✗'}</h4>
+                    
+                    <div class="passage-section">
+                        <div class="passage-title">${question.passage_title || 'Reading Passage'}</div>
+                        <div class="passage-text">${(question.passage_text || '').split('\n\n').map(p => `<p style="margin-bottom: 20px;">${p.replace(/\n/g, '<br>')}</p>`).join('')}</div>
+                    </div>
+                    
+                    <div class="question-text">${question.question_text}</div>
+                    
+                    <ul class="options-list">
+                        ${question.options.map((opt, i) => {
+                            const optNum = i + 1;
+                            let className = 'option-item';
+                            if (optNum === answer.selectedAnswer && optNum === question.correct_answer) {
+                                className += ' correct selected';
+                            } else if (optNum === answer.selectedAnswer) {
+                                className += ' incorrect selected';
+                            } else if (optNum === question.correct_answer) {
+                                className += ' correct';
+                            }
+                            return `<li class="${className}">${String.fromCharCode(65 + i)}. ${opt}</li>`;
+                        }).join('')}
+                    </ul>
+                    
+                    <div class="explanation">
+                        <strong>Explanation:</strong><br>${question.explanation || 'No explanation available.'}
+                    </div>
+                </div>
+            `;
+        } else {
+            // If question was NOT answered
+            return `
+                <div class="question-item unanswered" style="border-left-color: #ffc107; background: #fff3cd;">
+                    <h4 style="margin-bottom: 15px;">Question ${index + 1} <span style="color: #856404;">⚠ Not Answered</span></h4>
+                    
+                    <div class="passage-section">
+                        <div class="passage-title">${question.passage_title || 'Reading Passage'}</div>
+                        <div class="passage-text">${(question.passage_text || '').split('\n\n').map(p => `<p style="margin-bottom: 20px;">${p.replace(/\n/g, '<br>')}</p>`).join('')}</div>
+                    </div>
+                    
+                    <div class="question-text">${question.question_text}</div>
+                    
+                    <div style="background: white; border: 2px solid #ffc107; border-radius: 8px; padding: 20px; text-align: center; margin: 20px 0;">
+                        <i class="fas fa-exclamation-triangle" style="color: #856404; font-size: 2rem; margin-bottom: 10px;"></i>
+                        <p style="margin: 0; color: #856404; font-weight: 600;">Student did not answer this question</p>
+                    </div>
+                    
+                    <ul class="options-list">
+                        ${question.options.map((opt, i) => {
+                            const optNum = i + 1;
+                            let className = 'option-item';
+                            if (optNum === question.correct_answer) {
+                                className += ' correct';
+                            }
+                            return `<li class="${className}">${String.fromCharCode(65 + i)}. ${opt}</li>`;
+                        }).join('')}
+                    </ul>
+                    
+                    <div class="explanation">
+                        <strong>Correct Answer & Explanation:</strong><br>
+                        The correct answer is <strong>${String.fromCharCode(64 + question.correct_answer)}</strong>. ${question.explanation || 'No explanation available.'}
+                    </div>
+                </div>
+            `;
+        }
+    }).join('');
     
     document.getElementById('testDetailModal').style.display = 'block';
     
@@ -768,13 +810,13 @@ async function fetchAllQuestions(testId) {
         // Click to scroll to question
         btn.onclick = () => {
             toggleTeacherNavModal();
-            setTimeout(() => {
-                const questionItems = document.querySelectorAll('.question-item');
-                // Only scroll if the question was answered (exists in DOM)
-                if (answer && questionItems[currentAttempt.answers.indexOf(answer)]) {
-                    questionItems[currentAttempt.answers.indexOf(answer)].scrollIntoView({ behavior: 'smooth', block: 'center' });
-                }
-            }, 300);
+    setTimeout(() => {
+        const questionItems = document.querySelectorAll('.question-item');
+        // Scroll to the question by its index (now all questions exist in DOM)
+        if (questionItems[index]) {
+            questionItems[index].scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    }, 300);
         };
         
         grid.appendChild(btn);
