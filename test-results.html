@@ -510,7 +510,52 @@
             border-color: var(--secondary-color);
             color: var(--secondary-color);
         }
-
+/* Question Navigation Buttons in Results */
+        .results-question-btn {
+            width: 35px;
+            height: 35px;
+            border: 2px solid #e2e8f0;
+            background: white;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            color: var(--text-dark);
+        }
+        
+        .results-question-btn:hover {
+            border-color: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .results-question-btn.correct {
+            background: var(--success-color);
+            color: white;
+            border-color: var(--success-color);
+        }
+        
+        .results-question-btn.incorrect {
+            background: var(--danger-color);
+            color: white;
+            border-color: var(--danger-color);
+        }
+        
+        .results-question-btn.unanswered {
+            background: #fff3cd;
+            color: #856404;
+            border-color: #ffc107;
+        }
+        
+        .results-question-btn.flagged {
+            background: var(--warning-color);
+            color: white;
+            border-color: var(--warning-color);
+        }
         .question-item {
             padding: 25px;
             border-bottom: 1px solid #f1f5f9;
@@ -1113,15 +1158,24 @@
         <!-- Question by Question Review -->
         <div class="question-review">
             <div class="review-header">
-                <h3><i class="fas fa-list-check me-2"></i>Question Review</h3>
-                <div class="review-filters">
-                    <button class="filter-btn active" data-filter="all">All</button>
-                    <button class="filter-btn" data-filter="correct">Correct</button>
-                    <button class="filter-btn" data-filter="incorrect">Incorrect</button>
-                    <button class="filter-btn" data-filter="unanswered">Unanswered</button>
-                    <button class="filter-btn" data-filter="flagged">Flagged</button>
-                </div>
+    <h3><i class="fas fa-list-check me-2"></i>Question Review</h3>
+    
+    <!-- Question Navigation -->
+    <div style="margin: 15px 0;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <strong style="color: var(--primary-color);">Question Navigation:</strong>
+            <div style="display: flex; gap: 12px;">
+                <span style="padding: 4px 8px; font-size: 0.8rem; background: var(--success-color); color: white; border-radius: 4px;">Correct</span>
+                <span style="padding: 4px 8px; font-size: 0.8rem; background: var(--danger-color); color: white; border-radius: 4px;">Incorrect</span>
+                <span style="padding: 4px 8px; font-size: 0.8rem; background: #fff3cd; color: #856404; border-radius: 4px;">Unanswered</span>
+                <span style="padding: 4px 8px; font-size: 0.8rem; background: var(--warning-color); color: white; border-radius: 4px;">Flagged</span>
             </div>
+        </div>
+        <div id="resultsQuestionGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(35px, 1fr)); gap: 6px;"></div>
+    </div>
+    
+    <div class="review-filters">
+        <button class="filter-btn active" data-filter="all">All</button>
             <div class="filter-summary" id="filterSummary">
                 Showing all questions
             </div>
@@ -1697,9 +1751,50 @@ ${essay.essayContent}
             });
             
             reviewList.innerHTML = reviewHTML;
-            updateFilterSummary('all');
-        }
+updateFilterSummary('all');
 
+// Generate question navigation grid
+generateQuestionNavigationGrid();
+        }
+function generateQuestionNavigationGrid() {
+            const grid = document.getElementById('resultsQuestionGrid');
+            if (!grid) return;
+            
+            grid.innerHTML = '';
+            
+            questions.forEach((question, index) => {
+                const questionId = question.id;
+                const userAnswer = userAnswersMap[questionId];
+                const wasFlagged = testResults.flaggedQuestions && 
+                                 testResults.flaggedQuestions.includes(questionId);
+                
+                const btn = document.createElement('button');
+                btn.className = 'results-question-btn';
+                btn.textContent = index + 1;
+                
+                // Determine status class
+                if (!userAnswer) {
+                    btn.classList.add('unanswered');
+                } else if (wasFlagged) {
+                    btn.classList.add('flagged');
+                } else if (userAnswer.isCorrect) {
+                    btn.classList.add('correct');
+                } else {
+                    btn.classList.add('incorrect');
+                }
+                
+                // Click to scroll to question
+                btn.onclick = () => {
+                    const questionItems = document.querySelectorAll('.question-item');
+                    if (questionItems[index]) {
+                        questionItems[index].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        questionItems[index].style.animation = 'highlight 1s ease';
+                    }
+                };
+                
+                grid.appendChild(btn);
+            });
+        }
         function generateAnswerChoicesHTML(options, userSelected, correctAnswer) {
             if (!options || !Array.isArray(options)) {
                 return '<p class="text-muted">Options not available</p>';
@@ -1824,6 +1919,7 @@ ${essay.essayContent}
     </script>
 </body>
 </html>
+
 
 
 
