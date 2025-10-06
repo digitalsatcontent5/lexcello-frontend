@@ -430,7 +430,7 @@
                     
                     <div class="passage-section">
                         <div class="passage-title">${answer.passageTitle}</div>
-                        <div class="passage-text">${answer.passageText.replace(/\n\n/g, '</p><p>').replace(/\n/g, '<br>')}</div>
+                        <div class="passage-text">${answer.passageText.split('\n\n').map(p => `<p style="margin-bottom: 20px;">${p.replace(/\n/g, '<br>')}</p>`).join('')}</div>
                     </div>
                     
                     <div class="question-text">${answer.questionText}</div>
