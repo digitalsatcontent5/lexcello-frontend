@@ -720,7 +720,6 @@
         <input type="password" id="admin-password" required placeholder="Password">
     </div>
     <button type="submit" class="btn btn-primary" style="width: 100%;">Access Admin Panel</button>
-<button type="button" class="btn btn-secondary" style="width: 100%; margin-top: 10px;" onclick="initializeAdmins()">Initialize Admin Users (First Time Only)</button>
 </form>
             <p style="text-align: center; margin-top: 20px; font-size: 12px; color: #666;">
                 Authorized personnel only
@@ -3306,27 +3305,7 @@ async function deleteTeacher(teacherId, teacherEmail) {
         showMessage(`Network error: ${error.message}`, 'error');
     }
 }
-        // Temporary function to initialize admin users
-async function initializeAdmins() {
-    try {
-        const response = await fetch(`${API_BASE}/api/admin/create-initial-admins`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
         
-        const result = await response.json();
-        
-        if (result.success) {
-            alert('Admin users created successfully! You can now login with:\nUsername: admin or fastprep\nYou can remove this button now.');
-        } else {
-            alert('Error: ' + result.error);
-        }
-    } catch (error) {
-        alert('Error: ' + error.message);
-    }
-}
     </script>
     <!-- Edit Question Modal -->
 <div id="editQuestionModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 10001; overflow-y: auto;">
@@ -3480,6 +3459,7 @@ async function initializeAdmins() {
 </div>
 </body>
 </html>
+
 
 
 
