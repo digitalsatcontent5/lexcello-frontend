@@ -720,6 +720,7 @@
         <input type="password" id="admin-password" required placeholder="Password">
     </div>
     <button type="submit" class="btn btn-primary" style="width: 100%;">Access Admin Panel</button>
+<button type="button" class="btn btn-secondary" style="width: 100%; margin-top: 10px;" onclick="initializeAdmins()">Initialize Admin Users (First Time Only)</button>
 </form>
             <p style="text-align: center; margin-top: 20px; font-size: 12px; color: #666;">
                 Authorized personnel only
@@ -1315,11 +1316,7 @@
     <script>
         const API_BASE = 'https://lexcello-backend.onrender.com';
         
-        // Admin credentials - username: password
-        const ADMIN_CREDENTIALS = {
-            'admin': 'Ramesh12!@',
-            'fastprep': 'academy'
-            };
+        
         
         // Security state
         let isSecurityAuthenticated = false;
@@ -1362,31 +1359,51 @@
         }
         
          // Login form handler
-document.getElementById('security-login-form').addEventListener('submit', (e) => {
+document.getElementById('security-login-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     
-    const enteredUsername = document.getElementById('admin-username').value;
-    const enteredPassword = document.getElementById('admin-password').value;
+    const username = document.getElementById('admin-username').value;
+    const password = document.getElementById('admin-password').value;
     
-    if (ADMIN_CREDENTIALS[enteredUsername] && ADMIN_CREDENTIALS[enteredUsername] === enteredPassword) {
-        securityAuthenticate();
-        loginError.style.display = 'none';
-        loadTests();
-        loadDashboard();
-    } else {
-        loginError.textContent = 'Incorrect username or password. Access denied.';
-        loginError.style.display = 'block';
-        document.getElementById('admin-username').value = '';
-        document.getElementById('admin-password').value = '';
-        document.getElementById('admin-username').focus();
+    try {
+        const response = await fetch(`${API_BASE}/api/admin/login`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ username, password })
+        });
         
-        // Add shake animation
-        document.querySelector('.login-form').style.animation = 'shake 0.5s';
-        setTimeout(() => {
-            document.querySelector('.login-form').style.animation = '';
-        }, 500);
+        const result = await response.json();
+        
+        if (result.success) {
+            // Store admin info securely
+            localStorage.setItem('lexcello_admin_auth', 'authenticated');
+            localStorage.setItem('lexcello_admin_user', JSON.stringify(result.admin));
+            
+            securityAuthenticate();
+            loginError.style.display = 'none';
+            loadTests();
+            loadDashboard();
+        } else {
+            loginError.textContent = 'Incorrect username or password. Access denied.';
+            loginError.style.display = 'block';
+            document.getElementById('admin-username').value = '';
+            document.getElementById('admin-password').value = '';
+            document.getElementById('admin-username').focus();
+            
+            // Add shake animation
+            document.querySelector('.login-form').style.animation = 'shake 0.5s';
+            setTimeout(() => {
+                document.querySelector('.login-form').style.animation = '';
+            }, 500);
+        }
+    } catch (error) {
+        console.error('Login error:', error);
+        loginError.textContent = 'Login failed. Please check your connection and try again.';
+        loginError.style.display = 'block';
     }
-}); 
+});
        // Protect functions - require authentication
 function requireAuth() {
     if (!isSecurityAuthenticated) {
@@ -3289,6 +3306,27 @@ async function deleteTeacher(teacherId, teacherEmail) {
         showMessage(`Network error: ${error.message}`, 'error');
     }
 }
+        // Temporary function to initialize admin users
+async function initializeAdmins() {
+    try {
+        const response = await fetch(`${API_BASE}/api/admin/create-initial-admins`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            alert('Admin users created successfully! You can now login with:\nUsername: admin or fastprep\nYou can remove this button now.');
+        } else {
+            alert('Error: ' + result.error);
+        }
+    } catch (error) {
+        alert('Error: ' + error.message);
+    }
+}
     </script>
     <!-- Edit Question Modal -->
 <div id="editQuestionModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 10001; overflow-y: auto;">
@@ -3442,6 +3480,7 @@ async function deleteTeacher(teacherId, teacherEmail) {
 </div>
 </body>
 </html>
+
 
 
 
