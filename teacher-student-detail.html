@@ -596,7 +596,7 @@ let currentAttempt = null;
 
 async function fetchAllQuestions(testId) {
     try {
-        const response = await fetch(`${API_BASE_URL}/api/tests/${testId}/questions`, {
+        const response = await fetch(`${API_BASE_URL}/api/teacher/tests/${testId}/questions`, {
             headers: { 
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json'
@@ -613,7 +613,7 @@ async function fetchAllQuestions(testId) {
     } catch (error) {
         console.error('Error fetching questions:', error);
     }
-}
+}        
         function formatPassageText(text) {
     // Split by double line breaks for paragraphs
     const paragraphs = text.split('\n\n');
