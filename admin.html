@@ -2507,10 +2507,114 @@ function displayUsers(users) {
             showMessage('Preview functionality coming soon!', 'warning');
         }
         
-        function exportQuestions() {
-            if (!requireAuth()) return;
-            showMessage('Export functionality coming soon!', 'warning');
+        // Export all questions with explanations to CSV
+async function exportQuestions() {
+    if (!requireAuth()) return;
+    
+    const exportBtn = event.target;
+    exportBtn.disabled = true;
+    exportBtn.textContent = '⏳ Generating CSV...';
+    
+    try {
+        showMessage('Fetching all questions...', 'info');
+        
+        // Get all tests
+        const testsResponse = await fetch(`${API_BASE}/api/tests`);
+        const testsData = await testsResponse.json();
+        
+        if (!testsData.tests || testsData.tests.length === 0) {
+            showMessage('No tests found', 'error');
+            return;
         }
+        
+        let allQuestions = [];
+        
+        // Fetch questions for each test
+        for (const test of testsData.tests) {
+            try {
+                const questionsResponse = await fetch(`${API_BASE}/api/admin/tests/${test.id}/questions`);
+                const questionsData = await questionsResponse.json();
+                
+                if (questionsData.questions && questionsData.questions.length > 0) {
+                    questionsData.questions.forEach(q => {
+                        allQuestions.push({
+                            testId: test.id,
+                            testTitle: test.title,
+                            questionId: q.id,
+                            questionNumber: q.question_number || q.questionNumber,
+                            passageTitle: q.passage_title || q.passageTitle,
+                            passageText: q.passage_text || q.passageText,
+                            questionText: q.question_text || q.questionText,
+                            option1: (q.options || q.options_json)?.[0] || q.option_1 || '',
+                            option2: (q.options || q.options_json)?.[1] || q.option_2 || '',
+                            option3: (q.options || q.options_json)?.[2] || q.option_3 || '',
+                            option4: (q.options || q.options_json)?.[3] || q.option_4 || '',
+                            option5: (q.options || q.options_json)?.[4] || q.option_5 || '',
+                            correctAnswer: q.correct_answer || q.correctAnswer,
+                            explanation: q.explanation || 'No explanation available'
+                        });
+                    });
+                    
+                    showMessage(`Loaded ${questionsData.questions.length} questions from ${test.title}`, 'success');
+                }
+            } catch (err) {
+                console.error(`Error loading questions for test ${test.id}:`, err);
+                showMessage(`Error loading ${test.title}`, 'error');
+            }
+        }
+        
+        if (allQuestions.length === 0) {
+            showMessage('No questions found to export', 'error');
+            return;
+        }
+        
+        // Create CSV
+        let csv = 'Test ID,Test Title,Question ID,Question #,Passage Title,Passage Text,Question Text,Option A,Option B,Option C,Option D,Option E,Correct Answer,Explanation\n';
+        
+        allQuestions.forEach(q => {
+            // Escape and wrap each field in quotes
+            const row = [
+                q.testId,
+                `"${(q.testTitle || '').replace(/"/g, '""')}"`,
+                q.questionId,
+                q.questionNumber,
+                `"${(q.passageTitle || '').replace(/"/g, '""')}"`,
+                `"${(q.passageText || '').replace(/"/g, '""')}"`,
+                `"${(q.questionText || '').replace(/"/g, '""')}"`,
+                `"${(q.option1 || '').replace(/"/g, '""')}"`,
+                `"${(q.option2 || '').replace(/"/g, '""')}"`,
+                `"${(q.option3 || '').replace(/"/g, '""')}"`,
+                `"${(q.option4 || '').replace(/"/g, '""')}"`,
+                `"${(q.option5 || '').replace(/"/g, '""')}"`,
+                q.correctAnswer,
+                `"${(q.explanation || '').replace(/"/g, '""')}"`
+            ];
+            csv += row.join(',') + '\n';
+        });
+        
+        // Download CSV
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        
+        const timestamp = new Date().toISOString().split('T')[0];
+        link.setAttribute('href', url);
+        link.setAttribute('download', `lexcello_all_questions_${timestamp}.csv`);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        showMessage(`✅ Successfully exported ${allQuestions.length} questions from ${testsData.tests.length} tests!`, 'success');
+        
+    } catch (error) {
+        console.error('Export error:', error);
+        showMessage('Error exporting questions: ' + error.message, 'error');
+    } finally {
+        exportBtn.disabled = false;
+        exportBtn.textContent = 'Export All Questions';
+    }
+}
         
         // Add User Modal Functions
 function showAddUserModal() {
@@ -3459,6 +3563,7 @@ async function deleteTeacher(teacherId, teacherEmail) {
 </div>
 </body>
 </html>
+
 
 
 
