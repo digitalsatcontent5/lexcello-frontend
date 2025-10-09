@@ -2536,8 +2536,12 @@ async function exportQuestions() {
                 const questionsData = await questionsResponse.json();
                 
                 if (questionsData.questions && questionsData.questions.length > 0) {
-                    questionsData.questions.forEach(q => {
-                        allQuestions.push({
+    console.log('Sample question:', questionsData.questions[0]); // DEBUG LINE 1
+    
+    questionsData.questions.forEach(q => {
+        console.log('Processing question:', q); // DEBUG LINE 2
+        
+        allQuestions.push({
                             testId: test.id,
                             testTitle: test.title,
                             questionId: q.id,
@@ -3563,6 +3567,7 @@ async function deleteTeacher(teacherId, teacherEmail) {
 </div>
 </body>
 </html>
+
 
 
 
