@@ -531,12 +531,11 @@
     background: white;
     border: 2px solid #e2e8f0;
     border-radius: 12px;
-    padding: 20px;
+    padding: 16px;
     margin-bottom: 15px;
     transition: all 0.3s;
     cursor: pointer;
 }
-
 .student-card:hover {
     border-color: #3498db;
     box-shadow: 0 5px 15px rgba(52, 152, 219, 0.2);
@@ -547,55 +546,69 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 15px;
+    margin-bottom: 12px;
 }
-
+.student-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}        
 .student-name {
-    font-size: 1.2em;
+    font-size: 1.05em;
     font-weight: 600;
     color: #2c3e50;
 }
 
 .student-email {
-    font-size: 0.9em;
+    font-size: 0.8em;
     color: #666;
-    margin-top: 3px;
 }
 
 .student-metrics {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 15px;
-    margin-top: 15px;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 10px;
+    margin-top: 12px;
 }
-
 .metric-box {
     background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-    padding: 12px;
+    padding: 10px;
     border-radius: 8px;
     text-align: center;
 }
-
 .metric-value {
-    font-size: 1.8em;
+    font-size: 1.4em;
     font-weight: bold;
     color: #2c3e50;
 }
-
 .metric-label {
-    font-size: 0.85em;
+    font-size: 0.75em;
     color: #666;
-    margin-top: 5px;
+    margin-top: 3px;
+}
+.progress-section {
+    margin-top: 12px;
 }
 
+.progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.8em;
+    color: #666;
+    margin-bottom: 5px;
+}
+
+.last-active {
+    font-size: 0.8em;
+    color: #666;
+}
 .progress-bar-container {
     background: #e9ecef;
     border-radius: 20px;
-    height: 10px;
+    height: 8px;
     overflow: hidden;
-    margin-top: 8px;
 }
-
 .progress-bar {
     height: 100%;
     background: linear-gradient(90deg, #667eea, #764ba2);
@@ -2871,18 +2884,18 @@ function displayStudentProgress(students) {
         const improvement = student.best_score - student.worst_score;
         
         return `
-            <div class="student-card" onclick="showStudentDetail(${student.id})">
-                <div class="student-header">
-                    <div>
-                        <div class="student-name">${student.name || 'Unknown Student'}</div>
-                        <div class="student-email">${student.email}</div>
-                    </div>
-                    <div>
-                        <span class="score-badge ${scoreClass}">
-                            ${student.average_score}% Avg
-                        </span>
-                    </div>
-                </div>
+    <div class="student-card" onclick="showStudentDetail(${student.id})">
+        <div class="student-header">
+            <div class="student-info">
+                <span class="student-name">${student.name || 'Unknown Student'}</span>
+                <span class="student-email">${student.email}</span>
+            </div>
+            <div>
+                <span class="score-badge ${scoreClass}">
+                    ${student.average_score}% Avg
+                </span>
+            </div>
+        </div>
                 
                 <div class="student-metrics">
                     <div class="metric-box">
@@ -2903,19 +2916,15 @@ function displayStudentProgress(students) {
                     </div>
                 </div>
                 
-                <div style="margin-top: 15px;">
-                    <div style="display: flex; justify-content: space-between; font-size: 0.85em; color: #666; margin-bottom: 5px;">
-                        <span>Progress to 100%</span>
-                        <span>${student.average_score}%</span>
-                    </div>
-                    <div class="progress-bar-container">
-                        <div class="progress-bar" style="width: ${student.average_score}%"></div>
-                    </div>
-                </div>
-                
-                <div style="margin-top: 12px; font-size: 0.85em; color: #666;">
-                    Last active: ${formatDate(student.last_test_date)}
-                </div>
+                <div class="progress-section">
+            <div class="progress-header">
+                <span>Progress to 100%</span>
+                <span class="last-active">Last active: ${formatDate(student.last_test_date)}</span>
+            </div>
+            <div class="progress-bar-container">
+                <div class="progress-bar" style="width: ${student.average_score}%"></div>
+            </div>
+        </div>
             </div>
         `;
     }).join('');
@@ -3567,6 +3576,7 @@ async function deleteTeacher(teacherId, teacherEmail) {
 </div>
 </body>
 </html>
+
 
 
 
