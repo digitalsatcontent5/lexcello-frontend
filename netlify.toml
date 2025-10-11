@@ -1,0 +1,11 @@
+[[redirects]]
+  from = "/payment-success.html"
+  to = "/payment-success.html"
+  status = 200
+  force = false
+
+[[redirects]]
+  from = "/payment-failure.html"
+  to = "/payment-failure.html"
+  status = 200
+  force = false
