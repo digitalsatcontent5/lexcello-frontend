@@ -359,58 +359,118 @@
         }
         
         // Initiate payment
-        async function initiatePayment() {
-            const paymentBtn = document.getElementById('payment-btn');
-            const originalText = paymentBtn.innerHTML;
-            
-            try {
-                // Show loading state
-                paymentBtn.disabled = true;
-                paymentBtn.innerHTML = '<div class="loading-spinner"></div>Processing...';
-                
-                const token = localStorage.getItem('authToken');
-                if (!token) {
-                    throw new Error('Please sign in to continue');
-                }
-                
-                // Create payment order
-                const response = await fetch(`${API_BASE_URL}/payments/create-order`, {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        planType: selectedPlan.plan,
-                        amount: selectedPlan.amount,
-                        planDuration: selectedPlan.duration
-                    })
-                });
-                
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    throw new Error(errorData.error || 'Payment initiation failed');
-                }
-                
-                const paymentData = await response.json();
-                
-                if (paymentData.success) {
-                    // Fill PayU form and submit
-                    fillPayUForm(paymentData.paymentData);
-                    submitPayUForm(paymentData.paymentData.payu_url);
-                } else {
-                    throw new Error('Payment order creation failed');
-                }
-                
-            } catch (error) {
-                console.error('Payment initiation error:', error);
-                showError(error.message || 'Payment initiation failed. Please try again.');
-            } finally {
-                // Reset button state
-                paymentBtn.disabled = false;
-                paymentBtn.innerHTML = originalText;
-            }
+async function initiatePayment() {
+    // TRACK PAYMENT BUTTON CLICK - ADD THIS FIRST
+    try {
+        gtag('event', 'click_payment_button', {
+            'event_category': 'payment',
+            'event_label': 'proceed_to_payment',
+            'plan_type': selectedPlan.plan,
+            'plan_amount': selectedPlan.amount,
+            'plan_duration': selectedPlan.duration
+        });
+        
+        // Also track in console for debugging
+        console.log('Payment button clicked - Plan:', selectedPlan);
+    } catch (error) {
+        console.error('Tracking error:', error);
+    }
+    
+    const paymentBtn = document.getElementById('payment-btn');
+    const originalText = paymentBtn.innerHTML;
+    
+    try {
+        // Show loading state
+        paymentBtn.disabled = true;
+        paymentBtn.innerHTML = '<div class="loading-spinner"></div>Processing...';
+        
+        const token = localStorage.getItem('authToken');
+        if (!token) {
+            throw new Error('Please sign in to continue');
         }
+        
+        // TRACK PAYMENT INITIATION REQUEST
+        try {
+            gtag('event', 'payment_initiation_started', {
+                'event_category': 'payment',
+                'event_label': 'api_request_sent'
+            });
+        } catch (error) {
+            console.error('Tracking error:', error);
+        }
+        
+        // Create payment order
+        const response = await fetch(`${API_BASE_URL}/payments/create-order`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                planType: selectedPlan.plan,
+                amount: selectedPlan.amount,
+                planDuration: selectedPlan.duration
+            })
+        });
+        
+        if (!response.ok) {
+            const errorData = await response.json();
+            
+            // TRACK PAYMENT FAILURE
+            try {
+                gtag('event', 'payment_initiation_failed', {
+                    'event_category': 'payment',
+                    'event_label': 'api_error',
+                    'error_message': errorData.error || 'Unknown error'
+                });
+            } catch (error) {
+                console.error('Tracking error:', error);
+            }
+            
+            throw new Error(errorData.error || 'Payment initiation failed');
+        }
+        
+        const paymentData = await response.json();
+        
+        if (paymentData.success) {
+            // TRACK SUCCESSFUL PAYMENT ORDER CREATION
+            try {
+                gtag('event', 'payment_order_created', {
+                    'event_category': 'payment',
+                    'event_label': 'redirecting_to_payu',
+                    'transaction_id': paymentData.paymentData.txnid
+                });
+            } catch (error) {
+                console.error('Tracking error:', error);
+            }
+            
+            // Fill PayU form and submit
+            fillPayUForm(paymentData.paymentData);
+            submitPayUForm(paymentData.paymentData.payu_url);
+        } else {
+            throw new Error('Payment order creation failed');
+        }
+        
+    } catch (error) {
+        console.error('Payment initiation error:', error);
+        showError(error.message || 'Payment initiation failed. Please try again.');
+        
+        // TRACK ERROR
+        try {
+            gtag('event', 'payment_error', {
+                'event_category': 'payment',
+                'event_label': 'exception_caught',
+                'error_message': error.message
+            });
+        } catch (trackError) {
+            console.error('Tracking error:', trackError);
+        }
+    } finally {
+        // Reset button state
+        paymentBtn.disabled = false;
+        paymentBtn.innerHTML = originalText;
+    }
+}
         
         // Fill PayU form with payment data
         function fillPayUForm(paymentData) {
