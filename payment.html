@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-6EV4Y6N8M5"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-6EV4Y6N8M5');
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Payment - Lexcello</title>
@@ -335,28 +343,40 @@
         }
         
         // Setup plan selection
-        function setupPlanSelection() {
-            const planCards = document.querySelectorAll('.plan-card');
+function setupPlanSelection() {
+    const planCards = document.querySelectorAll('.plan-card');
+    
+    planCards.forEach(card => {
+        card.addEventListener('click', function() {
+            // Remove selected class from all cards
+            planCards.forEach(c => c.classList.remove('selected'));
             
-            planCards.forEach(card => {
-                card.addEventListener('click', function() {
-                    // Remove selected class from all cards
-                    planCards.forEach(c => c.classList.remove('selected'));
-                    
-                    // Add selected class to clicked card
-                    this.classList.add('selected');
-                    
-                    // Update selected plan
-                    selectedPlan = {
-                        plan: this.dataset.plan,
-                        amount: parseInt(this.dataset.amount),
-                        duration: parseInt(this.dataset.duration)
-                    };
-                    
-                    console.log('Selected plan:', selectedPlan);
+            // Add selected class to clicked card
+            this.classList.add('selected');
+            
+            // Update selected plan
+            selectedPlan = {
+                plan: this.dataset.plan,
+                amount: parseInt(this.dataset.amount),
+                duration: parseInt(this.dataset.duration)
+            };
+            
+            console.log('Selected plan:', selectedPlan);
+            
+            // TRACK PLAN SELECTION
+            try {
+                gtag('event', 'plan_selected', {
+                    'event_category': 'payment',
+                    'event_label': selectedPlan.plan,
+                    'plan_amount': selectedPlan.amount,
+                    'plan_duration': selectedPlan.duration
                 });
-            });
-        }
+            } catch (error) {
+                console.error('Tracking error:', error);
+            }
+        });
+    });
+}
         
         // Initiate payment
 async function initiatePayment() {
