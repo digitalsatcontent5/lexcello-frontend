@@ -856,25 +856,70 @@
         }
         
         function handleSubscription() {
-            if (!currentUser) {
-                // Not logged in, redirect to registration
-                window.location.href = 'register.html';
-                return;
-            }
-            
-            // Check if user already has premium subscription
-            if (currentUser.subscriptionStatus === 'premium') {
-                // Already subscribed, go to dashboard
-                window.location.href = 'dashboard.html';
-                return;
-            }
-            
-            // Start payment process - redirect to payment page
-            window.location.href = 'payment.html';
+    // TRACK CTA BUTTON CLICK
+    try {
+        gtag('event', 'pricing_cta_click', {
+            'event_category': 'pricing',
+            'event_label': 'start_lnat_preparation',
+            'user_logged_in': currentUser ? 'yes' : 'no',
+            'subscription_status': currentUser ? currentUser.subscriptionStatus : 'not_logged_in'
+        });
+        console.log('Pricing CTA clicked - User:', currentUser ? 'Logged in' : 'Not logged in');
+    } catch (error) {
+        console.error('Tracking error:', error);
+    }
+    
+    if (!currentUser) {
+        // Not logged in, redirect to registration
+        // TRACK REDIRECT TO REGISTER
+        try {
+            gtag('event', 'redirect_to_register', {
+                'event_category': 'pricing',
+                'event_label': 'from_pricing_page'
+            });
+        } catch (error) {
+            console.error('Tracking error:', error);
         }
+        
+        window.location.href = 'register.html';
+        return;
+    }
+    
+    // Check if user already has premium subscription
+    if (currentUser.subscriptionStatus === 'premium') {
+        // Already subscribed, go to dashboard
+        // TRACK REDIRECT TO DASHBOARD
+        try {
+            gtag('event', 'redirect_to_dashboard', {
+                'event_category': 'pricing',
+                'event_label': 'already_subscribed'
+            });
+        } catch (error) {
+            console.error('Tracking error:', error);
+        }
+        
+        window.location.href = 'dashboard.html';
+        return;
+    }
+    
+    // Start payment process - redirect to payment page
+    // TRACK REDIRECT TO PAYMENT
+    try {
+        gtag('event', 'redirect_to_payment', {
+            'event_category': 'pricing',
+            'event_label': 'from_pricing_page',
+            'user_email': currentUser.email
+        });
+    } catch (error) {
+        console.error('Tracking error:', error);
+    }
+    
+    window.location.href = 'payment.html';
+}
     </script>
 </body>
 </html>
+
 
 
 
