@@ -302,6 +302,19 @@
         
         // Check if user is authenticated
         async function checkAuthStatus() {
+            // TRACK PAYMENT PAGE VIEW
+            try {
+                gtag('event', 'payment_page_view', {
+                    'event_category': 'payment',
+                    'event_label': 'landed_on_payment_page',
+                    'page_location': window.location.href,
+                    'page_path': window.location.pathname
+                });
+                console.log('Payment page viewed');
+            } catch (error) {
+                console.error('Tracking error:', error);
+            }
+            
             const token = localStorage.getItem('authToken');
             if (!token) {
                 showError('Please sign in to access premium features');
