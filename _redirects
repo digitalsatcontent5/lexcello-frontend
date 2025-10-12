@@ -1,4 +1,2 @@
-/payment-success.html  /.netlify/functions/payment-redirect  200
-/payment-failure.html  /.netlify/functions/payment-redirect  200
 /articles/:slug  /article-template.html  200
 /articles  /articles-index.html  200
