@@ -1,20 +1,11 @@
 [[redirects]]
   from = "/payment-success.html"
-  to = "/payment-success.html"
+  to = "/.netlify/functions/payment-redirect"
   status = 200
   force = true
-  conditions = {Role = ["*"]}
 
 [[redirects]]
   from = "/payment-failure.html"
-  to = "/payment-failure.html"
+  to = "/.netlify/functions/payment-redirect"
   status = 200
   force = true
-  conditions = {Role = ["*"]}
-
-# Ensure no SPA fallback interferes
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
-  force = false
