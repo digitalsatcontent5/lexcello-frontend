@@ -1,13 +1,1 @@
-[[redirects]]
-  from = "/payment-success.html"
-  to = "/.netlify/functions/payment-redirect"
-  status = 200
-  force = true
-  conditions = {Method = ["POST"]}
 
-[[redirects]]
-  from = "/payment-failure.html"
-  to = "/.netlify/functions/payment-redirect"
-  status = 200
-  force = true
-  conditions = {Method = ["POST"]}
