@@ -190,43 +190,37 @@
                     <div class="success-message" id="success-message"></div>
                     
                     <!-- Plan Selection -->
-                    <h4 class="mb-4">Choose Your Plan</h4>
-                    
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="plan-card" data-plan="premium-6" data-amount="4999" data-duration="6">
-                                <div class="d-flex justify-content-between align-items-center mb-3">
-                                    <h5>6 Months Premium</h5>
-                                    <div class="plan-price">₹4999</div>
-                                </div>
-                                <ul class="plan-features">
-                                    <li><i class="fas fa-check-circle"></i>10 Complete Practice Tests</li>
-                                    <li><i class="fas fa-check-circle"></i>Detailed Performance Analytics</li>
-                                    <li><i class="fas fa-check-circle"></i>Expert Explanations</li>
-                                    <li><i class="fas fa-check-circle"></i>6 Months Access</li>
-                                </ul>
-                                <small class="text-muted">₹166 per month</small>
-                            </div>
-                        </div>
-                        
-                        <div class="col-md-6">
-                            <div class="plan-card selected" data-plan="premium-12" data-amount="9000" data-duration="12">
-                                <div class="d-flex justify-content-between align-items-center mb-3">
-                                    <h5>12 Months Premium</h5>
-                                    <div class="plan-price">₹9000</div>
-                                </div>
-                                <div class="badge bg-success mb-2">Most Popular</div>
-                                <ul class="plan-features">
-                                    <li><i class="fas fa-check-circle"></i>10 Complete Practice Tests</li>
-                                    <li><i class="fas fa-check-circle"></i>Detailed Performance Analytics</li>
-                                    <li><i class="fas fa-check-circle"></i>Expert Explanations</li>
-                                    <li><i class="fas fa-check-circle"></i>12 Months Access</li>
-                                    <li><i class="fas fa-check-circle"></i>Save ₹500</li>
-                                </ul>
-                                <small class="text-muted">₹125 per month</small>
-                            </div>
-                        </div>
-                    </div>
+                    <!-- Plan Selection -->
+<h4 class="mb-4">Choose Your Plan</h4>
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="plan-card selected" id="main-plan">
+            <div class="text-center mb-3">
+                <h5>12 Months Premium Access</h5>
+                <div class="badge bg-success mb-2">Best Value</div>
+            </div>
+            
+            <!-- Currency Display -->
+            <div class="d-flex justify-content-center align-items-center mb-3">
+                <div class="plan-price" id="display-price">₹9,000</div>
+            </div>
+            
+            <ul class="plan-features">
+                <li><i class="fas fa-check-circle"></i>All 10 Complete Practice Tests</li>
+                <li><i class="fas fa-check-circle"></i>Detailed Performance Analytics</li>
+                <li><i class="fas fa-check-circle"></i>Expert Answer Explanations</li>
+                <li><i class="fas fa-check-circle"></i>12 Months Full Access</li>
+                <li><i class="fas fa-check-circle"></i>Unlimited Test Retakes</li>
+                <li><i class="fas fa-check-circle"></i>Mobile & Desktop Access</li>
+            </ul>
+            
+            <div class="text-center">
+                <small class="text-muted" id="monthly-rate">₹750 per month</small>
+            </div>
+        </div>
+    </div>
+</div>
                     
                     <!-- Payment Button -->
                     <div class="text-center mt-4">
@@ -285,284 +279,269 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     
     <script>
-        // Configuration
-        const API_BASE_URL = 'https://lexcello-backend.onrender.com/api';
-        
-        let selectedPlan = {
-            plan: 'premium-12',
-            amount: 9000,
-            duration: 12
-        };
-        
-        // Initialize
-        document.addEventListener('DOMContentLoaded', function() {
-            checkAuthStatus();
-            setupPlanSelection();
-        });
-        
-        // Check if user is authenticated
-        async function checkAuthStatus() {
-            // TRACK PAYMENT PAGE VIEW
-            try {
-                gtag('event', 'payment_page_view', {
-                    'event_category': 'payment',
-                    'event_label': 'landed_on_payment_page',
-                    'page_location': window.location.href,
-                    'page_path': window.location.pathname
-                });
-                console.log('Payment page viewed');
-            } catch (error) {
-                console.error('Tracking error:', error);
-            }
-            
-            const token = localStorage.getItem('authToken');
-            if (!token) {
-                showError('Please sign in to access premium features');
-                setTimeout(() => {
-                    window.location.href = 'login.html';
-                }, 2000);
-                return;
-            }
-            
-            try {
-                const response = await fetch(`${API_BASE_URL}/auth/profile`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
-                    }
-                });
-                
-                if (!response.ok) {
-                    throw new Error('Authentication failed');
-                }
-                
-                const userData = await response.json();
-                
-                // Check if user already has premium
-                if (userData.subscriptionStatus === 'premium') {
-                    showSuccess('You already have premium access!');
-                    setTimeout(() => {
-                        window.location.href = 'dashboard.html';
-                    }, 2000);
-                }
-                
-            } catch (error) {
-                console.error('Auth check error:', error);
-                showError('Authentication failed. Please sign in again.');
-                setTimeout(() => {
-                    window.location.href = 'login.html';
-                }, 2000);
-            }
-        }
-        
-        // Setup plan selection
-function setupPlanSelection() {
-    const planCards = document.querySelectorAll('.plan-card');
+    // Configuration
+    const API_BASE_URL = 'https://lexcello-backend.onrender.com/api';
     
-    planCards.forEach(card => {
-        card.addEventListener('click', function() {
-            // Remove selected class from all cards
-            planCards.forEach(c => c.classList.remove('selected'));
-            
-            // Add selected class to clicked card
-            this.classList.add('selected');
-            
-            // Update selected plan
-            selectedPlan = {
-                plan: this.dataset.plan,
-                amount: parseInt(this.dataset.amount),
-                duration: parseInt(this.dataset.duration)
-            };
-            
-            console.log('Selected plan:', selectedPlan);
-            
-            // TRACK PLAN SELECTION
-            try {
-                gtag('event', 'plan_selected', {
-                    'event_category': 'payment',
-                    'event_label': selectedPlan.plan,
-                    'plan_amount': selectedPlan.amount,
-                    'plan_duration': selectedPlan.duration
-                });
-            } catch (error) {
-                console.error('Tracking error:', error);
-            }
-        });
+    // Price configuration
+    const prices = {
+        INR: { symbol: '₹', amount: 9000, display: '9,000', code: 'INR', monthly: '₹750' },
+        USD: { symbol: '$', amount: 99, display: '99', code: 'USD', monthly: '$8.25' },
+        GBP: { symbol: '£', amount: 79, display: '79', code: 'GBP', monthly: '£6.58' }
+    };
+    
+    let selectedPlan = {
+        plan: 'premium-12',
+        amount: 9000,
+        duration: 12,
+        currency: 'INR'
+    };
+    
+    // Initialize
+    document.addEventListener('DOMContentLoaded', function() {
+        loadSelectedCurrency();
+        checkAuthStatus();
     });
-}
+    
+    // Load currency selected from pricing page
+    function loadSelectedCurrency() {
+        const savedCurrency = localStorage.getItem('selectedCurrency') || 'INR';
+        const savedAmount = localStorage.getItem('selectedAmount');
         
-        // Initiate payment
-async function initiatePayment() {
-    // TRACK PAYMENT BUTTON CLICK - ADD THIS FIRST
-    try {
-        gtag('event', 'click_payment_button', {
-            'event_category': 'payment',
-            'event_label': 'proceed_to_payment',
-            'plan_type': selectedPlan.plan,
-            'plan_amount': selectedPlan.amount,
-            'plan_duration': selectedPlan.duration
-        });
-        
-        // Also track in console for debugging
-        console.log('Payment button clicked - Plan:', selectedPlan);
-    } catch (error) {
-        console.error('Tracking error:', error);
+        if (prices[savedCurrency]) {
+            selectedPlan.currency = savedCurrency;
+            selectedPlan.amount = prices[savedCurrency].amount;
+            
+            // Update display
+            const price = prices[savedCurrency];
+            document.getElementById('display-price').textContent = price.symbol + price.display;
+            document.getElementById('monthly-rate').textContent = price.monthly + ' per month';
+            
+            console.log('Loaded currency:', savedCurrency, 'Amount:', selectedPlan.amount);
+        }
     }
     
-    const paymentBtn = document.getElementById('payment-btn');
-    const originalText = paymentBtn.innerHTML;
-    
-    try {
-        // Show loading state
-        paymentBtn.disabled = true;
-        paymentBtn.innerHTML = '<div class="loading-spinner"></div>Processing...';
-        
-        const token = localStorage.getItem('authToken');
-        if (!token) {
-            throw new Error('Please sign in to continue');
-        }
-        
-        // TRACK PAYMENT INITIATION REQUEST
+    // Check if user is authenticated
+    async function checkAuthStatus() {
+        // TRACK PAYMENT PAGE VIEW
         try {
-            gtag('event', 'payment_initiation_started', {
+            gtag('event', 'payment_page_view', {
                 'event_category': 'payment',
-                'event_label': 'api_request_sent'
+                'event_label': 'landed_on_payment_page',
+                'page_location': window.location.href,
+                'page_path': window.location.pathname,
+                'selected_currency': selectedPlan.currency
             });
+            console.log('Payment page viewed - Currency:', selectedPlan.currency);
         } catch (error) {
             console.error('Tracking error:', error);
         }
         
-        // Create payment order
-        const response = await fetch(`${API_BASE_URL}/payments/create-order`, {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                planType: selectedPlan.plan,
-                amount: selectedPlan.amount,
-                planDuration: selectedPlan.duration
-            })
-        });
-        
-        if (!response.ok) {
-            const errorData = await response.json();
-            
-            // TRACK PAYMENT FAILURE
-            try {
-                gtag('event', 'payment_initiation_failed', {
-                    'event_category': 'payment',
-                    'event_label': 'api_error',
-                    'error_message': errorData.error || 'Unknown error'
-                });
-            } catch (error) {
-                console.error('Tracking error:', error);
-            }
-            
-            throw new Error(errorData.error || 'Payment initiation failed');
-        }
-        
-        const paymentData = await response.json();
-        
-        if (paymentData.success) {
-            // TRACK SUCCESSFUL PAYMENT ORDER CREATION
-            try {
-                gtag('event', 'payment_order_created', {
-                    'event_category': 'payment',
-                    'event_label': 'redirecting_to_payu',
-                    'transaction_id': paymentData.paymentData.txnid
-                });
-            } catch (error) {
-                console.error('Tracking error:', error);
-            }
-            
-            // Fill PayU form and submit
-            fillPayUForm(paymentData.paymentData);
-            submitPayUForm(paymentData.paymentData.payu_url);
-        } else {
-            throw new Error('Payment order creation failed');
-        }
-        
-    } catch (error) {
-        console.error('Payment initiation error:', error);
-        showError(error.message || 'Payment initiation failed. Please try again.');
-        
-        // TRACK ERROR
-        try {
-            gtag('event', 'payment_error', {
-                'event_category': 'payment',
-                'event_label': 'exception_caught',
-                'error_message': error.message
-            });
-        } catch (trackError) {
-            console.error('Tracking error:', trackError);
-        }
-    } finally {
-        // Reset button state
-        paymentBtn.disabled = false;
-        paymentBtn.innerHTML = originalText;
-    }
-}
-        
-        // Fill PayU form with payment data
-        function fillPayUForm(paymentData) {
-            document.getElementById('payu-key').value = paymentData.key;
-            document.getElementById('payu-txnid').value = paymentData.txnid;
-            document.getElementById('payu-amount').value = paymentData.amount;
-            document.getElementById('payu-productinfo').value = paymentData.productinfo;
-            document.getElementById('payu-firstname').value = paymentData.firstname;
-            document.getElementById('payu-email').value = paymentData.email;
-            document.getElementById('payu-phone').value = paymentData.phone;
-            document.getElementById('payu-surl').value = paymentData.surl;
-            document.getElementById('payu-furl').value = paymentData.furl;
-            document.getElementById('payu-hash').value = paymentData.hash;
-            document.getElementById('payu-udf1').value = paymentData.udf1;
-            document.getElementById('payu-udf2').value = paymentData.udf2;
-            document.getElementById('payu-udf3').value = paymentData.udf3;
-            document.getElementById('payu-udf4').value = paymentData.udf4 || '';
-            document.getElementById('payu-udf5').value = paymentData.udf5 || '';
-        }
-        
-        // Submit PayU form
-        function submitPayUForm(payuUrl) {
-            const form = document.getElementById('payu-form');
-            form.action = payuUrl;
-            form.submit();
-        }
-        
-        // Utility functions
-        function showError(message) {
-            const errorDiv = document.getElementById('error-message');
-            errorDiv.textContent = message;
-            errorDiv.style.display = 'block';
-            
-            // Hide success message if visible
-            document.getElementById('success-message').style.display = 'none';
-            
-            // Auto-hide after 5 seconds
+        const token = localStorage.getItem('authToken');
+        if (!token) {
+            showError('Please sign in to access premium features');
             setTimeout(() => {
-                errorDiv.style.display = 'none';
-            }, 5000);
+                window.location.href = 'login.html';
+            }, 2000);
+            return;
         }
         
-        function showSuccess(message) {
-            const successDiv = document.getElementById('success-message');
-            successDiv.textContent = message;
-            successDiv.style.display = 'block';
+        try {
+            const response = await fetch(`${API_BASE_URL}/auth/profile`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
             
-            // Hide error message if visible
-            document.getElementById('error-message').style.display = 'none';
+            if (!response.ok) {
+                throw new Error('Authentication failed');
+            }
+            
+            const userData = await response.json();
+            
+            // Check if user already has premium
+            if (userData.subscriptionStatus === 'premium') {
+                showSuccess('You already have premium access!');
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 2000);
+            }
+            
+        } catch (error) {
+            console.error('Auth check error:', error);
+            showError('Authentication failed. Please sign in again.');
+            setTimeout(() => {
+                window.location.href = 'login.html';
+            }, 2000);
+        }
+    }
+    
+    // Initiate payment
+    async function initiatePayment() {
+        // TRACK PAYMENT BUTTON CLICK
+        try {
+            gtag('event', 'click_payment_button', {
+                'event_category': 'payment',
+                'event_label': 'proceed_to_payment',
+                'plan_type': selectedPlan.plan,
+                'plan_amount': selectedPlan.amount,
+                'plan_duration': selectedPlan.duration,
+                'currency': selectedPlan.currency
+            });
+            
+            console.log('Payment button clicked - Plan:', selectedPlan);
+        } catch (error) {
+            console.error('Tracking error:', error);
         }
         
-        // Format currency
-        function formatCurrency(amount) {
-            return new Intl.NumberFormat('en-IN', {
-                style: 'currency',
-                currency: 'INR',
-                maximumFractionDigits: 0
-            }).format(amount);
+        const paymentBtn = document.getElementById('payment-btn');
+        const originalText = paymentBtn.innerHTML;
+        
+        try {
+            // Show loading state
+            paymentBtn.disabled = true;
+            paymentBtn.innerHTML = '<div class="loading-spinner"></div>Processing...';
+            
+            const token = localStorage.getItem('authToken');
+            if (!token) {
+                throw new Error('Please sign in to continue');
+            }
+            
+            // TRACK PAYMENT INITIATION REQUEST
+            try {
+                gtag('event', 'payment_initiation_started', {
+                    'event_category': 'payment',
+                    'event_label': 'api_request_sent',
+                    'currency': selectedPlan.currency
+                });
+            } catch (error) {
+                console.error('Tracking error:', error);
+            }
+            
+            // Create payment order with currency
+            const response = await fetch(`${API_BASE_URL}/payments/create-order`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    planType: selectedPlan.plan,
+                    amount: selectedPlan.amount,
+                    planDuration: selectedPlan.duration,
+                    currency: selectedPlan.currency  // Add currency here
+                })
+            });
+            
+            if (!response.ok) {
+                const errorData = await response.json();
+                
+                // TRACK PAYMENT FAILURE
+                try {
+                    gtag('event', 'payment_initiation_failed', {
+                        'event_category': 'payment',
+                        'event_label': 'api_error',
+                        'error_message': errorData.error || 'Unknown error'
+                    });
+                } catch (error) {
+                    console.error('Tracking error:', error);
+                }
+                
+                throw new Error(errorData.error || 'Payment initiation failed');
+            }
+            
+            const paymentData = await response.json();
+            
+            if (paymentData.success) {
+                // TRACK SUCCESSFUL PAYMENT ORDER CREATION
+                try {
+                    gtag('event', 'payment_order_created', {
+                        'event_category': 'payment',
+                        'event_label': 'redirecting_to_payu',
+                        'transaction_id': paymentData.paymentData.txnid,
+                        'currency': selectedPlan.currency
+                    });
+                } catch (error) {
+                    console.error('Tracking error:', error);
+                }
+                
+                // Fill PayU form and submit
+                fillPayUForm(paymentData.paymentData);
+                submitPayUForm(paymentData.paymentData.payu_url);
+            } else {
+                throw new Error('Payment order creation failed');
+            }
+            
+        } catch (error) {
+            console.error('Payment initiation error:', error);
+            showError(error.message || 'Payment initiation failed. Please try again.');
+            
+            // TRACK ERROR
+            try {
+                gtag('event', 'payment_error', {
+                    'event_category': 'payment',
+                    'event_label': 'exception_caught',
+                    'error_message': error.message
+                });
+            } catch (trackError) {
+                console.error('Tracking error:', trackError);
+            }
+        } finally {
+            // Reset button state
+            paymentBtn.disabled = false;
+            paymentBtn.innerHTML = originalText;
         }
-    </script>
+    }
+    
+    // Fill PayU form with payment data
+    function fillPayUForm(paymentData) {
+        document.getElementById('payu-key').value = paymentData.key;
+        document.getElementById('payu-txnid').value = paymentData.txnid;
+        document.getElementById('payu-amount').value = paymentData.amount;
+        document.getElementById('payu-productinfo').value = paymentData.productinfo;
+        document.getElementById('payu-firstname').value = paymentData.firstname;
+        document.getElementById('payu-email').value = paymentData.email;
+        document.getElementById('payu-phone').value = paymentData.phone;
+        document.getElementById('payu-surl').value = paymentData.surl;
+        document.getElementById('payu-furl').value = paymentData.furl;
+        document.getElementById('payu-hash').value = paymentData.hash;
+        document.getElementById('payu-udf1').value = paymentData.udf1;
+        document.getElementById('payu-udf2').value = paymentData.udf2;
+        document.getElementById('payu-udf3').value = paymentData.udf3;
+        document.getElementById('payu-udf4').value = paymentData.udf4 || '';
+        document.getElementById('payu-udf5').value = paymentData.udf5 || '';
+    }
+    
+    // Submit PayU form
+    function submitPayUForm(payuUrl) {
+        const form = document.getElementById('payu-form');
+        form.action = payuUrl;
+        form.submit();
+    }
+    
+    // Utility functions
+    function showError(message) {
+        const errorDiv = document.getElementById('error-message');
+        errorDiv.textContent = message;
+        errorDiv.style.display = 'block';
+        
+        // Hide success message if visible
+        document.getElementById('success-message').style.display = 'none';
+        
+        // Auto-hide after 5 seconds
+        setTimeout(() => {
+            errorDiv.style.display = 'none';
+        }, 5000);
+    }
+    
+    function showSuccess(message) {
+        const successDiv = document.getElementById('success-message');
+        successDiv.textContent = message;
+        successDiv.style.display = 'block';
+        
+        // Hide error message if visible
+        document.getElementById('error-message').style.display = 'none';
+    }
+</script>
 </body>
 </html>
