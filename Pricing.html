@@ -525,7 +525,7 @@
     <div class="currency-disclaimer" id="currency-disclaimer" style="display: block;">
     <small class="text-muted">
         <i class="fas fa-info-circle"></i> 
-        You will be charged <strong>₹9,000 </strong> (approximately <span id="selected-currency-name">£79</span>). 
+        You will be charged <strong>₹9,000 INR</strong> (approximately <span id="selected-currency-name">£79</span>). 
         Final amount in your currency may vary based on current exchange rates.
     </small>
 </div>
@@ -900,7 +900,7 @@
     if (price.showDisclaimer) {
         disclaimer.style.display = 'block';
         // Show both symbol and amount for international currencies
-        currencyName.textContent = `${price.symbol}${price.display} ${price.actualCurrency}`;
+        currencyName.textContent = `${price.symbol}${price.display}`;
     } else {
         disclaimer.style.display = 'none';
     }
@@ -987,6 +987,7 @@
     </script>
 </body>
 </html>
+
 
 
 
