@@ -517,17 +517,17 @@
 
 <div class="price-tag">
     <div class="price-amount">
-        <span class="price-currency" id="currency-symbol">₹</span><span id="price-amount">9,000</span>
-    </div>
+    <span class="price-currency" id="currency-symbol">£</span><span id="price-amount">79</span>
+</div>
     <div class="price-period">12 months access • One-time payment</div>
     <!-- Add disclaimer here -->
-    <div class="currency-disclaimer" id="currency-disclaimer" style="display: none;">
-        <small class="text-muted">
-            <i class="fas fa-info-circle"></i> 
-            You will be charged <strong>₹9,000 INR</strong> (approximately <span id="selected-currency-name">$99 USD</span>). 
-Final amount in your currency may vary based on current exchange rates.
-        </small>
-    </div>
+    <div class="currency-disclaimer" id="currency-disclaimer" style="display: block;">
+    <small class="text-muted">
+        <i class="fas fa-info-circle"></i> 
+        You will be charged <strong>₹9,000 INR</strong> (approximately <span id="selected-currency-name">£79 GBP</span>). 
+        Final amount in your currency may vary based on current exchange rates.
+    </small>
+</div>
 </div>
                         
                         <div class="plan-title">Complete LNAT Preparation</div>
@@ -878,7 +878,7 @@ Final amount in your currency may vary based on current exchange rates.
         actualCurrency: 'GBP'
     }
 };
-        let selectedCurrency = 'INR'; // Default currency
+        let selectedCurrency = 'GBP'; // Default currency
         
         function switchCurrency(currency) {
     selectedCurrency = currency;
@@ -986,6 +986,7 @@ Final amount in your currency may vary based on current exchange rates.
     </script>
 </body>
 </html>
+
 
 
 
