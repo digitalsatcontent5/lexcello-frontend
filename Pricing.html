@@ -493,16 +493,17 @@
                         <div class="featured-badge">Most Popular</div>
                         
                         <div class="currency-switch">
-                            <button class="currency-btn active" onclick="switchCurrency('usd')">USD</button>
-                            <button class="currency-btn" onclick="switchCurrency('gbp')">GBP</button>
-                        </div>
-                        
-                        <div class="price-tag">
-                            <div class="price-amount">
-                                <span class="price-currency" id="currency-symbol">$</span><span id="price-amount">99</span>
-                            </div>
-                            <div class="price-period">One-time payment</div>
-                        </div>
+    <button class="currency-btn active" onclick="switchCurrency('INR')">🇮🇳 INR</button>
+    <button class="currency-btn" onclick="switchCurrency('USD')">🇺🇸 USD</button>
+    <button class="currency-btn" onclick="switchCurrency('GBP')">🇬🇧 GBP</button>
+</div>
+
+<div class="price-tag">
+    <div class="price-amount">
+        <span class="price-currency" id="currency-symbol">₹</span><span id="price-amount">9,000</span>
+    </div>
+    <div class="price-period">12 months access • One-time payment</div>
+</div>
                         
                         <div class="plan-title">Complete LNAT Preparation</div>
                         <div class="plan-description">Everything you need to excel at the LNAT</div>
@@ -561,10 +562,10 @@
                 <div class="row justify-content-center">
                     <div class="col-lg-8">
                         <div class="alert alert-info">
-                            <i class="fas fa-info-circle me-2"></i>
-                            <strong>Early Access Pricing:</strong> Get all 10 tests for the price of a fraction of private tutoring. 
-                            As we add more tests and features, this price will increase to £149/$179.
-                        </div>
+    <i class="fas fa-info-circle me-2"></i>
+    <strong>International Pricing Available:</strong> Choose your preferred currency. Get lifetime access to all 10 tests. 
+    As we add more tests and features, this price will increase.
+</div>
                     </div>
                 </div>
             </div>
@@ -821,24 +822,25 @@
         }
         
         // Pricing functions
+        const prices = {
+    INR: { symbol: '₹', amount: 9000, display: '9,000', code: 'INR' },
+    USD: { symbol: '$', amount: 99, display: '99', code: 'USD' },
+    GBP: { symbol: '£', amount: 79, display: '79', code: 'GBP' }
+};
+        let selectedCurrency = 'INR'; // Default currency
+        
         function switchCurrency(currency) {
-            const usdBtn = document.querySelector('.currency-btn:first-child');
-            const gbpBtn = document.querySelector('.currency-btn:last-child');
-            const currencySymbol = document.getElementById('currency-symbol');
-            const priceAmount = document.getElementById('price-amount');
-            
-            if (currency === 'usd') {
-                usdBtn.classList.add('active');
-                gbpBtn.classList.remove('active');
-                currencySymbol.textContent = '$';
-                priceAmount.textContent = '99';
-            } else {
-                gbpBtn.classList.add('active');
-                usdBtn.classList.remove('active');
-                currencySymbol.textContent = '£';
-                priceAmount.textContent = '79';
-            }
-        }
+    selectedCurrency = currency;
+    
+    const buttons = document.querySelectorAll('.currency-btn');
+    buttons.forEach(btn => btn.classList.remove('active'));
+    
+    event.target.classList.add('active');
+    
+    const price = prices[currency];
+    document.getElementById('currency-symbol').textContent = price.symbol;
+    document.getElementById('price-amount').textContent = price.display;
+}
         
         function toggleFaq(button) {
             const answer = button.nextElementSibling;
@@ -855,23 +857,23 @@
             }
         }
         
-        function handleSubscription() {
+        async function handleSubscription() {
     // TRACK CTA BUTTON CLICK
     try {
         gtag('event', 'pricing_cta_click', {
             'event_category': 'pricing',
             'event_label': 'start_lnat_preparation',
             'user_logged_in': currentUser ? 'yes' : 'no',
-            'subscription_status': currentUser ? currentUser.subscriptionStatus : 'not_logged_in'
+            'subscription_status': currentUser ? currentUser.subscriptionStatus : 'not_logged_in',
+            'selected_currency': selectedCurrency
         });
-        console.log('Pricing CTA clicked - User:', currentUser ? 'Logged in' : 'Not logged in');
+        console.log('Pricing CTA clicked - Currency:', selectedCurrency);
     } catch (error) {
         console.error('Tracking error:', error);
     }
     
     if (!currentUser) {
         // Not logged in, redirect to registration
-        // TRACK REDIRECT TO REGISTER
         try {
             gtag('event', 'redirect_to_register', {
                 'event_category': 'pricing',
@@ -887,8 +889,6 @@
     
     // Check if user already has premium subscription
     if (currentUser.subscriptionStatus === 'premium') {
-        // Already subscribed, go to dashboard
-        // TRACK REDIRECT TO DASHBOARD
         try {
             gtag('event', 'redirect_to_dashboard', {
                 'event_category': 'pricing',
@@ -902,13 +902,17 @@
         return;
     }
     
-    // Start payment process - redirect to payment page
-    // TRACK REDIRECT TO PAYMENT
+    // Store selected currency and redirect to payment page
+    localStorage.setItem('selectedCurrency', selectedCurrency);
+    localStorage.setItem('selectedAmount', prices[selectedCurrency].amount);
+    
     try {
         gtag('event', 'redirect_to_payment', {
             'event_category': 'pricing',
             'event_label': 'from_pricing_page',
-            'user_email': currentUser.email
+            'user_email': currentUser.email,
+            'currency': selectedCurrency,
+            'amount': prices[selectedCurrency].amount
         });
     } catch (error) {
         console.error('Tracking error:', error);
@@ -919,6 +923,7 @@
     </script>
 </body>
 </html>
+
 
 
 
