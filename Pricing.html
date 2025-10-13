@@ -258,7 +258,24 @@
             color: var(--text-light);
             margin-top: 5px;
         }
-        
+        .currency-disclaimer {
+    margin-top: 15px;
+    padding: 12px;
+    background: #fff3cd;
+    border-left: 4px solid #ffc107;
+    border-radius: 4px;
+    text-align: left;
+}
+
+.currency-disclaimer small {
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.currency-disclaimer i {
+    color: #856404;
+    margin-right: 5px;
+}
         .plan-title {
             font-size: 1.8rem;
             font-weight: 700;
@@ -503,6 +520,14 @@
         <span class="price-currency" id="currency-symbol">₹</span><span id="price-amount">9,000</span>
     </div>
     <div class="price-period">12 months access • One-time payment</div>
+    <!-- Add disclaimer here -->
+    <div class="currency-disclaimer" id="currency-disclaimer" style="display: none;">
+        <small class="text-muted">
+            <i class="fas fa-info-circle"></i> 
+            You will be charged <strong>₹9,000 INR</strong> (approximately <span id="selected-currency-name">$99 USD</span>). 
+Final amount in your currency may vary based on current exchange rates.
+        </small>
+    </div>
 </div>
                         
                         <div class="plan-title">Complete LNAT Preparation</div>
@@ -823,9 +848,35 @@
         
         // Pricing functions
         const prices = {
-    INR: { symbol: '₹', amount: 9000, display: '9,000', code: 'INR' },
-    USD: { symbol: '$', amount: 99, display: '99', code: 'USD' },
-    GBP: { symbol: '£', amount: 79, display: '79', code: 'GBP' }
+    INR: { 
+        symbol: '₹', 
+        amount: 9000, 
+        display: '9,000', 
+        code: 'INR', 
+        monthly: '₹750',
+        name: 'Indian Rupees',
+        showDisclaimer: false
+    },
+    USD: { 
+        symbol: '$', 
+        amount: 9000,  // Send ₹9000 to backend
+        display: '99', 
+        code: 'INR',  // Backend processes as INR
+        monthly: '$8.25',
+        name: 'US Dollars',
+        showDisclaimer: true,
+        actualCurrency: 'USD'
+    },
+    GBP: { 
+        symbol: '£', 
+        amount: 9000,  // Send ₹9000 to backend
+        display: '79', 
+        code: 'INR',  // Backend processes as INR
+        monthly: '£6.58',
+        name: 'British Pounds',
+        showDisclaimer: true,
+        actualCurrency: 'GBP'
+    }
 };
         let selectedCurrency = 'INR'; // Default currency
         
@@ -840,6 +891,18 @@
     const price = prices[currency];
     document.getElementById('currency-symbol').textContent = price.symbol;
     document.getElementById('price-amount').textContent = price.display;
+    
+    // Show/hide disclaimer
+    const disclaimer = document.getElementById('currency-disclaimer');
+    const currencyName = document.getElementById('selected-currency-name');
+    
+    if (price.showDisclaimer) {
+        disclaimer.style.display = 'block';
+        // Show both symbol and amount for international currencies
+        currencyName.textContent = `${price.symbol}${price.display} ${price.actualCurrency}`;
+    } else {
+        disclaimer.style.display = 'none';
+    }
 }
         
         function toggleFaq(button) {
@@ -923,6 +986,7 @@
     </script>
 </body>
 </html>
+
 
 
 
