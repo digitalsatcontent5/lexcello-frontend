@@ -1,6 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-6EV4Y6N8M5"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-6EV4Y6N8M5');
+  
+  // Track purchase completion
+  gtag('event', 'purchase', {
+    transaction_id: new URLSearchParams(window.location.search).get('txnid') || 'unknown',
+    value: parseFloat(new URLSearchParams(window.location.search).get('amount')) || 0,
+    currency: new URLSearchParams(window.location.search).get('currency') || 'INR',
+    items: [{
+      item_id: 'lexcello_premium',
+      item_name: 'Lexcello Premium Subscription',
+      quantity: 1
+    }]
+  });
+</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Payment Successful - Lexcello</title>
