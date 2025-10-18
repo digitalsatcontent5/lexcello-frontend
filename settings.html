@@ -16,7 +16,6 @@
 <title>Settings - Lexcello</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-
 <style>
     :root {
         --primary-color: #1a365d;
@@ -196,7 +195,7 @@
     <nav class="navbar navbar-expand-lg fixed-top">
         <div class="container">
             <a class="navbar-brand" href="index.html">Lexcello</a>
-<div class="user-info">
+        <div class="user-info">
             <div class="user-avatar" id="userAvatar">U</div>
             <span class="user-name" id="userName">Student</span>
             <div class="dropdown">
@@ -300,7 +299,7 @@
                 
                 <hr class="my-4">
                 
-                <a href="pricing.html" class="btn btn-outline-primary">
+                <a href="pricing.html" class="btn btn-outline-primary" id="upgradeButton">
                     <i class="fas fa-arrow-up me-2"></i>Upgrade to Premium
                 </a>
             </div>
@@ -385,20 +384,38 @@
     function populateSettings() {
         if (!currentUser) return;
 
-        const name = currentUser.name || currentUser.email || 'Student';
-        const firstName = name.split(' ')[0] || name.split('@')[0] || 'Student';
+        // Handle name - check both camelCase and snake_case
+        const fullName = currentUser.name || 
+                 ((currentUser.firstName || currentUser.first_name || '') + ' ' + (currentUser.lastName || currentUser.last_name || '')).trim() || 
+                 currentUser.email || 
+                 'Student';
+        const firstName = currentUser.firstName || currentUser.first_name || fullName.split(' ')[0] || fullName.split('@')[0] || 'Student';
         const initial = firstName.charAt(0).toUpperCase();
 
         document.getElementById('userName').textContent = firstName;
         document.getElementById('userAvatar').textContent = initial;
 
-        const isPremium = currentUser.subscriptionStatus === 'premium';
+        // Check subscription status - both naming conventions
+        const isPremium = currentUser.subscription_status === 'premium' || 
+                          currentUser.subscription_status === 'active' ||
+                          currentUser.subscriptionStatus === 'premium' ||
+                          currentUser.subscriptionStatus === 'active';
+        
         document.getElementById('currentPlan').textContent = isPremium ? 'Premium' : 'Free';
         
         if (isPremium) {
             document.getElementById('premiumInfo').style.display = 'block';
         }
 
+        // Hide upgrade button if premium
+        if (isPremium) {
+            const upgradeBtn = document.getElementById('upgradeButton');
+            if (upgradeBtn) {
+                upgradeBtn.style.display = 'none';
+            }
+        }
+
+        // Load notification preferences from localStorage
         const prefs = JSON.parse(localStorage.getItem('notificationPrefs') || '{}');
         document.getElementById('emailNotifications').checked = prefs.emailNotifications !== false;
         document.getElementById('progressUpdates').checked = prefs.progressUpdates !== false;
@@ -420,11 +437,83 @@
     }
 
     function changePassword() {
-        showNotification('Password change coming soon!', 'info');
+        const currentPassword = prompt('Enter your current password:');
+        if (!currentPassword) return;
+        
+        const newPassword = prompt('Enter your new password (minimum 8 characters):');
+        if (!newPassword || newPassword.length < 8) {
+            showNotification('Password must be at least 8 characters', 'error');
+            return;
+        }
+        
+        const confirmPassword = prompt('Confirm your new password:');
+        if (newPassword !== confirmPassword) {
+            showNotification('Passwords do not match', 'error');
+            return;
+        }
+        
+        const token = localStorage.getItem('authToken');
+        
+        fetch(`${API_BASE_URL}/auth/change-password`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                currentPassword: currentPassword,
+                newPassword: newPassword
+            })
+        })
+        .then(response => {
+            if (response.ok) {
+                showNotification('Password changed successfully!', 'success');
+            } else {
+                showNotification('Failed to change password. Check your current password.', 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Password change error:', error);
+            showNotification('Failed to change password', 'error');
+        });
     }
 
-    function downloadData() {
-        showNotification('Data export requested. You will receive an email shortly.', 'info');
+    async function downloadData() {
+        const token = localStorage.getItem('authToken');
+        
+        try {
+            showNotification('Preparing your data export...', 'info');
+            
+            const response = await fetch(`${API_BASE_URL}/user/export-data`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+            
+            if (response.ok) {
+                const userData = await response.json();
+                
+                // Create downloadable JSON file
+                const dataStr = JSON.stringify(userData, null, 2);
+                const dataBlob = new Blob([dataStr], { type: 'application/json' });
+                const url = URL.createObjectURL(dataBlob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `lexcello-data-${new Date().toISOString().split('T')[0]}.json`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+                
+                showNotification('Data exported successfully!', 'success');
+            } else {
+                showNotification('Failed to export data', 'error');
+            }
+        } catch (error) {
+            console.error('Data export error:', error);
+            showNotification('Failed to export data', 'error');
+        }
     }
 
     function deleteAccount() {
