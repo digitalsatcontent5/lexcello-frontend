@@ -520,17 +520,68 @@
 
 <div class="price-tag">
     <div class="price-amount">
-    <span class="price-currency" id="currency-symbol">£</span><span id="price-amount">79</span>
-</div>
+        <span class="price-currency" id="currency-symbol">£</span><span id="price-amount">79</span>
+    </div>
     <div class="price-period">12 months access • One-time payment</div>
-    <!-- Add disclaimer here -->
+    
+    <!-- Coupon Input Section -->
+    <div class="coupon-section" style="margin-top: 25px;">
+        <div style="display: flex; gap: 10px; max-width: 400px; margin: 0 auto;">
+            <input type="text" 
+                   id="coupon-input" 
+                   class="form-control" 
+                   placeholder="Have a coupon code?" 
+                   style="text-transform: uppercase; flex: 1;">
+            <button class="btn btn-outline-primary" 
+                    onclick="applyCoupon()" 
+                    id="apply-coupon-btn"
+                    style="white-space: nowrap;">
+                Apply
+            </button>
+        </div>
+        
+        <!-- Coupon Status Messages -->
+        <div id="coupon-message" style="margin-top: 10px; display: none;"></div>
+        
+        <!-- Discount Display -->
+        <div id="discount-display" style="display: none; margin-top: 15px; padding: 15px; background: #d4edda; border-radius: 8px; border-left: 4px solid #28a745;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <strong style="color: #155724;">✓ Coupon Applied: <span id="applied-coupon-code"></span></strong>
+                    <div style="font-size: 0.9rem; color: #155724; margin-top: 5px;">
+                        <span id="discount-description"></span>
+                    </div>
+                </div>
+                <button onclick="removeCoupon()" 
+                        style="background: none; border: none; color: #721c24; font-size: 1.2rem; cursor: pointer; padding: 5px 10px;"
+                        title="Remove coupon">
+                    ×
+                </button>
+            </div>
+            <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #c3e6cb;">
+                <div style="display: flex; justify-content: space-between; font-size: 0.95rem; color: #666; margin-bottom: 5px;">
+                    <span>Original Price:</span>
+                    <span style="text-decoration: line-through;" id="original-price-display">£79</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; font-size: 1.1rem; font-weight: bold; color: #155724;">
+                    <span>Final Price:</span>
+                    <span id="final-price-display">£59</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; font-size: 0.9rem; color: #28a745; margin-top: 5px;">
+                    <span>You Save:</span>
+                    <span id="savings-display">£20</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <div class="currency-disclaimer" id="currency-disclaimer" style="display: block;">
-    <small class="text-muted">
-        <i class="fas fa-info-circle"></i> 
-        You will be charged <strong>₹9,000 INR</strong> (approximately <span id="selected-currency-name">£79</span>). 
-        Final amount in your currency may vary based on current exchange rates.
-    </small>
-</div>
+        <small class="text-muted">
+            <i class="fas fa-info-circle"></i> 
+            You will be charged <strong>₹9,000 INR</strong> (approximately <span id="selected-currency-name">£79</span>). 
+            Final amount in your currency may vary based on current exchange rates.
+        </small>
+    </div>
 </div>
                         
                         <div class="plan-title">Complete LNAT Preparation</div>
@@ -985,6 +1036,212 @@
     }
     
     window.location.href = 'payment.html';
+}
+        // Coupon Management
+let appliedCoupon = null;
+let discountAmount = 0;
+let finalPrice = 0;
+
+async function applyCoupon() {
+    const couponInput = document.getElementById('coupon-input');
+    const couponCode = couponInput.value.trim().toUpperCase();
+    
+    if (!couponCode) {
+        showCouponMessage('Please enter a coupon code', 'error');
+        return;
+    }
+    
+    const applyBtn = document.getElementById('apply-coupon-btn');
+    applyBtn.disabled = true;
+    applyBtn.textContent = 'Checking...';
+    
+    try {
+        // Get current price based on selected currency
+        const currentPrice = prices[selectedCurrency];
+        const originalAmount = currentPrice.amount; // Always ₹9000 for backend
+        
+        // Validate coupon
+        const validateResponse = await fetch(`${API_BASE_URL}/coupons/validate`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ code: couponCode })
+        });
+        
+        if (!validateResponse.ok) {
+            const error = await validateResponse.json();
+            showCouponMessage(error.error || 'Invalid coupon code', 'error');
+            applyBtn.disabled = false;
+            applyBtn.textContent = 'Apply';
+            return;
+        }
+        
+        // Calculate discount
+        const calculateResponse = await fetch(`${API_BASE_URL}/coupons/calculate`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                code: couponCode,
+                originalAmount: originalAmount
+            })
+        });
+        
+        if (!calculateResponse.ok) {
+            const error = await calculateResponse.json();
+            showCouponMessage(error.error || 'Failed to apply coupon', 'error');
+            applyBtn.disabled = false;
+            applyBtn.textContent = 'Apply';
+            return;
+        }
+        
+        const discountData = await calculateResponse.json();
+        
+        if (discountData.success) {
+            appliedCoupon = discountData.coupon;
+            discountAmount = discountData.discountAmount;
+            finalPrice = discountData.finalAmount;
+            
+            displayDiscount(discountData, currentPrice);
+            showCouponMessage('Coupon applied successfully!', 'success');
+            
+            // Store for payment page
+            localStorage.setItem('appliedCoupon', JSON.stringify({
+                code: couponCode,
+                couponId: discountData.couponId,
+                discountAmount: discountAmount,
+                finalAmount: finalPrice
+            }));
+            
+            // Track in Google Analytics
+            try {
+                gtag('event', 'coupon_applied', {
+                    'event_category': 'pricing',
+                    'event_label': couponCode,
+                    'value': discountAmount
+                });
+            } catch (error) {
+                console.error('GA tracking error:', error);
+            }
+            
+            couponInput.disabled = true;
+        }
+        
+    } catch (error) {
+        console.error('Coupon error:', error);
+        showCouponMessage('Failed to apply coupon. Please try again.', 'error');
+    } finally {
+        applyBtn.disabled = false;
+        applyBtn.textContent = 'Apply';
+    }
+}
+
+function displayDiscount(discountData, currentPrice) {
+    // Show discount display section
+    document.getElementById('discount-display').style.display = 'block';
+    
+    // Update coupon code
+    document.getElementById('applied-coupon-code').textContent = discountData.coupon.code;
+    
+    // Update description
+    const description = discountData.coupon.description || 
+        `${discountData.discountAmount === discountData.originalAmount ? 'Free' : 
+          `Save ${currentPrice.symbol}${(discountData.discountAmount * parseFloat(currentPrice.display) / currentPrice.amount).toFixed(2)}`}`;
+    document.getElementById('discount-description').textContent = description;
+    
+    // Calculate display amounts based on selected currency
+    const displayOriginal = parseFloat(currentPrice.display);
+    const displayDiscount = (discountData.discountAmount * displayOriginal / currentPrice.amount).toFixed(2);
+    const displayFinal = (displayOriginal - displayDiscount).toFixed(2);
+    
+    // Update prices
+    document.getElementById('original-price-display').textContent = 
+        `${currentPrice.symbol}${displayOriginal}`;
+    document.getElementById('final-price-display').textContent = 
+        `${currentPrice.symbol}${displayFinal}`;
+    document.getElementById('savings-display').textContent = 
+        `${currentPrice.symbol}${displayDiscount}`;
+    
+    // Update main price display to show discounted price
+    document.getElementById('price-amount').innerHTML = 
+        `<span style="text-decoration: line-through; opacity: 0.5; font-size: 0.6em;">${displayOriginal}</span> ${displayFinal}`;
+}
+
+function removeCoupon() {
+    appliedCoupon = null;
+    discountAmount = 0;
+    finalPrice = 0;
+    
+    // Clear storage
+    localStorage.removeItem('appliedCoupon');
+    
+    // Hide discount display
+    document.getElementById('discount-display').style.display = 'none';
+    
+    // Reset coupon input
+    const couponInput = document.getElementById('coupon-input');
+    couponInput.value = '';
+    couponInput.disabled = false;
+    
+    // Reset price display
+    const currentPrice = prices[selectedCurrency];
+    document.getElementById('price-amount').textContent = currentPrice.display;
+    
+    showCouponMessage('Coupon removed', 'info');
+    
+    // Track removal
+    try {
+        gtag('event', 'coupon_removed', {
+            'event_category': 'pricing',
+            'event_label': 'user_action'
+        });
+    } catch (error) {
+        console.error('GA tracking error:', error);
+    }
+}
+
+function showCouponMessage(message, type) {
+    const messageDiv = document.getElementById('coupon-message');
+    
+    const colors = {
+        success: { bg: '#d4edda', text: '#155724', border: '#c3e6cb' },
+        error: { bg: '#f8d7da', text: '#721c24', border: '#f5c6cb' },
+        info: { bg: '#d1ecf1', text: '#0c5460', border: '#bee5eb' }
+    };
+    
+    const color = colors[type] || colors.info;
+    
+    messageDiv.style.display = 'block';
+    messageDiv.style.padding = '10px';
+    messageDiv.style.borderRadius = '6px';
+    messageDiv.style.background = color.bg;
+    messageDiv.style.color = color.text;
+    messageDiv.style.border = `1px solid ${color.border}`;
+    messageDiv.style.fontSize = '0.9rem';
+    messageDiv.textContent = message;
+    
+    setTimeout(() => {
+        if (type !== 'success') {
+            messageDiv.style.display = 'none';
+        }
+    }, 5000);
+}
+
+// Update switchCurrency function to reset coupon when currency changes
+const originalSwitchCurrency = switchCurrency;
+function switchCurrency(currency) {
+    originalSwitchCurrency(currency);
+    
+    // If coupon is applied, recalculate and update display
+    if (appliedCoupon) {
+        const currentPrice = prices[currency];
+        const discountData = {
+            success: true,
+            coupon: appliedCoupon,
+            originalAmount: currentPrice.amount,
+            discountAmount: discountAmount,
+            finalAmount: finalPrice
+        };
+        displayDiscount(discountData, currentPrice);
+    }
 }
     </script>
 </body>
