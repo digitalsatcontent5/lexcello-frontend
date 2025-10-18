@@ -357,6 +357,8 @@
 
             if (response.ok) {
                 currentUser = await response.json();
+                console.log('User created_at:', currentUser.created_at);
+console.log('Full user object:', currentUser);
                 populateProfile();
             } else {
                 localStorage.removeItem('authToken');
