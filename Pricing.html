@@ -937,25 +937,59 @@
         function switchCurrency(currency) {
     selectedCurrency = currency;
     
+    // Update button states
     const buttons = document.querySelectorAll('.currency-btn');
     buttons.forEach(btn => btn.classList.remove('active'));
-    
     event.target.classList.add('active');
     
+    // Update price display
     const price = prices[currency];
     document.getElementById('currency-symbol').textContent = price.symbol;
-    document.getElementById('price-amount').textContent = price.display;
     
-    // Show/hide disclaimer
-    const disclaimer = document.getElementById('currency-disclaimer');
-    const currencyName = document.getElementById('selected-currency-name');
-    
-    if (price.showDisclaimer) {
-        disclaimer.style.display = 'block';
-        // Show both symbol and amount for international currencies
-        currencyName.textContent = `${price.symbol}${price.display}`;
+    // If coupon is applied, show discounted price
+    if (appliedCoupon) {
+        const displayOriginal = parseFloat(price.display);
+        const displayDiscount = (discountAmount * displayOriginal / price.amount).toFixed(2);
+        const displayFinal = (displayOriginal - displayDiscount).toFixed(2);
+        
+        document.getElementById('price-amount').innerHTML = 
+            `<span style="text-decoration: line-through; opacity: 0.5; font-size: 0.6em;">${displayOriginal}</span> ${displayFinal}`;
+        
+        // Update discount display box
+        document.getElementById('original-price-display').textContent = 
+            `${price.symbol}${displayOriginal}`;
+        document.getElementById('final-price-display').textContent = 
+            `${price.symbol}${displayFinal}`;
+        document.getElementById('savings-display').textContent = 
+            `${price.symbol}${displayDiscount}`;
+        
+        // Update disclaimer if international currency
+        if (price.showDisclaimer) {
+            const disclaimer = document.getElementById('currency-disclaimer');
+            const discountedINR = (9000 - discountAmount).toFixed(0);
+            
+            disclaimer.innerHTML = `
+                <small class="text-muted">
+                    <i class="fas fa-info-circle"></i> 
+                    You will be charged <strong>₹${Number(discountedINR).toLocaleString()} INR</strong> (approximately ${price.symbol}${displayFinal}). 
+                    Final amount in your currency may vary based on current exchange rates.
+                </small>
+            `;
+        }
     } else {
-        disclaimer.style.display = 'none';
+        // No coupon applied, show normal price
+        document.getElementById('price-amount').textContent = price.display;
+        
+        // Show/hide disclaimer
+        const disclaimer = document.getElementById('currency-disclaimer');
+        const currencyName = document.getElementById('selected-currency-name');
+        
+        if (price.showDisclaimer) {
+            disclaimer.style.display = 'block';
+            currencyName.textContent = `${price.symbol}${price.display}`;
+        } else {
+            disclaimer.style.display = 'none';
+        }
     }
 }
         
@@ -1250,40 +1284,9 @@ function showCouponMessage(message, type) {
     }, 5000);
 }
 
-// Update switchCurrency function to reset coupon when currency changes
-const originalSwitchCurrency = switchCurrency;
-function switchCurrency(currency) {
-    originalSwitchCurrency(currency);
-    
-    // If coupon is applied, recalculate and update display
-    if (appliedCoupon) {
-        const currentPrice = prices[currency];
-        const discountData = {
-            success: true,
-            coupon: appliedCoupon,
-            originalAmount: currentPrice.amount,
-            discountAmount: discountAmount,
-            finalAmount: finalPrice
-        };
-        displayDiscount(discountData, currentPrice);
-    }
-}
     </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
