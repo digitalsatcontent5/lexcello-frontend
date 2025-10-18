@@ -1,0 +1,872 @@
+<!DOCTYPE html> <html lang="en"> <head> <link rel="icon" type="image/png" href="/favicon.png"> <link rel="icon" type="image/x-icon" href="/favicon.ico"> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>Lexcello Admin - Coupon Management</title> <style> * { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 20px;
+    }
+    
+    .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        overflow: hidden;
+    }
+    
+    .header {
+        background: linear-gradient(135deg, #2c3e50, #3498db);
+        color: white;
+        padding: 30px;
+        text-align: center;
+        position: relative;
+    }
+    
+    .header h1 {
+        font-size: 2.5em;
+        margin-bottom: 10px;
+    }
+    
+    .header p {
+        opacity: 0.9;
+        font-size: 1.1em;
+    }
+    
+    .admin-panel {
+        padding: 40px;
+    }
+    
+    .tabs {
+        display: flex;
+        border-bottom: 2px solid #eee;
+        margin-bottom: 30px;
+    }
+    
+    .tab {
+        padding: 15px 30px;
+        background: none;
+        border: none;
+        font-size: 16px;
+        cursor: pointer;
+        border-bottom: 3px solid transparent;
+        transition: all 0.3s;
+    }
+    
+    .tab.active {
+        border-bottom-color: #3498db;
+        color: #3498db;
+        font-weight: 600;
+    }
+    
+    .tab-content {
+        display: none;
+    }
+    
+    .tab-content.active {
+        display: block;
+    }
+    
+    .form-group {
+        margin-bottom: 25px;
+    }
+    
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: #2c3e50;
+    }
+    
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        width: 100%;
+        padding: 12px;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        font-size: 14px;
+        transition: border-color 0.3s;
+    }
+    
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+        outline: none;
+        border-color: #3498db;
+    }
+    
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+    
+    .btn {
+        padding: 12px 24px;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        margin-right: 10px;
+    }
+    
+    .btn-primary {
+        background: linear-gradient(135deg, #3498db, #2980b9);
+        color: white;
+    }
+    
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+    }
+    
+    .btn-success {
+        background: linear-gradient(135deg, #27ae60, #229954);
+        color: white;
+    }
+    
+    .btn-warning {
+        background: linear-gradient(135deg, #f39c12, #e67e22);
+        color: white;
+    }
+    
+    .btn-danger {
+        background: linear-gradient(135deg, #e74c3c, #c0392b);
+        color: white;
+    }
+    
+    .btn-secondary {
+        background: linear-gradient(135deg, #6c757d, #5a6268);
+        color: white;
+    }
+    
+    .btn-sm {
+        padding: 8px 16px;
+        font-size: 14px;
+    }
+    
+    .status-message {
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        display: none;
+    }
+    
+    .status-success {
+        background: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+    }
+    
+    .status-error {
+        background: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+    }
+    
+    .status-info {
+        background: #d1ecf1;
+        color: #0c5460;
+        border: 1px solid #bee5eb;
+    }
+    
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+    
+    .stat-card {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        padding: 20px;
+        border-radius: 12px;
+        text-align: center;
+    }
+    
+    .stat-number {
+        font-size: 2em;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+    
+    .stat-label {
+        opacity: 0.9;
+    }
+    
+    .coupon-item {
+        padding: 20px;
+        border: 2px solid #e2e8f0;
+        border-radius: 12px;
+        margin-bottom: 15px;
+        transition: all 0.3s;
+        background: white;
+    }
+    
+    .coupon-item:hover {
+        border-color: #3498db;
+        box-shadow: 0 5px 15px rgba(52, 152, 219, 0.2);
+        transform: translateY(-2px);
+    }
+    
+    .coupon-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+    
+    .coupon-code {
+        font-size: 1.5em;
+        font-weight: 700;
+        color: #2c3e50;
+        font-family: 'Courier New', monospace;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    
+    .coupon-badge {
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.9em;
+    }
+    
+    .badge-active {
+        background: #d4edda;
+        color: #155724;
+    }
+    
+    .badge-inactive {
+        background: #f8d7da;
+        color: #721c24;
+    }
+    
+    .coupon-details {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 15px;
+        margin-bottom: 15px;
+    }
+    
+    .detail-item {
+        background: #f8f9fa;
+        padding: 10px;
+        border-radius: 8px;
+    }
+    
+    .detail-label {
+        font-size: 0.8em;
+        color: #666;
+        margin-bottom: 5px;
+    }
+    
+    .detail-value {
+        font-weight: 600;
+        color: #2c3e50;
+    }
+    
+    .progress-bar {
+        background: #e9ecef;
+        border-radius: 10px;
+        height: 10px;
+        overflow: hidden;
+        margin-top: 10px;
+    }
+    
+    .progress-fill {
+        background: linear-gradient(90deg, #667eea, #764ba2);
+        height: 100%;
+        transition: width 0.5s ease;
+    }
+    
+    .logout-btn {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: rgba(231, 76, 60, 0.9);
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 600;
+        transition: all 0.3s;
+        display: none;
+    }
+    
+    .logout-btn:hover {
+        background: rgba(231, 76, 60, 1);
+        transform: translateY(-1px);
+    }
+    
+    .security-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        z-index: 10000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .security-overlay.hidden {
+        display: none !important;
+    }
+    
+    .login-form {
+        background: white;
+        padding: 40px;
+        border-radius: 12px;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        max-width: 400px;
+        width: 90%;
+    }
+    
+    .login-form h2 {
+        color: #2c3e50;
+        margin-bottom: 30px;
+        text-align: center;
+        font-size: 1.8em;
+    }
+    
+    .login-error {
+        background: #f8d7da;
+        color: #721c24;
+        padding: 12px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        text-align: center;
+        display: none;
+    }
+    
+    .main-content {
+        transition: filter 0.3s;
+    }
+    
+    .main-content.locked {
+        filter: blur(5px);
+        pointer-events: none;
+    }
+</style>
+</head>
+<body>
+    <!-- SECURITY OVERLAY -->
+    <div id="security-overlay" class="security-overlay">
+        <div class="login-form">
+            <h2>🔐 Admin Access</h2>
+            <div id="login-error" class="login-error"></div>
+            <form id="security-login-form">
+                <div class="form-group">
+                    <label for="admin-username">Username:</label>
+                    <input type="text" id="admin-username" required placeholder="admin or fastprep">
+                </div>
+                <div class="form-group">
+                    <label for="admin-password">Password:</label>
+                    <input type="password" id="admin-password" required placeholder="Password">
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Access Admin Panel</button>
+            </form>
+            <p style="text-align: center; margin-top: 20px; font-size: 12px; color: #666;">
+                Authorized personnel only
+            </p>
+        </div>
+    </div>
+<!-- MAIN CONTENT -->
+<div id="main-content" class="main-content locked">
+    <div class="container">
+        <div class="header">
+            <h1>💰 Coupon Management</h1>
+            <p>Create and manage discount coupons for Lexcello Premium</p>
+            <button id="logout-btn" class="logout-btn" onclick="securityLogout()">Logout</button>
+        </div>
+        
+        <div class="admin-panel">
+            <div class="tabs">
+                <button class="tab active" onclick="showTab('dashboard')">Dashboard</button>
+                <button class="tab" onclick="showTab('create-coupon')">Create Coupon</button>
+                <button class="tab" onclick="showTab('manage-coupons')">Manage Coupons</button>
+                <button class="tab" onclick="showTab('usage-history')">Usage History</button>
+            </div>
+            
+            <div id="status-message" class="status-message"></div>
+            
+            <!-- Dashboard Tab -->
+            <div id="dashboard" class="tab-content active">
+                <h2>Coupon Statistics</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number" id="total-coupons">-</div>
+                        <div class="stat-label">Total Coupons</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="active-coupons">-</div>
+                        <div class="stat-label">Active Coupons</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="total-redemptions">-</div>
+                        <div class="stat-label">Total Redemptions</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="total-discount-given">-</div>
+                        <div class="stat-label">Total Discount Given</div>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 30px;">
+                    <button class="btn btn-primary" onclick="loadDashboard()">Refresh Stats</button>
+                    <button class="btn btn-success" onclick="showTab('create-coupon')">+ Create New Coupon</button>
+                </div>
+            </div>
+            
+            <!-- Create Coupon Tab -->
+            <div id="create-coupon" class="tab-content">
+                <h2>Create New Coupon</h2>
+                <form id="coupon-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="coupon-code">Coupon Code *</label>
+                            <input type="text" id="coupon-code" required placeholder="e.g., SAVE20, WELCOME50" style="text-transform: uppercase;">
+                            <small style="color: #666; font-size: 12px;">Will be converted to uppercase automatically</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="discount-type">Discount Type *</label>
+                            <select id="discount-type" required onchange="updateDiscountLabel()">
+                                <option value="">Select type...</option>
+                                <option value="percentage">Percentage Off</option>
+                                <option value="fixed">Fixed Amount Off</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="discount-value" id="discount-value-label">Discount Value *</label>
+                            <input type="number" id="discount-value" required min="0" step="0.01" placeholder="e.g., 20 or 500">
+                            <small id="discount-hint" style="color: #666; font-size: 12px;">Select discount type first</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="max-uses">Max Uses (optional)</label>
+                            <input type="number" id="max-uses" min="0" placeholder="Leave empty for unlimited">
+                            <small style="color: #666; font-size: 12px;">Total number of times this coupon can be used</small>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <textarea id="description" placeholder="e.g., Holiday Sale - 20% off all premium plans" rows="3"></textarea>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="valid-from">Valid From</label>
+                            <input type="datetime-local" id="valid-from">
+                            <small style="color: #666; font-size: 12px;">Leave empty for immediate activation</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="valid-until">Valid Until</label>
+                            <input type="datetime-local" id="valid-until">
+                            <small style="color: #666; font-size: 12px;">Leave empty for no expiration</small>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-success">Create Coupon</button>
+                    <button type="button" class="btn btn-danger" onclick="clearCouponForm()">Clear Form</button>
+                </form>
+            </div>
+            
+            <!-- Manage Coupons Tab -->
+            <div id="manage-coupons" class="tab-content">
+                <h2>Manage Existing Coupons</h2>
+                <div style="margin-bottom: 20px;">
+                    <button class="btn btn-primary" onclick="loadCoupons()">Refresh Coupons</button>
+                </div>
+                <div id="coupons-list">
+                    <p style="padding: 20px; text-align: center; color: #666;">Click "Refresh Coupons" to load coupons...</p>
+                </div>
+            </div>
+            
+            <!-- Usage History Tab -->
+            <div id="usage-history" class="tab-content">
+                <h2>Coupon Usage History</h2>
+                <p style="color: #666; margin-bottom: 20px;">Coming soon: Detailed usage analytics and user redemption history</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const API_BASE = 'https://lexcello-backend.onrender.com';
+    let isSecurityAuthenticated = false;
+    
+    // Security elements
+    const securityOverlay = document.getElementById('security-overlay');
+    const mainContent = document.getElementById('main-content');
+    const logoutBtn = document.getElementById('logout-btn');
+    const loginError = document.getElementById('login-error');
+    
+    // Check authentication on page load
+    function checkSecurityAuth() {
+        const stored = localStorage.getItem('lexcello_admin_auth');
+        if (stored === 'authenticated') {
+            securityAuthenticate();
+        }
+    }
+    
+    // Authenticate user
+    function securityAuthenticate() {
+        isSecurityAuthenticated = true;
+        securityOverlay.classList.add('hidden');
+        mainContent.classList.remove('locked');
+        logoutBtn.style.display = 'block';
+        localStorage.setItem('lexcello_admin_auth', 'authenticated');
+    }
+    
+    // Logout user
+    function securityLogout() {
+        if (confirm('Are you sure you want to logout?')) {
+            isSecurityAuthenticated = false;
+            securityOverlay.classList.remove('hidden');
+            mainContent.classList.add('locked');
+            logoutBtn.style.display = 'none';
+            localStorage.removeItem('lexcello_admin_auth');
+            document.getElementById('admin-username').value = '';
+            document.getElementById('admin-password').value = '';
+            loginError.style.display = 'none';
+        }
+    }
+    
+    // Login form handler
+    document.getElementById('security-login-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const username = document.getElementById('admin-username').value;
+        const password = document.getElementById('admin-password').value;
+        
+        try {
+            const response = await fetch(`${API_BASE}/api/admin/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password })
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                localStorage.setItem('lexcello_admin_auth', 'authenticated');
+                localStorage.setItem('lexcello_admin_user', JSON.stringify(result.admin));
+                securityAuthenticate();
+                loginError.style.display = 'none';
+                loadDashboard();
+            } else {
+                loginError.textContent = 'Incorrect username or password. Access denied.';
+                loginError.style.display = 'block';
+            }
+        } catch (error) {
+            console.error('Login error:', error);
+            loginError.textContent = 'Login failed. Please try again.';
+            loginError.style.display = 'block';
+        }
+    });
+    
+    // Require authentication
+    function requireAuth() {
+        if (!isSecurityAuthenticated) {
+            showMessage('Authentication required!', 'error');
+            return false;
+        }
+        return true;
+    }
+    
+    // Tab Management
+    function showTab(tabName) {
+        if (!requireAuth()) return;
+        
+        document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+        
+        event.target.classList.add('active');
+        document.getElementById(tabName).classList.add('active');
+        
+        if (tabName === 'manage-coupons') {
+            loadCoupons();
+        } else if (tabName === 'dashboard') {
+            loadDashboard();
+        }
+    }
+    
+    // Status Messages
+    function showMessage(message, type = 'success') {
+        const statusDiv = document.getElementById('status-message');
+        statusDiv.className = `status-message status-${type}`;
+        statusDiv.textContent = message;
+        statusDiv.style.display = 'block';
+        
+        setTimeout(() => {
+            statusDiv.style.display = 'none';
+        }, 5000);
+    }
+    
+    // Update discount label based on type
+    function updateDiscountLabel() {
+        const type = document.getElementById('discount-type').value;
+        const label = document.getElementById('discount-value-label');
+        const hint = document.getElementById('discount-hint');
+        
+        if (type === 'percentage') {
+            label.textContent = 'Percentage (%) *';
+            hint.textContent = 'Enter percentage (e.g., 20 for 20% off)';
+            document.getElementById('discount-value').max = 100;
+        } else if (type === 'fixed') {
+            label.textContent = 'Fixed Amount (₹) *';
+            hint.textContent = 'Enter amount in rupees (e.g., 500 for ₹500 off)';
+            document.getElementById('discount-value').removeAttribute('max');
+        }
+    }
+    
+    // Load Dashboard Statistics
+    async function loadDashboard() {
+        if (!requireAuth()) return;
+        
+        try {
+            const response = await fetch(`${API_BASE}/api/admin/coupons`);
+            const data = await response.json();
+            
+            if (data.success && data.coupons) {
+                const coupons = data.coupons;
+                
+                document.getElementById('total-coupons').textContent = coupons.length;
+                document.getElementById('active-coupons').textContent = 
+                    coupons.filter(c => c.is_active).length;
+                
+                const totalRedemptions = coupons.reduce((sum, c) => 
+                    sum + parseInt(c.total_redemptions || 0), 0);
+                document.getElementById('total-redemptions').textContent = totalRedemptions;
+                
+                const totalDiscount = coupons.reduce((sum, c) => 
+                    sum + parseFloat(c.total_discount_given || 0), 0);
+                document.getElementById('total-discount-given').textContent = 
+                    '₹' + totalDiscount.toFixed(2);
+                
+                showMessage('Dashboard loaded successfully!', 'success');
+            }
+        } catch (error) {
+            console.error('Error loading dashboard:', error);
+            showMessage('Error loading dashboard: ' + error.message, 'error');
+        }
+    }
+    
+    // Create Coupon Form Submission
+    document.getElementById('coupon-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        if (!requireAuth()) return;
+        
+        const formData = {
+            code: document.getElementById('coupon-code').value.toUpperCase().trim(),
+            description: document.getElementById('description').value.trim(),
+            discountType: document.getElementById('discount-type').value,
+            discountValue: parseFloat(document.getElementById('discount-value').value),
+            maxUses: document.getElementById('max-uses').value ? 
+                parseInt(document.getElementById('max-uses').value) : null,
+            validFrom: document.getElementById('valid-from').value || null,
+            validUntil: document.getElementById('valid-until').value || null
+        };
+        
+        try {
+            const response = await fetch(`${API_BASE}/api/admin/coupons`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            });
+            
+            const result = await response.json();
+            
+            if (response.ok) {
+                showMessage('Coupon created successfully!', 'success');
+                clearCouponForm();
+                loadDashboard();
+            } else {
+                showMessage(`Error: ${result.error}`, 'error');
+            }
+        } catch (error) {
+            console.error('Error creating coupon:', error);
+            showMessage(`Network error: ${error.message}`, 'error');
+        }
+    });
+    
+    // Load All Coupons
+    async function loadCoupons() {
+        if (!requireAuth()) return;
+        
+        const couponsList = document.getElementById('coupons-list');
+        couponsList.innerHTML = '<p style="padding: 20px; text-align: center; color: #666;">Loading coupons...</p>';
+        
+        try {
+            const response = await fetch(`${API_BASE}/api/admin/coupons`);
+            const data = await response.json();
+            
+            if (data.success && data.coupons && data.coupons.length > 0) {
+                displayCoupons(data.coupons);
+            } else {
+                couponsList.innerHTML = '<p style="padding: 20px; text-align: center; color: #666;">No coupons found. Create your first coupon!</p>';
+            }
+        } catch (error) {
+            console.error('Error loading coupons:', error);
+            couponsList.innerHTML = `<p style="padding: 20px; text-align: center; color: #e74c3c;">Error loading coupons: ${error.message}</p>`;
+        }
+    }
+    
+    // Display Coupons
+    function displayCoupons(coupons) {
+        const couponsList = document.getElementById('coupons-list');
+        
+        couponsList.innerHTML = coupons.map(coupon => {
+            const isActive = coupon.is_active;
+            const badgeClass = isActive ? 'badge-active' : 'badge-inactive';
+            const statusText = isActive ? 'Active' : 'Inactive';
+            
+            const discountText = coupon.discount_type === 'percentage' 
+                ? `${coupon.discount_value}% OFF`
+                : `₹${coupon.discount_value} OFF`;
+            
+            const usagePercent = coupon.max_uses 
+                ? (coupon.current_uses / coupon.max_uses) * 100
+                : 0;
+            
+            const validUntil = coupon.valid_until 
+                ? new Date(coupon.valid_until).toLocaleDateString()
+                : 'No expiration';
+            
+            return `
+                <div class="coupon-item">
+                    <div class="coupon-header">
+                        <div class="coupon-code">${coupon.code}</div>
+                        <span class="coupon-badge ${badgeClass}">${statusText}</span>
+                    </div>
+                    
+                    <p style="color: #666; margin-bottom: 15px;">${coupon.description || 'No description'}</p>
+                    
+                    <div class="coupon-details">
+                        <div class="detail-item">
+                            <div class="detail-label">Discount</div>
+                            <div class="detail-value">${discountText}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Used</div>
+                            <div class="detail-value">${coupon.current_uses || 0}${coupon.max_uses ? ` / ${coupon.max_uses}` : ' / ∞'}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Total Redeemed</div>
+                            <div class="detail-value">${coupon.total_redemptions || 0}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Expires</div>
+                            <div class="detail-value">${validUntil}</div>
+                        </div>
+                    </div>
+                    
+                    ${coupon.max_uses ? `
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${usagePercent}%"></div>
+                        </div>
+                        <small style="color: #666;">${usagePercent.toFixed(1)}% of max uses</small>
+                    ` : ''}
+                    
+                    <div style="margin-top: 15px; display: flex; gap: 10px;">
+                        <button class="btn btn-sm ${isActive ? 'btn-warning' : 'btn-success'}" 
+                                onclick="toggleCouponStatus(${coupon.id}, ${isActive})">
+                            ${isActive ? 'Deactivate' : 'Activate'}
+                        </button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteCoupon(${coupon.id}, '${coupon.code}')">
+                            Delete
+                        </button>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+    
+    // Toggle Coupon Active Status
+    async function toggleCouponStatus(couponId, currentStatus) {
+        if (!requireAuth()) return;
+        
+        const newStatus = !currentStatus;
+        const action = newStatus ? 'activate' : 'deactivate';
+        
+        if (!confirm(`Are you sure you want to ${action} this coupon?`)) {
+            return;
+        }
+        
+        try {
+            const response = await fetch(`${API_BASE}/api/admin/coupons/${couponId}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ isActive: newStatus })
+            });
+            
+            const result = await response.json();
+            
+            if (response.ok) {
+                showMessage(`Coupon ${action}d successfully!`, 'success');
+                loadCoupons();
+                loadDashboard();
+            } else {
+                showMessage(`Error: ${result.error}`, 'error');
+            }
+        } catch (error) {
+            console.error('Error toggling coupon:', error);
+            showMessage(`Network error: ${error.message}`, 'error');
+        }
+    }
+    
+    // Delete Coupon
+    async function deleteCoupon(couponId, couponCode) {
+        if (!requireAuth()) return;
+        
+        if (!confirm(`Are you sure you want to delete coupon "${couponCode}"?\n\nThis action cannot be undone.`)) {
+            return;
+        }
+        
+        try {
+            const response = await fetch(`${API_BASE}/api/admin/coupons/${couponId}`, {
+                method: 'DELETE'
+            });
+            
+            const result = await response.json();
+            
+            if (response.ok) {
+                showMessage('Coupon deleted successfully!', 'success');
+                loadCoupons();
+                loadDashboard();
+            } else {
+                showMessage(`Error: ${result.error}`, 'error');
+            }
+        } catch (error) {
+            console.error('Error deleting coupon:', error);
+            showMessage(`Network error: ${error.message}`, 'error');
+        }
+    }
+    
+    // Clear Coupon Form
+    function clearCouponForm() {
+        document.getElementById('coupon-form').reset();
+        document.getElementById('discount-hint').textContent = 'Select discount type first';
+    }
+    
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', () => {
+        checkSecurityAuth();
+    });
+</script>
+</body>
+</html>
