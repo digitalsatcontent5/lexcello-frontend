@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-6EV4Y6N8M5"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-6EV4Y6N8M5');
+    </script>
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Settings - Lexcello</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+<style>
+    :root {
+        --primary-color: #1a365d;
+        --primary-hover: #2d4a66;
+        --secondary-color: #2b6cb0;
+        --accent-gold: #d69e2e;
+        --text-dark: #1a202c;
+        --text-light: #4a5568;
+        --bg-light: #f7fafc;
+        --danger-color: #e53e3e;
+    }
+    
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: var(--bg-light);
+        color: var(--text-dark);
+        padding-top: 80px;
+        min-height: 100vh;
+    }
+    
+    .navbar {
+        background: white;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        padding: 1rem 0;
+    }
+    
+    .navbar-brand {
+        font-size: 2rem;
+        font-weight: 800;
+        color: var(--primary-color) !important;
+    }
+    
+    .user-info {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+    
+    .user-avatar {
+        width: 40px;
+        height: 40px;
+        background: var(--secondary-color);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 600;
+    }
+    
+    .page-header {
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: white;
+        padding: 40px 0;
+        margin-bottom: 40px;
+    }
+    
+    .page-header h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+    }
+    
+    .content-card {
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        margin-bottom: 30px;
+    }
+    
+    .content-card h3 {
+        color: var(--primary-color);
+        margin-bottom: 20px;
+        font-weight: 700;
+    }
+    
+    .form-check-input:checked {
+        background-color: var(--secondary-color);
+        border-color: var(--secondary-color);
+    }
+    
+    .form-check-label {
+        font-weight: 500;
+        color: var(--text-dark);
+    }
+    
+    .btn-primary {
+        background: var(--secondary-color);
+        border: none;
+        padding: 12px 24px;
+        font-weight: 600;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-primary:hover {
+        background: var(--primary-hover);
+        transform: translateY(-2px);
+    }
+    
+    .btn-outline-primary {
+        color: var(--secondary-color);
+        border: 2px solid var(--secondary-color);
+        padding: 12px 24px;
+        font-weight: 600;
+        border-radius: 8px;
+    }
+    
+    .btn-outline-primary:hover {
+        background: var(--secondary-color);
+        color: white;
+    }
+    
+    .btn-outline-danger {
+        color: var(--danger-color);
+        border: 2px solid var(--danger-color);
+        padding: 12px 24px;
+        font-weight: 600;
+        border-radius: 8px;
+    }
+    
+    .btn-outline-danger:hover {
+        background: var(--danger-color);
+        color: white;
+    }
+    
+    .alert-danger {
+        background: #fff5f5;
+        border: 2px solid #feb2b2;
+        border-radius: 8px;
+        color: var(--danger-color);
+    }
+    
+    .notification {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 15px 20px;
+        border-radius: 8px;
+        color: white;
+        font-weight: 600;
+        z-index: 9999;
+        opacity: 0;
+        transform: translateX(300px);
+        transition: all 0.3s ease;
+    }
+    
+    .notification.show {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    
+    .notification.success {
+        background: #28a745;
+    }
+    
+    .notification.error {
+        background: #dc3545;
+    }
+    
+    .notification.info {
+        background: #17a2b8;
+    }
+    
+    .setting-item {
+        padding: 20px 0;
+        border-bottom: 1px solid #e2e8f0;
+    }
+    
+    .setting-item:last-child {
+        border-bottom: none;
+    }
+</style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">Lexcello</a>
+<div class="user-info">
+            <div class="user-avatar" id="userAvatar">U</div>
+            <span class="user-name" id="userName">Student</span>
+            <div class="dropdown">
+                <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                    <i class="fas fa-cog"></i>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="dashboard.html"><i class="fas fa-tachometer-alt me-2"></i>Dashboard</a></li>
+                    <li><a class="dropdown-item" href="profile.html"><i class="fas fa-user me-2"></i>Profile</a></li>
+                    <li><a class="dropdown-item" href="settings.html"><i class="fas fa-cog me-2"></i>Settings</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="#" onclick="signOut()"><i class="fas fa-sign-out-alt me-2"></i>Sign Out</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<section class="page-header">
+    <div class="container">
+        <h1><i class="fas fa-cog me-3"></i>Settings</h1>
+        <p class="mb-0">Manage your preferences and account settings</p>
+    </div>
+</section>
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="content-card">
+                <h3><i class="fas fa-bell me-2"></i>Notifications</h3>
+                
+                <div class="setting-item">
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="emailNotifications" checked>
+                        <label class="form-check-label" for="emailNotifications">
+                            <strong>Email Notifications</strong>
+                            <p class="text-muted small mb-0">Receive email reminders for upcoming test goals and progress updates</p>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="setting-item">
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="progressUpdates" checked>
+                        <label class="form-check-label" for="progressUpdates">
+                            <strong>Weekly Progress Updates</strong>
+                            <p class="text-muted small mb-0">Get weekly summaries of your test performance and study streak</p>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="setting-item">
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="studyReminders">
+                        <label class="form-check-label" for="studyReminders">
+                            <strong>Study Reminders</strong>
+                            <p class="text-muted small mb-0">Daily reminders to maintain your study streak</p>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="setting-item">
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="marketingEmails">
+                        <label class="form-check-label" for="marketingEmails">
+                            <strong>Marketing Emails</strong>
+                            <p class="text-muted small mb-0">Receive tips, resources, and special offers</p>
+                        </label>
+                    </div>
+                </div>
+                
+                <button class="btn btn-primary mt-3" onclick="saveNotificationSettings()">
+                    <i class="fas fa-save me-2"></i>Save Preferences
+                </button>
+            </div>
+
+            <div class="content-card">
+                <h3><i class="fas fa-crown me-2"></i>Subscription</h3>
+                
+                <div class="mb-3">
+                    <strong>Current Plan:</strong>
+                    <span id="currentPlan" class="ms-2">Free</span>
+                </div>
+                
+                <div class="mb-3">
+                    <strong>Status:</strong>
+                    <span id="subscriptionStatus" class="ms-2 text-success">Active</span>
+                </div>
+                
+                <div id="premiumInfo" style="display: none;">
+                    <div class="mb-3">
+                        <strong>Billing Cycle:</strong>
+                        <span id="billingCycle" class="ms-2">-</span>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <strong>Next Billing Date:</strong>
+                        <span id="nextBillingDate" class="ms-2">-</span>
+                    </div>
+                </div>
+                
+                <hr class="my-4">
+                
+                <a href="pricing.html" class="btn btn-outline-primary">
+                    <i class="fas fa-arrow-up me-2"></i>Upgrade to Premium
+                </a>
+            </div>
+
+            <div class="content-card">
+                <h3><i class="fas fa-shield-alt me-2"></i>Privacy & Security</h3>
+                
+                <div class="mb-3">
+                    <button class="btn btn-outline-primary" onclick="changePassword()">
+                        <i class="fas fa-key me-2"></i>Change Password
+                    </button>
+                </div>
+                
+                <div class="mb-3">
+                    <button class="btn btn-outline-primary" onclick="downloadData()">
+                        <i class="fas fa-download me-2"></i>Download My Data
+                    </button>
+                </div>
+                
+                <hr class="my-4">
+                
+                <p class="text-muted small">
+                    <i class="fas fa-info-circle me-2"></i>
+                    We take your privacy seriously. Read our <a href="privacy-policy.html">Privacy Policy</a> and <a href="terms-of-service.html">Terms of Service</a>.
+                </p>
+            </div>
+
+            <div class="content-card">
+                <h3 class="text-danger"><i class="fas fa-exclamation-triangle me-2"></i>Danger Zone</h3>
+                
+                <div class="alert alert-danger">
+                    <strong>Warning:</strong> These actions are permanent and cannot be undone.
+                </div>
+                
+                <button class="btn btn-outline-danger" onclick="deleteAccount()">
+                    <i class="fas fa-trash me-2"></i>Delete Account
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="notification" class="notification"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    const API_BASE_URL = 'https://lexcello-backend.onrender.com/api';
+    let currentUser = null;
+
+    document.addEventListener('DOMContentLoaded', async function() {
+        await checkAuthAndLoadSettings();
+    });
+
+    async function checkAuthAndLoadSettings() {
+        const token = localStorage.getItem('authToken');
+        if (!token) {
+            window.location.href = 'login.html';
+            return;
+        }
+
+        try {
+            const response = await fetch(`${API_BASE_URL}/auth/profile`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (response.ok) {
+                currentUser = await response.json();
+                populateSettings();
+            } else {
+                localStorage.removeItem('authToken');
+                window.location.href = 'login.html';
+            }
+        } catch (error) {
+            console.error('Error loading settings:', error);
+            showNotification('Failed to load settings', 'error');
+        }
+    }
+
+    function populateSettings() {
+        if (!currentUser) return;
+
+        const name = currentUser.name || currentUser.email || 'Student';
+        const firstName = name.split(' ')[0] || name.split('@')[0] || 'Student';
+        const initial = firstName.charAt(0).toUpperCase();
+
+        document.getElementById('userName').textContent = firstName;
+        document.getElementById('userAvatar').textContent = initial;
+
+        const isPremium = currentUser.subscriptionStatus === 'premium';
+        document.getElementById('currentPlan').textContent = isPremium ? 'Premium' : 'Free';
+        
+        if (isPremium) {
+            document.getElementById('premiumInfo').style.display = 'block';
+        }
+
+        const prefs = JSON.parse(localStorage.getItem('notificationPrefs') || '{}');
+        document.getElementById('emailNotifications').checked = prefs.emailNotifications !== false;
+        document.getElementById('progressUpdates').checked = prefs.progressUpdates !== false;
+        document.getElementById('studyReminders').checked = prefs.studyReminders || false;
+        document.getElementById('marketingEmails').checked = prefs.marketingEmails || false;
+    }
+
+    function saveNotificationSettings() {
+        const prefs = {
+            emailNotifications: document.getElementById('emailNotifications').checked,
+            progressUpdates: document.getElementById('progressUpdates').checked,
+            studyReminders: document.getElementById('studyReminders').checked,
+            marketingEmails: document.getElementById('marketingEmails').checked
+        };
+
+        localStorage.setItem('notificationPrefs', JSON.stringify(prefs));
+        
+        showNotification('Notification preferences saved!', 'success');
+    }
+
+    function changePassword() {
+        showNotification('Password change coming soon!', 'info');
+    }
+
+    function downloadData() {
+        showNotification('Data export requested. You will receive an email shortly.', 'info');
+    }
+
+    function deleteAccount() {
+        const confirmed = confirm(
+            'Are you ABSOLUTELY sure you want to delete your account?\n\n' +
+            'This will permanently delete:\n' +
+            '• All your test results and progress\n' +
+            '• Your subscription (if any)\n' +
+            '• All your personal data\n\n' +
+            'This action CANNOT be undone!'
+        );
+
+        if (confirmed) {
+            const doubleConfirm = prompt('Type "DELETE" to confirm account deletion:');
+            
+            if (doubleConfirm === 'DELETE') {
+                showNotification('Account deletion requested. This may take up to 24 hours.', 'info');
+                
+                setTimeout(() => {
+                    localStorage.removeItem('authToken');
+                    sessionStorage.clear();
+                    window.location.href = 'index.html';
+                }, 3000);
+            } else {
+                showNotification('Account deletion cancelled', 'info');
+            }
+        }
+    }
+
+    function signOut() {
+        if (confirm('Are you sure you want to sign out?')) {
+            localStorage.removeItem('authToken');
+            sessionStorage.clear();
+            window.location.href = 'index.html';
+        }
+    }
+
+    function showNotification(message, type = 'info') {
+        const notification = document.getElementById('notification');
+        notification.textContent = message;
+        notification.className = `notification ${type}`;
+        notification.classList.add('show');
+        
+        setTimeout(() => {
+            notification.classList.remove('show');
+        }, 3000);
+    }
+</script>
+</body>
+</html>
