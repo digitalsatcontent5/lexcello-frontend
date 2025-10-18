@@ -947,57 +947,47 @@
     document.getElementById('currency-symbol').textContent = price.symbol;
     
     // If coupon is applied, show discounted price
-if (appliedCoupon) {
-    const displayOriginal = parseFloat(price.display.replace(/,/g, '')); // Remove commas for calculation
-    const displayDiscount = (discountAmount * displayOriginal / price.amount).toFixed(2);
-    const displayFinal = (displayOriginal - displayDiscount).toFixed(2);
-    
-    // Format display based on currency
-    const formattedOriginal = selectedCurrency === 'INR' 
-        ? displayOriginal.toLocaleString('en-IN')
-        : displayOriginal;
-    const formattedFinal = selectedCurrency === 'INR' 
-        ? parseFloat(displayFinal).toLocaleString('en-IN')
-        : displayFinal;
-    
-    document.getElementById('price-amount').innerHTML = 
-        `<span style="text-decoration: line-through; opacity: 0.5; font-size: 0.6em;">${formattedOriginal}</span> ${formattedFinal}`;
-    
-    // Update discount display box
-    const formattedDiscountOriginal = selectedCurrency === 'INR'
-        ? displayOriginal.toLocaleString('en-IN')
-        : displayOriginal;
-    const formattedDiscountFinal = selectedCurrency === 'INR'
-        ? parseFloat(displayFinal).toLocaleString('en-IN')
-        : displayFinal;
-    const formattedDiscountAmount = selectedCurrency === 'INR'
-        ? parseFloat(displayDiscount).toLocaleString('en-IN')
-        : displayDiscount;
-    
-    document.getElementById('original-price-display').textContent = 
-        `${price.symbol}${formattedDiscountOriginal}`;
-    document.getElementById('final-price-display').textContent = 
-        `${price.symbol}${formattedDiscountFinal}`;
-    document.getElementById('savings-display').textContent = 
-        `${price.symbol}${formattedDiscountAmount}`;
+    if (appliedCoupon) {
+        const displayOriginal = parseFloat(price.display.replace(/,/g, '')); // Remove commas for calculation
+        const displayDiscount = (discountAmount * displayOriginal / price.amount).toFixed(2);
+        const displayFinal = (displayOriginal - displayDiscount).toFixed(2);
+        
+        // Format display based on currency
+        const formattedOriginal = selectedCurrency === 'INR' 
+            ? displayOriginal.toLocaleString('en-IN')
+            : displayOriginal;
+        const formattedFinal = selectedCurrency === 'INR' 
+            ? parseFloat(displayFinal).toLocaleString('en-IN')
+            : displayFinal;
+        const formattedDiscount = selectedCurrency === 'INR'
+            ? parseFloat(displayDiscount).toLocaleString('en-IN')
+            : displayDiscount;
+        
+        // Update main price display
+        document.getElementById('price-amount').innerHTML = 
+            `<span style="text-decoration: line-through; opacity: 0.5; font-size: 0.6em;">${formattedOriginal}</span> ${formattedFinal}`;
         
         // Update discount display box
         document.getElementById('original-price-display').textContent = 
-            `${price.symbol}${displayOriginal}`;
+            `${price.symbol}${formattedOriginal}`;
         document.getElementById('final-price-display').textContent = 
-            `${price.symbol}${displayFinal}`;
+            `${price.symbol}${formattedFinal}`;
         document.getElementById('savings-display').textContent = 
-            `${price.symbol}${displayDiscount}`;
+            `${price.symbol}${formattedDiscount}`;
         
         // Update disclaimer if international currency
         if (price.showDisclaimer) {
             const disclaimer = document.getElementById('currency-disclaimer');
             const discountedINR = (9000 - discountAmount).toFixed(0);
+            const formattedDiscountedINR = Number(discountedINR).toLocaleString('en-IN');
+            const formattedFinalForDisclaimer = selectedCurrency === 'INR' 
+                ? parseFloat(displayFinal).toLocaleString('en-IN')
+                : displayFinal;
             
             disclaimer.innerHTML = `
                 <small class="text-muted">
                     <i class="fas fa-info-circle"></i> 
-                    You will be charged <strong>₹${Number(discountedINR).toLocaleString()} INR</strong> (approximately ${price.symbol}${displayFinal}). 
+                    You will be charged <strong>₹${formattedDiscountedINR} INR</strong> (approximately ${price.symbol}${formattedFinalForDisclaimer}). 
                     Final amount in your currency may vary based on current exchange rates.
                 </small>
             `;
@@ -1324,6 +1314,7 @@ function showCouponMessage(message, type) {
     </script>
 </body>
 </html>
+
 
 
 
