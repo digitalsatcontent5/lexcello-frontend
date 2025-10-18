@@ -479,42 +479,208 @@
     }
 
     async function downloadData() {
-        const token = localStorage.getItem('authToken');
+    const token = localStorage.getItem('authToken');
+    
+    try {
+        showNotification('Preparing your data export...', 'info');
         
-        try {
-            showNotification('Preparing your data export...', 'info');
-            
-            const response = await fetch(`${API_BASE_URL}/user/export-data`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                }
-            });
-            
-            if (response.ok) {
-                const userData = await response.json();
-                
-                // Create downloadable JSON file
-                const dataStr = JSON.stringify(userData, null, 2);
-                const dataBlob = new Blob([dataStr], { type: 'application/json' });
-                const url = URL.createObjectURL(dataBlob);
-                const link = document.createElement('a');
-                link.href = url;
-                link.download = `lexcello-data-${new Date().toISOString().split('T')[0]}.json`;
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                URL.revokeObjectURL(url);
-                
-                showNotification('Data exported successfully!', 'success');
-            } else {
-                showNotification('Failed to export data', 'error');
+        const response = await fetch(`${API_BASE_URL}/user/export-data`, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
             }
-        } catch (error) {
-            console.error('Data export error:', error);
+        });
+        
+        if (response.ok) {
+            const userData = await response.json();
+            
+            // Create a beautiful HTML report instead of JSON
+            const htmlContent = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lexcello - My Data Export</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 20px;
+            background: #f7fafc;
+            color: #1a202c;
+        }
+        .header {
+            background: linear-gradient(135deg, #1a365d, #2b6cb0);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            margin: 0 0 10px 0;
+            font-size: 2rem;
+        }
+        .section {
+            background: white;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .section h2 {
+            color: #1a365d;
+            margin-top: 0;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 10px;
+        }
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .info-row:last-child {
+            border-bottom: none;
+        }
+        .label {
+            font-weight: 600;
+            color: #4a5568;
+        }
+        .value {
+            color: #1a202c;
+        }
+        .test-item {
+            background: #f7fafc;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #2b6cb0;
+        }
+        .score {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2b6cb0;
+        }
+        .score.high { color: #48bb78; }
+        .score.medium { color: #d69e2e; }
+        .score.low { color: #e53e3e; }
+        .footer {
+            text-align: center;
+            color: #718096;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #e2e8f0;
+        }
+        @media print {
+            body { background: white; }
+            .section { box-shadow: none; border: 1px solid #e2e8f0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📊 Lexcello Data Export</h1>
+        <p>Generated on ${new Date(userData.exportDate).toLocaleString('en-US', { 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        })}</p>
+    </div>
+
+    <div class="section">
+        <h2>👤 Profile Information</h2>
+        <div class="info-row">
+            <span class="label">Email:</span>
+            <span class="value">${userData.user.email}</span>
+        </div>
+        <div class="info-row">
+            <span class="label">Name:</span>
+            <span class="value">${userData.user.first_name || ''} ${userData.user.last_name || ''}</span>
+        </div>
+        <div class="info-row">
+            <span class="label">Member Since:</span>
+            <span class="value">${new Date(userData.user.created_at).toLocaleDateString('en-US', { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            })}</span>
+        </div>
+        <div class="info-row">
+            <span class="label">Subscription Status:</span>
+            <span class="value">${userData.user.subscription_status === 'premium' ? '✨ Premium' : 'Free'}</span>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>📝 Test History (${userData.testHistory.length} tests completed)</h2>
+        ${userData.testHistory.length === 0 ? '<p style="color: #718096;">No tests completed yet.</p>' : ''}
+        ${userData.testHistory.map((test, index) => {
+            const percentage = Math.round((test.score / test.total_questions) * 100);
+            const scoreClass = percentage >= 70 ? 'high' : percentage >= 50 ? 'medium' : 'low';
+            return `
+                <div class="test-item">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                        <strong>Test #${index + 1} - Test ID: ${test.test_id}</strong>
+                        <span class="score ${scoreClass}">${percentage}%</span>
+                    </div>
+                    <div class="info-row" style="border: none; padding: 5px 0;">
+                        <span class="label">Score:</span>
+                        <span class="value">${test.score} / ${test.total_questions}</span>
+                    </div>
+                    <div class="info-row" style="border: none; padding: 5px 0;">
+                        <span class="label">Time Taken:</span>
+                        <span class="value">${Math.floor(test.time_taken / 60)} minutes</span>
+                    </div>
+                    <div class="info-row" style="border: none; padding: 5px 0;">
+                        <span class="label">Completed:</span>
+                        <span class="value">${new Date(test.submitted_at).toLocaleString('en-US', {
+                            year: 'numeric',
+                            month: 'short',
+                            day: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                        })}</span>
+                    </div>
+                </div>
+            `;
+        }).join('')}
+    </div>
+
+    <div class="footer">
+        <p><strong>Lexcello LNAT Preparation</strong></p>
+        <p>This report contains all your personal data stored on Lexcello.</p>
+        <p style="margin-top: 10px; font-size: 0.9rem;">
+            💡 <strong>Tip:</strong> You can print this page (Ctrl+P / Cmd+P) to save as PDF
+        </p>
+    </div>
+</body>
+</html>
+            `;
+            
+            // Create downloadable HTML file
+            const dataBlob = new Blob([htmlContent], { type: 'text/html' });
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `lexcello-data-export-${new Date().toISOString().split('T')[0]}.html`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+            
+            showNotification('Data exported successfully! The file will open in your browser.', 'success');
+        } else {
             showNotification('Failed to export data', 'error');
         }
+    } catch (error) {
+        console.error('Data export error:', error);
+        showNotification('Failed to export data', 'error');
     }
+}
 
     function deleteAccount() {
         const confirmed = confirm(
