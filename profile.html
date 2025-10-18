@@ -374,10 +374,10 @@ console.log('Full user object:', currentUser);
         if (!currentUser) return;
 
         const fullName = currentUser.name || 
-                 ((currentUser.first_name || '') + ' ' + (currentUser.last_name || '')).trim() || 
+                 ((currentUser.firstName || currentUser.first_name || '') + ' ' + (currentUser.lastName || currentUser.last_name || '')).trim() || 
                  currentUser.email || 
                  'Student';
-const firstName = currentUser.first_name || fullName.split(' ')[0] || fullName.split('@')[0] || 'Student';
+const firstName = currentUser.firstName || currentUser.first_name || fullName.split(' ')[0] || fullName.split('@')[0] || 'Student';
 const initial = firstName.charAt(0).toUpperCase();
 
         document.getElementById('userName').textContent = firstName;
