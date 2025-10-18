@@ -371,18 +371,24 @@
     function populateProfile() {
         if (!currentUser) return;
 
-        const name = currentUser.name || currentUser.email || 'Student';
-        const firstName = name.split(' ')[0] || name.split('@')[0] || 'Student';
-        const initial = firstName.charAt(0).toUpperCase();
+        const fullName = currentUser.name || 
+                 ((currentUser.first_name || '') + ' ' + (currentUser.last_name || '')).trim() || 
+                 currentUser.email || 
+                 'Student';
+const firstName = currentUser.first_name || fullName.split(' ')[0] || fullName.split('@')[0] || 'Student';
+const initial = firstName.charAt(0).toUpperCase();
 
         document.getElementById('userName').textContent = firstName;
         document.getElementById('userAvatar').textContent = initial;
 
         document.getElementById('profileAvatarLarge').textContent = initial;
-        document.getElementById('profileDisplayName').textContent = name;
+document.getElementById('profileDisplayName').textContent = fullName;
         document.getElementById('profileEmail').textContent = currentUser.email || '';
 
-        const isPremium = currentUser.subscriptionStatus === 'premium' || currentUser.subscriptionStatus === 'active';
+        const isPremium = currentUser.subscription_status === 'premium' || 
+                  currentUser.subscription_status === 'active' ||
+                  currentUser.subscriptionStatus === 'premium' ||
+                  currentUser.subscriptionStatus === 'active';
         const badge = document.getElementById('subscriptionBadge');
         badge.textContent = isPremium ? 'Premium Member' : 'Free Account';
         badge.className = isPremium ? 'badge-premium' : 'badge-free';
