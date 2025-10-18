@@ -401,8 +401,10 @@ document.getElementById('profileDisplayName').textContent = fullName;
         document.getElementById('testDate').value = currentUser.testDate || '';
 
         document.getElementById('subscriptionType').textContent = isPremium ? 'Premium' : 'Free';
-        if (currentUser.created_at) {
-    const date = new Date(currentUser.created_at);
+        // Check for both camelCase and snake_case (backend returns camelCase)
+const createdDate = currentUser.createdAt || currentUser.created_at;
+if (createdDate) {
+    const date = new Date(createdDate);
     document.getElementById('memberSince').textContent = date.toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'long',
