@@ -947,13 +947,39 @@
     document.getElementById('currency-symbol').textContent = price.symbol;
     
     // If coupon is applied, show discounted price
-    if (appliedCoupon) {
-        const displayOriginal = parseFloat(price.display);
-        const displayDiscount = (discountAmount * displayOriginal / price.amount).toFixed(2);
-        const displayFinal = (displayOriginal - displayDiscount).toFixed(2);
-        
-        document.getElementById('price-amount').innerHTML = 
-            `<span style="text-decoration: line-through; opacity: 0.5; font-size: 0.6em;">${displayOriginal}</span> ${displayFinal}`;
+if (appliedCoupon) {
+    const displayOriginal = parseFloat(price.display.replace(/,/g, '')); // Remove commas for calculation
+    const displayDiscount = (discountAmount * displayOriginal / price.amount).toFixed(2);
+    const displayFinal = (displayOriginal - displayDiscount).toFixed(2);
+    
+    // Format display based on currency
+    const formattedOriginal = selectedCurrency === 'INR' 
+        ? displayOriginal.toLocaleString('en-IN')
+        : displayOriginal;
+    const formattedFinal = selectedCurrency === 'INR' 
+        ? parseFloat(displayFinal).toLocaleString('en-IN')
+        : displayFinal;
+    
+    document.getElementById('price-amount').innerHTML = 
+        `<span style="text-decoration: line-through; opacity: 0.5; font-size: 0.6em;">${formattedOriginal}</span> ${formattedFinal}`;
+    
+    // Update discount display box
+    const formattedDiscountOriginal = selectedCurrency === 'INR'
+        ? displayOriginal.toLocaleString('en-IN')
+        : displayOriginal;
+    const formattedDiscountFinal = selectedCurrency === 'INR'
+        ? parseFloat(displayFinal).toLocaleString('en-IN')
+        : displayFinal;
+    const formattedDiscountAmount = selectedCurrency === 'INR'
+        ? parseFloat(displayDiscount).toLocaleString('en-IN')
+        : displayDiscount;
+    
+    document.getElementById('original-price-display').textContent = 
+        `${price.symbol}${formattedDiscountOriginal}`;
+    document.getElementById('final-price-display').textContent = 
+        `${price.symbol}${formattedDiscountFinal}`;
+    document.getElementById('savings-display').textContent = 
+        `${price.symbol}${formattedDiscountAmount}`;
         
         // Update discount display box
         document.getElementById('original-price-display').textContent = 
@@ -1181,22 +1207,33 @@ function displayDiscount(discountData, currentPrice) {
           `Save ${currentPrice.symbol}${(discountData.discountAmount * parseFloat(currentPrice.display) / currentPrice.amount).toFixed(2)}`}`;
     document.getElementById('discount-description').textContent = description;
     
-    // Calculate display amounts based on selected currency
-    const displayOriginal = parseFloat(currentPrice.display);
-    const displayDiscount = (discountData.discountAmount * displayOriginal / currentPrice.amount).toFixed(2);
-    const displayFinal = (displayOriginal - displayDiscount).toFixed(2);
-    
-    // Update prices
-    document.getElementById('original-price-display').textContent = 
-        `${currentPrice.symbol}${displayOriginal}`;
-    document.getElementById('final-price-display').textContent = 
-        `${currentPrice.symbol}${displayFinal}`;
-    document.getElementById('savings-display').textContent = 
-        `${currentPrice.symbol}${displayDiscount}`;
-    
-    // Update main price display to show discounted price
-    document.getElementById('price-amount').innerHTML = 
-        `<span style="text-decoration: line-through; opacity: 0.5; font-size: 0.6em;">${displayOriginal}</span> ${displayFinal}`;
+   // Calculate display amounts based on selected currency
+const displayOriginal = parseFloat(currentPrice.display.replace(/,/g, '')); // Remove commas
+const displayDiscount = (discountData.discountAmount * displayOriginal / currentPrice.amount).toFixed(2);
+const displayFinal = (displayOriginal - displayDiscount).toFixed(2);
+
+// Format for INR with commas
+const formattedOriginal = selectedCurrency === 'INR' 
+    ? displayOriginal.toLocaleString('en-IN')
+    : displayOriginal;
+const formattedFinal = selectedCurrency === 'INR' 
+    ? parseFloat(displayFinal).toLocaleString('en-IN')
+    : displayFinal;
+const formattedDiscount = selectedCurrency === 'INR'
+    ? parseFloat(displayDiscount).toLocaleString('en-IN')
+    : displayDiscount;
+
+// Update prices
+document.getElementById('original-price-display').textContent = 
+    `${currentPrice.symbol}${formattedOriginal}`;
+document.getElementById('final-price-display').textContent = 
+    `${currentPrice.symbol}${formattedFinal}`;
+document.getElementById('savings-display').textContent = 
+    `${currentPrice.symbol}${formattedDiscount}`;
+
+// Update main price display to show discounted price
+document.getElementById('price-amount').innerHTML = 
+    `<span style="text-decoration: line-through; opacity: 0.5; font-size: 0.6em;">${formattedOriginal}</span> ${formattedFinal}`;
     if (currentPrice.showDisclaimer) {
         const disclaimer = document.getElementById('currency-disclaimer');
         const currencyName = document.getElementById('selected-currency-name');
@@ -1287,6 +1324,7 @@ function showCouponMessage(message, type) {
     </script>
 </body>
 </html>
+
 
 
 
