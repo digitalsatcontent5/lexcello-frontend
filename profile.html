@@ -393,10 +393,17 @@
         document.getElementById('testDate').value = currentUser.testDate || '';
 
         document.getElementById('subscriptionType').textContent = isPremium ? 'Premium' : 'Free';
-        
+        if (currentUser.created_at) {
+    const date = new Date(currentUser.created_at);
+    document.getElementById('memberSince').textContent = date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    });
+}
         // Hide upgrade button if premium
 if (isPremium) {
-    const upgradeBtn = document.querySelector('a[href="pricing.html"]');
+    const upgradeBtn = document.getElementById('upgradeButton');
     if (upgradeBtn) {
         upgradeBtn.style.display = 'none';
     }
