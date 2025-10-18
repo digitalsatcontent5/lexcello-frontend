@@ -1163,7 +1163,23 @@ function displayDiscount(discountData, currentPrice) {
     // Update main price display to show discounted price
     document.getElementById('price-amount').innerHTML = 
         `<span style="text-decoration: line-through; opacity: 0.5; font-size: 0.6em;">${displayOriginal}</span> ${displayFinal}`;
+    if (currentPrice.showDisclaimer) {
+        const disclaimer = document.getElementById('currency-disclaimer');
+        const currencyName = document.getElementById('selected-currency-name');
+        
+        // Calculate discounted INR amount
+        const discountedINR = (9000 - discountData.discountAmount).toFixed(0);
+        
+        disclaimer.innerHTML = `
+            <small class="text-muted">
+                <i class="fas fa-info-circle"></i> 
+                You will be charged <strong>₹${discountedINR.toLocaleString()} INR</strong> (approximately ${currentPrice.symbol}${displayFinal}). 
+                Final amount in your currency may vary based on current exchange rates.
+            </small>
+        `;
+    }
 }
+
 
 function removeCoupon() {
     appliedCoupon = null;
@@ -1184,10 +1200,19 @@ function removeCoupon() {
     // Reset price display
     const currentPrice = prices[selectedCurrency];
     document.getElementById('price-amount').textContent = currentPrice.display;
+    if (currentPrice.showDisclaimer) {
+        const disclaimer = document.getElementById('currency-disclaimer');
+        disclaimer.innerHTML = `
+            <small class="text-muted">
+                <i class="fas fa-info-circle"></i> 
+                You will be charged <strong>₹9,000 INR</strong> (approximately ${currentPrice.symbol}${currentPrice.display}). 
+                Final amount in your currency may vary based on current exchange rates.
+            </small>
+        `;
+    }
     
     showCouponMessage('Coupon removed', 'info');
     
-    // Track removal
     try {
         gtag('event', 'coupon_removed', {
             'event_category': 'pricing',
@@ -1246,6 +1271,7 @@ function switchCurrency(currency) {
     </script>
 </body>
 </html>
+
 
 
 
