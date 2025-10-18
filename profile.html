@@ -382,7 +382,7 @@
         document.getElementById('profileDisplayName').textContent = name;
         document.getElementById('profileEmail').textContent = currentUser.email || '';
 
-        const isPremium = currentUser.subscriptionStatus === 'premium';
+        const isPremium = currentUser.subscriptionStatus === 'premium' || currentUser.subscriptionStatus === 'active';
         const badge = document.getElementById('subscriptionBadge');
         badge.textContent = isPremium ? 'Premium Member' : 'Free Account';
         badge.className = isPremium ? 'badge-premium' : 'badge-free';
@@ -394,16 +394,15 @@
 
         document.getElementById('subscriptionType').textContent = isPremium ? 'Premium' : 'Free';
         
-        if (currentUser.created_at) {
-            const date = new Date(currentUser.created_at);
-            document.getElementById('memberSince').textContent = date.toLocaleDateString('en-US', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-            });
-        }
+        // Hide upgrade button if premium
+if (isPremium) {
+    const upgradeBtn = document.querySelector('a[href="pricing.html"]');
+    if (upgradeBtn && upgradeBtn.textContent.includes('Upgrade')) {
+        upgradeBtn.style.display = 'none';
+    }
+}
 
-        loadTestStatistics();
+loadTestStatistics();
     }
 
     async function loadTestStatistics() {
