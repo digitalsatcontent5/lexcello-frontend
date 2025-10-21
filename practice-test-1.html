@@ -1612,106 +1612,132 @@
         }
         // ============= SCHOLARSHIP MODAL FUNCTIONS =============
 function showScholarshipModal(scholarship) {
-  const modal = document.createElement('div');
-  modal.className = 'scholarship-modal';
-  modal.innerHTML = `
-    <div class="scholarship-content">
-      <div class="scholarship-icon">${scholarship.badgeIcon}</div>
-      <h1>🎉 Congratulations!</h1>
-      <h2>You've Earned a ${scholarship.discountPercentage}% Scholarship!</h2>
-      
-      <div class="scholarship-tier ${scholarship.badgeColor}">
-        ${scholarship.tier} Performance
-      </div>
-      
-      <div class="scholarship-code">
-        <div style="margin-bottom: 10px;">Your Exclusive Scholarship Code:</div>
-        <strong id="coupon-code-text">${scholarship.couponCode}</strong>
-        <button onclick="copyScholarshipCode('${scholarship.couponCode}')">
-          <i class="fas fa-copy me-1"></i> Copy Code
-        </button>
-      </div>
-      
-      <div class="price-breakdown">
-        <div class="original-price">Original Price: ₹${scholarship.originalPrice.toLocaleString('en-IN')}</div>
-        <div class="discount">Your Scholarship: -₹${scholarship.discountAmount.toLocaleString('en-IN')} (${scholarship.discountPercentage}% OFF)</div>
-        <div class="final-price">Your Price: ₹${scholarship.finalPrice.toLocaleString('en-IN')} only!</div>
-      </div>
-      
-      <div class="scholarship-info">
-        ✅ Valid for ${scholarship.daysValid} days<br>
-        ✅ Access all 10 comprehensive LNAT practice tests<br>
-        ✅ Detailed explanations & performance analytics<br>
-        ✅ Progress tracking and improvement recommendations
-      </div>
-      
-      <button class="claim-btn" onclick="claimScholarship('${scholarship.couponCode}')">
-        🚀 Claim Your Scholarship Now
-      </button>
-      
-      <p class="motivation">${scholarship.message}</p>
-      
-      <button onclick="closeScholarshipModal()" style="background: transparent; border: none; color: #718096; cursor: pointer; margin-top: 10px; text-decoration: underline; font-size: 0.9rem;">
-        I'll view my results first
-      </button>
-    </div>
-  `;
-  
-  document.body.appendChild(modal);
-  
-  // Store scholarship in localStorage
-  localStorage.setItem('activeScholarship', JSON.stringify(scholarship));
+    console.log('📢 Showing scholarship modal with data:', scholarship);
+    
+    // CRITICAL: Save to localStorage FIRST
+    try {
+        localStorage.setItem('activeScholarship', JSON.stringify(scholarship));
+        localStorage.setItem('scholarshipCoupon', scholarship.couponCode);
+        console.log('✅ Scholarship saved to localStorage');
+        console.log('✅ Saved data:', localStorage.getItem('activeScholarship'));
+    } catch (error) {
+        console.error('❌ Failed to save scholarship to localStorage:', error);
+    }
+    
+    const modal = document.createElement('div');
+    modal.className = 'scholarship-modal';
+    modal.innerHTML = `
+        <div class="scholarship-content">
+            <div class="scholarship-icon">${scholarship.badgeIcon}</div>
+            <h1>🎉 Congratulations!</h1>
+            <h2>You've Earned a ${scholarship.discountPercentage}% Scholarship!</h2>
+            
+            <div class="scholarship-tier ${scholarship.badgeColor}">
+                ${scholarship.tier} Performance
+            </div>
+            
+            <div class="scholarship-code">
+                <div style="margin-bottom: 10px;">Your Exclusive Scholarship Code:</div>
+                <strong id="coupon-code-text">${scholarship.couponCode}</strong>
+                <button onclick="copyScholarshipCode('${scholarship.couponCode}')">
+                    <i class="fas fa-copy me-1"></i> Copy Code
+                </button>
+            </div>
+            
+            <div class="price-breakdown">
+                <div class="original-price">Original Price: ₹${scholarship.originalPrice.toLocaleString('en-IN')}</div>
+                <div class="discount">Your Scholarship: -₹${scholarship.discountAmount.toLocaleString('en-IN')} (${scholarship.discountPercentage}% OFF)</div>
+                <div class="final-price">Your Price: ₹${scholarship.finalPrice.toLocaleString('en-IN')} only!</div>
+            </div>
+            
+            <div class="scholarship-info">
+                ✅ Valid for ${scholarship.daysValid} days<br>
+                ✅ Access all 10 comprehensive LNAT practice tests<br>
+                ✅ Detailed explanations & performance analytics<br>
+                ✅ Progress tracking and improvement recommendations
+            </div>
+            
+            <button class="claim-btn" onclick="claimScholarship()">
+                🚀 Claim Your Scholarship Now
+            </button>
+            
+            <p class="motivation">${scholarship.message}</p>
+            
+            <button onclick="closeScholarshipModal()" style="background: transparent; border: none; color: #718096; cursor: pointer; margin-top: 10px; text-decoration: underline; font-size: 0.9rem;">
+                I'll view my results first
+            </button>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
 }
 
 function copyScholarshipCode(code) {
-  navigator.clipboard.writeText(code).then(() => {
-    const btn = event.target;
-    const originalHTML = btn.innerHTML;
-    btn.innerHTML = '<i class="fas fa-check me-1"></i> Copied!';
-    btn.style.background = '#38a169';
-    
-    setTimeout(() => {
-      btn.innerHTML = originalHTML;
-      btn.style.background = '';
-    }, 2000);
-  }).catch(err => {
-    // Fallback for older browsers
-    const textArea = document.createElement('textarea');
-    textArea.value = code;
-    document.body.appendChild(textArea);
-    textArea.select();
-    document.execCommand('copy');
-    document.body.removeChild(textArea);
-    alert('✅ Scholarship code copied!');
-  });
+    navigator.clipboard.writeText(code).then(() => {
+        const btn = event.target;
+        const originalHTML = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-check me-1"></i> Copied!';
+        btn.style.background = '#38a169';
+        
+        setTimeout(() => {
+            btn.innerHTML = originalHTML;
+            btn.style.background = '#2b6cb0';
+        }, 2000);
+    }).catch(err => {
+        const textArea = document.createElement('textarea');
+        textArea.value = code;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        alert('✅ Scholarship code copied: ' + code);
+    });
 }
 
-function claimScholarship(couponCode) {
-  // Store scholarship coupon for auto-apply
-  localStorage.setItem('scholarshipCoupon', couponCode);
-  
-  // Save test results before redirecting
-  const resultsData = sessionStorage.getItem('sectionAResults');
-  if (resultsData) {
-    sessionStorage.setItem('sectionAResults', resultsData);
-  }
-  
-  // Redirect to pricing page with scholarship parameter
-  window.location.href = `pricing.html?scholarship=${couponCode}`;
+function claimScholarship() {
+    console.log('🎓 User clicked "Claim Scholarship"');
+    
+    // Verify localStorage has the data
+    const savedScholarship = localStorage.getItem('activeScholarship');
+    console.log('📦 Scholarship in localStorage:', savedScholarship);
+    
+    if (savedScholarship) {
+        const scholarship = JSON.parse(savedScholarship);
+        
+        // Save test results before redirecting
+        const resultsData = sessionStorage.getItem('sectionAResults');
+        if (resultsData) {
+            console.log('✅ Test results found in sessionStorage');
+        }
+        
+        // Redirect to pricing page with scholarship parameter
+        console.log('🔗 Redirecting to pricing.html with code:', scholarship.couponCode);
+        window.location.href = `pricing.html?scholarship=${scholarship.couponCode}`;
+    } else {
+        console.error('❌ No scholarship found in localStorage!');
+        alert('Error: Scholarship data not found. Please try again.');
+    }
 }
 
 function closeScholarshipModal() {
-  const modal = document.querySelector('.scholarship-modal');
-  if (modal) {
-    modal.style.opacity = '0';
-    setTimeout(() => {
-      modal.remove();
-      // Redirect to test results after closing modal
-      window.location.href = 'test-results.html';
-    }, 300);
-  }
+    console.log('📊 User chose to view results first');
+    
+    // Verify localStorage has the data
+    const savedScholarship = localStorage.getItem('activeScholarship');
+    console.log('📦 Scholarship in localStorage:', savedScholarship);
+    
+    const modal = document.querySelector('.scholarship-modal');
+    if (modal) {
+        modal.style.opacity = '0';
+        setTimeout(() => {
+            modal.remove();
+            // Redirect to test results (which will also show scholarship banner)
+            window.location.href = 'test-results.html';
+        }, 300);
+    }
 }
     </script>
 </body>
 </html>
+
 
