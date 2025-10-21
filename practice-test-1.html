@@ -1529,6 +1529,20 @@
         
         const results = await response.json();
         console.log('Backend response:', results);
+        // ============ NEW DEBUG LOGS - ADD THESE ============
+console.log('🔍 TEST_ID:', TEST_ID);
+console.log('🔍 currentUser:', currentUser);
+console.log('🔍 results.scholarship:', results.scholarship);
+if (results.scholarship) {
+    console.log('🔍 results.scholarship.earned:', results.scholarship.earned);
+}
+console.log('🔍 Scholarship check:', {
+    isTest1: TEST_ID === 1,
+    hasUser: !!currentUser,
+    hasScholarship: !!results.scholarship,
+    isEarned: results.scholarship?.earned
+});
+// ============ END NEW LOGS ============
 
         // ============ SCHOLARSHIP CHECK (ONLY FOR TEST 1 & AUTHENTICATED USERS) ============
         if (TEST_ID === 1 && currentUser && results.scholarship && results.scholarship.earned) {
@@ -1628,7 +1642,7 @@ function showScholarshipModal(scholarship) {
     modal.className = 'scholarship-modal';
     modal.innerHTML = `
         <div class="scholarship-content">
-            <div class="scholarship-icon">${scholarship.badgeIcon}</div>
+            <div class="scholarship-icon">${scholarship.tier === 'Excellent' ? '🏆' : '📘'}</div>
             <h1>🎉 Congratulations!</h1>
             <h2>You've Earned a ${scholarship.discountPercentage}% Scholarship!</h2>
             
@@ -1739,5 +1753,6 @@ function closeScholarshipModal() {
     </script>
 </body>
 </html>
+
 
 
