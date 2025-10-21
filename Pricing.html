@@ -926,29 +926,66 @@
         }
         
         async function signOut() {
-            try {
-                const token = localStorage.getItem('authToken');
-                if (token) {
-                    await fetch(`${API_BASE_URL}/auth/logout`, {
-                        method: 'POST',
-                        headers: {
-                            'Authorization': `Bearer ${token}`,
-                            'Content-Type': 'application/json'
-                        }
-                    });
+    try {
+        const token = localStorage.getItem('authToken');
+        if (token) {
+            await fetch(`${API_BASE_URL}/auth/logout`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
                 }
-            } catch (error) {
-                console.error('Error during logout:', error);
-            } finally {
-                localStorage.removeItem('authToken');
-                updateUIForLoggedOutUser();
-                
-                if (window.location.pathname.includes('dashboard') || 
-                    window.location.pathname.includes('profile')) {
-                    window.location.href = 'index.html';
-                }
-            }
+            });
         }
+    } catch (error) {
+        console.error('Error during logout:', error);
+    } finally {
+        localStorage.removeItem('authToken');
+        
+        // FORCE show auth buttons and hide user menu
+        const authButtons = document.getElementById('auth-buttons');
+        const userMenu = document.getElementById('user-menu');
+        
+        if (authButtons) {
+            // Force show with multiple methods
+            authButtons.style.setProperty('display', 'flex', 'important');
+            authButtons.style.visibility = 'visible';
+            authButtons.style.opacity = '1';
+            authButtons.style.height = 'auto';
+            authButtons.style.overflow = 'visible';
+            authButtons.classList.remove('hide');
+            
+            // Show all child buttons
+            const buttons = authButtons.querySelectorAll('button');
+            buttons.forEach(btn => {
+                btn.style.setProperty('display', 'block', 'important');
+                btn.style.visibility = 'visible';
+            });
+        }
+        
+        if (userMenu) {
+            // Force hide user menu
+            userMenu.style.setProperty('display', 'none', 'important');
+            userMenu.style.visibility = 'hidden';
+            userMenu.style.opacity = '0';
+            userMenu.style.height = '0';
+            userMenu.classList.add('hide');
+            userMenu.classList.remove('show');
+        }
+        
+        currentUser = null;
+        updateCTAButton();
+        
+        console.log('✅ Logged out - UI updated');
+        console.log('Auth buttons display:', authButtons?.style.display);
+        console.log('User menu display:', userMenu?.style.display);
+        
+        if (window.location.pathname.includes('dashboard') || 
+            window.location.pathname.includes('profile')) {
+            window.location.href = 'index.html';
+        }
+    }
+}
         
         // Navigation functions
         function signIn() {
@@ -1499,6 +1536,7 @@
     </script>
 </body>
 </html>
+
 
 
 
