@@ -437,36 +437,38 @@
 </head>
 <body>
     <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg fixed-top">
-        <div class="container">
-            <a class="navbar-brand" href="index.html">Lexcello</a>
+<nav class="navbar navbar-expand-lg fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="index.html">Lexcello</a>
+        
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav mx-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="index.html">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="index.html#tests">Practice Tests</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="about-lnat.html">About LNAT</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="resources.html">Resources</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="pricing.html">Pricing</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="contact.html">Contact</a>
+                </li>
+            </ul>
             
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav mx-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="index.html">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="index.html#tests">Practice Tests</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="about-lnat.html">About LNAT</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="resources.html">Resources</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="pricing.html">Pricing</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="contact.html">Contact</a>
-                    </li>
-                </ul>
-                
+            <!-- Authentication Section - Always visible container -->
+            <div id="nav-auth-container">
                 <!-- Authentication buttons (shown when not logged in) -->
                 <div class="d-flex gap-2" id="auth-buttons">
                     <button class="btn btn-outline-primary" onclick="signIn()">Sign In</button>
@@ -496,7 +498,8 @@
                 </div>
             </div>
         </div>
-    </nav>
+    </div>
+</nav>
 
     <!-- Header -->
     <section class="pricing-header">
@@ -1403,3 +1406,4 @@
     </script>
 </body>
 </html>
+
