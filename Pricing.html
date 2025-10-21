@@ -152,8 +152,25 @@
             background: #e2e8f0;
             margin: 5px 0;
         }
-        
-        /* Header Section */
+        /* Force proper display of auth elements */
+#auth-buttons {
+    display: flex;
+    gap: 0.5rem;
+}
+
+#auth-buttons.hide {
+    display: none !important;
+}
+
+#user-menu.show {
+    display: block !important;
+}
+
+#user-menu.hide {
+    display: none !important;
+}
+
+/* Header Section */
         .pricing-header {
             background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             color: white;
@@ -814,12 +831,34 @@
         function updateUIForLoggedInUser(userData) {
     currentUser = userData;
     
-    // Hide auth buttons and show user menu
+    // NUCLEAR OPTION: Force hide with multiple methods
     const authButtons = document.getElementById('auth-buttons');
     const userMenu = document.getElementById('user-menu');
     
-    if (authButtons) authButtons.style.display = 'none';
-    if (userMenu) userMenu.style.display = 'block';
+    if (authButtons) {
+        // Set inline style with !important
+        authButtons.style.setProperty('display', 'none', 'important');
+        authButtons.style.visibility = 'hidden';
+        authButtons.style.opacity = '0';
+        authButtons.style.height = '0';
+        authButtons.style.overflow = 'hidden';
+        authButtons.classList.add('hide');
+        
+        // Also hide all child elements
+        const buttons = authButtons.querySelectorAll('button');
+        buttons.forEach(btn => {
+            btn.style.setProperty('display', 'none', 'important');
+            btn.style.visibility = 'hidden';
+        });
+    }
+    
+    if (userMenu) {
+        userMenu.style.setProperty('display', 'block', 'important');
+        userMenu.style.visibility = 'visible';
+        userMenu.style.opacity = '1';
+        userMenu.classList.remove('hide');
+        userMenu.classList.add('show');
+    }
     
     const userAvatar = document.getElementById('user-avatar');
     if (userAvatar) {
@@ -831,21 +870,34 @@
     updateCTAButton();
     
     console.log('✅ UI updated for logged in user:', userData.email);
+    console.log('Auth buttons display:', authButtons?.style.display);
+    console.log('Auth buttons visibility:', authButtons?.style.visibility);
+    console.log('User menu display:', userMenu?.style.display);
 }
         
         function updateUIForLoggedOutUser() {
     currentUser = null;
     
-    // Show auth buttons and hide user menu
+    // Show auth buttons and hide user menu with classes
     const authButtons = document.getElementById('auth-buttons');
     const userMenu = document.getElementById('user-menu');
     
-    if (authButtons) authButtons.style.display = 'flex';
-    if (userMenu) userMenu.style.display = 'none';
+    if (authButtons) {
+        authButtons.style.display = 'flex';
+        authButtons.classList.remove('hide');
+    }
+    
+    if (userMenu) {
+        userMenu.style.display = 'none';
+        userMenu.classList.add('hide');
+        userMenu.classList.remove('show');
+    }
     
     updateCTAButton();
     
     console.log('✅ UI updated for logged out user');
+    console.log('Auth buttons display:', authButtons?.style.display);
+    console.log('User menu display:', userMenu?.style.display);
 }
         
         function updateCTAButton() {
@@ -1447,5 +1499,6 @@
     </script>
 </body>
 </html>
+
 
 
