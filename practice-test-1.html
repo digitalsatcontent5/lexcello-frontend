@@ -583,6 +583,207 @@
                 display: none;
             }
         }
+        /* ============= SCHOLARSHIP MODAL STYLES ============= */
+.scholarship-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+  animation: fadeIn 0.3s ease;
+  overflow-y: auto;
+  padding: 20px;
+}
+
+.scholarship-content {
+  background: white;
+  border-radius: 20px;
+  padding: 40px;
+  max-width: 600px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: slideUp 0.5s ease;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+}
+
+.scholarship-icon {
+  font-size: 80px;
+  margin-bottom: 20px;
+  animation: bounce 1s ease infinite;
+}
+
+.scholarship-content h1 {
+  color: #1a365d;
+  margin-bottom: 10px;
+  font-size: 2rem;
+}
+
+.scholarship-content h2 {
+  color: #2b6cb0;
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+}
+
+.scholarship-tier {
+  display: inline-block;
+  padding: 10px 30px;
+  border-radius: 50px;
+  font-weight: bold;
+  font-size: 1.2rem;
+  margin: 20px 0;
+}
+
+.scholarship-tier.gold {
+  background: linear-gradient(135deg, #ffd700, #ffed4e);
+  color: #1a365d;
+}
+
+.scholarship-tier.silver {
+  background: linear-gradient(135deg, #c0c0c0, #e8e8e8);
+  color: #1a365d;
+}
+
+.scholarship-code {
+  background: #f7fafc;
+  border: 2px dashed #2b6cb0;
+  padding: 20px;
+  border-radius: 10px;
+  margin: 20px 0;
+}
+
+.scholarship-code strong {
+  font-size: 1.5rem;
+  color: #1a365d;
+  letter-spacing: 2px;
+  display: block;
+  margin-bottom: 10px;
+}
+
+.scholarship-code button {
+  margin-top: 10px;
+  padding: 8px 15px;
+  background: #2b6cb0;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.scholarship-code button:hover {
+  background: #1a365d;
+}
+
+.price-breakdown {
+  background: #f7fafc;
+  padding: 20px;
+  border-radius: 10px;
+  margin: 20px 0;
+}
+
+.original-price {
+  color: #718096;
+  text-decoration: line-through;
+  font-size: 1.1rem;
+  margin-bottom: 10px;
+}
+
+.discount {
+  color: #38a169;
+  font-weight: bold;
+  font-size: 1.2rem;
+  margin: 10px 0;
+}
+
+.final-price {
+  color: #1a365d;
+  font-size: 2rem;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.scholarship-info {
+  background: #e6fffa;
+  padding: 15px;
+  border-radius: 8px;
+  margin: 20px 0;
+  line-height: 1.8;
+  text-align: left;
+}
+
+.claim-btn {
+  background: linear-gradient(135deg, #2b6cb0, #1a365d);
+  color: white;
+  padding: 15px 40px;
+  border: none;
+  border-radius: 10px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s;
+  margin: 20px 0;
+}
+
+.claim-btn:hover {
+  transform: scale(1.05);
+}
+
+.motivation {
+  color: #4a5568;
+  font-style: italic;
+  margin-top: 20px;
+  font-size: 0.95rem;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(50px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .scholarship-content {
+    padding: 25px;
+  }
+  
+  .scholarship-content h1 {
+    font-size: 1.5rem;
+  }
+  
+  .scholarship-content h2 {
+    font-size: 1.2rem;
+  }
+  
+  .scholarship-icon {
+    font-size: 60px;
+  }
+  
+  .scholarship-code strong {
+    font-size: 1.2rem;
+  }
+  
+  .final-price {
+    font-size: 1.5rem;
+  }
+}
     </style>
 </head>
 <body>
@@ -1282,87 +1483,95 @@
         }
 
         async function submitTest() {
-            try {
-                clearInterval(timerInterval);
-                
-                const modal = bootstrap.Modal.getInstance(document.getElementById('submitModal'));
-                if (modal) modal.hide();
-                
-                showLoading();
-                document.querySelector('#loadingScreen h4').textContent = 'Submitting Your Test...';
-                document.querySelector('#loadingScreen p').textContent = 'Calculating your results';
-                
-                // Calculate time spent FIRST (in seconds)
-                const totalTestTime = testMode === 'guest' ? 20 * 60 : 95 * 60;
-                const timeSpent = totalTestTime - timeLeft;
-                
-                console.log('Time tracking:', {
-                    totalTestTime,
-                    timeLeft,
-                    timeSpent,
-                    minutes: Math.floor(timeSpent / 60)
-                });
-                
-                // Convert letter answers to numbers for API submission
-                const answersArray = Object.entries(userAnswers).map(([questionId, letter]) => {
-                    const letterToNumber = { 'A': 1, 'B': 2, 'C': 3, 'D': 4, 'E': 5 };
-                    return {
-                        questionId: parseInt(questionId),
-                        selectedAnswer: letterToNumber[letter]
-                    };
-                });
-                
-                const submissionData = {
-                    answers: answersArray,
-                    timeSpent: timeSpent,
-                    flaggedQuestions: Array.from(flaggedQuestions)
-                };
-                
-                console.log('Submitting data:', submissionData);
-                
-                const response = await fetch(`${API_BASE_URL}/api/tests/${TEST_ID}/submit`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        ...(currentUser ? { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` } : {})
-                    },
-                    body: JSON.stringify(submissionData)
-                });
-                
-                if (!response.ok) {
-                    throw new Error(`Submission failed: ${response.status}`);
-                }
-                
-                const results = await response.json();
-
-                // Save Section A results to sessionStorage
-                sessionStorage.setItem('sectionAResults', JSON.stringify({
-                    testId: TEST_ID,
-                    score: results.score,
-                    totalQuestions: questions.length,
-                    percentage: results.percentage,
-                    timeSpent: timeSpent,
-                    results: results.results,
-                    userAnswers: userAnswers,
-                    flaggedQuestions: Array.from(flaggedQuestions),
-                    isGuestMode: testMode === 'guest',
-                    testMode: testMode
-                }));
-
-                // Redirect to Essay Section B
-                alert(`Section A Complete! Score: ${results.percentage}%\n\nNow proceeding to Section B: Essay Writing`);
-                window.location.href = `essay-section.html?test=${TEST_ID}`;
-                
-            } catch (error) {
-                console.error('Error submitting test:', error);
-                hideLoading();
-                alert('There was an error submitting your test. Please check your connection and try again.');
-                
-                if (timeLeft > 0) {
-                    startTimer();
-                }
-            }
+    try {
+        clearInterval(timerInterval);
+        
+        const modal = bootstrap.Modal.getInstance(document.getElementById('submitModal'));
+        if (modal) modal.hide();
+        
+        showLoading();
+        document.querySelector('#loadingScreen h4').textContent = 'Submitting Your Test...';
+        document.querySelector('#loadingScreen p').textContent = 'Calculating your results';
+        
+        // Calculate time spent (in seconds)
+        const totalTestTime = testMode === 'guest' ? 20 * 60 : 95 * 60;
+        const timeSpent = totalTestTime - timeLeft;
+        
+        // Convert letter answers to numbers
+        const answersArray = Object.entries(userAnswers).map(([questionId, letter]) => {
+            const letterToNumber = { 'A': 1, 'B': 2, 'C': 3, 'D': 4, 'E': 5 };
+            return {
+                questionId: parseInt(questionId),
+                selectedAnswer: letterToNumber[letter]
+            };
+        });
+        
+        const submissionData = {
+            answers: answersArray,
+            timeSpent: timeSpent,
+            flaggedQuestions: Array.from(flaggedQuestions)
+        };
+        
+        console.log('Submitting data:', submissionData);
+        
+        const response = await fetch(`${API_BASE_URL}/api/tests/${TEST_ID}/submit`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                ...(currentUser ? { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` } : {})
+            },
+            body: JSON.stringify(submissionData)
+        });
+        
+        if (!response.ok) {
+            throw new Error(`Submission failed: ${response.status}`);
         }
+        
+        const results = await response.json();
+        console.log('Backend response:', results);
+
+        // ============ SCHOLARSHIP CHECK (ONLY FOR TEST 1 & AUTHENTICATED USERS) ============
+        if (TEST_ID === 1 && currentUser && results.scholarship && results.scholarship.earned) {
+            console.log('🎉 Scholarship earned!', results.scholarship);
+            
+            // Hide loading
+            hideLoading();
+            
+            // Show scholarship modal
+            showScholarshipModal(results.scholarship);
+            
+            // Don't proceed to results yet - modal buttons will handle navigation
+            return;
+        }
+        // ============ END SCHOLARSHIP CHECK ============
+
+        // Save Section A results
+        sessionStorage.setItem('sectionAResults', JSON.stringify({
+            testId: TEST_ID,
+            score: results.score,
+            totalQuestions: questions.length,
+            percentage: results.percentage,
+            timeSpent: timeSpent,
+            results: results.results,
+            userAnswers: userAnswers,
+            flaggedQuestions: Array.from(flaggedQuestions),
+            isGuestMode: testMode === 'guest',
+            testMode: testMode
+        }));
+
+        // Redirect to results page
+        window.location.href = 'test-results.html';
+        
+    } catch (error) {
+        console.error('Error submitting test:', error);
+        hideLoading();
+        alert('There was an error submitting your test. Please check your connection and try again.');
+        
+        if (timeLeft > 0) {
+            startTimer();
+        }
+    }
+}
 
         function autoSubmitTest() {
             alert('Time is up! Your test will be automatically submitted.');
@@ -1401,6 +1610,108 @@
                 console.log('Auto-save checkpoint');
             }, 30000);
         }
+        // ============= SCHOLARSHIP MODAL FUNCTIONS =============
+function showScholarshipModal(scholarship) {
+  const modal = document.createElement('div');
+  modal.className = 'scholarship-modal';
+  modal.innerHTML = `
+    <div class="scholarship-content">
+      <div class="scholarship-icon">${scholarship.badgeIcon}</div>
+      <h1>🎉 Congratulations!</h1>
+      <h2>You've Earned a ${scholarship.discountPercentage}% Scholarship!</h2>
+      
+      <div class="scholarship-tier ${scholarship.badgeColor}">
+        ${scholarship.tier} Performance
+      </div>
+      
+      <div class="scholarship-code">
+        <div style="margin-bottom: 10px;">Your Exclusive Scholarship Code:</div>
+        <strong id="coupon-code-text">${scholarship.couponCode}</strong>
+        <button onclick="copyScholarshipCode('${scholarship.couponCode}')">
+          <i class="fas fa-copy me-1"></i> Copy Code
+        </button>
+      </div>
+      
+      <div class="price-breakdown">
+        <div class="original-price">Original Price: ₹${scholarship.originalPrice.toLocaleString('en-IN')}</div>
+        <div class="discount">Your Scholarship: -₹${scholarship.discountAmount.toLocaleString('en-IN')} (${scholarship.discountPercentage}% OFF)</div>
+        <div class="final-price">Your Price: ₹${scholarship.finalPrice.toLocaleString('en-IN')} only!</div>
+      </div>
+      
+      <div class="scholarship-info">
+        ✅ Valid for ${scholarship.daysValid} days<br>
+        ✅ Access all 10 comprehensive LNAT practice tests<br>
+        ✅ Detailed explanations & performance analytics<br>
+        ✅ Progress tracking and improvement recommendations
+      </div>
+      
+      <button class="claim-btn" onclick="claimScholarship('${scholarship.couponCode}')">
+        🚀 Claim Your Scholarship Now
+      </button>
+      
+      <p class="motivation">${scholarship.message}</p>
+      
+      <button onclick="closeScholarshipModal()" style="background: transparent; border: none; color: #718096; cursor: pointer; margin-top: 10px; text-decoration: underline; font-size: 0.9rem;">
+        I'll view my results first
+      </button>
+    </div>
+  `;
+  
+  document.body.appendChild(modal);
+  
+  // Store scholarship in localStorage
+  localStorage.setItem('activeScholarship', JSON.stringify(scholarship));
+}
+
+function copyScholarshipCode(code) {
+  navigator.clipboard.writeText(code).then(() => {
+    const btn = event.target;
+    const originalHTML = btn.innerHTML;
+    btn.innerHTML = '<i class="fas fa-check me-1"></i> Copied!';
+    btn.style.background = '#38a169';
+    
+    setTimeout(() => {
+      btn.innerHTML = originalHTML;
+      btn.style.background = '';
+    }, 2000);
+  }).catch(err => {
+    // Fallback for older browsers
+    const textArea = document.createElement('textarea');
+    textArea.value = code;
+    document.body.appendChild(textArea);
+    textArea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textArea);
+    alert('✅ Scholarship code copied!');
+  });
+}
+
+function claimScholarship(couponCode) {
+  // Store scholarship coupon for auto-apply
+  localStorage.setItem('scholarshipCoupon', couponCode);
+  
+  // Save test results before redirecting
+  const resultsData = sessionStorage.getItem('sectionAResults');
+  if (resultsData) {
+    sessionStorage.setItem('sectionAResults', resultsData);
+  }
+  
+  // Redirect to pricing page with scholarship parameter
+  window.location.href = `pricing.html?scholarship=${couponCode}`;
+}
+
+function closeScholarshipModal() {
+  const modal = document.querySelector('.scholarship-modal');
+  if (modal) {
+    modal.style.opacity = '0';
+    setTimeout(() => {
+      modal.remove();
+      // Redirect to test results after closing modal
+      window.location.href = 'test-results.html';
+    }, 300);
+  }
+}
     </script>
 </body>
 </html>
+
