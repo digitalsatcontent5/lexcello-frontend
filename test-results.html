@@ -1031,6 +1031,139 @@
             cursor: pointer;
             color: #666;
         }
+        /* ============= SCHOLARSHIP BADGE STYLES ============= */
+.scholarship-banner {
+  background: linear-gradient(135deg, #ffd700, #ffed4e);
+  border: 3px solid #d4af37;
+  border-radius: 15px;
+  padding: 25px;
+  margin: 20px;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3);
+  animation: slideDown 0.5s ease;
+}
+
+.scholarship-banner.silver {
+  background: linear-gradient(135deg, #c0c0c0, #e8e8e8);
+  border-color: #a8a8a8;
+}
+
+.scholarship-banner h3 {
+  color: #1a365d;
+  margin-bottom: 15px;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.scholarship-banner .badge-icon {
+  font-size: 3rem;
+  margin-bottom: 15px;
+  display: block;
+}
+
+.scholarship-code-display {
+  background: white;
+  border: 2px dashed #1a365d;
+  border-radius: 10px;
+  padding: 15px;
+  margin: 15px 0;
+  display: inline-block;
+}
+
+.scholarship-code-display strong {
+  font-size: 1.3rem;
+  color: #1a365d;
+  letter-spacing: 1px;
+}
+
+.scholarship-price {
+  margin: 15px 0;
+  font-size: 1.1rem;
+  color: #1a365d;
+}
+
+.scholarship-price .original {
+  text-decoration: line-through;
+  color: #718096;
+  margin-right: 10px;
+}
+
+.scholarship-price .final {
+  font-weight: 700;
+  color: #38a169;
+  font-size: 1.3rem;
+}
+
+.scholarship-actions {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+.scholarship-btn {
+  padding: 12px 30px;
+  border-radius: 10px;
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-block;
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.scholarship-btn-primary {
+  background: linear-gradient(135deg, #2b6cb0, #1a365d);
+  color: white;
+}
+
+.scholarship-btn-primary:hover {
+  transform: scale(1.05);
+  color: white;
+}
+
+.scholarship-btn-secondary {
+  background: white;
+  color: #2b6cb0;
+  border: 2px solid #2b6cb0;
+}
+
+.scholarship-btn-secondary:hover {
+  background: #f7fafc;
+}
+
+.scholarship-expiry {
+  font-size: 0.9rem;
+  color: #c53030;
+  margin-top: 10px;
+  font-weight: 600;
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .scholarship-banner {
+    padding: 20px 15px;
+  }
+  
+  .scholarship-code-display strong {
+    font-size: 1.1rem;
+  }
+  
+  .scholarship-actions {
+    flex-direction: column;
+  }
+}
     </style>
 </head>
 <body>
@@ -1064,6 +1197,8 @@
         <div class="results-header">
             <div id="testModeBadge" class="test-mode-badge">Full Test</div>
             <div class="container">
+                <!-- Scholarship Earned Banner -->
+<div id="scholarshipBanner" style="display: none;"></div>
                 <h1><i class="fas fa-chart-line me-3"></i>Test Results</h1>
                 <p id="testTitle">LNAT Practice Test 1</p>
             </div>
@@ -1435,6 +1570,8 @@ ${essay.essayContent}
         }
 
         function displayResults() {
+            // Check for active scholarship
+checkAndDisplayScholarship();
             document.getElementById('loadingScreen').style.display = 'none';
             document.getElementById('resultsContent').style.display = 'block';
             
@@ -2015,9 +2152,113 @@ function generateQuestionNavigationGrid() {
                 toggleNavModal();
             }
         }
+        // ============= SCHOLARSHIP DISPLAY FUNCTIONS =============
+function checkAndDisplayScholarship() {
+  const scholarship = localStorage.getItem('activeScholarship');
+  
+  if (!scholarship) {
+    console.log('No active scholarship found');
+    return;
+  }
+  
+  try {
+    const scholarshipData = JSON.parse(scholarship);
+    console.log('✓ Active scholarship found:', scholarshipData);
+    
+    // Check if scholarship is still valid
+    const validUntil = new Date(scholarshipData.validUntil);
+    const now = new Date();
+    const daysRemaining = Math.ceil((validUntil - now) / (1000 * 60 * 60 * 24));
+    
+    if (daysRemaining <= 0) {
+      console.log('Scholarship expired');
+      localStorage.removeItem('activeScholarship');
+      return;
+    }
+    
+    displayScholarshipBanner(scholarshipData, daysRemaining);
+  } catch (error) {
+    console.error('Error parsing scholarship:', error);
+  }
+}
+
+function displayScholarshipBanner(scholarship, daysRemaining) {
+  const banner = document.getElementById('scholarshipBanner');
+  const isExpiringSoon = daysRemaining <= 2;
+  
+  banner.innerHTML = `
+    <div class="scholarship-banner ${scholarship.badgeColor}">
+      <span class="badge-icon">${scholarship.badgeIcon}</span>
+      <h3>🎉 You've Earned a ${scholarship.discountPercentage}% Scholarship!</h3>
+      <p style="color: #4a5568; margin-bottom: 20px;">
+        ${scholarship.message}
+      </p>
+      
+      <div class="scholarship-code-display">
+        <div style="font-size: 0.9rem; color: #718096; margin-bottom: 5px;">Your Scholarship Code:</div>
+        <strong>${scholarship.couponCode}</strong>
+        <button onclick="copyScholarshipCodeResults('${scholarship.couponCode}')" 
+                style="margin-left: 15px; padding: 5px 15px; background: #2b6cb0; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 0.9rem;">
+          <i class="fas fa-copy me-1"></i> Copy
+        </button>
+      </div>
+      
+      <div class="scholarship-price">
+        <span class="original">₹${scholarship.originalPrice.toLocaleString('en-IN')}</span>
+        <i class="fas fa-arrow-right mx-2"></i>
+        <span class="final">₹${scholarship.finalPrice.toLocaleString('en-IN')} only!</span>
+      </div>
+      
+      ${isExpiringSoon ? `
+        <div class="scholarship-expiry">
+          <i class="fas fa-exclamation-triangle me-1"></i>
+          Expires in ${daysRemaining} day${daysRemaining !== 1 ? 's' : ''}!
+        </div>
+      ` : `
+        <div style="font-size: 0.9rem; color: #4a5568; margin-top: 10px;">
+          Valid for ${daysRemaining} more days
+        </div>
+      `}
+      
+      <div class="scholarship-actions">
+        <a href="pricing.html?scholarship=${scholarship.couponCode}" 
+           class="scholarship-btn scholarship-btn-primary">
+          <i class="fas fa-graduation-cap me-2"></i>Claim Your Scholarship
+        </a>
+        <button onclick="hideScholarshipBanner()" 
+                class="scholarship-btn scholarship-btn-secondary">
+          <i class="fas fa-times me-2"></i>Dismiss
+        </button>
+      </div>
+    </div>
+  `;
+  
+  banner.style.display = 'block';
+}
+
+function copyScholarshipCodeResults(code) {
+  navigator.clipboard.writeText(code).then(() => {
+    const btn = event.target.closest('button');
+    const originalHTML = btn.innerHTML;
+    btn.innerHTML = '<i class="fas fa-check me-1"></i> Copied!';
+    btn.style.background = '#38a169';
+    
+    setTimeout(() => {
+      btn.innerHTML = originalHTML;
+      btn.style.background = '';
+    }, 2000);
+  }).catch(() => {
+    alert('✅ Scholarship code: ' + code);
+  });
+}
+
+function hideScholarshipBanner() {
+  document.getElementById('scholarshipBanner').style.display = 'none';
+}
     </script>
 </body>
 </html>
+
 
 
 
