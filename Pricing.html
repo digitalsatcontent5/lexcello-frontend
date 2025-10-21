@@ -812,27 +812,41 @@
         }
         
         function updateUIForLoggedInUser(userData) {
-            currentUser = userData;
-            
-            document.getElementById('auth-buttons').style.display = 'none';
-            document.getElementById('user-menu').style.display = 'block';
-            
-            const userAvatar = document.getElementById('user-avatar');
-            const firstLetter = (userData.name || userData.email || 'U').charAt(0).toUpperCase();
-            userAvatar.textContent = firstLetter;
-            userAvatar.title = userData.email || 'User';
-            
-            updateCTAButton();
-        }
+    currentUser = userData;
+    
+    // Hide auth buttons and show user menu
+    const authButtons = document.getElementById('auth-buttons');
+    const userMenu = document.getElementById('user-menu');
+    
+    if (authButtons) authButtons.style.display = 'none';
+    if (userMenu) userMenu.style.display = 'block';
+    
+    const userAvatar = document.getElementById('user-avatar');
+    if (userAvatar) {
+        const firstLetter = (userData.name || userData.email || 'U').charAt(0).toUpperCase();
+        userAvatar.textContent = firstLetter;
+        userAvatar.title = userData.email || 'User';
+    }
+    
+    updateCTAButton();
+    
+    console.log('✅ UI updated for logged in user:', userData.email);
+}
         
         function updateUIForLoggedOutUser() {
-            currentUser = null;
-            
-            document.getElementById('auth-buttons').style.display = 'flex';
-            document.getElementById('user-menu').style.display = 'none';
-            
-            updateCTAButton();
-        }
+    currentUser = null;
+    
+    // Show auth buttons and hide user menu
+    const authButtons = document.getElementById('auth-buttons');
+    const userMenu = document.getElementById('user-menu');
+    
+    if (authButtons) authButtons.style.display = 'flex';
+    if (userMenu) userMenu.style.display = 'none';
+    
+    updateCTAButton();
+    
+    console.log('✅ UI updated for logged out user');
+}
         
         function updateCTAButton() {
             const ctaButton = document.getElementById('ctaButton');
@@ -1284,59 +1298,86 @@
 
         // Scholarship Auto-Apply Functions
         function checkForScholarshipCode() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const scholarshipParam = urlParams.get('scholarship');
+    console.log('🔍 Checking for scholarship code...');
+    
+    const urlParams = new URLSearchParams(window.location.search);
+    const scholarshipParam = urlParams.get('scholarship');
+    
+    console.log('URL search params:', window.location.search);
+    console.log('Scholarship param from URL:', scholarshipParam);
+    
+    if (scholarshipParam) {
+        console.log('🎓 Scholarship code found in URL:', scholarshipParam);
+        
+        const couponInput = document.getElementById('coupon-input');
+        if (couponInput) {
+            couponInput.value = scholarshipParam;
+            console.log('✅ Set coupon input to:', scholarshipParam);
+        } else {
+            console.error('❌ Coupon input element not found!');
+        }
+        
+        setTimeout(() => {
+            console.log('⏰ Attempting to apply coupon...');
+            applyCoupon();
+            showScholarshipWelcome();
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }, 500);
+        
+        return;
+    }
+    
+    // Check localStorage
+    const scholarship = localStorage.getItem('activeScholarship');
+    const couponCode = localStorage.getItem('scholarshipCoupon');
+    
+    console.log('activeScholarship in localStorage:', scholarship);
+    console.log('scholarshipCoupon in localStorage:', couponCode);
+    
+    if (scholarship || couponCode) {
+        try {
+            const scholarshipData = scholarship ? JSON.parse(scholarship) : null;
+            const code = scholarshipData?.couponCode || couponCode;
             
-            if (scholarshipParam) {
-                console.log('🎓 Scholarship code found in URL:', scholarshipParam);
+            if (code) {
+                console.log('🎓 Scholarship found in localStorage:', code);
                 
-                document.getElementById('coupon-input').value = scholarshipParam;
+                if (scholarshipData?.validUntil) {
+                    const validUntil = new Date(scholarshipData.validUntil);
+                    const now = new Date();
+                    
+                    console.log('Valid until:', validUntil);
+                    console.log('Current time:', now);
+                    
+                    if (validUntil < now) {
+                        console.log('❌ Scholarship expired');
+                        localStorage.removeItem('activeScholarship');
+                        localStorage.removeItem('scholarshipCoupon');
+                        return;
+                    }
+                }
+                
+                const couponInput = document.getElementById('coupon-input');
+                if (couponInput) {
+                    couponInput.value = code;
+                    console.log('✅ Set coupon input to:', code);
+                }
                 
                 setTimeout(() => {
+                    console.log('⏰ Attempting to apply coupon from localStorage...');
                     applyCoupon();
                     showScholarshipWelcome();
-                    window.history.replaceState({}, document.title, window.location.pathname);
                 }, 500);
-                
-                return;
+            } else {
+                console.log('⚠️ No valid code found in scholarship data');
             }
-            
-            const scholarship = localStorage.getItem('activeScholarship');
-            const couponCode = localStorage.getItem('scholarshipCoupon');
-            
-            if (scholarship || couponCode) {
-                try {
-                    const scholarshipData = scholarship ? JSON.parse(scholarship) : null;
-                    const code = scholarshipData?.couponCode || couponCode;
-                    
-                    if (code) {
-                        console.log('🎓 Scholarship found in localStorage:', code);
-                        
-                        if (scholarshipData?.validUntil) {
-                            const validUntil = new Date(scholarshipData.validUntil);
-                            const now = new Date();
-                            
-                            if (validUntil < now) {
-                                console.log('❌ Scholarship expired');
-                                localStorage.removeItem('activeScholarship');
-                                localStorage.removeItem('scholarshipCoupon');
-                                return;
-                            }
-                        }
-                        
-                        document.getElementById('coupon-input').value = code;
-                        
-                        setTimeout(() => {
-                            applyCoupon();
-                            showScholarshipWelcome();
-                        }, 500);
-                    }
-                } catch (error) {
-                    console.error('Error parsing scholarship:', error);
-                }
-            }
+        } catch (error) {
+            console.error('❌ Error parsing scholarship:', error);
         }
-
+    } else {
+        console.log('ℹ️ No scholarship found in localStorage or URL');
+    }
+}
         function showScholarshipWelcome() {
             const welcomeDiv = document.createElement('div');
             welcomeDiv.style.cssText = `
@@ -1406,4 +1447,5 @@
     </script>
 </body>
 </html>
+
 
