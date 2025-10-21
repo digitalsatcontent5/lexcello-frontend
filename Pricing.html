@@ -763,18 +763,19 @@
         
         // Initialize the app
         document.addEventListener('DOMContentLoaded', function() {
-            checkAuthStatus();
-            
-            // Add click listener to close dropdown when clicking outside
-            document.addEventListener('click', function(event) {
-                const userMenu = document.getElementById('user-menu');
-                const dropdown = document.getElementById('user-dropdown');
-                
-                if (userMenu && !userMenu.contains(event.target)) {
-                    dropdown.classList.remove('show');
-                }
-            });
-        });
+    checkAuthStatus();
+    checkForScholarshipCode(); // ADD THIS LINE
+    
+    // Add click listener to close dropdown when clicking outside
+    document.addEventListener('click', function(event) {
+        const userMenu = document.getElementById('user-menu');
+        const dropdown = document.getElementById('user-dropdown');
+        
+        if (userMenu && !userMenu.contains(event.target)) {
+            dropdown.classList.remove('show');
+        }
+    });
+});
         
         // Authentication functions
         async function checkAuthStatus() {
@@ -1310,10 +1311,186 @@ function showCouponMessage(message, type) {
         }
     }, 5000);
 }
+// ============= SCHOLARSHIP AUTO-APPLY FUNCTIONS =============
+function checkForScholarshipCode() {
+    // Check URL parameter first
+    const urlParams = new URLSearchParams(window.location.search);
+    const scholarshipParam = urlParams.get('scholarship');
+    
+    if (scholarshipParam) {
+        console.log('🎓 Scholarship code found in URL:', scholarshipParam);
+        
+        // Set the coupon input
+        document.getElementById('coupon-input').value = scholarshipParam;
+        
+        // Auto-apply after a short delay to ensure page is fully loaded
+        setTimeout(() => {
+            applyCoupon();
+            
+            // Show scholarship success message
+            showScholarshipWelcome();
+            
+            // Clean up URL
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }, 500);
+        
+        return;
+    }
+    
+    // Check localStorage for scholarship
+    const scholarship = localStorage.getItem('activeScholarship');
+    const couponCode = localStorage.getItem('scholarshipCoupon');
+    
+    if (scholarship || couponCode) {
+        try {
+            const scholarshipData = scholarship ? JSON.parse(scholarship) : null;
+            const code = scholarshipData?.couponCode || couponCode;
+            
+            if (code) {
+                console.log('🎓 Scholarship found in localStorage:', code);
+                
+                // Check if valid
+                if (scholarshipData?.validUntil) {
+                    const validUntil = new Date(scholarshipData.validUntil);
+                    const now = new Date();
+                    
+                    if (validUntil < now) {
+                        console.log('❌ Scholarship expired');
+                        localStorage.removeItem('activeScholarship');
+                        localStorage.removeItem('scholarshipCoupon');
+                        return;
+                    }
+                }
+                
+                // Set the coupon input
+                document.getElementById('coupon-input').value = code;
+                
+                // Auto-apply
+                setTimeout(() => {
+                    applyCoupon();
+                    showScholarshipWelcome();
+                }, 500);
+            }
+        } catch (error) {
+            console.error('Error parsing scholarship:', error);
+        }
+    }
+}
 
+function showScholarshipWelcome() {
+    // Create a special welcome message for scholarship users
+    const welcomeDiv = document.createElement('div');
+    welcomeDiv.style.cssText = `
+        position: fixed;
+        top: 100px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: linear-gradient(135deg, #ffd700, #ffed4e);
+        border: 3px solid #d4af37;
+        border-radius: 15px;
+        padding: 20px 30px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        z-index: 10000;
+        text-align: center;
+        animation: slideDown 0.5s ease;
+        max-width: 500px;
+        width: 90%;
+    `;
+    
+    welcomeDiv.innerHTML = `
+        <div style="font-size: 2rem; margin-bottom: 10px;">🎉</div>
+        <h4 style="color: #1a365d; margin-bottom: 10px; font-weight: 700;">Scholarship Applied!</h4>
+        <p style="color: #4a5568; margin: 0; font-size: 0.95rem;">
+            Your exclusive discount has been automatically applied to your purchase.
+        </p>
+        <button onclick="this.parentElement.remove()" 
+                style="margin-top: 15px; padding: 8px 20px; background: #1a365d; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">
+            Continue
+        </button>
+    `;
+    
+    document.body.appendChild(welcomeDiv);
+    
+    // Auto-remove after 8 seconds
+    setTimeout(() => {
+        if (welcomeDiv.parentElement) {
+            welcomeDiv.style.opacity = '0';
+            welcomeDiv.style.transition = 'opacity 0.5s ease';
+            setTimeout(() => welcomeDiv.remove(), 500);
+        }
+    }, 8000);
+    
+    // Track in analytics
+    try {
+        gtag('event', 'scholarship_auto_applied', {
+            'event_category': 'pricing',
+            'event_label': 'automatic_application'
+        });
+    } catch (error) {
+        console.error('GA tracking error:', error);
+    }
+}
+
+// Add CSS animation for welcome message
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes slideDown {
+        from {
+            transform: translate(-50%, -100px);
+            opacity: 0;
+        }
+        to {
+            transform: translate(-50%, 0);
+            opacity: 1;
+        }
+    }
+`;
+document.head.appendChild(style);
+```
+
+---
+
+## **✅ THAT'S IT! YOUR COMPLETE SCHOLARSHIP SYSTEM IS NOW DONE!**
+
+---
+
+## **🎬 COMPLETE END-TO-END FLOW:**
+```
+✅ Step 1: User takes Test 1 (scores 71%)
+    └─> Backend generates: SCHOLAR25-ABC123
+    └─> Backend response includes scholarship object
+
+✅ Step 2: practice-test-1.html receives scholarship
+    └─> Shows modal immediately
+    └─> localStorage.setItem('activeScholarship', scholarship)
+    └─> User has 2 options:
+        ├─> "Claim Scholarship" → pricing.html?scholarship=SCHOLAR25-ABC123
+        └─> "View Results" → test-results.html
+
+✅ Step 3A: User clicks "Claim Scholarship"
+    └─> Redirects to: pricing.html?scholarship=SCHOLAR25-ABC123
+    └─> checkForScholarshipCode() runs
+    └─> Detects URL parameter
+    └─> Auto-fills coupon input
+    └─> Auto-applies coupon
+    └─> Shows "Scholarship Applied!" popup
+    └─> Price updates: ₹9000 → ₹6750
+
+✅ Step 3B: User clicks "View Results"
+    └─> Shows results with scholarship banner
+    └─> Banner has "Claim Scholarship" button
+    └─> Clicking button → pricing.html?scholarship=SCHOLAR25-ABC123
+    └─> (Same auto-apply flow as 3A)
+
+✅ Step 4: User completes purchase
+    └─> payment.html receives discounted price
+    └─> Backend validates scholarship code
+    └─> User gets premium access at discounted price
+    └─> Scholarship marked as used
     </script>
 </body>
 </html>
+
 
 
 
