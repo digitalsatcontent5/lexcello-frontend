@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-6EV4Y6N8M5"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-6EV4Y6N8M5');
+    </script>
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All LNAT Articles & Blog Posts - Lexcello</title>
+    <meta name="description" content="Browse all LNAT preparation articles, study guides, tips, and strategies. Expert advice for mastering the LNAT exam and getting into top UK law schools.">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #1a365d;
+            --primary-hover: #2d4a66;
+            --secondary-color: #2b6cb0;
+            --accent-gold: #d69e2e;
+            --text-dark: #1a202c;
+            --text-light: #4a5568;
+            --bg-light: #f7fafc;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background: var(--bg-light);
+        }
+        
+        /* Navigation */
+        .navbar {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 1rem 0;
+        }
+        
+        .navbar-brand {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--primary-color) !important;
+            letter-spacing: -1px;
+        }
+        
+        .nav-link {
+            font-weight: 500;
+            color: var(--text-dark) !important;
+            margin: 0 0.5rem;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            color: var(--secondary-color) !important;
+        }
+        
+        .navbar-collapse.show {
+            background-color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+        
+        .btn-primary {
+            background: var(--secondary-color);
+            border: none;
+            padding: 12px 24px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+        }
+        
+        .btn-outline-primary {
+            color: var(--secondary-color);
+            border-color: var(--secondary-color);
+            padding: 12px 24px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-outline-primary:hover {
+            background: var(--secondary-color);
+            border-color: var(--secondary-color);
+            color: white;
+        }
+        
+        /* Page Header */
+        .page-header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            padding: 120px 0 80px;
+            text-align: center;
+        }
+        
+        .page-header h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+        
+        .page-header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        /* Filter Section */
+        .filter-section {
+            background: white;
+            padding: 30px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .filter-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .filter-btn {
+            padding: 8px 20px;
+            border-radius: 25px;
+            border: 2px solid var(--secondary-color);
+            background: white;
+            color: var(--secondary-color);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .filter-btn:hover, .filter-btn.active {
+            background: var(--secondary-color);
+            color: white;
+        }
+        
+        /* Articles Section */
+        .articles-section {
+            padding: 80px 0;
+        }
+        
+        .article-card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            height: 100%;
+            transition: all 0.3s ease;
+            border: 1px solid #e2e8f0;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .article-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+        
+        .article-icon {
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+        }
+        
+        .article-card h4 {
+            color: var(--primary-color);
+            font-weight: 700;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+        
+        .article-card p {
+            color: var(--text-light);
+            margin-bottom: 20px;
+            flex-grow: 1;
+        }
+        
+        .article-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+        
+        .article-tag {
+            background: var(--bg-light);
+            color: var(--secondary-color);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .article-action {
+            color: var(--secondary-color);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+        
+        .article-action:hover {
+            color: var(--primary-hover);
+        }
+        
+        /* Loading and Error States */
+        .loading-state {
+            text-align: center;
+            padding: 60px 20px;
+        }
+        
+        .spinner-border {
+            width: 3rem;
+            height: 3rem;
+            border-width: 0.3rem;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+        }
+        
+        .empty-state-icon {
+            font-size: 4rem;
+            color: var(--text-light);
+            margin-bottom: 20px;
+        }
+        
+        /* Pagination */
+        .pagination-section {
+            margin-top: 60px;
+            display: flex;
+            justify-content: center;
+        }
+        
+        .pagination {
+            gap: 10px;
+        }
+        
+        .page-item .page-link {
+            color: var(--secondary-color);
+            border: 2px solid var(--secondary-color);
+            border-radius: 8px;
+            padding: 10px 20px;
+            font-weight: 600;
+        }
+        
+        .page-item.active .page-link {
+            background: var(--secondary-color);
+            border-color: var(--secondary-color);
+        }
+        
+        .page-item .page-link:hover {
+            background: var(--secondary-color);
+            color: white;
+        }
+        
+        /* Footer */
+        .footer {
+            background: #1a202c;
+            color: white;
+            padding: 60px 0 40px;
+        }
+        
+        .footer-links {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .footer-links a {
+            color: #a0aec0;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: white;
+        }
+        
+        .footer-bottom {
+            border-top: 1px solid #2d3748;
+            padding-top: 30px;
+            text-align: center;
+            color: #718096;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .page-header h1 {
+                font-size: 2rem;
+            }
+            
+            .filter-buttons {
+                gap: 5px;
+            }
+            
+            .filter-btn {
+                padding: 6px 15px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">Lexcello</a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html#tests">Practice Tests</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="about-lnat.html">About LNAT</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="resources.html">Resources</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="pricing.html">Pricing</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="contact.html">Contact</a>
+                    </li>
+                </ul>
+                
+                <div class="d-flex gap-2">
+                    <button class="btn btn-outline-primary" onclick="signIn()">Sign In</button>
+                    <button class="btn btn-primary" onclick="getStarted()">Get Started</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1>All LNAT Articles</h1>
+            <p>Expert advice, strategies, and insights to help you succeed in your LNAT examination and law school journey.</p>
+        </div>
+    </section>
+
+    <!-- Filter Section -->
+    <section class="filter-section">
+        <div class="container">
+            <div class="filter-buttons" id="filter-buttons">
+                <button class="filter-btn active" data-category="all" onclick="filterArticles('all')">All Articles</button>
+                <button class="filter-btn" data-category="Tips" onclick="filterArticles('Tips')">Tips</button>
+                <button class="filter-btn" data-category="Strategy" onclick="filterArticles('Strategy')">Strategy</button>
+                <button class="filter-btn" data-category="Success Story" onclick="filterArticles('Success Story')">Success Stories</button>
+                <button class="filter-btn" data-category="Admissions" onclick="filterArticles('Admissions')">Admissions</button>
+                <button class="filter-btn" data-category="Resources" onclick="filterArticles('Resources')">Resources</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Articles Section -->
+    <section class="articles-section">
+        <div class="container">
+            <div class="row g-4" id="articles-container">
+                <!-- Articles will be loaded here -->
+            </div>
+            
+            <!-- Pagination -->
+            <div class="pagination-section" id="pagination-section" style="display: none;">
+                <nav>
+                    <ul class="pagination" id="pagination">
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4">
+                    <h5 class="fw-bold mb-3">Lexcello</h5>
+                    <p class="text-light">Expert LNAT preparation platform designed to help aspiring law students excel in their admissions journey.</p>
+                    <div class="footer-links">
+                        <a href="https://wa.me/918106461788?text=Hello,%20I%20have%20a%20question%20about%20LNAT%20preparation" target="_blank" title="WhatsApp">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                        <a href="https://instagram.com/lexcello_lnat" target="_blank"><i class="fab fa-instagram me-2"></i>Instagram</a>
+                        <a href="https://www.linkedin.com/in/lexcello-lnat-preparation-9417ba385/" target="_blank"><i class="fab fa-linkedin me-2"></i>LinkedIn</a>
+                        <a href="contact.html"><i class="fas fa-envelope me-2"></i>Contact</a>
+                    </div>
+                </div>
+                
+                <div class="col-lg-2 col-6 mb-4">
+                    <h6 class="fw-bold mb-3">Platform</h6>
+                    <div class="footer-links flex-column d-flex">
+                        <a href="index.html#tests">Practice Tests</a>
+                        <a href="dashboard.html">Performance Analytics</a>
+                        <a href="about-lnat.html">Study Resources</a>
+                        <a href="index.html#tests">Mock Exams</a>
+                    </div>
+                </div>
+                
+                <div class="col-lg-2 col-6 mb-4">
+                    <h6 class="fw-bold mb-3">Resources</h6>
+                    <div class="footer-links flex-column d-flex">
+                        <a href="about-lnat.html">LNAT Guide</a>
+                        <a href="about-lnat.html#format">Test Format</a>
+                        <a href="about-lnat.html#scoring">Scoring</a>
+                        <a href="pricing.html#faq">FAQ</a>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 mb-4">
+                    <h6 class="fw-bold mb-3">Contact Support</h6>
+                    <p>Need help? Get in touch with us.</p>
+                    <p><a href="mailto:support@lexcello.com" class="text-light">support@lexcello.com</a></p>
+                    <p><a href="https://wa.me/918106461788?text=Hello,%20I%20need%20help%20with%20LNAT%20preparation" target="_blank" class="text-light">WhatsApp: +91 81064 61788</a></p>
+                    <p class="mb-0">Response time: Within 24 hours</p>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 Lexcello. All rights reserved. LNAT® is a trademark of the LNAT Consortium.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        const API_BASE = 'https://lexcello-backend.onrender.com';
+        let allArticles = [];
+        let currentFilter = 'all';
+        let currentPage = 1;
+        const articlesPerPage = 12;
+
+        // Category icon mapping
+        const categoryIcons = {
+            'Tips': 'fas fa-lightbulb',
+            'Success Story': 'fas fa-graduation-cap',
+            'Strategy': 'fas fa-calendar-check',
+            'Admissions': 'fas fa-university',
+            'Analytics': 'fas fa-chart-bar',
+            'Resources': 'fas fa-book'
+        };
+
+        // Load all articles
+        async function loadArticles() {
+            const container = document.getElementById('articles-container');
+            
+            // Show loading state
+            container.innerHTML = `
+                <div class="col-12 loading-state">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading articles...</span>
+                    </div>
+                    <p class="mt-3 text-muted">Loading articles...</p>
+                </div>
+            `;
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/articles`);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                allArticles = data.articles || [];
+                
+                if (allArticles.length > 0) {
+                    displayArticles();
+                } else {
+                    showEmptyState();
+                }
+                
+            } catch (error) {
+                console.error('Error loading articles:', error);
+                showErrorState(error.message);
+            }
+        }
+
+        // Display articles based on current filter and page
+        function displayArticles() {
+            const container = document.getElementById('articles-container');
+            
+            // Filter articles
+            let filteredArticles = currentFilter === 'all' 
+                ? allArticles 
+                : allArticles.filter(article => article.category === currentFilter);
+            
+            // Paginate
+            const startIndex = (currentPage - 1) * articlesPerPage;
+            const endIndex = startIndex + articlesPerPage;
+            const paginatedArticles = filteredArticles.slice(startIndex, endIndex);
+            
+            if (paginatedArticles.length === 0) {
+                showEmptyState();
+                return;
+            }
+            
+            container.innerHTML = paginatedArticles.map(article => {
+                const icon = categoryIcons[article.category] || 'fas fa-file-alt';
+                const readTime = article.read_time ? `${article.read_time} min read` : 'Quick read';
+                
+                return `
+                    <div class="col-lg-4 col-md-6">
+                        <div class="article-card">
+                            <div class="article-icon">
+                                <i class="${icon}"></i>
+                            </div>
+                            <h4>${escapeHtml(article.title)}</h4>
+                            <div class="article-meta">
+                                <span>${readTime}</span>
+                                <span class="article-tag">${escapeHtml(article.category || 'Article')}</span>
+                            </div>
+                            <p>${escapeHtml(article.excerpt || 'Click to read this insightful article about LNAT preparation.')}</p>
+                            <a href="/articles/${article.slug}" class="article-action">
+                                Read Article <i class="fas fa-arrow-right ms-1"></i>
+                            </a>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            // Update pagination
+            updatePagination(filteredArticles.length);
+        }
+
+        // Filter articles by category
+        function filterArticles(category) {
+            currentFilter = category;
+            currentPage = 1;
+            
+            // Update active button
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`[data-category="${category}"]`).classList.add('active');
+            
+            displayArticles();
+        }
+
+        // Update pagination controls
+        function updatePagination(totalArticles) {
+            const totalPages = Math.ceil(totalArticles / articlesPerPage);
+            const paginationSection = document.getElementById('pagination-section');
+            const pagination = document.getElementById('pagination');
+            
+            if (totalPages <= 1) {
+                paginationSection.style.display = 'none';
+                return;
+            }
+            
+            paginationSection.style.display = 'flex';
+            
+            let paginationHTML = '';
+            
+            // Previous button
+            paginationHTML += `
+                <li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
+                    <a class="page-link" href="#" onclick="changePage(${currentPage - 1}); return false;">
+                        <i class="fas fa-chevron-left"></i>
+                    </a>
+                </li>
+            `;
+            
+            // Page numbers
+            for (let i = 1; i <= totalPages; i++) {
+                if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) {
+                    paginationHTML += `
+                        <li class="page-item ${i === currentPage ? 'active' : ''}">
+                            <a class="page-link" href="#" onclick="changePage(${i}); return false;">${i}</a>
+                        </li>
+                    `;
+                } else if (i === currentPage - 2 || i === currentPage + 2) {
+                    paginationHTML += `<li class="page-item disabled"><span class="page-link">...</span></li>`;
+                }
+            }
+            
+            // Next button
+            paginationHTML += `
+                <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
+                    <a class="page-link" href="#" onclick="changePage(${currentPage + 1}); return false;">
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                </li>
+            `;
+            
+            pagination.innerHTML = paginationHTML;
+        }
+
+        // Change page
+        function changePage(page) {
+            const filteredArticles = currentFilter === 'all' 
+                ? allArticles 
+                : allArticles.filter(article => article.category === currentFilter);
+            const totalPages = Math.ceil(filteredArticles.length / articlesPerPage);
+            
+            if (page < 1 || page > totalPages) return;
+            
+            currentPage = page;
+            displayArticles();
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Show empty state
+        function showEmptyState() {
+            const container = document.getElementById('articles-container');
+            container.innerHTML = `
+                <div class="col-12 empty-state">
+                    <div class="empty-state-icon">
+                        <i class="fas fa-newspaper"></i>
+                    </div>
+                    <h3>No Articles Found</h3>
+                    <p class="text-muted">
+                        ${currentFilter === 'all' 
+                            ? "We're working on creating helpful LNAT articles for you. Check back soon!" 
+                            : `No articles found in the "${currentFilter}" category. Try selecting a different category.`}
+                    </p>
+                    <button class="btn btn-primary mt-3" onclick="filterArticles('all')">View All Articles</button>
+                </div>
+            `;
+            document.getElementById('pagination-section').style.display = 'none';
+        }
+
+        // Show error state
+        function showErrorState(errorMessage) {
+            const container = document.getElementById('articles-container');
+            container.innerHTML = `
+                <div class="col-12 empty-state">
+                    <div class="empty-state-icon" style="color: #dc3545;">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <h3>Unable to Load Articles</h3>
+                    <p class="text-muted">We're experiencing technical difficulties. Please try again later.</p>
+                    <p class="text-muted small">Error: ${escapeHtml(errorMessage)}</p>
+                    <button class="btn btn-primary mt-3" onclick="loadArticles()">
+                        <i class="fas fa-redo me-2"></i>Try Again
+                    </button>
+                </div>
+            `;
+        }
+
+        // Utility function to escape HTML
+        function escapeHtml(text) {
+            if (!text) return '';
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            return text.replace(/[&<>"']/g, m => map[m]);
+        }
+
+        // Navigation functions
+        function signIn() {
+            window.location.href = 'login.html';
+        }
+        
+        function getStarted() {
+            window.location.href = 'register.html';
+        }
+
+        // Load articles on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadArticles();
+        });
+    </script>
+</body>
+</html>
