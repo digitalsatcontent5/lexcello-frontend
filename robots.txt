@@ -1,7 +1,58 @@
-User-agent: *
-Allow: /
-Disallow: /test-results.html
-Disallow: /dashboard.html
-Disallow: /test-history.html
+# Robots.txt for Lexcello.com
+# Allow all search engines to crawl public content
 
+User-agent: *
+
+# Allow public pages
+Allow: /
+Allow: /index.html
+Allow: /about-lnat.html
+Allow: /resources.html
+Allow: /pricing.html
+Allow: /contact.html
+Allow: /free-lnat-practice-tests.html
+Allow: /practice-test-1.html
+Allow: /blog-archive.html
+Allow: /articles/
+Allow: /login.html
+Allow: /register.html
+Allow: /privacy-policy.html
+Allow: /terms-of-service.html
+
+# Allow PDF resources
+Allow: /*.pdf
+
+# Disallow private/authenticated pages
+Disallow: /dashboard.html
+Disallow: /dashboard
+Disallow: /profile.html
+Disallow: /profile
+Disallow: /test-history.html
+Disallow: /test-history
+Disallow: /settings.html
+Disallow: /settings
+Disallow: /interface.html
+Disallow: /test-results.html
+Disallow: /essay-section.html
+Disallow: /payment.html
+Disallow: /payment-success.html
+Disallow: /payment-failure.html
+
+# Disallow admin pages
+Disallow: /admin.html
+Disallow: /admin
+Disallow: /teacher-dashboard.html
+Disallow: /teacher-login.html
+Disallow: /teacher-purchase-seats.html
+Disallow: /teacher-student-detail.html
+
+# Disallow error/utility pages
+Disallow: /error-log.html
+Disallow: /error-log
+Disallow: /export-explanations.html
+
+# Disallow API endpoints
+Disallow: /api/
+
+# Sitemap location
 Sitemap: https://lexcello.com/sitemap.xml
