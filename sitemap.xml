@@ -1,129 +1,102 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+<urlset
+      xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+<!-- created with Free Online Sitemap Generator www.xml-sitemaps.com -->
 
-<!-- Homepage -->
-<url>
-    <loc>https://lexcello.com/</loc>
-    <lastmod>2025-10-12</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>1.00</priority>
-</url>
 
 <url>
-    <loc>https://lexcello.com/index.html</loc>
-    <lastmod>2025-10-12</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>1.00</priority>
+  <loc>https://lexcello.com/</loc>
+  <lastmod>2025-10-25T09:36:27+00:00</lastmod>
+  <priority>1.00</priority>
+</url>
+<url>
+  <loc>https://lexcello.com/free-lnat-practice-tests</loc>
+  <lastmod>2025-10-25T09:36:27+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://lexcello.com/about-lnat</loc>
+  <lastmod>2025-10-25T09:36:27+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://lexcello.com/resources</loc>
+  <lastmod>2025-10-25T09:36:27+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://lexcello.com/pricing</loc>
+  <lastmod>2025-10-25T09:36:27+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://lexcello.com/contact</loc>
+  <lastmod>2025-10-25T09:36:27+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://lexcello.com/dashboard</loc>
+  <lastmod>2025-10-25T09:36:27+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://lexcello.com/profile</loc>
+  <lastmod>2025-10-25T09:36:27+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://lexcello.com/test-history</loc>
+  <lastmod>2025-10-25T09:36:27+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://lexcello.com/privacy-policy</loc>
+  <lastmod>2025-10-25T09:36:27+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://lexcello.com/terms-of-service</loc>
+  <lastmod>2025-10-25T09:36:27+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://lexcello.com/time-management-strategies.pdf</loc>
+  <lastmod>2025-10-25T09:36:27+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://lexcello.com/LNAT-Critical-Reasoning-Mastery.pdf</loc>
+  <lastmod>2025-10-25T09:36:27+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://lexcello.com/LNAT%20sample%20questions.pdf</loc>
+  <lastmod>2025-10-25T09:36:27+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://lexcello.com/LNAT-Study-Schedule-Template.pdf</loc>
+  <lastmod>2025-10-25T09:36:27+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://lexcello.com/error-log</loc>
+  <lastmod>2025-10-25T09:36:27+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://lexcello.com/blog-archive</loc>
+  <lastmod>2025-10-25T09:36:27+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://lexcello.com/settings</loc>
+  <lastmod>2025-10-25T09:36:27+00:00</lastmod>
+  <priority>0.64</priority>
 </url>
 
-<!-- Main Pages -->
-<url>
-    <loc>https://lexcello.com/free-lnat-practice-tests.html</loc>
-    <lastmod>2025-10-12</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.95</priority>
-</url>
-
-<url>
-    <loc>https://lexcello.com/pricing.html</loc>
-    <lastmod>2025-10-12</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.90</priority>
-</url>
-
-<url>
-    <loc>https://lexcello.com/about-lnat.html</loc>
-    <lastmod>2025-10-12</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.85</priority>
-</url>
-
-<url>
-    <loc>https://lexcello.com/resources.html</loc>
-    <lastmod>2025-10-12</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.80</priority>
-</url>
-
-<url>
-    <loc>https://lexcello.com/contact.html</loc>
-    <lastmod>2025-10-12</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.70</priority>
-</url>
-
-<!-- Authentication Pages -->
-<url>
-    <loc>https://lexcello.com/register.html</loc>
-    <lastmod>2025-10-12</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.85</priority>
-</url>
-
-<url>
-    <loc>https://lexcello.com/login.html</loc>
-    <lastmod>2025-10-12</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.75</priority>
-</url>
-
-<!-- User Dashboard Pages -->
-<url>
-    <loc>https://lexcello.com/dashboard.html</loc>
-    <lastmod>2025-10-12</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.80</priority>
-</url>
-
-<url>
-    <loc>https://lexcello.com/test-history.html</loc>
-    <lastmod>2025-10-12</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.70</priority>
-</url>
-
-<!-- Legal Pages -->
-<url>
-    <loc>https://lexcello.com/privacy-policy.html</loc>
-    <lastmod>2025-10-12</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.50</priority>
-</url>
-
-<url>
-    <loc>https://lexcello.com/terms-of-service.html</loc>
-    <lastmod>2025-10-12</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.50</priority>
-</url>
-
-<!-- PDF Resources -->
-<url>
-    <loc>https://lexcello.com/time-management-strategies.pdf</loc>
-    <lastmod>2025-10-12</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.60</priority>
-</url>
-
-<url>
-    <loc>https://lexcello.com/LNAT-Critical-Reasoning-Mastery.pdf</loc>
-    <lastmod>2025-10-12</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.60</priority>
-</url>
-
-<url>
-    <loc>https://lexcello.com/LNAT%20sample%20questions.pdf</loc>
-    <lastmod>2025-10-12</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.60</priority>
-</url>
-
-<url>
-    <loc>https://lexcello.com/LNAT-Study-Schedule-Template.pdf</loc>
-    <lastmod>2025-10-12</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.60</priority>
-</url>
 
 </urlset>
