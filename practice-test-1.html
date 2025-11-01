@@ -1574,7 +1574,7 @@ console.log('🔍 Scholarship check:', {
         }));
 
         // Redirect to Section B (Essay)
-            window.location.href = `section-b.html?test=${TEST_ID}`;
+            window.location.href = `essay-section.html?test=${TEST_ID}`;
         
     } catch (error) {
         console.error('Error submitting test:', error);
@@ -1746,13 +1746,14 @@ function closeScholarshipModal() {
         setTimeout(() => {
             modal.remove();
             // Redirect to Section B (Essay) - results will show after essay completion
-            window.location.href = `section-b.html?test=${TEST_ID}`;
+            window.location.href = `essay-section.html?test=${TEST_ID}`;
         }, 300);
     }
 }
     </script>
 </body>
 </html>
+
 
 
 
