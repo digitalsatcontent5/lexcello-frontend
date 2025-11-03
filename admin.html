@@ -3623,8 +3623,13 @@ function displayFeedback(feedback) {
                         <span class="student-email">Test ${testId} • ${submittedDate}</span>
                     </div>
                     <div>
-                        ${subscriptionBadge}
-                    </div>
+    ${subscriptionBadge}
+    ${wouldSubscribe === 'no' && (item.why_not_subscribe || item.whyNotSubscribe) ? `
+        <div style="margin-top: 8px; font-size: 0.85em; color: #666;">
+            <strong>Reason:</strong> ${item.why_not_subscribe || item.whyNotSubscribe}
+        </div>
+    ` : ''}
+</div>
                 </div>
                 
                 <div class="student-metrics">
@@ -3641,7 +3646,7 @@ function displayFeedback(feedback) {
                         <div class="metric-label">LNAT Date</div>
                     </div>
                     <div class="metric-box">
-                        <div class="metric-value">${score}/${totalQuestions}</div>
+                        <div class="metric-value">${score !== 'N/A' && totalQuestions !== 'N/A' ? `${score}/${totalQuestions}` : 'N/A'}</div>
                         <div class="metric-label">Test Score</div>
                     </div>
                 </div>
@@ -3878,6 +3883,7 @@ function exportFeedback() {
 </div>
 </body>
 </html>
+
 
 
 
