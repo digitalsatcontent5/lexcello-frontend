@@ -3575,17 +3575,52 @@ function displayFeedback(feedback) {
     }
     
     listContainer.innerHTML = feedback.map(item => {
-        const stars = '⭐'.repeat(item.experience_rating || 0);
-        const subscriptionBadge = item.would_subscribe === 'yes'
+        // Handle both snake_case and camelCase from API
+        const rating = item.experience_rating || item.experienceRating || 0;
+        const stars = '⭐'.repeat(rating);
+        
+        const wouldSubscribe = item.would_subscribe || item.wouldSubscribe || 'no';
+        const subscriptionBadge = wouldSubscribe === 'yes'
             ? '<span class="subscription-badge subscription-active">Would Subscribe</span>'
             : '<span class="subscription-badge subscription-inactive">Would Not Subscribe</span>';
+        
+        // Handle LNAT date
+        const lnatDate = item.lnat_date || item.lnatDate;
+        const lnatDateFormatted = lnatDate ? new Date(lnatDate).toLocaleDateString('en-GB', {day: 'numeric', month: 'short', year: 'numeric'}) : 'N/A';
+        
+        // Calculate days until LNAT
+        let daysUntilLnat = 'N/A';
+        if (lnatDate) {
+            const today = new Date();
+            const examDate = new Date(lnatDate);
+            const diffTime = examDate - today;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            daysUntilLnat = diffDays > 0 ? diffDays : 0;
+        }
+        
+        // Handle user email
+        const userEmail = item.user_email || item.userEmail || 'Anonymous';
+        
+        // Handle test ID
+        const testId = item.test_id || item.testId || 'N/A';
+        
+        // Handle submitted date
+        const submittedAt = item.submitted_at || item.submittedAt;
+        const submittedDate = submittedAt ? new Date(submittedAt).toLocaleDateString() : 'N/A';
+        
+        // Handle feedback text
+        const feedbackText = item.feedback_text || item.improvementSuggestions || item.improvement_suggestions || '';
+        
+        // Handle test score
+        const score = item.score || 'N/A';
+        const totalQuestions = item.total_questions || item.totalQuestions || 'N/A';
         
         return `
             <div class="student-card" style="cursor: default;">
                 <div class="student-header">
                     <div class="student-info">
-                        <span class="student-name">${item.user_email || 'Anonymous'}</span>
-                        <span class="student-email">Test ${item.test_id} • ${new Date(item.submitted_at).toLocaleDateString()}</span>
+                        <span class="student-name">${userEmail}</span>
+                        <span class="student-email">Test ${testId} • ${submittedDate}</span>
                     </div>
                     <div>
                         ${subscriptionBadge}
@@ -3594,34 +3629,33 @@ function displayFeedback(feedback) {
                 
                 <div class="student-metrics">
                     <div class="metric-box">
-                        <div class="metric-value">${stars}</div>
+                        <div class="metric-value">${stars || 'No rating'}</div>
                         <div class="metric-label">Rating</div>
                     </div>
                     <div class="metric-box">
-                        <div class="metric-value">${item.days_until_lnat || 'N/A'}</div>
+                        <div class="metric-value">${daysUntilLnat}</div>
                         <div class="metric-label">Days to LNAT</div>
                     </div>
                     <div class="metric-box">
-                        <div class="metric-value">${new Date(item.lnat_date).toLocaleDateString('en-GB', {day: 'numeric', month: 'short'})}</div>
+                        <div class="metric-value">${lnatDateFormatted}</div>
                         <div class="metric-label">LNAT Date</div>
                     </div>
                     <div class="metric-box">
-                        <div class="metric-value">${item.score || 'N/A'}/${item.total_questions || 'N/A'}</div>
+                        <div class="metric-value">${score}/${totalQuestions}</div>
                         <div class="metric-label">Test Score</div>
                     </div>
                 </div>
                 
-                ${item.feedback_text ? `
+                ${feedbackText ? `
                     <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-top: 15px;">
                         <strong style="color: #2c3e50; display: block; margin-bottom: 8px;">💬 Feedback:</strong>
-                        <p style="margin: 0; color: #4a5568; line-height: 1.6;">${item.feedback_text}</p>
+                        <p style="margin: 0; color: #4a5568; line-height: 1.6;">${feedbackText}</p>
                     </div>
                 ` : ''}
             </div>
         `;
     }).join('');
 }
-
 // Apply Feedback Filters
 document.getElementById('feedback-test-filter')?.addEventListener('change', applyFeedbackFilters);
 document.getElementById('feedback-rating-filter')?.addEventListener('change', applyFeedbackFilters);
@@ -3844,6 +3878,7 @@ function exportFeedback() {
 </div>
 </body>
 </html>
+
 
 
 
