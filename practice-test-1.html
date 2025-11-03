@@ -1085,62 +1085,110 @@
                     <p class="text-center mb-3">Help us improve! Your feedback takes just 30 seconds.</p>
                     
                     <form id="feedbackForm">
-                        <!-- Rating -->
-                        <div class="mb-4">
-                            <label class="form-label fw-bold">How was your experience? *</label>
-                            <div class="d-flex justify-content-between gap-1" id="ratingButtons">
-                                <button type="button" class="btn btn-outline-primary rating-btn" data-rating="1">1</button>
-                                <button type="button" class="btn btn-outline-primary rating-btn" data-rating="2">2</button>
-                                <button type="button" class="btn btn-outline-primary rating-btn" data-rating="3">3</button>
-                                <button type="button" class="btn btn-outline-primary rating-btn" data-rating="4">4</button>
-                                <button type="button" class="btn btn-outline-primary rating-btn" data-rating="5">5</button>
-                                <button type="button" class="btn btn-outline-primary rating-btn" data-rating="6">6</button>
-                                <button type="button" class="btn btn-outline-primary rating-btn" data-rating="7">7</button>
-                                <button type="button" class="btn btn-outline-primary rating-btn" data-rating="8">8</button>
-                                <button type="button" class="btn btn-outline-primary rating-btn" data-rating="9">9</button>
-                                <button type="button" class="btn btn-outline-primary rating-btn" data-rating="10">10</button>
-                            </div>
-                            <div class="d-flex justify-content-between mt-1">
-                                <small class="text-muted">Poor</small>
-                                <small class="text-muted">Excellent</small>
-                            </div>
-                            <input type="hidden" id="experienceRating" required>
-                        </div>
+    <!-- Question 1: LNAT Date (moved to top) -->
+    <div class="mb-4">
+        <label class="form-label fw-bold">1. When is your LNAT? *</label>
+        <input 
+            type="text" 
+            id="lnatDate" 
+            class="form-control"
+            placeholder="e.g., December 2025, January 2026"
+            required
+        >
+        <small class="text-muted">This helps us tailor your preparation timeline</small>
+    </div>
 
-                        <!-- Suggestions -->
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">What can we improve? (Optional)</label>
-                            <textarea 
-                                id="improvementSuggestions" 
-                                class="form-control"
-                                placeholder="Share your thoughts..."
-                                rows="3"
-                                maxlength="500"
-                            ></textarea>
-                            <small class="text-muted"><span id="charCount">0</span>/500 characters</small>
-                        </div>
+    <!-- Question 2: Rating (moved to second) -->
+    <div class="mb-4">
+        <label class="form-label fw-bold">2. How was your overall experience? (1-10) *</label>
+        <div class="d-flex justify-content-between gap-1" id="ratingButtons">
+            <button type="button" class="btn btn-outline-primary rating-btn" data-rating="1">1</button>
+            <button type="button" class="btn btn-outline-primary rating-btn" data-rating="2">2</button>
+            <button type="button" class="btn btn-outline-primary rating-btn" data-rating="3">3</button>
+            <button type="button" class="btn btn-outline-primary rating-btn" data-rating="4">4</button>
+            <button type="button" class="btn btn-outline-primary rating-btn" data-rating="5">5</button>
+            <button type="button" class="btn btn-outline-primary rating-btn" data-rating="6">6</button>
+            <button type="button" class="btn btn-outline-primary rating-btn" data-rating="7">7</button>
+            <button type="button" class="btn btn-outline-primary rating-btn" data-rating="8">8</button>
+            <button type="button" class="btn btn-outline-primary rating-btn" data-rating="9">9</button>
+            <button type="button" class="btn btn-outline-primary rating-btn" data-rating="10">10</button>
+        </div>
+        <div class="d-flex justify-content-between mt-1">
+            <small class="text-muted">Poor</small>
+            <small class="text-muted">Excellent</small>
+        </div>
+        <input type="hidden" id="experienceRating" required>
+    </div>
 
-                        <!-- LNAT Date -->
-                        <div class="mb-4">
-                            <label class="form-label fw-bold">When is your LNAT? (Optional)</label>
-                            <input 
-                                type="text" 
-                                id="lnatDate" 
-                                class="form-control"
-                                placeholder="e.g., December 2025, January 2026"
-                            >
-                        </div>
+    <!-- Question 3: Would you subscribe? (NEW) -->
+    <div class="mb-4">
+        <label class="form-label fw-bold">3. Would you subscribe to our full LNAT prep course? *</label>
+        <div class="d-flex gap-3 mb-2">
+            <div class="form-check">
+                <input 
+                    class="form-check-input" 
+                    type="radio" 
+                    name="wouldSubscribe" 
+                    id="subscribeYes" 
+                    value="yes"
+                    required
+                >
+                <label class="form-check-label" for="subscribeYes">
+                    Yes, I'm interested
+                </label>
+            </div>
+            <div class="form-check">
+                <input 
+                    class="form-check-input" 
+                    type="radio" 
+                    name="wouldSubscribe" 
+                    id="subscribeNo" 
+                    value="no"
+                    required
+                >
+                <label class="form-check-label" for="subscribeNo">
+                    No, not right now
+                </label>
+            </div>
+        </div>
+        
+        <!-- Hidden field that appears when "No" is selected -->
+        <div id="whyNotField" style="display: none;" class="mt-3">
+            <label class="form-label">Why not? (Optional)</label>
+            <textarea 
+                id="whyNotSubscribe" 
+                class="form-control"
+                placeholder="Let us know what's holding you back..."
+                rows="2"
+                maxlength="300"
+            ></textarea>
+            <small class="text-muted"><span id="whyNotCharCount">0</span>/300 characters</small>
+        </div>
+    </div>
 
-                        <!-- Submit Buttons -->
-                        <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-primary btn-lg">
-                                <i class="fas fa-paper-plane me-2"></i>Submit & Continue
-                            </button>
-                            <button type="button" class="btn btn-outline-secondary" onclick="skipFeedback()">
-                                Skip for now
-                            </button>
-                        </div>
-                    </form>
+    <!-- Optional: Additional Suggestions (kept as optional) -->
+    <div class="mb-3">
+        <label class="form-label fw-bold">Any other suggestions? (Optional)</label>
+        <textarea 
+            id="improvementSuggestions" 
+            class="form-control"
+            placeholder="Share your thoughts..."
+            rows="2"
+            maxlength="500"
+        ></textarea>
+        <small class="text-muted"><span id="charCount">0</span>/500 characters</small>
+    </div>
+
+    <!-- Submit Buttons -->
+    <div class="d-grid gap-2">
+        <button type="submit" class="btn btn-primary btn-lg">
+            <i class="fas fa-paper-plane me-2"></i>Submit & View Results
+        </button>
+        <button type="button" class="btn btn-outline-secondary" onclick="skipFeedback()">
+            Skip for now
+        </button>
+    </div>
+</form>
                 </div>
             </div>
         </div>
@@ -1816,28 +1864,42 @@ function closeScholarshipModal() {
         let selectedRating = null;
 
         function showFeedbackModal() {
-            const modal = new bootstrap.Modal(document.getElementById('feedbackModal'));
-            modal.show();
-            
-            // Setup rating buttons
-            document.querySelectorAll('.rating-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    // Remove previous selection
-                    document.querySelectorAll('.rating-btn').forEach(b => b.classList.remove('selected'));
-                    
-                    // Add selection
-                    this.classList.add('selected');
-                    selectedRating = parseInt(this.dataset.rating);
-                    document.getElementById('experienceRating').value = selectedRating;
-                });
-            });
-            
-            // Character counter
-            document.getElementById('improvementSuggestions').addEventListener('input', function() {
-                document.getElementById('charCount').textContent = this.value.length;
-            });
-        }
-
+    console.log('🎊 Feedback modal triggered!');
+    const modal = new bootstrap.Modal(document.getElementById('feedbackModal'));
+    modal.show();
+    
+    // Setup rating buttons
+    document.querySelectorAll('.rating-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.rating-btn').forEach(b => b.classList.remove('selected'));
+            this.classList.add('selected');
+            selectedRating = parseInt(this.dataset.rating);
+            document.getElementById('experienceRating').value = selectedRating;
+        });
+    });
+    
+    // Character counter for suggestions
+    document.getElementById('improvementSuggestions').addEventListener('input', function() {
+        document.getElementById('charCount').textContent = this.value.length;
+    });
+    
+    // NEW: Show/hide "Why not" field based on subscription choice
+    document.querySelectorAll('input[name="wouldSubscribe"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            const whyNotField = document.getElementById('whyNotField');
+            if (this.value === 'no') {
+                whyNotField.style.display = 'block';
+            } else {
+                whyNotField.style.display = 'none';
+            }
+        });
+    });
+    
+    // NEW: Character counter for "why not" field
+    document.getElementById('whyNotSubscribe').addEventListener('input', function() {
+        document.getElementById('whyNotCharCount').textContent = this.value.length;
+    });
+}
         // Handle feedback form submission
         document.getElementById('feedbackForm').addEventListener('submit', async function(e) {
             e.preventDefault();
@@ -1858,12 +1920,14 @@ function closeScholarshipModal() {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        testId: TEST_ID,
-                        testAttemptId: testAttemptId,
-                        experienceRating: selectedRating,
-                        improvementSuggestions: document.getElementById('improvementSuggestions').value,
-                        lnatDate: document.getElementById('lnatDate').value
-                    })
+    testId: TEST_ID,
+    testAttemptId: testAttemptId,
+    lnatDate: document.getElementById('lnatDate').value,
+    experienceRating: selectedRating,
+    wouldSubscribe: document.querySelector('input[name="wouldSubscribe"]:checked')?.value || null,
+    whyNotSubscribe: document.getElementById('whyNotSubscribe').value || null,
+    improvementSuggestions: document.getElementById('improvementSuggestions').value
+})
                 });
                 
                 const result = await response.json();
@@ -1924,6 +1988,7 @@ function closeScholarshipModal() {
     </script>
 </body>
 </html>
+
 
 
 
