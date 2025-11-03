@@ -758,6 +758,7 @@
                     <button class="tab" onclick="showTab('user-management')">User Management</button>
                     <button class="tab" onclick="showTab('teacher-management')">Teachers</button>
                     <button class="tab" onclick="showTab('student-progress')">Student Progress</button> <!-- ADD THIS -->
+                    <button class="tab" onclick="showTab('feedback-management')">Feedback</button>
                     <button class="tab" onclick="showTab('dashboard')">Dashboard</button>
                 </div>
                 
@@ -1198,7 +1199,78 @@
             </div>
         </form>
     </div>
-</div>              
+</div>         
+                <!-- Feedback Management Tab -->
+                <div id="feedback-management" class="tab-content">
+                    <h2>Student Feedback & Surveys</h2>
+                    
+                    <!-- Statistics Overview -->
+                    <div class="stats-grid" style="margin-bottom: 30px;">
+                        <div class="stat-card">
+                            <div class="stat-number" id="total-feedback">-</div>
+                            <div class="stat-label">Total Feedback</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="avg-rating">-</div>
+                            <div class="stat-label">Average Rating</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="subscription-intent">-</div>
+                            <div class="stat-label">Would Subscribe</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="avg-lnat-days">-</div>
+                            <div class="stat-label">Avg Days to LNAT</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Filters -->
+                    <div class="filter-bar">
+                        <select id="feedback-test-filter">
+                            <option value="">All Tests</option>
+                            <option value="1">Test 1</option>
+                            <option value="2">Test 2</option>
+                            <option value="3">Test 3</option>
+                            <option value="4">Test 4</option>
+                            <option value="5">Test 5</option>
+                            <option value="6">Test 6</option>
+                            <option value="7">Test 7</option>
+                            <option value="8">Test 8</option>
+                            <option value="9">Test 9</option>
+                            <option value="10">Test 10</option>
+                        </select>
+                        <select id="feedback-rating-filter">
+                            <option value="">All Ratings</option>
+                            <option value="5">⭐⭐⭐⭐⭐ (5 stars)</option>
+                            <option value="4">⭐⭐⭐⭐ (4 stars)</option>
+                            <option value="3">⭐⭐⭐ (3 stars)</option>
+                            <option value="2">⭐⭐ (2 stars)</option>
+                            <option value="1">⭐ (1 star)</option>
+                        </select>
+                        <select id="feedback-subscription-filter">
+                            <option value="">All Subscription Intent</option>
+                            <option value="yes">Would Subscribe</option>
+                            <option value="no">Would Not Subscribe</option>
+                        </select>
+                        <select id="feedback-sort">
+                            <option value="recent">Most Recent</option>
+                            <option value="oldest">Oldest First</option>
+                            <option value="rating_high">Highest Rating</option>
+                            <option value="rating_low">Lowest Rating</option>
+                        </select>
+                        <button class="btn btn-primary" onclick="loadFeedback()">Refresh</button>
+                        <button class="btn btn-success" onclick="exportFeedback()">Export CSV</button>
+                    </div>
+                    
+                    <!-- Feedback List -->
+                    <div id="feedback-list">
+                        <div class="empty-state">
+                            <div class="empty-state-icon">💬</div>
+                            <h3>No Feedback Yet</h3>
+                            <p>Click "Refresh" to load student feedback</p>
+                        </div>
+                    </div>
+                </div>
                 <!-- Dashboard Tab -->
                 <div id="dashboard" class="tab-content">
                     <h2>Dashboard - All 10 LNAT Practice Tests</h2>
@@ -3422,6 +3494,202 @@ async function deleteTeacher(teacherId, teacherEmail) {
         showMessage(`Network error: ${error.message}`, 'error');
     }
 }
+        // ============= FEEDBACK MANAGEMENT FUNCTIONS =============
+
+let feedbackData = [];
+let filteredFeedback = [];
+
+// Load All Feedback
+async function loadFeedback() {
+    if (!requireAuth()) return;
+    
+    const listContainer = document.getElementById('feedback-list');
+    listContainer.innerHTML = '<p style="padding: 40px; text-align: center; color: #666;">Loading feedback...</p>';
+    
+    try {
+        const response = await fetch(`${API_BASE}/api/admin/feedback`);
+        const data = await response.json();
+        
+        if (data.success && data.feedback) {
+            feedbackData = data.feedback;
+            filteredFeedback = [...feedbackData];
+            
+            updateFeedbackStats(feedbackData);
+            displayFeedback(filteredFeedback);
+        } else {
+            listContainer.innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-state-icon">📝</div>
+                    <h3>No Feedback Submitted Yet</h3>
+                    <p>Student feedback will appear here after they complete tests</p>
+                </div>
+            `;
+        }
+    } catch (error) {
+        console.error('Error loading feedback:', error);
+        listContainer.innerHTML = `
+            <div class="empty-state">
+                <div class="empty-state-icon">❌</div>
+                <h3>Error Loading Feedback</h3>
+                <p style="color: #e74c3c;">${error.message}</p>
+                <button class="btn btn-primary" onclick="loadFeedback()" style="margin-top: 15px;">Retry</button>
+            </div>
+        `;
+    }
+}
+
+// Update Feedback Statistics
+function updateFeedbackStats(feedback) {
+    document.getElementById('total-feedback').textContent = feedback.length;
+    
+    const avgRating = feedback.length > 0
+        ? (feedback.reduce((sum, f) => sum + (f.experience_rating || 0), 0) / feedback.length).toFixed(1)
+        : '0.0';
+    document.getElementById('avg-rating').textContent = avgRating + ' ⭐';
+    
+    const wouldSubscribe = feedback.filter(f => f.would_subscribe === 'yes').length;
+    const subscriptionPercent = feedback.length > 0
+        ? Math.round((wouldSubscribe / feedback.length) * 100)
+        : 0;
+    document.getElementById('subscription-intent').textContent = subscriptionPercent + '%';
+    
+    const avgDays = feedback.length > 0
+        ? Math.round(feedback.reduce((sum, f) => sum + (f.days_until_lnat || 0), 0) / feedback.length)
+        : 0;
+    document.getElementById('avg-lnat-days').textContent = avgDays + ' days';
+}
+
+// Display Feedback Cards
+function displayFeedback(feedback) {
+    const listContainer = document.getElementById('feedback-list');
+    
+    if (feedback.length === 0) {
+        listContainer.innerHTML = `
+            <div class="empty-state">
+                <div class="empty-state-icon">🔍</div>
+                <h3>No Results Found</h3>
+                <p>Try adjusting your filters</p>
+            </div>
+        `;
+        return;
+    }
+    
+    listContainer.innerHTML = feedback.map(item => {
+        const stars = '⭐'.repeat(item.experience_rating || 0);
+        const subscriptionBadge = item.would_subscribe === 'yes'
+            ? '<span class="subscription-badge subscription-active">Would Subscribe</span>'
+            : '<span class="subscription-badge subscription-inactive">Would Not Subscribe</span>';
+        
+        return `
+            <div class="student-card" style="cursor: default;">
+                <div class="student-header">
+                    <div class="student-info">
+                        <span class="student-name">${item.user_email || 'Anonymous'}</span>
+                        <span class="student-email">Test ${item.test_id} • ${new Date(item.submitted_at).toLocaleDateString()}</span>
+                    </div>
+                    <div>
+                        ${subscriptionBadge}
+                    </div>
+                </div>
+                
+                <div class="student-metrics">
+                    <div class="metric-box">
+                        <div class="metric-value">${stars}</div>
+                        <div class="metric-label">Rating</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-value">${item.days_until_lnat || 'N/A'}</div>
+                        <div class="metric-label">Days to LNAT</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-value">${new Date(item.lnat_date).toLocaleDateString('en-GB', {day: 'numeric', month: 'short'})}</div>
+                        <div class="metric-label">LNAT Date</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-value">${item.score || 'N/A'}/${item.total_questions || 'N/A'}</div>
+                        <div class="metric-label">Test Score</div>
+                    </div>
+                </div>
+                
+                ${item.feedback_text ? `
+                    <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-top: 15px;">
+                        <strong style="color: #2c3e50; display: block; margin-bottom: 8px;">💬 Feedback:</strong>
+                        <p style="margin: 0; color: #4a5568; line-height: 1.6;">${item.feedback_text}</p>
+                    </div>
+                ` : ''}
+            </div>
+        `;
+    }).join('');
+}
+
+// Apply Feedback Filters
+document.getElementById('feedback-test-filter')?.addEventListener('change', applyFeedbackFilters);
+document.getElementById('feedback-rating-filter')?.addEventListener('change', applyFeedbackFilters);
+document.getElementById('feedback-subscription-filter')?.addEventListener('change', applyFeedbackFilters);
+document.getElementById('feedback-sort')?.addEventListener('change', applyFeedbackFilters);
+
+function applyFeedbackFilters() {
+    let filtered = [...feedbackData];
+    
+    const testFilter = document.getElementById('feedback-test-filter').value;
+    if (testFilter) {
+        filtered = filtered.filter(f => f.test_id === parseInt(testFilter));
+    }
+    
+    const ratingFilter = document.getElementById('feedback-rating-filter').value;
+    if (ratingFilter) {
+        filtered = filtered.filter(f => f.experience_rating === parseInt(ratingFilter));
+    }
+    
+    const subscriptionFilter = document.getElementById('feedback-subscription-filter').value;
+    if (subscriptionFilter) {
+        filtered = filtered.filter(f => f.would_subscribe === subscriptionFilter);
+    }
+    
+    const sortBy = document.getElementById('feedback-sort').value;
+    switch(sortBy) {
+        case 'recent':
+            filtered.sort((a, b) => new Date(b.submitted_at) - new Date(a.submitted_at));
+            break;
+        case 'oldest':
+            filtered.sort((a, b) => new Date(a.submitted_at) - new Date(b.submitted_at));
+            break;
+        case 'rating_high':
+            filtered.sort((a, b) => b.experience_rating - a.experience_rating);
+            break;
+        case 'rating_low':
+            filtered.sort((a, b) => a.experience_rating - b.experience_rating);
+            break;
+    }
+    
+    filteredFeedback = filtered;
+    displayFeedback(filteredFeedback);
+}
+
+// Export Feedback to CSV
+function exportFeedback() {
+    if (!requireAuth()) return;
+    
+    if (filteredFeedback.length === 0) {
+        alert('No feedback data to export');
+        return;
+    }
+    
+    let csv = 'Date,Test ID,User Email,Rating,Would Subscribe,LNAT Date,Days Until LNAT,Score,Total Questions,Feedback\n';
+    
+    filteredFeedback.forEach(item => {
+        csv += `"${new Date(item.submitted_at).toLocaleDateString()}",${item.test_id},"${item.user_email || 'Anonymous'}",${item.experience_rating},"${item.would_subscribe}","${new Date(item.lnat_date).toLocaleDateString()}",${item.days_until_lnat || 'N/A'},${item.score || 'N/A'},${item.total_questions || 'N/A'},"${(item.feedback_text || '').replace(/"/g, '""')}"\n`;
+    });
+    
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `student-feedback-${new Date().toISOString().split('T')[0]}.csv`;
+    a.click();
+    
+    showMessage(`✅ Exported ${filteredFeedback.length} feedback responses`, 'success');
+}
         
     </script>
     <!-- Edit Question Modal -->
@@ -3576,6 +3844,7 @@ async function deleteTeacher(teacherId, teacherEmail) {
 </div>
 </body>
 </html>
+
 
 
 
