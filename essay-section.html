@@ -539,14 +539,12 @@
         }
 
         function updateSubmitButton() {
-            const textarea = document.getElementById('essayTextarea');
-            const submitBtn = document.getElementById('submitBtn');
-            const text = textarea.value.trim();
-            const words = text ? text.split(/\s+/).length : 0;
-            
-            // Enable submit if there's content
-            submitBtn.disabled = words < 100; // Minimum 100 words to submit
-        }
+    const textarea = document.getElementById('essayTextarea');
+    const submitBtn = document.getElementById('submitBtn');
+    
+    // Always enable submit button - users can submit with any word count (even 0)
+    submitBtn.disabled = false;
+}
 
         function startTimer() {
             const timerEl = document.getElementById('timer');
