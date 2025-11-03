@@ -601,18 +601,15 @@
         }
 
         async function submitEssay() {
-            if (!confirm('Are you sure you want to submit your essay? You cannot edit it after submission.')) {
-                return;
-            }
-            
-            const textarea = document.getElementById('essayTextarea');
-            const text = textarea.value.trim();
-            const words = text ? text.split(/\s+/).length : 0;
-            
-            if (words < 100) {
-                alert('Please write at least 100 words before submitting.');
-                return;
-            }
+    if (!confirm('Are you sure you want to submit your essay? You cannot edit it after submission.')) {
+        return;
+    }
+    
+    const textarea = document.getElementById('essayTextarea');
+    const text = textarea.value.trim();
+    const words = text ? text.split(/\s+/).length : 0;
+    
+    // No minimum word requirement - allow submission with any word count
             
             const submitBtn = document.getElementById('submitBtn');
             submitBtn.disabled = true;
