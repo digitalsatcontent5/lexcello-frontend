@@ -1184,14 +1184,11 @@
     </div>
 
     <!-- Submit Buttons -->
-    <div class="d-grid gap-2">
-        <button type="submit" class="btn btn-primary btn-lg">
-            <i class="fas fa-paper-plane me-2"></i>Submit & View Results
-        </button>
-        <button type="button" class="btn btn-outline-secondary" onclick="skipFeedback()">
-            Skip for now
-        </button>
-    </div>
+<div class="d-grid gap-2">
+    <button type="submit" class="btn btn-primary btn-lg">
+        <i class="fas fa-paper-plane me-2"></i>Submit & Continue
+    </button>
+</div>
 </form>
                 </div>
             </div>
@@ -1950,17 +1947,6 @@ function closeScholarshipModal() {
             proceedAfterFeedback(results);
         });
 
-        function skipFeedback() {
-            console.log('User skipped feedback');
-            
-            const modal = bootstrap.Modal.getInstance(document.getElementById('feedbackModal'));
-            modal.hide();
-            
-            // Get stored results and proceed
-            const results = JSON.parse(sessionStorage.getItem('testResults'));
-            proceedAfterFeedback(results);
-        }
-
         function proceedAfterFeedback(results) {
             // Check for scholarship
             if (results.scholarship && results.scholarship.earned) {
@@ -1992,6 +1978,7 @@ function closeScholarshipModal() {
     </script>
 </body>
 </html>
+
 
 
 
