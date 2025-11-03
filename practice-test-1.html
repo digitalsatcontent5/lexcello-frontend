@@ -784,6 +784,25 @@
     font-size: 1.5rem;
   }
 }
+        /* ============= FEEDBACK MODAL STYLES ============= */
+        .rating-btn {
+            flex: 1;
+            min-width: 35px;
+            padding: 8px 4px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .rating-btn:hover {
+            background: #e6f3ff;
+            border-color: var(--secondary-color);
+        }
+        
+        .rating-btn.selected {
+            background: var(--secondary-color) !important;
+            border-color: var(--secondary-color) !important;
+            color: white !important;
+        }
     </style>
 </head>
 <body>
@@ -1053,7 +1072,79 @@
             </div>
         </div>
     </div>
+<!-- Feedback Modal -->
+    <div class="modal fade" id="feedbackModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="border-radius: 15px; border: none;">
+                <div class="modal-header" style="background: linear-gradient(135deg, #2b6cb0, #1a365d); color: white; border-radius: 15px 15px 0 0;">
+                    <h5 class="modal-title">
+                        <i class="fas fa-comment-dots me-2"></i>Quick Feedback
+                    </h5>
+                </div>
+                <div class="modal-body p-4">
+                    <p class="text-center mb-3">Help us improve! Your feedback takes just 30 seconds.</p>
+                    
+                    <form id="feedbackForm">
+                        <!-- Rating -->
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">How was your experience? *</label>
+                            <div class="d-flex justify-content-between gap-1" id="ratingButtons">
+                                <button type="button" class="btn btn-outline-primary rating-btn" data-rating="1">1</button>
+                                <button type="button" class="btn btn-outline-primary rating-btn" data-rating="2">2</button>
+                                <button type="button" class="btn btn-outline-primary rating-btn" data-rating="3">3</button>
+                                <button type="button" class="btn btn-outline-primary rating-btn" data-rating="4">4</button>
+                                <button type="button" class="btn btn-outline-primary rating-btn" data-rating="5">5</button>
+                                <button type="button" class="btn btn-outline-primary rating-btn" data-rating="6">6</button>
+                                <button type="button" class="btn btn-outline-primary rating-btn" data-rating="7">7</button>
+                                <button type="button" class="btn btn-outline-primary rating-btn" data-rating="8">8</button>
+                                <button type="button" class="btn btn-outline-primary rating-btn" data-rating="9">9</button>
+                                <button type="button" class="btn btn-outline-primary rating-btn" data-rating="10">10</button>
+                            </div>
+                            <div class="d-flex justify-content-between mt-1">
+                                <small class="text-muted">Poor</small>
+                                <small class="text-muted">Excellent</small>
+                            </div>
+                            <input type="hidden" id="experienceRating" required>
+                        </div>
 
+                        <!-- Suggestions -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">What can we improve? (Optional)</label>
+                            <textarea 
+                                id="improvementSuggestions" 
+                                class="form-control"
+                                placeholder="Share your thoughts..."
+                                rows="3"
+                                maxlength="500"
+                            ></textarea>
+                            <small class="text-muted"><span id="charCount">0</span>/500 characters</small>
+                        </div>
+
+                        <!-- LNAT Date -->
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">When is your LNAT? (Optional)</label>
+                            <input 
+                                type="text" 
+                                id="lnatDate" 
+                                class="form-control"
+                                placeholder="e.g., December 2025, January 2026"
+                            >
+                        </div>
+
+                        <!-- Submit Buttons -->
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-paper-plane me-2"></i>Submit & Continue
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary" onclick="skipFeedback()">
+                                Skip for now
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     
     <script>
@@ -1529,52 +1620,23 @@
         
         const results = await response.json();
         console.log('Backend response:', results);
-        // ============ NEW DEBUG LOGS - ADD THESE ============
-console.log('🔍 TEST_ID:', TEST_ID);
-console.log('🔍 currentUser:', currentUser);
-console.log('🔍 results.scholarship:', results.scholarship);
-if (results.scholarship) {
-    console.log('🔍 results.scholarship.earned:', results.scholarship.earned);
-}
-console.log('🔍 Scholarship check:', {
-    isTest1: TEST_ID === 1,
-    hasUser: !!currentUser,
-    hasScholarship: !!results.scholarship,
-    isEarned: results.scholarship?.earned
-});
-// ============ END NEW LOGS ============
 
-        // ============ SCHOLARSHIP CHECK (ONLY FOR TEST 1 & AUTHENTICATED USERS) ============
-        if (TEST_ID === 1 && currentUser && results.scholarship && results.scholarship.earned) {
-            console.log('🎉 Scholarship earned!', results.scholarship);
-            
-            // Hide loading
-            hideLoading();
-            
-            // Show scholarship modal
-            showScholarshipModal(results.scholarship);
-            
-            // Don't proceed to results yet - modal buttons will handle navigation
-            return;
+        // Save results temporarily
+        sessionStorage.setItem('testResults', JSON.stringify(results));
+        sessionStorage.setItem('testAttemptId', results.attemptId || Date.now());
+
+        // Hide loading
+        hideLoading();
+
+        // ============ NEW: SHOW FEEDBACK MODAL FOR TEST 1 ============
+        if (TEST_ID === 1 && currentUser) {
+            showFeedbackModal();
+            return; // Don't proceed yet - feedback modal buttons will handle navigation
         }
-        // ============ END SCHOLARSHIP CHECK ============
+        // ============ END FEEDBACK CHECK ============
 
-        // Save Section A results
-        sessionStorage.setItem('sectionAResults', JSON.stringify({
-            testId: TEST_ID,
-            score: results.score,
-            totalQuestions: questions.length,
-            percentage: results.percentage,
-            timeSpent: timeSpent,
-            results: results.results,
-            userAnswers: userAnswers,
-            flaggedQuestions: Array.from(flaggedQuestions),
-            isGuestMode: testMode === 'guest',
-            testMode: testMode
-        }));
-
-        // Redirect to Section B (Essay)
-            window.location.href = `essay-section.html?test=${TEST_ID}`;
+        // For tests other than Test 1, proceed directly
+        proceedAfterFeedback(results);
         
     } catch (error) {
         console.error('Error submitting test:', error);
@@ -1750,9 +1812,119 @@ function closeScholarshipModal() {
         }, 300);
     }
 }
+        // ============= FEEDBACK MODAL FUNCTIONS =============
+        let selectedRating = null;
+
+        function showFeedbackModal() {
+            const modal = new bootstrap.Modal(document.getElementById('feedbackModal'));
+            modal.show();
+            
+            // Setup rating buttons
+            document.querySelectorAll('.rating-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // Remove previous selection
+                    document.querySelectorAll('.rating-btn').forEach(b => b.classList.remove('selected'));
+                    
+                    // Add selection
+                    this.classList.add('selected');
+                    selectedRating = parseInt(this.dataset.rating);
+                    document.getElementById('experienceRating').value = selectedRating;
+                });
+            });
+            
+            // Character counter
+            document.getElementById('improvementSuggestions').addEventListener('input', function() {
+                document.getElementById('charCount').textContent = this.value.length;
+            });
+        }
+
+        // Handle feedback form submission
+        document.getElementById('feedbackForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            if (!selectedRating) {
+                alert('Please rate your experience (1-10)');
+                return;
+            }
+            
+            const token = localStorage.getItem('authToken');
+            const testAttemptId = sessionStorage.getItem('testAttemptId');
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/feedback`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        testId: TEST_ID,
+                        testAttemptId: testAttemptId,
+                        experienceRating: selectedRating,
+                        improvementSuggestions: document.getElementById('improvementSuggestions').value,
+                        lnatDate: document.getElementById('lnatDate').value
+                    })
+                });
+                
+                const result = await response.json();
+                console.log('Feedback submitted:', result);
+                
+            } catch (error) {
+                console.error('Error submitting feedback:', error);
+            }
+            
+            // Close modal and proceed
+            const modal = bootstrap.Modal.getInstance(document.getElementById('feedbackModal'));
+            modal.hide();
+            
+            // Get stored results and proceed
+            const results = JSON.parse(sessionStorage.getItem('testResults'));
+            proceedAfterFeedback(results);
+        });
+
+        function skipFeedback() {
+            console.log('User skipped feedback');
+            
+            const modal = bootstrap.Modal.getInstance(document.getElementById('feedbackModal'));
+            modal.hide();
+            
+            // Get stored results and proceed
+            const results = JSON.parse(sessionStorage.getItem('testResults'));
+            proceedAfterFeedback(results);
+        }
+
+        function proceedAfterFeedback(results) {
+            // Check for scholarship
+            if (results.scholarship && results.scholarship.earned) {
+                console.log('🎉 Scholarship earned!', results.scholarship);
+                showScholarshipModal(results.scholarship);
+                return;
+            }
+            
+            // Save Section A results
+            const totalTestTime = testMode === 'guest' ? 20 * 60 : 95 * 60;
+            const timeSpent = totalTestTime - timeLeft;
+            
+            sessionStorage.setItem('sectionAResults', JSON.stringify({
+                testId: TEST_ID,
+                score: results.score,
+                totalQuestions: questions.length,
+                percentage: results.percentage,
+                timeSpent: timeSpent,
+                results: results.results,
+                userAnswers: userAnswers,
+                flaggedQuestions: Array.from(flaggedQuestions),
+                isGuestMode: testMode === 'guest',
+                testMode: testMode
+            }));
+
+            // Redirect to essay section
+            window.location.href = `essay-section.html?test=${TEST_ID}`;
+        }
     </script>
 </body>
 </html>
+
 
 
 
