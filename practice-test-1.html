@@ -1955,7 +1955,22 @@ function closeScholarshipModal() {
 }
         // ============= FEEDBACK MODAL FUNCTIONS =============
         let selectedRating = null;
-
+// Helper function to select contact method
+function selectContactMethod(method) {
+    const phoneContainer = document.getElementById('phone-input-container');
+    const phoneInput = document.getElementById('phone-number');
+    
+    if (method === 'phone') {
+        document.getElementById('contact-phone').checked = true;
+        phoneContainer.style.display = 'block';
+        phoneInput.required = true;
+    } else {
+        document.getElementById('contact-email').checked = true;
+        phoneContainer.style.display = 'none';
+        phoneInput.required = false;
+        phoneInput.value = '';
+    }
+}
         function showFeedbackModal() {
     console.log('🎊 Feedback modal triggered!');
     const modal = new bootstrap.Modal(document.getElementById('feedbackModal'));
@@ -1994,34 +2009,65 @@ function closeScholarshipModal() {
     });
 }
         // Handle feedback form submission
-        document.getElementById('feedbackForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            if (!selectedRating) {
-                alert('Please rate your experience (1-10)');
-                return;
-            }
-            
-            const token = localStorage.getItem('authToken');
-            const testAttemptId = sessionStorage.getItem('testAttemptId');
-            
-            try {
-                const response = await fetch(`${API_BASE_URL}/api/feedback`, {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-    testId: TEST_ID,
-    testAttemptId: testAttemptId,
-    lnatDate: document.getElementById('lnatDate').value,
-    experienceRating: selectedRating,
-    wouldSubscribe: document.querySelector('input[name="wouldSubscribe"]:checked')?.value || null,
-    whyNotSubscribe: document.getElementById('whyNotSubscribe').value || null,
-    improvementSuggestions: document.getElementById('improvementSuggestions').value
-})
-                });
+document.getElementById('feedbackForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    if (!selectedRating) {
+        alert('Please rate your experience (1-10)');
+        return;
+    }
+    
+    // NEW: Validate country
+    const country = document.getElementById('country-select').value;
+    if (!country) {
+        alert('Please select your country of residence');
+        return;
+    }
+    
+    // NEW: Validate contact method
+    const contactMethod = document.querySelector('input[name="contact-method"]:checked')?.value;
+    if (!contactMethod) {
+        alert('Please select your preferred contact method');
+        return;
+    }
+    
+    // NEW: Validate phone number if phone is selected
+    let phoneNumber = null;
+    if (contactMethod === 'phone') {
+        const countryCode = document.getElementById('country-code').value;
+        const phoneInput = document.getElementById('phone-number').value.trim();
+        
+        if (!phoneInput) {
+            alert('Please enter your phone number');
+            return;
+        }
+        
+        phoneNumber = countryCode + phoneInput;
+    }
+    
+    const token = localStorage.getItem('authToken');
+    const testAttemptId = sessionStorage.getItem('testAttemptId');
+    
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/feedback`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                testId: TEST_ID,
+                testAttemptId: testAttemptId,
+                lnatDate: document.getElementById('lnatDate').value,
+                experienceRating: selectedRating,
+                wouldSubscribe: document.querySelector('input[name="wouldSubscribe"]:checked')?.value || null,
+                whyNotSubscribe: document.getElementById('whyNotSubscribe').value || null,
+                improvementSuggestions: document.getElementById('improvementSuggestions').value,
+                country: country,                    // NEW
+                preferredContact: contactMethod,     // NEW
+                phoneNumber: phoneNumber             // NEW
+            })
+        });
                 
                 const result = await response.json();
                 console.log('Feedback submitted:', result);
@@ -2070,6 +2116,7 @@ function closeScholarshipModal() {
     </script>
 </body>
 </html>
+
 
 
 
