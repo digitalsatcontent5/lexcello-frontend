@@ -2017,22 +2017,26 @@ document.getElementById('feedbackForm').addEventListener('submit', async functio
         return;
     }
     
+    // ✅ DECLARE VARIABLES AT THE TOP OF THE FUNCTION
+    let country = null;
+    let contactMethod = null;
+    let phoneNumber = null;
+    
     // NEW: Validate country
-    const country = document.getElementById('country-select').value;
+    country = document.getElementById('country-select').value;
     if (!country) {
         alert('Please select your country of residence');
         return;
     }
     
     // NEW: Validate contact method
-    const contactMethod = document.querySelector('input[name="contact-method"]:checked')?.value;
+    contactMethod = document.querySelector('input[name="contact-method"]:checked')?.value;
     if (!contactMethod) {
         alert('Please select your preferred contact method');
         return;
     }
     
     // NEW: Validate phone number if phone is selected
-    let phoneNumber = null;
     if (contactMethod === 'phone') {
         const countryCode = document.getElementById('country-code').value;
         const phoneInput = document.getElementById('phone-number').value.trim();
@@ -2063,28 +2067,27 @@ document.getElementById('feedbackForm').addEventListener('submit', async functio
                 wouldSubscribe: document.querySelector('input[name="wouldSubscribe"]:checked')?.value || null,
                 whyNotSubscribe: document.getElementById('whyNotSubscribe').value || null,
                 improvementSuggestions: document.getElementById('improvementSuggestions').value,
-                country: country,                    // NEW
-                preferredContact: contactMethod,     // NEW
-                phoneNumber: phoneNumber             // NEW
+                country: country,                    // ✅ NOW THESE VARIABLES EXIST
+                preferredContact: contactMethod,     // ✅ NOW THESE VARIABLES EXIST
+                phoneNumber: phoneNumber             // ✅ NOW THESE VARIABLES EXIST
             })
         });
-                
-                const result = await response.json();
-                console.log('Feedback submitted:', result);
-                
-            } catch (error) {
-                console.error('Error submitting feedback:', error);
-            }
-            
-            // Close modal and proceed
-            const modal = bootstrap.Modal.getInstance(document.getElementById('feedbackModal'));
-            modal.hide();
-            
-            // Get stored results and proceed
-            const results = JSON.parse(sessionStorage.getItem('testResults'));
-            proceedAfterFeedback(results);
-        });
-
+        
+        const result = await response.json();
+        console.log('Feedback submitted:', result);
+        
+    } catch (error) {
+        console.error('Error submitting feedback:', error);
+    }
+    
+    // Close modal and proceed
+    const modal = bootstrap.Modal.getInstance(document.getElementById('feedbackModal'));
+    modal.hide();
+    
+    // Get stored results and proceed
+    const results = JSON.parse(sessionStorage.getItem('testResults'));
+    proceedAfterFeedback(results);
+});
         function proceedAfterFeedback(results) {
             // Check for scholarship
             if (results.scholarship && results.scholarship.earned) {
@@ -2116,6 +2119,7 @@ document.getElementById('feedbackForm').addEventListener('submit', async functio
     </script>
 </body>
 </html>
+
 
 
 
