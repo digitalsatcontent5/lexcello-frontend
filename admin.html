@@ -3633,23 +3633,40 @@ function displayFeedback(feedback) {
                 </div>
                 
                 <div class="student-metrics">
-                    <div class="metric-box">
-                        <div class="metric-value">${stars || 'No rating'}</div>
-                        <div class="metric-label">Rating</div>
-                    </div>
-                    <div class="metric-box">
-                        <div class="metric-value">${daysUntilLnat}</div>
-                        <div class="metric-label">Days to LNAT</div>
-                    </div>
-                    <div class="metric-box">
-                        <div class="metric-value">${lnatDateFormatted}</div>
-                        <div class="metric-label">LNAT Date</div>
-                    </div>
-                    <div class="metric-box">
-                        <div class="metric-value">${score !== 'N/A' && totalQuestions !== 'N/A' ? `${score}/${totalQuestions}` : 'N/A'}</div>
-                        <div class="metric-label">Test Score</div>
-                    </div>
-                </div>
+    <div class="metric-box">
+        <div class="metric-value">${stars || 'No rating'}</div>
+        <div class="metric-label">Rating</div>
+    </div>
+    <div class="metric-box">
+        <div class="metric-value">${daysUntilLnat}</div>
+        <div class="metric-label">Days to LNAT</div>
+    </div>
+    <div class="metric-box">
+        <div class="metric-value">${lnatDateFormatted}</div>
+        <div class="metric-label">LNAT Date</div>
+    </div>
+    <div class="metric-box">
+        <div class="metric-value">${score !== 'N/A' && totalQuestions !== 'N/A' ? `${score}/${totalQuestions}` : 'N/A'}</div>
+        <div class="metric-label">Test Score</div>
+    </div>
+    <!-- NEW: Country -->
+    <div class="metric-box">
+        <div class="metric-value">${item.country || 'N/A'}</div>
+        <div class="metric-label">Country</div>
+    </div>
+    <!-- NEW: Preferred Contact -->
+    <div class="metric-box">
+        <div class="metric-value">${item.preferred_contact === 'email' ? '📧 Email' : item.preferred_contact === 'phone' ? '📞 Phone' : 'N/A'}</div>
+        <div class="metric-label">Contact Method</div>
+    </div>
+    <!-- NEW: Phone Number (if provided) -->
+    ${item.phone_number ? `
+        <div class="metric-box">
+            <div class="metric-value" style="font-size: 0.9em;">${item.phone_number}</div>
+            <div class="metric-label">Phone Number</div>
+        </div>
+    ` : ''}
+</div>
                 
                 ${feedbackText ? `
                     <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-top: 15px;">
@@ -3714,10 +3731,10 @@ function exportFeedback() {
         return;
     }
     
-    let csv = 'Date,Test ID,User Email,Rating,Would Subscribe,LNAT Date,Days Until LNAT,Score,Total Questions,Feedback\n';
+    let csv = 'Date,Test ID,User Email,Rating,Would Subscribe,LNAT Date,Days Until LNAT,Score,Total Questions,Country,Contact Method,Phone Number,Feedback\n';
     
     filteredFeedback.forEach(item => {
-        csv += `"${new Date(item.submitted_at).toLocaleDateString()}",${item.test_id},"${item.user_email || 'Anonymous'}",${item.experience_rating},"${item.would_subscribe}","${new Date(item.lnat_date).toLocaleDateString()}",${item.days_until_lnat || 'N/A'},${item.score || 'N/A'},${item.total_questions || 'N/A'},"${(item.feedback_text || '').replace(/"/g, '""')}"\n`;
+        csv += `"${new Date(item.submitted_at).toLocaleDateString()}",${item.test_id},"${item.user_email || 'Anonymous'}",${item.experience_rating},"${item.would_subscribe}","${new Date(item.lnat_date).toLocaleDateString()}",${item.days_until_lnat || 'N/A'},${item.score || 'N/A'},${item.total_questions || 'N/A'},"${item.country || 'N/A'}","${item.preferred_contact || 'N/A'}","${item.phone_number || 'N/A'}","${(item.feedback_text || '').replace(/"/g, '""')}"\n`;
     });
     
     const blob = new Blob([csv], { type: 'text/csv' });
@@ -3883,6 +3900,7 @@ function exportFeedback() {
 </div>
 </body>
 </html>
+
 
 
 
