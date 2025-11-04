@@ -1182,6 +1182,98 @@
         ></textarea>
         <small class="text-muted"><span id="charCount">0</span>/500 characters</small>
     </div>
+    <!-- ========== ADD THESE TWO NEW FIELDS HERE ========== -->
+
+<!-- Country Selection -->
+<div class="mb-4">
+    <label class="form-label fw-bold">Country of Residence *</label>
+    <select id="country-select" class="form-control" required>
+        <option value="">Select your country...</option>
+        <option value="United Kingdom">🇬🇧 United Kingdom</option>
+        <option value="India">🇮🇳 India</option>
+        <option value="United States">🇺🇸 United States</option>
+        <option value="Canada">🇨🇦 Canada</option>
+        <option value="Australia">🇦🇺 Australia</option>
+        <option value="Singapore">🇸🇬 Singapore</option>
+        <option value="UAE">🇦🇪 United Arab Emirates</option>
+        <option value="Hong Kong">🇭🇰 Hong Kong</option>
+        <option value="Malaysia">🇲🇾 Malaysia</option>
+        <option value="South Africa">🇿🇦 South Africa</option>
+        <option value="Nigeria">🇳🇬 Nigeria</option>
+        <option value="Kenya">🇰🇪 Kenya</option>
+        <option value="Pakistan">🇵🇰 Pakistan</option>
+        <option value="Bangladesh">🇧🇩 Bangladesh</option>
+        <option value="Other">🌍 Other</option>
+    </select>
+</div>
+
+<!-- Preferred Contact Method -->
+<div class="mb-4">
+    <label class="form-label fw-bold">Preferred Contact Method *</label>
+    
+    <div class="mb-3">
+        <div class="form-check mb-2" style="padding: 12px; border: 2px solid #ddd; border-radius: 8px; cursor: pointer;" onclick="selectContactMethod('email')">
+            <input 
+                class="form-check-input" 
+                type="radio" 
+                name="contact-method" 
+                id="contact-email" 
+                value="email" 
+                checked 
+                required
+            >
+            <label class="form-check-label" for="contact-email" style="cursor: pointer; width: 100%;">
+                <strong>Email</strong>
+                <div style="font-size: 0.9em; color: #666; margin-top: 3px;">We'll contact you at your registered email</div>
+            </label>
+        </div>
+        
+        <div class="form-check" style="padding: 12px; border: 2px solid #ddd; border-radius: 8px; cursor: pointer;" onclick="selectContactMethod('phone')">
+            <input 
+                class="form-check-input" 
+                type="radio" 
+                name="contact-method" 
+                id="contact-phone" 
+                value="phone" 
+                required
+            >
+            <label class="form-check-label" for="contact-phone" style="cursor: pointer; width: 100%;">
+                <strong>Phone Number</strong>
+                <div style="font-size: 0.9em; color: #666; margin-top: 3px;">We'll call or WhatsApp you</div>
+            </label>
+        </div>
+    </div>
+    
+    <!-- Phone Number Input (Hidden by Default) -->
+    <div id="phone-input-container" style="display: none;">
+        <label for="phone-number" class="form-label">Phone Number *</label>
+        <div class="d-flex gap-2">
+            <select id="country-code" class="form-control" style="max-width: 120px;">
+                <option value="+44">🇬🇧 +44</option>
+                <option value="+91" selected>🇮🇳 +91</option>
+                <option value="+1">🇺🇸 +1</option>
+                <option value="+61">🇦🇺 +61</option>
+                <option value="+65">🇸🇬 +65</option>
+                <option value="+971">🇦🇪 +971</option>
+                <option value="+852">🇭🇰 +852</option>
+                <option value="+60">🇲🇾 +60</option>
+                <option value="+27">🇿🇦 +27</option>
+                <option value="+234">🇳🇬 +234</option>
+                <option value="+254">🇰🇪 +254</option>
+                <option value="+92">🇵🇰 +92</option>
+                <option value="+880">🇧🇩 +880</option>
+            </select>
+            <input 
+                type="tel" 
+                id="phone-number" 
+                class="form-control"
+                placeholder="Enter your phone number"
+                pattern="[0-9]{7,15}"
+            >
+        </div>
+        <small class="text-muted mt-1 d-block">Enter without country code (e.g., 7700900123)</small>
+    </div>
+</div>
 
     <!-- Submit Buttons -->
 <div class="d-grid gap-2">
@@ -1978,6 +2070,7 @@ function closeScholarshipModal() {
     </script>
 </body>
 </html>
+
 
 
 
