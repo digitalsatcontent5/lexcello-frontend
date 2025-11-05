@@ -3574,6 +3574,12 @@ function displayFeedback(feedback) {
         return;
     }
     
+    // ✅ DEBUG: Log the first feedback item to console
+    if (feedback.length > 0) {
+        console.log('📊 Sample feedback item:', feedback[0]);
+        console.log('🔍 All field names:', Object.keys(feedback[0]));
+    }
+    
     listContainer.innerHTML = feedback.map(item => {
         // Handle both snake_case and camelCase from API
         const rating = item.experience_rating || item.experienceRating || 0;
@@ -3583,6 +3589,13 @@ function displayFeedback(feedback) {
         const subscriptionBadge = wouldSubscribe === 'yes'
             ? '<span class="subscription-badge subscription-active">Would Subscribe</span>'
             : '<span class="subscription-badge subscription-inactive">Would Not Subscribe</span>';
+        
+        // ✅ FIXED: Handle "why not" reason with ALL possible field names
+        const whyNotReason = item.why_not_subscribe || 
+                            item.whyNotSubscribe || 
+                            item.why_not || 
+                            item.whyNot || 
+                            '';
         
         // Handle LNAT date
         const lnatDate = item.lnat_date || item.lnatDate;
@@ -3622,55 +3635,53 @@ function displayFeedback(feedback) {
                         <span class="student-name">${userEmail}</span>
                         <span class="student-email">Test ${testId} • ${submittedDate}</span>
                     </div>
-                    <div>
-    ${subscriptionBadge}
-    ${wouldSubscribe === 'no' && (item.why_not_subscribe || item.whyNotSubscribe) ? `
-        <div style="margin-top: 8px; font-size: 0.85em; color: #666;">
-            <strong>Reason:</strong> ${item.why_not_subscribe || item.whyNotSubscribe}
-        </div>
-    ` : ''}
-</div>
+                    <div style="text-align: right;">
+                        ${subscriptionBadge}
+                        ${wouldSubscribe === 'no' && whyNotReason ? `
+                            <div style="margin-top: 8px; padding: 8px 12px; background: #fff3cd; border-left: 3px solid #ffc107; border-radius: 4px; font-size: 0.85em;">
+                                <strong style="color: #856404;">Reason for "No":</strong>
+                                <div style="color: #856404; margin-top: 4px;">"${whyNotReason}"</div>
+                            </div>
+                        ` : ''}
+                    </div>
                 </div>
                 
                 <div class="student-metrics">
-    <div class="metric-box">
-        <div class="metric-value">${stars || 'No rating'}</div>
-        <div class="metric-label">Rating</div>
-    </div>
-    <div class="metric-box">
-        <div class="metric-value">${daysUntilLnat}</div>
-        <div class="metric-label">Days to LNAT</div>
-    </div>
-    <div class="metric-box">
-        <div class="metric-value">${lnatDateFormatted}</div>
-        <div class="metric-label">LNAT Date</div>
-    </div>
-    <div class="metric-box">
-        <div class="metric-value">${score !== 'N/A' && totalQuestions !== 'N/A' ? `${score}/${totalQuestions}` : 'N/A'}</div>
-        <div class="metric-label">Test Score</div>
-    </div>
-    <!-- NEW: Country -->
-    <div class="metric-box">
-        <div class="metric-value">${item.country || 'N/A'}</div>
-        <div class="metric-label">Country</div>
-    </div>
-    <!-- NEW: Preferred Contact -->
-    <div class="metric-box">
-        <div class="metric-value">${item.preferred_contact === 'email' ? '📧 Email' : item.preferred_contact === 'phone' ? '📞 Phone' : 'N/A'}</div>
-        <div class="metric-label">Contact Method</div>
-    </div>
-    <!-- NEW: Phone Number (if provided) -->
-    ${item.phone_number ? `
-        <div class="metric-box">
-            <div class="metric-value" style="font-size: 0.9em;">${item.phone_number}</div>
-            <div class="metric-label">Phone Number</div>
-        </div>
-    ` : ''}
-</div>
+                    <div class="metric-box">
+                        <div class="metric-value">${stars || 'No rating'}</div>
+                        <div class="metric-label">Rating</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-value">${daysUntilLnat}</div>
+                        <div class="metric-label">Days to LNAT</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-value">${lnatDateFormatted}</div>
+                        <div class="metric-label">LNAT Date</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-value">${score !== 'N/A' && totalQuestions !== 'N/A' ? `${score}/${totalQuestions}` : 'N/A'}</div>
+                        <div class="metric-label">Test Score</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-value">${item.country || 'N/A'}</div>
+                        <div class="metric-label">Country</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-value">${item.preferred_contact === 'email' ? '📧 Email' : item.preferred_contact === 'phone' ? '📞 Phone' : 'N/A'}</div>
+                        <div class="metric-label">Contact Method</div>
+                    </div>
+                    ${item.phone_number ? `
+                        <div class="metric-box">
+                            <div class="metric-value" style="font-size: 0.9em;">${item.phone_number}</div>
+                            <div class="metric-label">Phone Number</div>
+                        </div>
+                    ` : ''}
+                </div>
                 
                 ${feedbackText ? `
                     <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-top: 15px;">
-                        <strong style="color: #2c3e50; display: block; margin-bottom: 8px;">💬 Feedback:</strong>
+                        <strong style="color: #2c3e50; display: block; margin-bottom: 8px;">💬 Additional Feedback:</strong>
                         <p style="margin: 0; color: #4a5568; line-height: 1.6;">${feedbackText}</p>
                     </div>
                 ` : ''}
@@ -3900,6 +3911,7 @@ function exportFeedback() {
 </div>
 </body>
 </html>
+
 
 
 
