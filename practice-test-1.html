@@ -1307,7 +1307,7 @@
         let testStartTime;
         let currentUser = null;
         let testMode = 'guest'; // 'full' or 'guest'
-
+        let keyboardShortcutsActive = true;
         // Initialize test when page loads
         document.addEventListener('DOMContentLoaded', function() {
             // Protection for premium tests - redirect unauthenticated users immediately
@@ -1720,7 +1720,8 @@
         async function submitTest() {
     try {
         clearInterval(timerInterval);
-        
+                keyboardShortcutsActive = false; // ✅ ADD THIS LINE
+
         const modal = bootstrap.Modal.getInstance(document.getElementById('submitModal'));
         if (modal) modal.hide();
         
@@ -1809,20 +1810,31 @@
         });
 
         // Keyboard shortcuts
-        document.addEventListener('keydown', function(e) {
-            if (questions.length === 0) return;
-            
-            if (e.key === 'ArrowLeft' && currentQuestionIndex > 0) {
-                e.preventDefault();
-                previousQuestion();
-            } else if (e.key === 'ArrowRight' && currentQuestionIndex < questions.length - 1) {
-                e.preventDefault();
-                nextQuestion();
-            } else if ((e.key === 'f' || e.key === 'F') && !e.ctrlKey) {
-                e.preventDefault();
-                toggleFlag();
-            }
-        });
+document.addEventListener('keydown', function(e) {
+    // Don't trigger shortcuts if disabled
+    if (!keyboardShortcutsActive) return;
+    
+    if (questions.length === 0) return;
+    
+    // Don't trigger shortcuts if user is typing in an input field
+    const activeElement = document.activeElement;
+    const isTyping = activeElement.tagName === 'INPUT' || 
+                     activeElement.tagName === 'TEXTAREA' || 
+                     activeElement.isContentEditable;
+    
+    if (isTyping) return;
+    
+    if (e.key === 'ArrowLeft' && currentQuestionIndex > 0) {
+        e.preventDefault();
+        previousQuestion();
+    } else if (e.key === 'ArrowRight' && currentQuestionIndex < questions.length - 1) {
+        e.preventDefault();
+        nextQuestion();
+    } else if ((e.key === 'f' || e.key === 'F') && !e.ctrlKey) {
+        e.preventDefault();
+        toggleFlag();
+    }
+});
         
         // Auto-save functionality for logged-in users (future enhancement)
         if (currentUser) {
@@ -2140,6 +2152,7 @@ document.getElementById('feedbackForm').addEventListener('submit', async functio
     </script>
 </body>
 </html>
+
 
 
 
