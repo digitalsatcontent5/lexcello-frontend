@@ -1158,14 +1158,17 @@
         
         <!-- Hidden field that appears when "No" is selected -->
         <div id="whyNotField" style="display: none;" class="mt-3">
-            <label class="form-label">Why not? (Optional)</label>
+            <label class="form-label">
+    Why not? <span style="color: red; font-weight: bold;">*</span>
+</label>
             <textarea 
-                id="whyNotSubscribe" 
-                class="form-control"
-                placeholder="Let us know what's holding you back..."
-                rows="2"
-                maxlength="300"
-            ></textarea>
+    id="whyNotSubscribe" 
+    class="form-control"
+    placeholder="Please share your reason (required) - Your feedback helps us improve..."
+    rows="2"
+    maxlength="300"
+    required
+></textarea>
             <small class="text-muted"><span id="whyNotCharCount">0</span>/300 characters</small>
         </div>
     </div>
@@ -2017,12 +2020,30 @@ document.getElementById('feedbackForm').addEventListener('submit', async functio
         return;
     }
     
+    // ✅ NEW: Validate "Would Subscribe" and "Why Not" fields
+    const wouldSubscribe = document.querySelector('input[name="wouldSubscribe"]:checked')?.value;
+    
+    if (!wouldSubscribe) {
+        alert('⚠️ Please let us know if you would subscribe to our full LNAT prep course!');
+        return;
+    }
+    
+    // ✅ CRITICAL: Make "Why Not" mandatory if they selected "No"
+    if (wouldSubscribe === 'no') {
+        const whyNotSubscribe = document.getElementById('whyNotSubscribe').value.trim();
+        if (!whyNotSubscribe) {
+            alert('⚠️ Please tell us why you would not subscribe. Your feedback is valuable and helps us improve our platform!');
+            document.getElementById('whyNotSubscribe').focus();
+            return;
+        }
+    }
+    
     // ✅ DECLARE VARIABLES AT THE TOP OF THE FUNCTION
     let country = null;
     let contactMethod = null;
     let phoneNumber = null;
     
-    // NEW: Validate country
+   // NEW: Validate country
     country = document.getElementById('country-select').value;
     if (!country) {
         alert('Please select your country of residence');
@@ -2119,6 +2140,7 @@ document.getElementById('feedbackForm').addEventListener('submit', async functio
     </script>
 </body>
 </html>
+
 
 
 
