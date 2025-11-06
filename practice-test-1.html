@@ -2059,7 +2059,7 @@ document.getElementById('feedbackForm').addEventListener('submit', async functio
     let contactMethod = null;
     let phoneNumber = null;
     
-   // NEW: Validate country
+    // NEW: Validate country
     country = document.getElementById('country-select').value;
     if (!country) {
         alert('Please select your country of residence');
@@ -2089,6 +2089,27 @@ document.getElementById('feedbackForm').addEventListener('submit', async functio
     const token = localStorage.getItem('authToken');
     const testAttemptId = sessionStorage.getItem('testAttemptId');
     
+    // ✅✅✅ ADD DEBUG LOGS HERE (BEFORE FETCH) ✅✅✅
+    console.log('🔍 DEBUG: Feedback submission starting...');
+    console.log('🔍 DEBUG: testAttemptId from sessionStorage:', testAttemptId);
+    console.log('🔍 DEBUG: testAttemptId type:', typeof testAttemptId);
+    console.log('🔍 DEBUG: TEST_ID:', TEST_ID);
+    
+    const feedbackPayload = {
+        testId: TEST_ID,
+        testAttemptId: testAttemptId,
+        lnatDate: document.getElementById('lnatDate').value,
+        experienceRating: selectedRating,
+        wouldSubscribe: wouldSubscribe,
+        whyNotSubscribe: document.getElementById('whyNotSubscribe').value || null,
+        improvementSuggestions: document.getElementById('improvementSuggestions').value,
+        country: country,
+        preferredContact: contactMethod,
+        phoneNumber: phoneNumber
+    };
+    
+    console.log('🔍 DEBUG: Complete feedback payload:', JSON.stringify(feedbackPayload, null, 2));
+    
     try {
         const response = await fetch(`${API_BASE_URL}/api/feedback`, {
             method: 'POST',
@@ -2096,19 +2117,24 @@ document.getElementById('feedbackForm').addEventListener('submit', async functio
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({
-                testId: TEST_ID,
-                testAttemptId: testAttemptId,
-                lnatDate: document.getElementById('lnatDate').value,
-                experienceRating: selectedRating,
-                wouldSubscribe: document.querySelector('input[name="wouldSubscribe"]:checked')?.value || null,
-                whyNotSubscribe: document.getElementById('whyNotSubscribe').value || null,
-                improvementSuggestions: document.getElementById('improvementSuggestions').value,
-                country: country,                    // ✅ NOW THESE VARIABLES EXIST
-                preferredContact: contactMethod,     // ✅ NOW THESE VARIABLES EXIST
-                phoneNumber: phoneNumber             // ✅ NOW THESE VARIABLES EXIST
-            })
+            body: JSON.stringify(feedbackPayload)
         });
+        
+        const result = await response.json();
+        console.log('✅ Feedback submitted:', result);
+        
+    } catch (error) {
+        console.error('❌ Error submitting feedback:', error);
+    }
+    
+    // Close modal and proceed
+    const modal = bootstrap.Modal.getInstance(document.getElementById('feedbackModal'));
+    modal.hide();
+    
+    // Get stored results and proceed
+    const results = JSON.parse(sessionStorage.getItem('testResults'));
+    proceedAfterFeedback(results);
+});
         
         const result = await response.json();
         console.log('Feedback submitted:', result);
@@ -2156,6 +2182,7 @@ document.getElementById('feedbackForm').addEventListener('submit', async functio
     </script>
 </body>
 </html>
+
 
 
 
