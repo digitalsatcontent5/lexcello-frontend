@@ -2136,22 +2136,7 @@ document.getElementById('feedbackForm').addEventListener('submit', async functio
     proceedAfterFeedback(results);
 });
         
-        const result = await response.json();
-        console.log('Feedback submitted:', result);
-        
-    } catch (error) {
-        console.error('Error submitting feedback:', error);
-    }
-    
-    // Close modal and proceed
-    const modal = bootstrap.Modal.getInstance(document.getElementById('feedbackModal'));
-    modal.hide();
-    
-    // Get stored results and proceed
-    const results = JSON.parse(sessionStorage.getItem('testResults'));
-    proceedAfterFeedback(results);
-});
-        function proceedAfterFeedback(results) {
+          function proceedAfterFeedback(results) {
             // Check for scholarship
             if (results.scholarship && results.scholarship.earned) {
                 console.log('🎉 Scholarship earned!', results.scholarship);
@@ -2182,6 +2167,7 @@ document.getElementById('feedbackForm').addEventListener('submit', async functio
     </script>
 </body>
 </html>
+
 
 
 
