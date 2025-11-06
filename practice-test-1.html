@@ -1764,11 +1764,15 @@
         }
         
         const results = await response.json();
-        console.log('Backend response:', results);
+console.log('Backend response:', results);
 
-        // Save results temporarily
-        sessionStorage.setItem('testResults', JSON.stringify(results));
-        sessionStorage.setItem('testAttemptId', results.attemptId || Date.now());
+// ✅ CRITICAL: Store the attempt ID from backend response
+const attemptId = results.attemptId || results.id || Date.now();
+console.log('✅ Storing attemptId:', attemptId);
+
+// Save results temporarily
+sessionStorage.setItem('testResults', JSON.stringify(results));
+sessionStorage.setItem('testAttemptId', attemptId);
 
         // Hide loading
         hideLoading();
@@ -2152,6 +2156,7 @@ document.getElementById('feedbackForm').addEventListener('submit', async functio
     </script>
 </body>
 </html>
+
 
 
 
