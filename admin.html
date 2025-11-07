@@ -1061,6 +1061,24 @@
                     <input type="tel" id="newUserPhone" class="form-control" placeholder="Optional">
                 </div>
                 <div class="form-group">
+                    <label for="newUserCountry">Country</label>
+                    <input type="text" id="newUserCountry" class="form-control" placeholder="e.g., India">
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="newUserCountryCode">Country Code</label>
+                    <input type="text" id="newUserCountryCode" class="form-control" placeholder="e.g., +91">
+                </div>
+                <div class="form-group">
+                    <label for="newUserContactNumber">Contact Number</label>
+                    <input type="text" id="newUserContactNumber" class="form-control" placeholder="e.g., 9876543210">
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
                     <label for="newUserSubscriptionStatus">Subscription Status *</label>
                     <select id="newUserSubscriptionStatus" class="form-control" required>
                         <option value="inactive">Inactive (Default)</option>
@@ -1177,6 +1195,24 @@
                     <label for="editUserPhone">Phone</label>
                     <input type="tel" id="editUserPhone" class="form-control" placeholder="Optional">
                 </div>
+                <div class="form-group">
+                    <label for="editUserCountry">Country</label>
+                    <input type="text" id="editUserCountry" class="form-control" placeholder="e.g., India">
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="editUserCountryCode">Country Code</label>
+                    <input type="text" id="editUserCountryCode" class="form-control" placeholder="e.g., +91">
+                </div>
+                <div class="form-group">
+                    <label for="editUserContactNumber">Contact Number</label>
+                    <input type="text" id="editUserContactNumber" class="form-control" placeholder="e.g., 9876543210">
+                </div>
+            </div>
+            
+            <div class="form-row">
                 <div class="form-group">
                     <label for="editUserSubscriptionStatus">Subscription Status *</label>
                     <select id="editUserSubscriptionStatus" class="form-control" required>
@@ -2468,6 +2504,8 @@ function displayUsers(users) {
                     <div class="user-email">${user.email}</div>
                     <div class="user-details">
                         Name: ${user.first_name || 'N/A'} ${user.last_name || ''} | 
+                        Country: ${user.country || 'N/A'} (${user.country_code || ''}) | 
+                        Contact: ${user.contact_number || 'N/A'} | 
                         Phone: ${user.phone || 'N/A'} | 
                         ID: ${user.id} | 
                         Registered: ${new Date(user.created_at).toLocaleDateString()} | 
@@ -2725,6 +2763,9 @@ async function submitAddUser(event) {
         password: document.getElementById('newUserPassword').value,
         firstName: document.getElementById('newUserFirstName').value.trim() || null,
         lastName: document.getElementById('newUserLastName').value.trim() || null,
+        country: document.getElementById('newUserCountry').value.trim() || null,
+        countryCode: document.getElementById('newUserCountryCode').value.trim() || null,
+        contactNumber: document.getElementById('newUserContactNumber').value.trim() || null,
         phone: document.getElementById('newUserPhone').value.trim() || null,
         subscriptionStatus: document.getElementById('newUserSubscriptionStatus').value,
         subscriptionPlan: document.getElementById('newUserSubscriptionPlan').value.trim() || null
@@ -2774,6 +2815,9 @@ async function showEditUserModal(userId) {
         document.getElementById('editUserEmail').value = user.email;
         document.getElementById('editUserFirstName').value = user.first_name || '';
         document.getElementById('editUserLastName').value = user.last_name || '';
+        document.getElementById('editUserCountry').value = user.country || '';
+        document.getElementById('editUserCountryCode').value = user.country_code || '';
+        document.getElementById('editUserContactNumber').value = user.contact_number || '';
         document.getElementById('editUserPhone').value = user.phone || '';
         document.getElementById('editUserSubscriptionStatus').value = user.subscription_status || 'inactive';
         document.getElementById('editUserSubscriptionPlan').value = user.subscription_plan || '';
@@ -2803,6 +2847,9 @@ async function submitEditUser(event) {
         email: document.getElementById('editUserEmail').value.trim(),
         firstName: document.getElementById('editUserFirstName').value.trim() || null,
         lastName: document.getElementById('editUserLastName').value.trim() || null,
+        country: document.getElementById('editUserCountry').value.trim() || null,
+        countryCode: document.getElementById('editUserCountryCode').value.trim() || null,
+        contactNumber: document.getElementById('editUserContactNumber').value.trim() || null,
         phone: document.getElementById('editUserPhone').value.trim() || null,
         subscriptionStatus: document.getElementById('editUserSubscriptionStatus').value,
         subscriptionPlan: document.getElementById('editUserSubscriptionPlan').value.trim() || null
@@ -3911,6 +3958,7 @@ function exportFeedback() {
 </div>
 </body>
 </html>
+
 
 
 
