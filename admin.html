@@ -2481,8 +2481,7 @@ console.log('Loaded options:', options); // Debug log
             }
         }
         
-        // Display Users
-function displayUsers(users) {
+        function displayUsers(users) {
     const usersList = document.getElementById('users-list');
     
     if (users.length === 0) {
@@ -2498,15 +2497,22 @@ function displayUsers(users) {
         const subscriptionExpiry = user.subscription_expires ? 
             new Date(user.subscription_expires).toLocaleDateString() : 'N/A';
         
+        // ✅ IMPROVED NULL HANDLING
+        const displayName = `${user.first_name || 'N/A'} ${user.last_name || ''}`.trim();
+        const displayCountry = user.country || 'Not provided';
+        const displayCountryCode = user.country_code || '';
+        const displayContact = user.contact_number || 'Not provided';
+        const displayPhone = user.phone || 'Not provided';
+        
         return `
             <div class="user-item">
                 <div class="user-info">
                     <div class="user-email">${user.email}</div>
                     <div class="user-details">
-                        Name: ${user.first_name || 'N/A'} ${user.last_name || ''} | 
-                        Country: ${user.country || 'N/A'} (${user.country_code || ''}) | 
-                        Contact: ${user.contact_number || 'N/A'} | 
-                        Phone: ${user.phone || 'N/A'} | 
+                        Name: ${displayName} | 
+                        Country: ${displayCountry} ${displayCountryCode ? '(' + displayCountryCode + ')' : ''} | 
+                        Contact: ${displayContact} | 
+                        Phone: ${displayPhone} | 
                         ID: ${user.id} | 
                         Registered: ${new Date(user.created_at).toLocaleDateString()} | 
                         Subscription Expires: ${subscriptionExpiry}
@@ -3958,6 +3964,7 @@ function exportFeedback() {
 </div>
 </body>
 </html>
+
 
 
 
