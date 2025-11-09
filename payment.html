@@ -287,7 +287,9 @@
         <input type="hidden" name="udf5" id="payu-udf5">
     </form>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    🎯 Updated payment.html with PayPal Support
+Replace the entire <script> section (starting from the <script> tag after Bootstrap until </body>) in your payment.html with this:
+html    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     
     <script>
         // Configuration
@@ -301,7 +303,8 @@
                 display: '9,000', 
                 code: 'INR', 
                 monthly: '₹750',
-                showDisclaimer: false
+                showDisclaimer: false,
+                gateway: 'payu'
             },
             USD: { 
                 symbol: '$', 
@@ -310,7 +313,8 @@
                 code: 'INR',
                 monthly: '$8.25',
                 showDisclaimer: true,
-                actualCurrency: 'USD'
+                actualCurrency: 'USD',
+                gateway: 'paypal'
             },
             GBP: { 
                 symbol: '£', 
@@ -319,7 +323,8 @@
                 code: 'INR',
                 monthly: '£6.58',
                 showDisclaimer: true,
-                actualCurrency: 'GBP'
+                actualCurrency: 'GBP',
+                gateway: 'paypal'
             }
         };
         
@@ -327,7 +332,8 @@
             plan: 'premium-12',
             amount: 9000,
             duration: 12,
-            currency: 'INR'
+            currency: 'INR',
+            gateway: 'payu'
         };
         
         // Coupon state
@@ -347,11 +353,12 @@
             const savedCurrency = localStorage.getItem('selectedCurrency') || 'INR';
             
             if (prices[savedCurrency]) {
-                selectedPlan.currency = savedCurrency;  // For display only
-                selectedPlan.amount = 9000;             // Always start with INR amount
+                selectedPlan.currency = savedCurrency;
+                selectedPlan.amount = 9000;
+                selectedPlan.gateway = prices[savedCurrency].gateway;
                 
-                console.log('Loaded currency:', savedCurrency, 'Amount: ₹9000 INR');
-                console.log('IMPORTANT: Display currency is', savedCurrency, 'but payment will be processed in INR');
+                console.log('Loaded currency:', savedCurrency, 'Gateway:', selectedPlan.gateway);
+                updatePaymentButtonDisplay();
             }
         }
         
@@ -363,10 +370,8 @@
                 try {
                     const coupon = JSON.parse(couponData);
                     appliedCoupon = coupon;
-                    discountAmount = coupon.discountAmount;  // INR discount (e.g., 1800)
-                    finalAmount = coupon.finalAmount;        // INR final amount (e.g., 7200)
-                    
-                    // CRITICAL: Update selectedPlan amount to discounted INR amount
+                    discountAmount = coupon.discountAmount;
+                    finalAmount = coupon.finalAmount;
                     selectedPlan.amount = finalAmount;
                     
                     console.log('Coupon loaded:', {
@@ -376,10 +381,8 @@
                         displayCurrency: selectedPlan.currency
                     });
                     
-                    // Update display
                     updatePriceDisplay();
                     
-                    // Track coupon usage on payment page
                     try {
                         gtag('event', 'coupon_on_payment_page', {
                             'event_category': 'payment',
@@ -391,13 +394,11 @@
                     }
                 } catch (error) {
                     console.error('Error loading coupon:', error);
-                    // If coupon loading fails, reset to full amount
                     finalAmount = 9000;
                     selectedPlan.amount = 9000;
                     updatePriceDisplay();
                 }
             } else {
-                // No coupon - use full amount
                 finalAmount = 9000;
                 selectedPlan.amount = 9000;
                 updatePriceDisplay();
@@ -413,12 +414,10 @@
             const approxAmount = document.getElementById('approx-amount');
             
             if (appliedCoupon) {
-                // Calculate display amounts
                 const displayOriginal = parseFloat(price.display.replace(/,/g, ''));
                 const displayDiscount = (discountAmount * displayOriginal / 9000).toFixed(2);
                 const displayFinal = (displayOriginal - displayDiscount).toFixed(2);
                 
-                // Format for INR
                 const formattedOriginal = selectedPlan.currency === 'INR' 
                     ? displayOriginal.toLocaleString('en-IN')
                     : displayOriginal;
@@ -426,16 +425,13 @@
                     ? parseFloat(displayFinal).toLocaleString('en-IN')
                     : displayFinal;
                 
-                // Show discounted price
                 priceElement.innerHTML = `
                     <span style="text-decoration: line-through; opacity: 0.5; font-size: 0.6em;">${price.symbol}${formattedOriginal}</span>
                     ${price.symbol}${formattedFinal}
                 `;
                 
-                // Show coupon badge
                 showCouponBadge();
                 
-                // Update disclaimer
                 if (price.showDisclaimer) {
                     disclaimer.style.display = 'block';
                     const discountedINR = finalAmount.toLocaleString('en-IN');
@@ -451,11 +447,9 @@
                     `;
                 }
             } else {
-                // No coupon - show normal price
                 priceElement.textContent = price.symbol + price.display;
                 monthlyElement.textContent = price.monthly + ' per month';
                 
-                // Show disclaimer for international currencies
                 if (price.showDisclaimer) {
                     disclaimer.style.display = 'block';
                     approxAmount.textContent = price.symbol + price.display.replace(',', '');
@@ -465,9 +459,22 @@
             }
         }
         
+        // Update payment button display based on gateway
+        function updatePaymentButtonDisplay() {
+            const paymentBtn = document.getElementById('payment-btn');
+            const price = prices[selectedPlan.currency];
+            
+            if (price.gateway === 'paypal') {
+                paymentBtn.innerHTML = '<i class="fab fa-paypal me-2"></i>Pay with PayPal';
+                paymentBtn.style.background = '#0070ba';
+            } else {
+                paymentBtn.innerHTML = '<i class="fas fa-lock me-2"></i>Proceed to Secure Payment';
+                paymentBtn.style.background = '';
+            }
+        }
+        
         // Show coupon badge
         function showCouponBadge() {
-            // Check if badge already exists
             if (document.getElementById('coupon-badge')) return;
             
             const planCard = document.getElementById('main-plan');
@@ -507,19 +514,15 @@
             finalAmount = 9000;
             selectedPlan.amount = 9000;
             
-            // Remove from localStorage
             localStorage.removeItem('appliedCoupon');
             
-            // Remove badge
             const badge = document.getElementById('coupon-badge');
             if (badge) {
                 badge.remove();
             }
             
-            // Update display
             updatePriceDisplay();
             
-            // Track removal
             try {
                 gtag('event', 'coupon_removed_payment_page', {
                     'event_category': 'payment',
@@ -539,9 +542,10 @@
                     'page_location': window.location.href,
                     'page_path': window.location.pathname,
                     'selected_currency': selectedPlan.currency,
+                    'gateway': selectedPlan.gateway,
                     'coupon_applied': appliedCoupon ? appliedCoupon.code : 'none'
                 });
-                console.log('Payment page viewed - Currency:', selectedPlan.currency);
+                console.log('Payment page viewed - Currency:', selectedPlan.currency, 'Gateway:', selectedPlan.gateway);
             } catch (error) {
                 console.error('Tracking error:', error);
             }
@@ -585,25 +589,17 @@
             }
         }
         
-        // Initiate payment
+        // Initiate payment (routes to PayU or PayPal)
         async function initiatePayment() {
-            try {
-                gtag('event', 'click_payment_button', {
-                    'event_category': 'payment',
-                    'event_label': 'proceed_to_payment',
-                    'plan_type': selectedPlan.plan,
-                    'plan_amount': finalAmount,
-                    'original_amount': 9000,
-                    'discount_amount': discountAmount,
-                    'currency': selectedPlan.currency,
-                    'coupon_code': appliedCoupon ? appliedCoupon.code : 'none'
-                });
-                
-                console.log('Payment button clicked - Final Amount:', finalAmount);
-            } catch (error) {
-                console.error('Tracking error:', error);
+            if (selectedPlan.gateway === 'paypal') {
+                await initiatePayPalPayment();
+            } else {
+                await initiatePayUPayment();
             }
-            
+        }
+        
+        // Initiate PayPal payment
+        async function initiatePayPalPayment() {
             const paymentBtn = document.getElementById('payment-btn');
             const originalText = paymentBtn.innerHTML;
             
@@ -617,17 +613,16 @@
                 }
                 
                 try {
-                    gtag('event', 'payment_initiation_started', {
+                    gtag('event', 'paypal_payment_initiated', {
                         'event_category': 'payment',
-                        'event_label': 'api_request_sent',
-                        'currency': 'INR',
+                        'event_label': 'paypal_button_clicked',
+                        'currency': selectedPlan.currency,
                         'final_amount': finalAmount
                     });
                 } catch (error) {
                     console.error('Tracking error:', error);
                 }
                 
-                // Validate amount before sending
                 if (!finalAmount || finalAmount < 100 || finalAmount > 100000) {
                     throw new Error(`Invalid payment amount: ₹${finalAmount}. Please refresh and try again.`);
                 }
@@ -636,17 +631,15 @@
                     throw new Error('Coupon discount not applied correctly. Please try again.');
                 }
 
-                console.log('✓ Payment validation passed - Amount: ₹' + finalAmount + ' INR');
+                console.log('✓ PayPal payment validation passed - Amount: ₹' + finalAmount + ' INR');
                 
-                // Create payment order with coupon data
                 const requestBody = {
                     planType: selectedPlan.plan,
-                    amount: finalAmount,              // Discounted INR amount
+                    amount: finalAmount,
                     planDuration: selectedPlan.duration,
-                    currency: 'INR'                   // ALWAYS INR
+                    currency: selectedPlan.currency
                 };
                 
-                // Add coupon data if applied
                 if (appliedCoupon) {
                     requestBody.couponCode = appliedCoupon.code;
                     requestBody.couponId = appliedCoupon.couponId;
@@ -654,8 +647,121 @@
                     requestBody.originalAmount = 9000;
                 }
                 
-                // Log the exact request
-                console.log('Sending payment request:', JSON.stringify(requestBody, null, 2));
+                console.log('Sending PayPal payment request:', JSON.stringify(requestBody, null, 2));
+                
+                const response = await fetch(`${API_BASE_URL}/payments/paypal/create-order`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(requestBody)
+                });
+                
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    
+                    try {
+                        gtag('event', 'paypal_initiation_failed', {
+                            'event_category': 'payment',
+                            'event_label': 'api_error',
+                            'error_message': errorData.error || 'Unknown error'
+                        });
+                    } catch (error) {
+                        console.error('Tracking error:', error);
+                    }
+                    
+                    throw new Error(errorData.error || 'PayPal payment initiation failed');
+                }
+                
+                const paymentData = await response.json();
+                
+                if (paymentData.success && paymentData.approvalUrl) {
+                    try {
+                        gtag('event', 'paypal_order_created', {
+                            'event_category': 'payment',
+                            'event_label': 'redirecting_to_paypal',
+                            'transaction_id': paymentData.txnid,
+                            'order_id': paymentData.orderId
+                        });
+                    } catch (error) {
+                        console.error('Tracking error:', error);
+                    }
+                    
+                    // Redirect to PayPal
+                    window.location.href = paymentData.approvalUrl;
+                } else {
+                    throw new Error('PayPal order creation failed');
+                }
+                
+            } catch (error) {
+                console.error('PayPal payment initiation error:', error);
+                showError(error.message || 'PayPal payment initiation failed. Please try again.');
+                
+                try {
+                    gtag('event', 'paypal_payment_error', {
+                        'event_category': 'payment',
+                        'event_label': 'exception_caught',
+                        'error_message': error.message
+                    });
+                } catch (trackError) {
+                    console.error('Tracking error:', trackError);
+                }
+            } finally {
+                paymentBtn.disabled = false;
+                paymentBtn.innerHTML = originalText;
+            }
+        }
+        
+        // Initiate PayU payment (existing code)
+        async function initiatePayUPayment() {
+            const paymentBtn = document.getElementById('payment-btn');
+            const originalText = paymentBtn.innerHTML;
+            
+            try {
+                paymentBtn.disabled = true;
+                paymentBtn.innerHTML = '<div class="loading-spinner"></div>Processing...';
+                
+                const token = localStorage.getItem('authToken');
+                if (!token) {
+                    throw new Error('Please sign in to continue');
+                }
+                
+                try {
+                    gtag('event', 'payu_payment_initiated', {
+                        'event_category': 'payment',
+                        'event_label': 'payu_button_clicked',
+                        'final_amount': finalAmount
+                    });
+                } catch (error) {
+                    console.error('Tracking error:', error);
+                }
+                
+                if (!finalAmount || finalAmount < 100 || finalAmount > 100000) {
+                    throw new Error(`Invalid payment amount: ₹${finalAmount}. Please refresh and try again.`);
+                }
+
+                if (appliedCoupon && finalAmount >= 9000) {
+                    throw new Error('Coupon discount not applied correctly. Please try again.');
+                }
+
+                console.log('✓ PayU payment validation passed - Amount: ₹' + finalAmount + ' INR');
+                
+                const requestBody = {
+                    planType: selectedPlan.plan,
+                    amount: finalAmount,
+                    planDuration: selectedPlan.duration,
+                    currency: 'INR'
+                };
+                
+                if (appliedCoupon) {
+                    requestBody.couponCode = appliedCoupon.code;
+                    requestBody.couponId = appliedCoupon.couponId;
+                    requestBody.discountAmount = discountAmount;
+                    requestBody.originalAmount = 9000;
+                }
+                
+                console.log('Sending PayU payment request:', JSON.stringify(requestBody, null, 2));
                 
                 const response = await fetch(`${API_BASE_URL}/payments/create-order`, {
                     method: 'POST',
@@ -670,7 +776,7 @@
                     const errorData = await response.json();
                     
                     try {
-                        gtag('event', 'payment_initiation_failed', {
+                        gtag('event', 'payu_initiation_failed', {
                             'event_category': 'payment',
                             'event_label': 'api_error',
                             'error_message': errorData.error || 'Unknown error'
@@ -686,13 +792,10 @@
                 
                 if (paymentData.success) {
                     try {
-                        gtag('event', 'payment_order_created', {
+                        gtag('event', 'payu_order_created', {
                             'event_category': 'payment',
                             'event_label': 'redirecting_to_payu',
-                            'transaction_id': paymentData.paymentData.txnid,
-                            'currency': 'INR',
-                            'final_amount': finalAmount,
-                            'coupon_used': appliedCoupon ? appliedCoupon.code : 'none'
+                            'transaction_id': paymentData.txnid
                         });
                     } catch (error) {
                         console.error('Tracking error:', error);
@@ -705,11 +808,11 @@
                 }
                 
             } catch (error) {
-                console.error('Payment initiation error:', error);
+                console.error('PayU payment initiation error:', error);
                 showError(error.message || 'Payment initiation failed. Please try again.');
                 
                 try {
-                    gtag('event', 'payment_error', {
+                    gtag('event', 'payu_payment_error', {
                         'event_category': 'payment',
                         'event_label': 'exception_caught',
                         'error_message': error.message
