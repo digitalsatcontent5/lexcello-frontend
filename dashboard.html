@@ -1158,11 +1158,11 @@
                             </p>
                         </div>
                         <button 
-                            onclick="window.location.href='free-test.html'" 
-                            class="btn btn-light btn-lg" 
-                            style="white-space: nowrap; font-weight: 700; padding: 15px 30px; border: none; cursor: pointer;">
-                            <i class="fas fa-rocket me-2"></i>Start Free Test
-                        </button>
+    onclick="navigateToFreeTest()" 
+    class="btn btn-light btn-lg" 
+    style="white-space: nowrap; font-weight: 700; padding: 15px 30px; border: none; cursor: pointer;">
+    <i class="fas fa-rocket me-2"></i>Start Free Test
+</button>
                     </div>
                 </div>
             `;
@@ -2064,9 +2064,47 @@ async function checkAuthStatus() {
                 console.log('Auto-refresh failed:', error);
             }
         }, 300000);
+        // Navigate to free test with token backup
+function navigateToFreeTest() {
+    console.log('=== FREE TEST NAVIGATION ===');
+    
+    // Get token from localStorage
+    const token = localStorage.getItem('authToken');
+    
+    console.log('Token exists:', !!token);
+    console.log('Token preview:', token ? token.substring(0, 30) + '...' : 'MISSING');
+    
+    if (!token) {
+        alert('Authentication error. Please refresh and login again.');
+        window.location.href = 'login.html';
+        return;
+    }
+    
+    // Store token in BOTH localStorage AND sessionStorage
+    localStorage.setItem('authToken', token);
+    sessionStorage.setItem('authToken', token);
+    sessionStorage.setItem('authBackup', token);
+    
+    console.log('✅ Token stored in both storages');
+    console.log('✅ Navigating to free-test.html...');
+    
+    // Track navigation
+    try {
+        gtag('event', 'free_test_navigation', {
+            'event_category': 'dashboard',
+            'event_label': 'free_test_button_clicked'
+        });
+    } catch (error) {
+        console.error('GA tracking error:', error);
+    }
+    
+    // Navigate
+    window.location.href = '/free-test.html';
+}
     </script>
 </body>
 </html>
+
 
 
 
