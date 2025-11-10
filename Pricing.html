@@ -59,7 +59,63 @@
         .nav-link:hover {
             color: var(--secondary-color) !important;
         }
+/* Free Test Link - Special Styling */
+.free-test-link {
+    background: linear-gradient(135deg, #48bb78, #38a169) !important;
+    color: white !important;
+    border-radius: 8px;
+    padding: 8px 16px !important;
+    font-weight: 600 !important;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
 
+.free-test-link:hover {
+    background: linear-gradient(135deg, #38a169, #2f855a) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(72, 187, 120, 0.4);
+}
+
+.free-test-link::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.free-test-link:hover::before {
+    width: 300px;
+    height: 300px;
+}
+
+.free-test-link i {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.2);
+    }
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+    .free-test-link {
+        margin: 10px 0;
+        text-align: center;
+        display: block;
+    }
+}
         .navbar-collapse.show {
             background-color: white;
             padding: 15px;
@@ -464,25 +520,30 @@
         
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav mx-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="index.html">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="index.html#tests">Practice Tests</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="about-lnat.html">About LNAT</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="resources.html">Resources</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active" href="pricing.html">Pricing</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="contact.html">Contact</a>
-                </li>
-            </ul>
+    <li class="nav-item">
+        <a class="nav-link" href="index.html">Home</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link free-test-link" href="free-test.html">
+            <i class="fas fa-gift me-1"></i>Free Test
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="index.html#tests">Practice Tests</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="about-lnat.html">About LNAT</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="resources.html">Resources</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link active" href="pricing.html">Pricing</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="contact.html">Contact</a>
+    </li>
+</ul>
             
             <!-- Authentication Section - Always visible container -->
             <div id="nav-auth-container">
@@ -533,7 +594,12 @@
                 <div class="col-lg-8 col-xl-7">
                     <div class="pricing-card featured">
                         <div class="featured-badge">Most Popular</div>
-                        
+                        <div style="background: #e6fffa; border-left: 4px solid #38a169; padding: 15px; border-radius: 8px; margin-bottom: 20px; text-align: center;">
+        <p style="margin: 0; color: #234e52; font-size: 0.95rem;">
+            <i class="fas fa-info-circle" style="color: #38a169; margin-right: 5px;"></i>
+            <strong>First time here?</strong> Take our <a href="free-test.html" style="color: #38a169; text-decoration: underline; font-weight: 600;">free 14-question test</a> to see the quality before you buy!
+        </p>
+    </div>
                         <div class="currency-switch">
                             <button class="currency-btn active" onclick="switchCurrency('GBP')">£ GBP</button>
                             <button class="currency-btn" onclick="switchCurrency('USD')">$ USD</button>
@@ -739,7 +805,7 @@
                             <i class="fas fa-plus"></i>
                         </button>
                         <div class="faq-answer" style="display: none;">
-                            We offer a sample test with 42 questions that you can try for free on our homepage. This gives you a taste of our question quality and platform interface. With our 3-day money-back guarantee, your purchase is risk-free.
+                            We offer a sample test with 14 questions that you can try for free on our homepage. This gives you a taste of our question quality and platform interface.
                         </div>
                     </div>
                     
@@ -1536,6 +1602,7 @@
     </script>
 </body>
 </html>
+
 
 
 
