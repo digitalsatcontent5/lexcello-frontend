@@ -300,41 +300,50 @@ const API_BASE_URL = 'https://lexcello-backend.onrender.com';
         
         async function loadFreeTest() {
     try {
-        console.log('=== FREE TEST DEBUG START ===');
+        console.log('=== FREE TEST LOAD DEBUG ===');
         console.log('1. Current URL:', window.location.href);
-        console.log('2. Checking localStorage...');
         
-        // Check ALL localStorage keys
-        console.log('3. All localStorage keys:', Object.keys(localStorage));
-        console.log('4. All localStorage data:', JSON.stringify(localStorage));
+        // Try multiple token sources
+        let token = localStorage.getItem('authToken');
         
-        // Try to get token
-        const token = localStorage.getItem('authToken');
-        console.log('5. authToken value:', token ? token.substring(0, 30) + '...' : 'NULL/UNDEFINED');
-        
-        // Check if token exists but is invalid
         if (!token) {
-            console.error('❌ NO TOKEN FOUND!');
-            console.log('6. Checking alternative token names...');
-            console.log('   - token:', localStorage.getItem('token'));
-            console.log('   - auth:', localStorage.getItem('auth'));
-            console.log('   - jwt:', localStorage.getItem('jwt'));
-            console.log('   - user:', localStorage.getItem('user'));
+            console.log('2. No token in localStorage, trying sessionStorage...');
+            token = sessionStorage.getItem('authToken');
             
-            // Don't redirect immediately - show debug info
-            alert('DEBUG: No auth token found. Check console for details.');
+            if (token) {
+                console.log('✅ Found token in sessionStorage, copying to localStorage');
+                localStorage.setItem('authToken', token);
+            }
+        }
+        
+        if (!token) {
+            console.log('3. Trying backup token...');
+            token = sessionStorage.getItem('authBackup');
             
-            // Wait 5 seconds so you can see console
-            await new Promise(resolve => setTimeout(resolve, 5000));
+            if (token) {
+                console.log('✅ Found token in backup, restoring...');
+                localStorage.setItem('authToken', token);
+                sessionStorage.setItem('authToken', token);
+            }
+        }
+        
+        if (!token) {
+            console.error('❌ NO TOKEN FOUND IN ANY STORAGE!');
+            console.log('localStorage keys:', Object.keys(localStorage));
+            console.log('sessionStorage keys:', Object.keys(sessionStorage));
             
+            alert('Please login to access the free test.');
+            
+            // Wait 3 seconds so you can read console
+            await new Promise(resolve => setTimeout(resolve, 3000));
             window.location.href = 'login.html';
             return;
         }
         
-        console.log('✅ Token found! Proceeding...');
-        console.log('7. Fetching questions from:', `${API_BASE_URL}/api/tests/free/questions`);
+        console.log('✅ Token found:', token.substring(0, 30) + '...');
+        console.log('4. Fetching questions from:', `${API_BASE_URL}/api/tests/free/questions`);
         
-        // Continue with the rest of your code...
+        // Fetch questions
         const response = await fetch(`${API_BASE_URL}/api/tests/free/questions`, {
             method: 'GET',
             headers: {
@@ -343,15 +352,17 @@ const API_BASE_URL = 'https://lexcello-backend.onrender.com';
             }
         });
         
-        console.log('8. Response status:', response.status);
+        console.log('5. Response status:', response.status);
         
         if (!response.ok) {
             const errorText = await response.text();
-            console.error('9. Error response:', errorText);
+            console.error('6. Error response:', errorText);
             
             if (response.status === 401 || response.status === 403) {
                 console.log('❌ Auth failed - token invalid');
                 localStorage.removeItem('authToken');
+                sessionStorage.removeItem('authToken');
+                sessionStorage.removeItem('authBackup');
                 alert('Your session has expired. Please login again.');
                 window.location.href = 'login.html';
                 return;
@@ -361,7 +372,7 @@ const API_BASE_URL = 'https://lexcello-backend.onrender.com';
         }
         
         const data = await response.json();
-        console.log('10. ✅ Received data:', data);
+        console.log('7. ✅ Received data:', data);
         
         if (!data.success) {
             throw new Error(data.message || 'Failed to load test');
@@ -372,8 +383,8 @@ const API_BASE_URL = 'https://lexcello-backend.onrender.com';
         }
         
         questions = data.questions;
-        console.log(`11. ✅ Successfully loaded ${questions.length} questions`);
-        console.log('=== FREE TEST DEBUG END ===');
+        console.log(`8. ✅ Successfully loaded ${questions.length} questions`);
+        console.log('=== FREE TEST LOAD SUCCESS ===');
         
         document.getElementById('loadingScreen').style.display = 'none';
         document.getElementById('testContainer').style.display = 'block';
