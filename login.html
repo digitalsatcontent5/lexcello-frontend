@@ -176,6 +176,7 @@
             background: white;
             padding: 0 15px;
             color: var(--text-light);
+            position: relative;
         }
 
         .guest-access {
@@ -339,8 +340,8 @@
                 </div>
 
                 <div class="guest-access">
-                    <a href="practice-test-1.html" class="btn-guest">
-                        <i class="fas fa-play me-2"></i>Try Demo Test
+                    <a href="free-test.html" class="btn-guest">
+                        <i class="fas fa-gift me-2"></i>Try Free Test
                     </a>
                 </div>
             </div>
@@ -410,12 +411,32 @@
                     
                     showAlert('Login successful! Redirecting...', 'success');
                     
-                    // Redirect to dashboard after short delay
+                    // Track login
+                    try {
+                        gtag('event', 'login', {
+                            'event_category': 'authentication',
+                            'event_label': 'successful_login'
+                        });
+                    } catch (error) {
+                        console.error('GA tracking error:', error);
+                    }
+                    
+                    // Always redirect to dashboard after login
                     setTimeout(() => {
                         window.location.href = 'dashboard.html';
                     }, 1500);
                 } else {
                     showAlert(data.error || 'Login failed', 'danger');
+                    
+                    // Track failed login
+                    try {
+                        gtag('event', 'login_failed', {
+                            'event_category': 'authentication',
+                            'event_label': data.error || 'unknown_error'
+                        });
+                    } catch (error) {
+                        console.error('GA tracking error:', error);
+                    }
                 }
             } catch (error) {
                 console.error('Login error:', error);
@@ -447,7 +468,10 @@
         // Check if user is already logged in
         window.addEventListener('DOMContentLoaded', function() {
             const token = localStorage.getItem('authToken');
+            
             if (token) {
+                console.log('Auth token found, verifying...');
+                
                 // Verify token is still valid
                 fetch(`${API_BASE_URL}/api/auth/profile`, {
                     headers: {
@@ -456,20 +480,26 @@
                 })
                 .then(response => {
                     if (response.ok) {
+                        console.log('Token valid, redirecting to dashboard');
                         // User is already logged in, redirect to dashboard
                         window.location.href = 'dashboard.html';
+                    } else {
+                        console.log('Token invalid, clearing auth data');
+                        // Token is invalid, clear it
+                        localStorage.removeItem('authToken');
+                        localStorage.removeItem('userData');
                     }
                 })
-                .catch(() => {
+                .catch((error) => {
+                    console.error('Token verification error:', error);
                     // Token is invalid, clear it
                     localStorage.removeItem('authToken');
                     localStorage.removeItem('userData');
                 });
+            } else {
+                console.log('No auth token found');
             }
         });
     </script>
 </body>
-
 </html>
-
-
