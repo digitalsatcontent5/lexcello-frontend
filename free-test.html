@@ -253,36 +253,57 @@
         });
         
         async function loadFreeTest() {
-            try {
-                const response = await fetch(`${API_BASE_URL}/api/tests/free/questions`);
-                
-                if (!response.ok) {
-                    throw new Error('Failed to load test');
-                }
-                
-                const data = await response.json();
-                
-                if (!data.success || !data.questions) {
-                    throw new Error('Invalid response format');
-                }
-                
-                questions = data.questions;
-                
-                document.getElementById('loadingScreen').style.display = 'none';
-                document.getElementById('testContainer').style.display = 'block';
-                
-                initializeTest();
-                
-            } catch (error) {
-                console.error('Error loading test:', error);
-                document.getElementById('loadingScreen').innerHTML = `
-                    <div class="alert alert-danger">
-                        <i class="fas fa-exclamation-triangle me-2"></i>
-                        Failed to load test. Please refresh the page.
-                    </div>
-                `;
-            }
+    try {
+        // ✅ Check if user is logged in
+        const token = localStorage.getItem('token');
+        
+        if (!token) {
+            // Redirect to login page
+            window.location.href = 'login.html?redirect=free-test.html';
+            return;
         }
+        
+        // ✅ FIXED: Added missing parenthesis after fetch
+        const response = await fetch(`${API_BASE_URL}/api/tests/free/questions`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        
+        // ✅ ADD ERROR HANDLING for 401/403
+        if (!response.ok) {
+            if (response.status === 401 || response.status === 403) {
+                // Token expired or invalid - redirect to login
+                localStorage.removeItem('token');
+                window.location.href = 'login.html?redirect=free-test.html';
+                return;
+            }
+            throw new Error('Failed to load test');
+        }
+        
+        const data = await response.json();
+        
+        if (!data.success || !data.questions) {
+            throw new Error('Invalid response format');
+        }
+        
+        questions = data.questions;
+        
+        document.getElementById('loadingScreen').style.display = 'none';
+        document.getElementById('testContainer').style.display = 'block';
+        
+        initializeTest();
+        
+    } catch (error) {
+        console.error('Error loading test:', error);
+        document.getElementById('loadingScreen').innerHTML = `
+            <div class="alert alert-danger">
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                Failed to load test. Please refresh the page.
+            </div>
+        `;
+    }
+}
         
         function initializeTest() {
             createQuestionNavigation();
@@ -421,56 +442,67 @@
             modal.show();
         }
         
-        async function submitTest() {
-            try {
-                clearInterval(timerInterval);
-                
-                const modal = bootstrap.Modal.getInstance(document.getElementById('submitModal'));
-                if (modal) modal.hide();
-                
-                document.getElementById('testContainer').innerHTML = `
-                    <div class="loading">
-                        <div class="spinner-border text-primary"></div>
-                        <p class="mt-3">Calculating your results...</p>
-                    </div>
-                `;
-                
-                const timeSpent = (32 * 60) - timeLeft;
-                
-                const answersArray = Object.entries(userAnswers).map(([questionId, letter]) => {
-    return {
-        questionId: parseInt(questionId),
-        selectedAnswer: letter  // ✅ Send 'A', 'B', 'C', 'D' directly
-    };
-});
-                
-                const response = await fetch(`${API_BASE_URL}/api/tests/free/submit`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        answers: answersArray,
-                        timeSpent: timeSpent
-                    })
-                });
-                
-                if (!response.ok) {
-                    throw new Error('Submission failed');
-                }
-                
-                const results = await response.json();
-                
-                sessionStorage.setItem('freeTestResults', JSON.stringify(results));
-                window.location.href = 'free-test-results.html';
-                
-            } catch (error) {
-                console.error('Error submitting test:', error);
-                alert('Failed to submit test. Please try again.');
-                location.reload();
+       async function submitTest() {
+    try {
+        clearInterval(timerInterval);
+        
+        // ✅ ADD THIS - Get token
+        const token = localStorage.getItem('token');
+        
+        const modal = bootstrap.Modal.getInstance(document.getElementById('submitModal'));
+        if (modal) modal.hide();
+        
+        document.getElementById('testContainer').innerHTML = `
+            <div class="loading">
+                <div class="spinner-border text-primary"></div>
+                <p class="mt-3">Calculating your results...</p>
+            </div>
+        `;
+        
+        const timeSpent = (32 * 60) - timeLeft;
+        
+        const answersArray = Object.entries(userAnswers).map(([questionId, letter]) => {
+            return {
+                questionId: parseInt(questionId),
+                selectedAnswer: letter
+            };
+        });
+        
+        // ✅ FIXED: Added Authorization header with token
+        const response = await fetch(`${API_BASE_URL}/api/tests/free/submit`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`  // ✅ ADDED THIS LINE
+            },
+            body: JSON.stringify({
+                answers: answersArray,
+                timeSpent: timeSpent
+            })
+        });
+        
+        // ✅ ADDED: Handle authentication errors
+        if (!response.ok) {
+            if (response.status === 401 || response.status === 403) {
+                localStorage.removeItem('token');
+                alert('Your session has expired. Please login again.');
+                window.location.href = 'login.html?redirect=free-test.html';
+                return;
             }
+            throw new Error('Submission failed');
         }
         
+        const results = await response.json();
+        
+        sessionStorage.setItem('freeTestResults', JSON.stringify(results));
+        window.location.href = 'free-test-results.html';
+        
+    } catch (error) {
+        console.error('Error submitting test:', error);
+        alert('Failed to submit test. Please try again.');
+        location.reload();
+    }
+}
         window.addEventListener('beforeunload', function(e) {
             if (timeLeft > 0 && questions.length > 0) {
                 e.preventDefault();
