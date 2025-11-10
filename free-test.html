@@ -162,6 +162,201 @@
             padding: 50px;
         }
 
+        /* ============= SCHOLARSHIP MODAL STYLES ============= */
+        .scholarship-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            animation: fadeIn 0.3s ease;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .scholarship-content {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: slideUp 0.5s ease;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .scholarship-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+            animation: bounce 1s ease infinite;
+        }
+
+        .scholarship-content h1 {
+            color: #1a365d;
+            margin-bottom: 10px;
+            font-size: 2rem;
+        }
+
+        .scholarship-content h2 {
+            color: #2b6cb0;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+
+        .scholarship-tier {
+            display: inline-block;
+            padding: 10px 30px;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin: 20px 0;
+        }
+
+        .scholarship-tier.gold {
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            color: #1a365d;
+        }
+
+        .scholarship-tier.silver {
+            background: linear-gradient(135deg, #c0c0c0, #e8e8e8);
+            color: #1a365d;
+        }
+
+        .scholarship-code {
+            background: #f7fafc;
+            border: 2px dashed #2b6cb0;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .scholarship-code strong {
+            font-size: 1.5rem;
+            color: #1a365d;
+            letter-spacing: 2px;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .scholarship-code button {
+            margin-top: 10px;
+            padding: 8px 15px;
+            background: #2b6cb0;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .scholarship-code button:hover {
+            background: #1a365d;
+        }
+
+        .price-breakdown {
+            background: #f7fafc;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .original-price {
+            color: #718096;
+            text-decoration: line-through;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+
+        .discount {
+            color: #38a169;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin: 10px 0;
+        }
+
+        .final-price {
+            color: #1a365d;
+            font-size: 2rem;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .scholarship-info {
+            background: #e6fffa;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            line-height: 1.8;
+            text-align: left;
+        }
+
+        .claim-btn {
+            background: linear-gradient(135deg, #2b6cb0, #1a365d);
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+            margin: 20px 0;
+        }
+
+        .claim-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .motivation {
+            color: #4a5568;
+            font-style: italic;
+            margin-top: 20px;
+            font-size: 0.95rem;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* ============= FEEDBACK MODAL STYLES ============= */
+        .rating-btn {
+            flex: 1;
+            min-width: 35px;
+            padding: 8px 4px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .rating-btn:hover {
+            background: #e6f3ff;
+            border-color: var(--secondary-color);
+        }
+        
+        .rating-btn.selected {
+            background: var(--secondary-color) !important;
+            border-color: var(--secondary-color) !important;
+            color: white !important;
+        }
+
         @media (max-width: 768px) {
             .question-layout {
                 flex-direction: column;
@@ -174,6 +369,30 @@
 
             .question-grid {
                 grid-template-columns: repeat(7, 1fr);
+            }
+
+            .scholarship-content {
+                padding: 25px;
+            }
+            
+            .scholarship-content h1 {
+                font-size: 1.5rem;
+            }
+            
+            .scholarship-content h2 {
+                font-size: 1.2rem;
+            }
+            
+            .scholarship-icon {
+                font-size: 60px;
+            }
+            
+            .scholarship-code strong {
+                font-size: 1.2rem;
+            }
+            
+            .final-price {
+                font-size: 1.5rem;
             }
         }
     </style>
@@ -282,16 +501,234 @@
         </div>
     </div>
 
+    <!-- Feedback Modal -->
+    <div class="modal fade" id="feedbackModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="border-radius: 15px; border: none;">
+                <div class="modal-header" style="background: linear-gradient(135deg, #2b6cb0, #1a365d); color: white; border-radius: 15px 15px 0 0;">
+                    <h5 class="modal-title">
+                        <i class="fas fa-comment-dots me-2"></i>Quick Feedback
+                    </h5>
+                </div>
+                <div class="modal-body p-4">
+                    <div class="alert alert-info mb-4" style="border-left: 4px solid #2b6cb0; background: #e6f3ff;">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Your detailed results are ready!</strong><br>
+                        <small>Complete this quick feedback (30 seconds) to view your score, scholarship status, and explanations.</small>
+                    </div>
+                    
+                    <form id="feedbackForm">
+                        <!-- Question 1: LNAT Date -->
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">1. When is your LNAT? *</label>
+                            <input 
+                                type="text" 
+                                id="lnatDate" 
+                                class="form-control"
+                                placeholder="e.g., December 2025, January 2026"
+                                required
+                            >
+                            <small class="text-muted">This helps us tailor your preparation timeline</small>
+                        </div>
+
+                        <!-- Question 2: Rating -->
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">2. How was your overall experience? (1-10) *</label>
+                            <div class="d-flex justify-content-between gap-1" id="ratingButtons">
+                                <button type="button" class="btn btn-outline-primary rating-btn" data-rating="1">1</button>
+                                <button type="button" class="btn btn-outline-primary rating-btn" data-rating="2">2</button>
+                                <button type="button" class="btn btn-outline-primary rating-btn" data-rating="3">3</button>
+                                <button type="button" class="btn btn-outline-primary rating-btn" data-rating="4">4</button>
+                                <button type="button" class="btn btn-outline-primary rating-btn" data-rating="5">5</button>
+                                <button type="button" class="btn btn-outline-primary rating-btn" data-rating="6">6</button>
+                                <button type="button" class="btn btn-outline-primary rating-btn" data-rating="7">7</button>
+                                <button type="button" class="btn btn-outline-primary rating-btn" data-rating="8">8</button>
+                                <button type="button" class="btn btn-outline-primary rating-btn" data-rating="9">9</button>
+                                <button type="button" class="btn btn-outline-primary rating-btn" data-rating="10">10</button>
+                            </div>
+                            <div class="d-flex justify-content-between mt-1">
+                                <small class="text-muted">Poor</small>
+                                <small class="text-muted">Excellent</small>
+                            </div>
+                            <input type="hidden" id="experienceRating" required>
+                        </div>
+
+                        <!-- Question 3: Would you subscribe? -->
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">3. Would you subscribe to our full LNAT prep course? *</label>
+                            <div class="d-flex gap-3 mb-2">
+                                <div class="form-check">
+                                    <input 
+                                        class="form-check-input" 
+                                        type="radio" 
+                                        name="wouldSubscribe" 
+                                        id="subscribeYes" 
+                                        value="yes"
+                                        required
+                                    >
+                                    <label class="form-check-label" for="subscribeYes">
+                                        Yes, I'm interested
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input 
+                                        class="form-check-input" 
+                                        type="radio" 
+                                        name="wouldSubscribe" 
+                                        id="subscribeNo" 
+                                        value="no"
+                                        required
+                                    >
+                                    <label class="form-check-label" for="subscribeNo">
+                                        No, not right now
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <!-- Hidden field that appears when "No" is selected -->
+                            <div id="whyNotField" style="display: none;" class="mt-3">
+                                <label class="form-label">
+                                    What can we do to help you subscribe? <span style="color: red; font-weight: bold;">*</span>
+                                </label>
+                                <textarea 
+                                    id="whyNotSubscribe" 
+                                    class="form-control"
+                                    placeholder="Tell us what would make you subscribe (required) - e.g., lower price, more practice tests, better explanations..."
+                                    rows="2"
+                                    maxlength="300"
+                                ></textarea>
+                                <small class="text-muted"><span id="whyNotCharCount">0</span>/300 characters</small>
+                            </div>
+                        </div>
+
+                        <!-- Optional: Additional Suggestions -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Any other suggestions? (Optional)</label>
+                            <textarea 
+                                id="improvementSuggestions" 
+                                class="form-control"
+                                placeholder="Share your thoughts..."
+                                rows="2"
+                                maxlength="500"
+                            ></textarea>
+                            <small class="text-muted"><span id="charCount">0</span>/500 characters</small>
+                        </div>
+
+                        <!-- Country Selection -->
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Country of Residence *</label>
+                            <select id="country-select" class="form-control" required>
+                                <option value="">Select your country...</option>
+                                <option value="United Kingdom">🇬🇧 United Kingdom</option>
+                                <option value="India">🇮🇳 India</option>
+                                <option value="United States">🇺🇸 United States</option>
+                                <option value="Canada">🇨🇦 Canada</option>
+                                <option value="Australia">🇦🇺 Australia</option>
+                                <option value="Singapore">🇸🇬 Singapore</option>
+                                <option value="UAE">🇦🇪 United Arab Emirates</option>
+                                <option value="Hong Kong">🇭🇰 Hong Kong</option>
+                                <option value="Malaysia">🇲🇾 Malaysia</option>
+                                <option value="South Africa">🇿🇦 South Africa</option>
+                                <option value="Nigeria">🇳🇬 Nigeria</option>
+                                <option value="Kenya">🇰🇪 Kenya</option>
+                                <option value="Pakistan">🇵🇰 Pakistan</option>
+                                <option value="Bangladesh">🇧🇩 Bangladesh</option>
+                                <option value="Other">🌍 Other</option>
+                            </select>
+                        </div>
+
+                        <!-- Preferred Contact Method -->
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Preferred Contact Method *</label>
+                            
+                            <div class="mb-3">
+                                <div class="form-check mb-2" style="padding: 12px; border: 2px solid #ddd; border-radius: 8px; cursor: pointer;" onclick="selectContactMethod('email')">
+                                    <input 
+                                        class="form-check-input" 
+                                        type="radio" 
+                                        name="contact-method" 
+                                        id="contact-email" 
+                                        value="email" 
+                                        checked 
+                                        required
+                                    >
+                                    <label class="form-check-label" for="contact-email" style="cursor: pointer; width: 100%;">
+                                        <strong>Email</strong>
+                                        <div style="font-size: 0.9em; color: #666; margin-top: 3px;">We'll contact you at your registered email</div>
+                                    </label>
+                                </div>
+                                
+                                <div class="form-check" style="padding: 12px; border: 2px solid #ddd; border-radius: 8px; cursor: pointer;" onclick="selectContactMethod('phone')">
+                                    <input 
+                                        class="form-check-input" 
+                                        type="radio" 
+                                        name="contact-method" 
+                                        id="contact-phone" 
+                                        value="phone" 
+                                        required
+                                    >
+                                    <label class="form-check-label" for="contact-phone" style="cursor: pointer; width: 100%;">
+                                        <strong>Phone Number</strong>
+                                        <div style="font-size: 0.9em; color: #666; margin-top: 3px;">We'll call or WhatsApp you</div>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <!-- Phone Number Input (Hidden by Default) -->
+                            <div id="phone-input-container" style="display: none;">
+                                <label for="phone-number" class="form-label">Phone Number *</label>
+                                <div class="d-flex gap-2">
+                                    <select id="country-code" class="form-control" style="max-width: 120px;">
+                                        <option value="+44">🇬🇧 +44</option>
+                                        <option value="+91" selected>🇮🇳 +91</option>
+                                        <option value="+1">🇺🇸 +1</option>
+                                        <option value="+61">🇦🇺 +61</option>
+                                        <option value="+65">🇸🇬 +65</option>
+                                        <option value="+971">🇦🇪 +971</option>
+                                        <option value="+852">🇭🇰 +852</option>
+                                        <option value="+60">🇲🇾 +60</option>
+                                        <option value="+27">🇿🇦 +27</option>
+                                        <option value="+234">🇳🇬 +234</option>
+                                        <option value="+254">🇰🇪 +254</option>
+                                        <option value="+92">🇵🇰 +92</option>
+                                        <option value="+880">🇧🇩 +880</option>
+                                    </select>
+                                    <input 
+                                        type="tel" 
+                                        id="phone-number" 
+                                        class="form-control"
+                                        placeholder="Enter your phone number"
+                                        pattern="[0-9]{7,15}"
+                                    >
+                                </div>
+                                <small class="text-muted mt-1 d-block">Enter without country code (e.g., 7700900123)</small>
+                            </div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-paper-plane me-2"></i>Submit & Continue
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     
     <script>
-const API_BASE_URL = 'https://lexcello-backend.onrender.com';
+        const API_BASE_URL = 'https://lexcello-backend.onrender.com';
         
         let questions = [];
         let currentQuestionIndex = 0;
         let userAnswers = {};
         let timeLeft = 32 * 60; // 32 minutes
         let timerInterval;
+        let selectedRating = null;
+        let keyboardShortcutsActive = true;
         
         document.addEventListener('DOMContentLoaded', function() {
             console.log('Free test page loaded');
@@ -299,110 +736,100 @@ const API_BASE_URL = 'https://lexcello-backend.onrender.com';
         });
         
         async function loadFreeTest() {
-    try {
-        console.log('=== FREE TEST LOAD DEBUG ===');
-        console.log('1. Current URL:', window.location.href);
-        
-        // ✅ ADD THIS: Wait 100ms for localStorage to be ready
-        await new Promise(resolve => setTimeout(resolve, 100));
-        
-        // Try multiple token sources
-        let token = localStorage.getItem('authToken');
-        console.log('2. Token in localStorage:', token ? 'YES' : 'NO');
-        
-        if (!token) {
-            console.log('3. No token in localStorage, trying sessionStorage...');
-            token = sessionStorage.getItem('authToken');
-            
-            if (token) {
-                console.log('✅ Found token in sessionStorage, copying to localStorage');
-                localStorage.setItem('authToken', token);
+            try {
+                console.log('=== FREE TEST LOAD DEBUG ===');
+                console.log('1. Current URL:', window.location.href);
+                
+                await new Promise(resolve => setTimeout(resolve, 100));
+                
+                let token = localStorage.getItem('authToken');
+                console.log('2. Token in localStorage:', token ? 'YES' : 'NO');
+                
+                if (!token) {
+                    console.log('3. No token in localStorage, trying sessionStorage...');
+                    token = sessionStorage.getItem('authToken');
+                    
+                    if (token) {
+                        console.log('✅ Found token in sessionStorage, copying to localStorage');
+                        localStorage.setItem('authToken', token);
+                    }
+                }
+                
+                if (!token) {
+                    console.error('❌ NO TOKEN FOUND IN ANY STORAGE!');
+                    alert('Please login to access the free test.');
+                    await new Promise(resolve => setTimeout(resolve, 2000));
+                    window.location.href = 'login.html';
+                    return;
+                }
+                
+                console.log('✅ Token found:', token.substring(0, 30) + '...');
+                console.log('4. Fetching questions from:', `${API_BASE_URL}/api/tests/free/questions`);
+                
+                const response = await fetch(`${API_BASE_URL}/api/tests/free/questions`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                console.log('5. Response status:', response.status);
+                
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('6. Error response:', errorText);
+                    
+                    if (response.status === 401 || response.status === 403) {
+                        console.log('❌ Auth failed - token invalid');
+                        localStorage.removeItem('authToken');
+                        sessionStorage.removeItem('authToken');
+                        alert('Your session has expired. Please login again.');
+                        window.location.href = 'login.html';
+                        return;
+                    }
+                    
+                    throw new Error(`Server error: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                console.log('7. ✅ Received data:', data);
+                
+                if (!data.success) {
+                    throw new Error(data.message || 'Failed to load test');
+                }
+                
+                if (!data.questions || data.questions.length === 0) {
+                    throw new Error('No questions available');
+                }
+                
+                questions = data.questions;
+                console.log(`8. ✅ Successfully loaded ${questions.length} questions`);
+                console.log('=== FREE TEST LOAD SUCCESS ===');
+                
+                document.getElementById('loadingScreen').style.display = 'none';
+                document.getElementById('testContainer').style.display = 'block';
+                
+                initializeTest();
+                
+            } catch (error) {
+                console.error('❌ Error loading test:', error);
+                document.getElementById('loadingScreen').innerHTML = `
+                    <div class="alert alert-danger" style="max-width: 600px; margin: 50px auto;">
+                        <h4><i class="fas fa-exclamation-triangle me-2"></i>Error Loading Test</h4>
+                        <p class="mb-3">${error.message}</p>
+                        <div class="mt-3">
+                            <button class="btn btn-primary" onclick="location.reload()">
+                                <i class="fas fa-refresh me-2"></i>Try Again
+                            </button>
+                            <a href="dashboard.html" class="btn btn-secondary ms-2">
+                                <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+                            </a>
+                        </div>
+                    </div>
+                `;
             }
         }
-        
-        if (!token) {
-            console.error('❌ NO TOKEN FOUND IN ANY STORAGE!');
-            console.log('localStorage keys:', Object.keys(localStorage));
-            console.log('sessionStorage keys:', Object.keys(sessionStorage));
-            
-            // ✅ IMPORTANT: Don't delete anything here!
-            alert('Please login to access the free test.');
-            
-            // Give user time to see console logs
-            await new Promise(resolve => setTimeout(resolve, 2000));
-            window.location.href = 'login.html';
-            return;
-        }
-        
-        console.log('✅ Token found:', token.substring(0, 30) + '...');
-        console.log('4. Fetching questions from:', `${API_BASE_URL}/api/tests/free/questions`);
-        
-        // Fetch questions
-        const response = await fetch(`${API_BASE_URL}/api/tests/free/questions`, {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            }
-        });
-        
-        console.log('5. Response status:', response.status);
-        
-        if (!response.ok) {
-            const errorText = await response.text();
-            console.error('6. Error response:', errorText);
-            
-            if (response.status === 401 || response.status === 403) {
-                console.log('❌ Auth failed - token invalid');
-                // ✅ ONLY remove if truly invalid
-                localStorage.removeItem('authToken');
-                sessionStorage.removeItem('authToken');
-                alert('Your session has expired. Please login again.');
-                window.location.href = 'login.html';
-                return;
-            }
-            
-            throw new Error(`Server error: ${response.status}`);
-        }
-        
-        const data = await response.json();
-        console.log('7. ✅ Received data:', data);
-        
-        if (!data.success) {
-            throw new Error(data.message || 'Failed to load test');
-        }
-        
-        if (!data.questions || data.questions.length === 0) {
-            throw new Error('No questions available');
-        }
-        
-        questions = data.questions;
-        console.log(`8. ✅ Successfully loaded ${questions.length} questions`);
-        console.log('=== FREE TEST LOAD SUCCESS ===');
-        
-        document.getElementById('loadingScreen').style.display = 'none';
-        document.getElementById('testContainer').style.display = 'block';
-        
-        initializeTest();
-        
-    } catch (error) {
-        console.error('❌ Error loading test:', error);
-        document.getElementById('loadingScreen').innerHTML = `
-            <div class="alert alert-danger" style="max-width: 600px; margin: 50px auto;">
-                <h4><i class="fas fa-exclamation-triangle me-2"></i>Error Loading Test</h4>
-                <p class="mb-3">${error.message}</p>
-                <div class="mt-3">
-                    <button class="btn btn-primary" onclick="location.reload()">
-                        <i class="fas fa-refresh me-2"></i>Try Again
-                    </button>
-                    <a href="dashboard.html" class="btn btn-secondary ms-2">
-                        <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
-                    </a>
-                </div>
-            </div>
-        `;
-    }
-}
         
         function initializeTest() {
             console.log('Initializing test interface...');
@@ -438,7 +865,6 @@ const API_BASE_URL = 'https://lexcello-backend.onrender.com';
             document.getElementById('passageText').textContent = question.passage_text || '';
             document.getElementById('questionText').textContent = question.question_text || '';
             
-            // Render options
             const optionsContainer = document.getElementById('optionsContainer');
             optionsContainer.innerHTML = question.options.map(option => `
                 <div class="option ${userAnswers[question.id] === option.label ? 'selected' : ''}" 
@@ -453,7 +879,6 @@ const API_BASE_URL = 'https://lexcello-backend.onrender.com';
             updateQuestionNavigation();
             updateNavigationButtons();
             
-            // Scroll to top of panels
             document.querySelector('.passage-panel').scrollTop = 0;
             document.querySelector('.question-panel').scrollTop = 0;
         }
@@ -462,7 +887,6 @@ const API_BASE_URL = 'https://lexcello-backend.onrender.com';
             console.log(`Selected answer ${answer} for question ${questionId}`);
             userAnswers[questionId] = answer;
             
-            // Track answer selection
             try {
                 gtag('event', 'free_test_answer_selected', {
                     'event_category': 'free_test',
@@ -476,7 +900,6 @@ const API_BASE_URL = 'https://lexcello-backend.onrender.com';
             updateQuestionNavigation();
             loadQuestion(currentQuestionIndex);
             
-            // Auto-advance after selection
             setTimeout(() => {
                 if (currentQuestionIndex < questions.length - 1) {
                     nextQuestion();
@@ -535,7 +958,7 @@ const API_BASE_URL = 'https://lexcello-backend.onrender.com';
                 timeLeft--;
                 updateTimerDisplay();
                 
-                if (timeLeft <= 300) { // 5 minutes warning
+                if (timeLeft <= 300) {
                     document.getElementById('timer').classList.add('warning');
                 }
                 
@@ -569,8 +992,8 @@ const API_BASE_URL = 'https://lexcello-backend.onrender.com';
             try {
                 console.log('Submitting test...');
                 clearInterval(timerInterval);
+                keyboardShortcutsActive = false;
                 
-                // ✅ FIXED: Get authToken instead of token
                 const token = localStorage.getItem('authToken');
                 
                 if (!token) {
@@ -582,7 +1005,6 @@ const API_BASE_URL = 'https://lexcello-backend.onrender.com';
                 const modal = bootstrap.Modal.getInstance(document.getElementById('submitModal'));
                 if (modal) modal.hide();
                 
-                // Show loading state
                 document.getElementById('testContainer').innerHTML = `
                     <div class="loading">
                         <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;"></div>
@@ -593,7 +1015,6 @@ const API_BASE_URL = 'https://lexcello-backend.onrender.com';
                 
                 const timeSpent = (32 * 60) - timeLeft;
                 
-                // Format answers for API
                 const answersArray = Object.entries(userAnswers).map(([questionId, letter]) => {
                     return {
                         questionId: parseInt(questionId),
@@ -603,8 +1024,7 @@ const API_BASE_URL = 'https://lexcello-backend.onrender.com';
                 
                 console.log('Submitting answers:', answersArray);
                 
-                // ✅ FIXED: Corrected fetch syntax and added Authorization header
-const response = await fetch(`${API_BASE_URL}/api/tests/free/submit`, {
+                const response = await fetch(`${API_BASE_URL}/api/tests/free/submit`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -618,7 +1038,6 @@ const response = await fetch(`${API_BASE_URL}/api/tests/free/submit`, {
                 
                 console.log('Submit response status:', response.status);
                 
-                // ✅ Handle authentication errors
                 if (!response.ok) {
                     if (response.status === 401 || response.status === 403) {
                         localStorage.removeItem('authToken');
@@ -634,7 +1053,6 @@ const response = await fetch(`${API_BASE_URL}/api/tests/free/submit`, {
                 const results = await response.json();
                 console.log('Received results:', results);
                 
-                // Track test completion
                 try {
                     gtag('event', 'free_test_completed', {
                         'event_category': 'free_test',
@@ -645,9 +1063,19 @@ const response = await fetch(`${API_BASE_URL}/api/tests/free/submit`, {
                     console.error('GA tracking error:', error);
                 }
                 
-                // Store results and redirect
+                // Store results in sessionStorage
                 sessionStorage.setItem('freeTestResults', JSON.stringify(results));
-                window.location.href = 'free-test-results.html';
+                
+                // Hide loading and show feedback modal
+                document.getElementById('testContainer').style.display = 'block';
+                document.getElementById('testContainer').innerHTML = `
+                    <div class="alert alert-success text-center p-4">
+                        <h4><i class="fas fa-check-circle me-2"></i>Test Submitted!</h4>
+                        <p>Processing your results...</p>
+                    </div>
+                `;
+                
+                showFeedbackModal();
                 
             } catch (error) {
                 console.error('Error submitting test:', error);
@@ -656,12 +1084,325 @@ const response = await fetch(`${API_BASE_URL}/api/tests/free/submit`, {
             }
         }
         
+        // ============= FEEDBACK MODAL FUNCTIONS =============
+        function showFeedbackModal() {
+            console.log('🎊 Feedback modal triggered!');
+            const modal = new bootstrap.Modal(document.getElementById('feedbackModal'));
+            modal.show();
+            
+            // Setup rating buttons
+            document.querySelectorAll('.rating-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.rating-btn').forEach(b => b.classList.remove('selected'));
+                    this.classList.add('selected');
+                    selectedRating = parseInt(this.dataset.rating);
+                    document.getElementById('experienceRating').value = selectedRating;
+                });
+            });
+            
+            // Character counter for suggestions
+            document.getElementById('improvementSuggestions').addEventListener('input', function() {
+                document.getElementById('charCount').textContent = this.value.length;
+            });
+            
+            // Show/hide "Why not" field
+            document.querySelectorAll('input[name="wouldSubscribe"]').forEach(radio => {
+                radio.addEventListener('change', function() {
+                    const whyNotField = document.getElementById('whyNotField');
+                    if (this.value === 'no') {
+                        whyNotField.style.display = 'block';
+                        document.getElementById('whyNotSubscribe').required = true;
+                    } else {
+                        whyNotField.style.display = 'none';
+                        document.getElementById('whyNotSubscribe').required = false;
+                    }
+                });
+            });
+            
+            // Character counter for "why not" field
+            document.getElementById('whyNotSubscribe').addEventListener('input', function() {
+                document.getElementById('whyNotCharCount').textContent = this.value.length;
+            });
+        }
+        
+        // Helper function to select contact method
+        function selectContactMethod(method) {
+            const phoneContainer = document.getElementById('phone-input-container');
+            const phoneInput = document.getElementById('phone-number');
+            
+            if (method === 'phone') {
+                document.getElementById('contact-phone').checked = true;
+                phoneContainer.style.display = 'block';
+                phoneInput.required = true;
+            } else {
+                document.getElementById('contact-email').checked = true;
+                phoneContainer.style.display = 'none';
+                phoneInput.required = false;
+                phoneInput.value = '';
+            }
+        }
+        
+        // Handle feedback form submission
+        document.getElementById('feedbackForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            if (!selectedRating) {
+                alert('Please rate your experience (1-10)');
+                return;
+            }
+            
+            const wouldSubscribe = document.querySelector('input[name="wouldSubscribe"]:checked')?.value;
+            
+            if (!wouldSubscribe) {
+                alert('⚠️ Please let us know if you would subscribe to our full LNAT prep course!');
+                return;
+            }
+            
+            if (wouldSubscribe === 'no') {
+                const whyNotSubscribe = document.getElementById('whyNotSubscribe').value.trim();
+                if (!whyNotSubscribe) {
+                    alert('⚠️ Please tell us what would help you subscribe. Your feedback is valuable!');
+                    document.getElementById('whyNotSubscribe').focus();
+                    return;
+                }
+            }
+            
+            let country = document.getElementById('country-select').value;
+            if (!country) {
+                alert('Please select your country of residence');
+                return;
+            }
+            
+            let contactMethod = document.querySelector('input[name="contact-method"]:checked')?.value;
+            if (!contactMethod) {
+                alert('Please select your preferred contact method');
+                return;
+            }
+            
+            let phoneNumber = null;
+            if (contactMethod === 'phone') {
+                const countryCode = document.getElementById('country-code').value;
+                const phoneInput = document.getElementById('phone-number').value.trim();
+                
+                if (!phoneInput) {
+                    alert('Please enter your phone number');
+                    return;
+                }
+                
+                phoneNumber = countryCode + phoneInput;
+            }
+            
+            const token = localStorage.getItem('authToken');
+            
+            const feedbackPayload = {
+                testId: 1, // Free test is treated as test 1
+                lnatDate: document.getElementById('lnatDate').value,
+                experienceRating: selectedRating,
+                wouldSubscribe: wouldSubscribe,
+                whyNotSubscribe: document.getElementById('whyNotSubscribe').value || null,
+                improvementSuggestions: document.getElementById('improvementSuggestions').value,
+                country: country,
+                preferredContact: contactMethod,
+                phoneNumber: phoneNumber
+            };
+            
+            console.log('🔍 Submitting feedback:', feedbackPayload);
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/feedback`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(feedbackPayload)
+                });
+                
+                const result = await response.json();
+                console.log('✅ Feedback submitted:', result);
+                
+            } catch (error) {
+                console.error('❌ Error submitting feedback:', error);
+            }
+            
+            // Close modal and proceed
+            const modal = bootstrap.Modal.getInstance(document.getElementById('feedbackModal'));
+            modal.hide();
+            
+            // Get stored results and proceed
+            const results = JSON.parse(sessionStorage.getItem('freeTestResults'));
+            proceedAfterFeedback(results);
+        });
+        
+        function proceedAfterFeedback(results) {
+            console.log('📊 Processing results after feedback:', results);
+            
+            // Check for scholarship
+            if (results.scholarshipEarned && results.couponCode) {
+                console.log('🎉 Scholarship earned!');
+                showScholarshipModal({
+                    earned: true,
+                    tier: results.scholarshipTier === 'gold' ? 'Gold' : 'Silver',
+                    discountPercentage: results.discountPercentage,
+                    couponCode: results.couponCode,
+                    originalPrice: results.pricing.inr.original,
+                    discountAmount: results.pricing.inr.original - results.pricing.inr.discounted,
+                    finalPrice: results.pricing.inr.discounted,
+                    badgeColor: results.scholarshipTier === 'gold' ? 'gold' : 'silver',
+                    message: results.scholarshipTier === 'gold' ? 
+                        'Outstanding performance! You\'ve earned our highest scholarship tier.' :
+                        'Great job! You\'ve qualified for our scholarship program.',
+                    daysValid: 7
+                });
+                return;
+            }
+            
+            // No scholarship - redirect to results page
+            console.log('No scholarship earned, redirecting to results');
+            window.location.href = 'free-test-results.html';
+        }
+        
+        // ============= SCHOLARSHIP MODAL FUNCTIONS =============
+        function showScholarshipModal(scholarship) {
+            console.log('📢 Showing scholarship modal with data:', scholarship);
+            
+            try {
+                localStorage.setItem('activeScholarship', JSON.stringify(scholarship));
+                localStorage.setItem('scholarshipCoupon', scholarship.couponCode);
+                console.log('✅ Scholarship saved to localStorage');
+            } catch (error) {
+                console.error('❌ Failed to save scholarship to localStorage:', error);
+            }
+            
+            const modal = document.createElement('div');
+            modal.className = 'scholarship-modal';
+            modal.innerHTML = `
+                <div class="scholarship-content">
+                    <div class="scholarship-icon">${scholarship.tier === 'Gold' ? '🏆' : '📘'}</div>
+                    <h1>🎉 Congratulations!</h1>
+                    <h2>You've Earned a ${scholarship.discountPercentage}% Scholarship!</h2>
+                    
+                    <div class="scholarship-tier ${scholarship.badgeColor}">
+                        ${scholarship.tier} Performance
+                    </div>
+                    
+                    <div class="scholarship-code">
+                        <div style="margin-bottom: 10px;">Your Exclusive Scholarship Code:</div>
+                        <strong id="coupon-code-text">${scholarship.couponCode}</strong>
+                        <button onclick="copyScholarshipCode('${scholarship.couponCode}')">
+                            <i class="fas fa-copy me-1"></i> Copy Code
+                        </button>
+                    </div>
+                    
+                    <div class="price-breakdown">
+                        <div class="original-price">Original Price: ₹${scholarship.originalPrice.toLocaleString('en-IN')}</div>
+                        <div class="discount">Your Scholarship: -₹${scholarship.discountAmount.toLocaleString('en-IN')} (${scholarship.discountPercentage}% OFF)</div>
+                        <div class="final-price">Your Price: ₹${scholarship.finalPrice.toLocaleString('en-IN')} only!</div>
+                    </div>
+                    
+                    <div class="scholarship-info">
+                        ✅ Valid for ${scholarship.daysValid} days<br>
+                        ✅ Access all 10 comprehensive LNAT practice tests<br>
+                        ✅ Detailed explanations & performance analytics<br>
+                        ✅ Progress tracking and improvement recommendations
+                    </div>
+                    
+                    <button class="claim-btn" onclick="claimScholarship()">
+                        🚀 Claim Your Scholarship Now
+                    </button>
+                    
+                    <p class="motivation">${scholarship.message}</p>
+                    
+                    <button onclick="closeScholarshipModal()" style="background: transparent; border: none; color: #718096; cursor: pointer; margin-top: 10px; text-decoration: underline; font-size: 0.9rem;">
+                        I'll view my results first
+                    </button>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+        }
+        
+        function copyScholarshipCode(code) {
+            navigator.clipboard.writeText(code).then(() => {
+                const btn = event.target;
+                const originalHTML = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-check me-1"></i> Copied!';
+                btn.style.background = '#38a169';
+                
+                setTimeout(() => {
+                    btn.innerHTML = originalHTML;
+                    btn.style.background = '#2b6cb0';
+                }, 2000);
+            }).catch(err => {
+                const textArea = document.createElement('textarea');
+                textArea.value = code;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                alert('✅ Scholarship code copied: ' + code);
+            });
+        }
+        
+        function claimScholarship() {
+            console.log('🎓 User clicked "Claim Scholarship"');
+            
+            const savedScholarship = localStorage.getItem('activeScholarship');
+            console.log('📦 Scholarship in localStorage:', savedScholarship);
+            
+            if (savedScholarship) {
+                const scholarship = JSON.parse(savedScholarship);
+                console.log('🔗 Redirecting to pricing.html with code:', scholarship.couponCode);
+                window.location.href = `pricing.html?scholarship=${scholarship.couponCode}`;
+            } else {
+                console.error('❌ No scholarship found in localStorage!');
+                alert('Error: Scholarship data not found. Please try again.');
+            }
+        }
+        
+        function closeScholarshipModal() {
+            console.log('📊 User chose to view results first');
+            
+            const savedScholarship = localStorage.getItem('activeScholarship');
+            console.log('📦 Scholarship in localStorage:', savedScholarship);
+            
+            const modal = document.querySelector('.scholarship-modal');
+            if (modal) {
+                modal.style.opacity = '0';
+                setTimeout(() => {
+                    modal.remove();
+                    window.location.href = 'free-test-results.html';
+                }, 300);
+            }
+        }
+        
         // Prevent accidental page close
         window.addEventListener('beforeunload', function(e) {
-            if (timeLeft > 0 && questions.length > 0) {
+            if (timeLeft > 0 && questions.length > 0 && keyboardShortcutsActive) {
                 e.preventDefault();
                 e.returnValue = 'You have an ongoing test. Are you sure you want to leave?';
                 return e.returnValue;
+            }
+        });
+        
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (!keyboardShortcutsActive) return;
+            if (questions.length === 0) return;
+            
+            const activeElement = document.activeElement;
+            const isTyping = activeElement.tagName === 'INPUT' || 
+                             activeElement.tagName === 'TEXTAREA' || 
+                             activeElement.isContentEditable;
+            
+            if (isTyping) return;
+            
+            if (e.key === 'ArrowLeft' && currentQuestionIndex > 0) {
+                e.preventDefault();
+                previousQuestion();
+            } else if (e.key === 'ArrowRight' && currentQuestionIndex < questions.length - 1) {
+                e.preventDefault();
+                nextQuestion();
             }
         });
     </script>
