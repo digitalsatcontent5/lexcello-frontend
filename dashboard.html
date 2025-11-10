@@ -1135,76 +1135,94 @@
         }
 
         function showFreeTestPromoIfNeeded() {
-            const userPackage = getUserPackage(currentUser);
-            
-            if (!userPackage || userPackage === 'free' || userPackage === 'inactive') {
-                const promoContainer = document.getElementById('freeTestPromo');
-                promoContainer.innerHTML = `
-                    <div class="free-test-promo">
-                        <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
-                            <div>
-                                <h5><i class="fas fa-gift me-2"></i>Try Our Free 14-Question Practice Test!</h5>
-                                <p class="mb-0">Score 40%+ to earn an exclusive scholarship discount (30-50% off) on our premium packages.</p>
-                            </div>
-                            <a href="free-test.html" class="btn btn-light btn-lg">
-                                <i class="fas fa-rocket me-2"></i>Start Free Test
-                            </a>
+    const userPackage = getUserPackage(currentUser);
+    
+    // Only show for free/non-paying users
+    if (!userPackage || userPackage === 'free' || userPackage === 'inactive') {
+        const promoContainer = document.getElementById('freeTestPromo');
+        
+        if (promoContainer) {
+            promoContainer.innerHTML = `
+                <div class="free-test-promo" style="position: relative; z-index: 5;">
+                    <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+                        <div>
+                            <h5 style="margin-bottom: 10px;">
+                                <i class="fas fa-gift me-2"></i>Try Our Free 14-Question Practice Test!
+                            </h5>
+                            <p class="mb-0" style="font-size: 1rem;">
+                                Score 40%+ to earn an exclusive scholarship discount (30-50% off) on our premium packages.
+                            </p>
                         </div>
+                        <a href="free-test.html" 
+                           class="btn btn-light btn-lg" 
+                           onclick="trackFreeTestClick(event)"
+                           style="white-space: nowrap; text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
+                            <i class="fas fa-rocket"></i>
+                            <span>Start Free Test</span>
+                        </a>
                     </div>
-                `;
+                </div>
+            `;
+            
+            // Track promo shown
+            try {
+                gtag('event', 'free_test_promo_shown', {
+                    'event_category': 'dashboard',
+                    'event_label': 'promo_banner_displayed',
+                    'user_package': userPackage || 'none'
+                });
+                console.log('✓ Free test promo banner shown');
+            } catch (error) {
+                console.error('GA tracking error:', error);
             }
+        } else {
+            console.warn('Free test promo container not found in DOM');
         }
-// Track promo banner shown
-        try {
-            gtag('event', 'free_test_promo_shown', {
-                'event_category': 'dashboard',
-                'event_label': 'promo_banner_displayed'
-            });
-        } catch (error) {
-            console.error('GA tracking error:', error);
-        }
+    } else {
+        console.log('User has package:', userPackage, '- not showing free test promo');
     }
 }
 
-// Add this new function right after showFreeTestPromoIfNeeded()
-function goToFreeTest() {
+// Track free test button clicks
+function trackFreeTestClick(event) {
     try {
         gtag('event', 'free_test_button_clicked', {
             'event_category': 'dashboard',
-            'event_label': 'start_free_test_from_banner'
+            'event_label': 'start_free_test_from_banner',
+            'page_location': window.location.href
         });
+        console.log('✓ Free test button clicked - navigating to free-test.html');
     } catch (error) {
         console.error('GA tracking error:', error);
     }
-    
-    // Navigate to free test
-    window.location.href = 'free-test.html';
+    // Let the link navigate normally
 }
-        async function checkAuthStatus() {
-            const token = localStorage.getItem('authToken');
-            if (token) {
-                try {
-                    const response = await fetch(`${API_BASE_URL}/auth/profile`, {
-                        method: 'GET',
-                        headers: {
-                            'Authorization': `Bearer ${token}`,
-                            'Content-Type': 'application/json'
-                        }
-                    });
-                    
-                    if (response.ok) {
-                        currentUser = await response.json();
-                        updateUserInfo();
-                    } else {
-                        localStorage.removeItem('authToken');
-                        currentUser = null;
-                    }
-                } catch (error) {
-                    console.error('Auth check failed:', error);
-                    currentUser = null;
+
+async function checkAuthStatus() {
+    const token = localStorage.getItem('authToken');
+    if (token) {
+        try {
+            const response = await fetch(`${API_BASE_URL}/auth/profile`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
                 }
+            });
+            
+            if (response.ok) {
+                currentUser = await response.json();
+                updateUserInfo();
+            } else {
+                localStorage.removeItem('authToken');
+                currentUser = null;
             }
+        } catch (error) {
+            console.error('Auth check failed:', error);
+            currentUser = null;
         }
+    }
+}
 
         function updateUserInfo() {
             if (currentUser) {
@@ -2045,4 +2063,5 @@ function goToFreeTest() {
     </script>
 </body>
 </html>
+
 
