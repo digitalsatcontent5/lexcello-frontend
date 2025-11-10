@@ -303,11 +303,15 @@ const API_BASE_URL = 'https://lexcello-backend.onrender.com';
         console.log('=== FREE TEST LOAD DEBUG ===');
         console.log('1. Current URL:', window.location.href);
         
+        // ✅ ADD THIS: Wait 100ms for localStorage to be ready
+        await new Promise(resolve => setTimeout(resolve, 100));
+        
         // Try multiple token sources
         let token = localStorage.getItem('authToken');
+        console.log('2. Token in localStorage:', token ? 'YES' : 'NO');
         
         if (!token) {
-            console.log('2. No token in localStorage, trying sessionStorage...');
+            console.log('3. No token in localStorage, trying sessionStorage...');
             token = sessionStorage.getItem('authToken');
             
             if (token) {
@@ -317,25 +321,15 @@ const API_BASE_URL = 'https://lexcello-backend.onrender.com';
         }
         
         if (!token) {
-            console.log('3. Trying backup token...');
-            token = sessionStorage.getItem('authBackup');
-            
-            if (token) {
-                console.log('✅ Found token in backup, restoring...');
-                localStorage.setItem('authToken', token);
-                sessionStorage.setItem('authToken', token);
-            }
-        }
-        
-        if (!token) {
             console.error('❌ NO TOKEN FOUND IN ANY STORAGE!');
             console.log('localStorage keys:', Object.keys(localStorage));
             console.log('sessionStorage keys:', Object.keys(sessionStorage));
             
+            // ✅ IMPORTANT: Don't delete anything here!
             alert('Please login to access the free test.');
             
-            // Wait 3 seconds so you can read console
-            await new Promise(resolve => setTimeout(resolve, 3000));
+            // Give user time to see console logs
+            await new Promise(resolve => setTimeout(resolve, 2000));
             window.location.href = 'login.html';
             return;
         }
@@ -360,9 +354,9 @@ const API_BASE_URL = 'https://lexcello-backend.onrender.com';
             
             if (response.status === 401 || response.status === 403) {
                 console.log('❌ Auth failed - token invalid');
+                // ✅ ONLY remove if truly invalid
                 localStorage.removeItem('authToken');
                 sessionStorage.removeItem('authToken');
-                sessionStorage.removeItem('authBackup');
                 alert('Your session has expired. Please login again.');
                 window.location.href = 'login.html';
                 return;
