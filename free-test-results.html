@@ -1,0 +1,2121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-6EV4Y6N8M5"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-6EV4Y6N8M5');
+</script>
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Test Results | Lexcello LNAT Practice</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #1a365d;
+            --secondary-color: #2b6cb0;
+            --accent-gold: #d69e2e;
+            --text-dark: #1a202c;
+            --text-light: #4a5568;
+            --bg-light: #f7fafc;
+            --success-color: #48bb78;
+            --warning-color: #ed8936;
+            --danger-color: #e53e3e;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background: #fafafa;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Header */
+        .results-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 40px 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .results-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(-10px, -10px) rotate(5deg); }
+        }
+
+        .results-header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .results-header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin: 0;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Free Trial Badge */
+        .test-mode-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            z-index: 3;
+            background: rgba(255, 193, 7, 0.9);
+            color: #856404;
+        }
+
+        /* Score Summary */
+        .score-summary {
+            background: white;
+            margin: -30px 20px 30px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            padding: 40px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .score-display {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .score-circle {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            background: conic-gradient(var(--success-color) var(--score-percentage, 0%), #e2e8f0 0%);
+        }
+
+        .score-circle::before {
+            content: '';
+            width: 140px;
+            height: 140px;
+            background: white;
+            border-radius: 50%;
+            position: absolute;
+        }
+
+        .score-content {
+            z-index: 1;
+            text-align: center;
+        }
+
+        .score-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            display: block;
+        }
+
+        .score-label {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-top: 5px;
+        }
+
+        .performance-summary {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .performance-grade {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .grade-badge {
+            font-size: 2rem;
+            font-weight: 800;
+            padding: 15px 25px;
+            border-radius: 15px;
+            display: inline-block;
+            min-width: 80px;
+            text-align: center;
+        }
+
+        .grade-a { 
+            background: linear-gradient(135deg, var(--success-color), #38a169); 
+            color: white; 
+        }
+        .grade-b { 
+            background: linear-gradient(135deg, var(--accent-gold), #d69e2e); 
+            color: white; 
+        }
+        .grade-c { 
+            background: linear-gradient(135deg, var(--warning-color), #dd6b20); 
+            color: white; 
+        }
+        .grade-d { 
+            background: linear-gradient(135deg, var(--danger-color), #c53030); 
+            color: white; 
+        }
+
+        .grade-description {
+            flex: 1;
+        }
+
+        .grade-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+
+        .grade-text {
+            color: var(--text-light);
+            font-size: 1rem;
+        }
+
+        .percentile-info {
+            background: linear-gradient(135deg, #e6f3ff, #f0f8ff);
+            border-radius: 12px;
+            padding: 20px;
+            border-left: 4px solid var(--secondary-color);
+        }
+
+        .percentile-text {
+            font-size: 1.1rem;
+            color: var(--text-dark);
+            margin: 0;
+        }
+
+        .percentile-number {
+            font-weight: 700;
+            color: var(--secondary-color);
+        }
+
+        /* Enhanced Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        .stat-icon {
+            font-size: 2rem;
+            color: var(--secondary-color);
+            margin-bottom: 15px;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: var(--text-light);
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        .stat-subtext {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            margin-top: 8px;
+            opacity: 0.8;
+        }
+
+        /* Analytics Section */
+        .analytics-section {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            margin: 30px 20px;
+            overflow: hidden;
+        }
+
+        .analytics-header {
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+
+        .analytics-header h3 {
+            margin: 0;
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+
+        .analytics-content {
+            padding: 30px;
+        }
+
+        .performance-breakdown {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .breakdown-item {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            border-left: 4px solid var(--secondary-color);
+        }
+
+        .breakdown-percentage {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+
+        .breakdown-label {
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        .progress-bar-container {
+            margin: 20px 0;
+        }
+
+        .progress-bar-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .progress-bar {
+            height: 12px;
+            background: #e2e8f0;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
+            border-radius: 6px;
+            transition: width 0.8s ease;
+        }
+
+        /* Performance Insights */
+        .insights-section {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            margin: 30px 20px;
+            overflow: hidden;
+        }
+
+        .insights-header {
+            background: linear-gradient(135deg, var(--accent-gold), #f7c41f);
+            color: var(--primary-color);
+            padding: 25px;
+            text-align: center;
+        }
+
+        .insights-header h3 {
+            margin: 0;
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+
+        .insights-content {
+            padding: 30px;
+        }
+
+        .insight-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            padding: 20px 0;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .insight-item:last-child {
+            border-bottom: none;
+        }
+
+        .insight-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .insight-positive {
+            background: var(--success-color);
+        }
+
+        .insight-warning {
+            background: var(--warning-color);
+        }
+
+        .insight-info {
+            background: var(--secondary-color);
+        }
+
+        .insight-content {
+            flex: 1;
+        }
+
+        .insight-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--primary-color);
+            margin-bottom: 8px;
+        }
+
+        .insight-description {
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+
+        /* Question Review */
+        .question-review {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            margin: 30px 20px;
+            overflow: hidden;
+        }
+
+        .review-header {
+            background: var(--bg-light);
+            padding: 25px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .review-header h3 {
+            margin: 0;
+            color: var(--primary-color);
+            font-weight: 700;
+        }
+
+        .review-filters {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 8px 16px;
+            border: 2px solid #e2e8f0;
+            background: white;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--text-dark);
+        }
+
+        .filter-btn.active {
+            border-color: var(--secondary-color);
+            background: var(--secondary-color);
+            color: white;
+        }
+
+        .filter-btn:hover:not(.active) {
+            border-color: var(--secondary-color);
+            color: var(--secondary-color);
+        }
+
+        /* Question Navigation Buttons in Results */
+        .results-question-btn {
+            width: 35px;
+            height: 35px;
+            border: 2px solid #e2e8f0;
+            background: white;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            color: var(--text-dark);
+        }
+        
+        .results-question-btn:hover {
+            border-color: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .results-question-btn.correct {
+            background: var(--success-color);
+            color: white;
+            border-color: var(--success-color);
+        }
+        
+        .results-question-btn.incorrect {
+            background: var(--danger-color);
+            color: white;
+            border-color: var(--danger-color);
+        }
+        
+        .results-question-btn.unanswered {
+            background: #fff3cd;
+            color: #856404;
+            border-color: #ffc107;
+        }
+
+        .question-item {
+            padding: 25px;
+            border-bottom: 1px solid #f1f5f9;
+            transition: background 0.3s ease;
+        }
+
+        .question-item:hover {
+            background: #fcfcfc;
+        }
+
+        .question-item:last-child {
+            border-bottom: none;
+        }
+
+        .question-item.hidden {
+            display: none;
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .question-number {
+            font-weight: 700;
+            color: var(--primary-color);
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .answer-status {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .status-correct {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-incorrect {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .status-unanswered {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .question-text {
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--text-dark);
+            line-height: 1.5;
+        }
+
+        .explanation {
+            background: linear-gradient(135deg, #f0f8ff, #e6f3ff);
+            border-left: 4px solid var(--secondary-color);
+            padding: 25px;
+            margin-top: 20px;
+            border-radius: 0 12px 12px 0;
+        }
+
+        .explanation h6 {
+            color: var(--primary-color);
+            font-weight: 700;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .explanation p {
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        /* Passage Section Styling */
+        .passage-section {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--secondary-color);
+        }
+
+        .passage-section h6 {
+            color: var(--primary-color);
+            font-weight: 700;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+
+        .passage-text {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            white-space: pre-wrap;
+            line-height: 1.7;
+            color: var(--text-dark);
+            font-size: 0.95rem;
+        }
+
+        /* Answer Choices Styling */
+        .answer-choices-section {
+            margin: 20px 0;
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .answer-choices-title {
+            color: var(--primary-color);
+            font-weight: 700;
+            margin-bottom: 15px;
+            font-size: 1rem;
+        }
+
+        .answer-choices-grid {
+            display: grid;
+            gap: 12px;
+        }
+
+        .answer-choice {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 15px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .choice-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .choice-letter {
+            background: #6c757d;
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .choice-icon {
+            font-size: 1.1rem;
+        }
+
+        .choice-text {
+            line-height: 1.5;
+            color: var(--text-dark);
+        }
+
+        /* Correct answer that user selected */
+        .choice-correct-selected {
+            border-color: var(--success-color);
+            background: linear-gradient(135deg, #d4edda, #c3e6cb);
+        }
+
+        .choice-correct-selected .choice-letter {
+            background: var(--success-color);
+        }
+
+        .choice-correct-selected .choice-icon {
+            color: var(--success-color);
+        }
+
+        /* Correct answer (but user didn't select) */
+        .choice-correct {
+            border-color: var(--success-color);
+            background: #f8fff9;
+        }
+
+        .choice-correct .choice-letter {
+            background: var(--success-color);
+        }
+
+        .choice-correct .choice-icon {
+            color: var(--success-color);
+        }
+
+        /* User's incorrect selection */
+        .choice-user-incorrect {
+            border-color: var(--danger-color);
+            background: linear-gradient(135deg, #f8d7da, #f5c6cb);
+        }
+
+        .choice-user-incorrect .choice-letter {
+            background: var(--danger-color);
+        }
+
+        .choice-user-incorrect .choice-icon {
+            color: var(--danger-color);
+        }
+
+        /* Neutral options */
+        .choice-neutral {
+            border-color: #e2e8f0;
+            background: white;
+        }
+
+        .choice-neutral:hover {
+            border-color: #cbd5e0;
+            background: #f7fafc;
+        }
+
+        .filter-summary {
+            background: #f8f9fa;
+            padding: 15px 25px;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            text-align: center;
+            margin: 40px 20px;
+        }
+
+        .btn-action {
+            padding: 15px 30px;
+            font-weight: 600;
+            border-radius: 12px;
+            text-decoration: none;
+            display: inline-block;
+            margin: 10px;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .btn-primary-action {
+            background: var(--secondary-color);
+            color: white;
+            border: none;
+        }
+
+        .btn-primary-action:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn-secondary-action {
+            background: white;
+            color: var(--secondary-color);
+            border: 2px solid var(--secondary-color);
+        }
+
+        .btn-secondary-action:hover {
+            background: var(--secondary-color);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .btn-upgrade {
+            background: linear-gradient(135deg, var(--accent-gold), #f7c41f);
+            color: var(--primary-color);
+            border: none;
+            font-size: 1.1rem;
+            padding: 18px 40px;
+        }
+
+        .btn-upgrade:hover {
+            background: linear-gradient(135deg, #f7c41f, var(--accent-gold));
+            color: var(--primary-color);
+            transform: translateY(-2px) scale(1.05);
+        }
+
+        /* Loading and Error States */
+        .loading-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: white;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid var(--secondary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error-container {
+            text-align: center;
+            padding: 60px 20px;
+            background: white;
+            margin: 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .error-icon {
+            font-size: 4rem;
+            color: var(--danger-color);
+            margin-bottom: 20px;
+        }
+
+        /* Upgrade CTA Banner */
+        .upgrade-banner {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 15px;
+            margin: 30px 20px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .upgrade-banner h3 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .upgrade-banner p {
+            font-size: 1.1rem;
+            margin-bottom: 25px;
+            opacity: 0.95;
+        }
+
+        .upgrade-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+            text-align: left;
+        }
+
+        .upgrade-feature {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        .upgrade-feature i {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .results-header h1 {
+                font-size: 2rem;
+            }
+
+            .score-summary {
+                margin: -20px 15px 20px;
+                padding: 25px;
+            }
+
+            .score-display {
+                grid-template-columns: 1fr;
+                gap: 25px;
+                text-align: center;
+            }
+
+            .score-circle {
+                width: 150px;
+                height: 150px;
+                margin: 0 auto;
+            }
+
+            .score-circle::before {
+                width: 120px;
+                height: 120px;
+            }
+
+            .score-number {
+                font-size: 2rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .question-review,
+            .insights-section,
+            .analytics-section,
+            .upgrade-banner {
+                margin: 20px 15px;
+            }
+
+            .question-item {
+                padding: 20px 15px;
+            }
+
+            .question-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .review-filters {
+                flex-wrap: wrap;
+                gap: 5px;
+            }
+
+            .filter-btn {
+                font-size: 0.8rem;
+                padding: 6px 12px;
+            }
+
+            .test-mode-badge {
+                position: static;
+                display: inline-block;
+                margin-bottom: 15px;
+            }
+
+            .performance-breakdown,
+            .upgrade-features {
+                grid-template-columns: 1fr;
+            }
+
+            .answer-choices-section {
+                padding: 15px;
+            }
+            
+            .answer-choice {
+                padding: 12px;
+            }
+            
+            .choice-letter {
+                width: 24px;
+                height: 24px;
+                font-size: 0.8rem;
+            }
+            
+            .choice-text {
+                font-size: 0.9rem;
+            }
+
+            .upgrade-banner h3 {
+                font-size: 1.5rem;
+            }
+
+            .upgrade-banner p {
+                font-size: 1rem;
+            }
+        }
+
+        /* Floating Navigation Button */
+        .floating-nav-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: var(--secondary-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .floating-nav-btn:hover {
+            background: var(--primary-color);
+            transform: scale(1.1);
+        }
+
+        /* Navigation Modal */
+        .nav-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-modal.active {
+            display: flex;
+        }
+
+        .nav-modal-content {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .nav-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .nav-modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+        }
+
+        /* ============= SCHOLARSHIP BADGE STYLES ============= */
+        .scholarship-banner {
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            border: 3px solid #d4af37;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3);
+            animation: slideDown 0.5s ease;
+        }
+
+        .scholarship-banner.silver {
+            background: linear-gradient(135deg, #c0c0c0, #e8e8e8);
+            border-color: #a8a8a8;
+        }
+
+        .scholarship-banner h3 {
+            color: #1a365d;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .scholarship-banner .badge-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .scholarship-code-display {
+            background: white;
+            border: 2px dashed #1a365d;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+            display: inline-block;
+        }
+
+        .scholarship-code-display strong {
+            font-size: 1.3rem;
+            color: #1a365d;
+            letter-spacing: 1px;
+        }
+
+        .scholarship-price {
+            margin: 15px 0;
+            font-size: 1.1rem;
+            color: #1a365d;
+        }
+
+        .scholarship-price .original {
+            text-decoration: line-through;
+            color: #718096;
+            margin-right: 10px;
+        }
+
+        .scholarship-price .final {
+            font-weight: 700;
+            color: #38a169;
+            font-size: 1.3rem;
+        }
+
+        .scholarship-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .scholarship-btn {
+            padding: 12px 30px;
+            border-radius: 10px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .scholarship-btn-primary {
+            background: linear-gradient(135deg, #2b6cb0, #1a365d);
+            color: white;
+        }
+
+        .scholarship-btn-primary:hover {
+            transform: scale(1.05);
+            color: white;
+        }
+
+        .scholarship-btn-secondary {
+            background: white;
+            color: #2b6cb0;
+            border: 2px solid #2b6cb0;
+        }
+
+        .scholarship-btn-secondary:hover {
+            background: #f7fafc;
+        }
+
+        .scholarship-expiry {
+            font-size: 0.9rem;
+            color: #c53030;
+            margin-top: 10px;
+            font-weight: 600;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loadingScreen" class="loading-container">
+        <div class="text-center">
+            <div class="spinner"></div>
+            <h4 class="mt-3">Analyzing Your Performance...</h4>
+            <p class="text-muted">Calculating detailed insights</p>
+        </div>
+    </div>
+
+    <!-- Error Screen -->
+    <div id="errorScreen" class="error-container" style="display: none;">
+        <div class="error-icon">
+            <i class="fas fa-exclamation-triangle"></i>
+        </div>
+        <h3>Results Not Found</h3>
+        <p class="text-muted mb-4">Unable to load your test results. This might happen if you navigated here directly or your session expired.</p>
+        <a href="free-test.html" class="btn-action btn-primary-action">
+            <i class="fas fa-redo me-2"></i>Retake Free Test
+        </a>
+        <a href="index.html" class="btn-action btn-secondary-action">
+            <i class="fas fa-home me-2"></i>Back to Home
+        </a>
+    </div>
+
+    <!-- Main Results Content -->
+    <div id="resultsContent" style="display: none;">
+        <!-- Header -->
+        <div class="results-header">
+            <div class="test-mode-badge">FREE TRIAL</div>
+            <div class="container">
+                <!-- Scholarship Earned Banner -->
+                <div id="scholarshipBanner" style="display: none;"></div>
+                <h1><i class="fas fa-chart-line me-3"></i>Free Test Results</h1>
+                <p>14-Question LNAT Practice Sample</p>
+            </div>
+        </div>
+
+        <!-- Score Summary -->
+        <div class="container">
+            <div class="score-summary">
+                <div class="score-display">
+                    <div class="score-circle" id="scoreCircle">
+                        <div class="score-content">
+                            <span class="score-number" id="scorePercentage">85%</span>
+                            <div class="score-label">Overall Score</div>
+                        </div>
+                    </div>
+                    
+                    <div class="performance-summary">
+                        <div class="performance-grade">
+                            <span id="gradeBadge" class="grade-badge">A</span>
+                            <div class="grade-description">
+                                <div class="grade-title" id="gradeTitle">Excellent Performance</div>
+                                <div class="grade-text" id="gradeText">You demonstrated strong analytical and reasoning skills.</div>
+                            </div>
+                        </div>
+                        
+                        <div class="percentile-info">
+                            <p class="percentile-text">
+                                Your score places you in the <span class="percentile-number" id="percentileRank">85th percentile</span> among LNAT test-takers.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+                        <span class="stat-value" id="correctCount">0</span>
+                        <div class="stat-label">Correct Answers</div>
+                        <div class="stat-subtext">out of 14 questions</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-clock"></i></div>
+                        <span class="stat-value" id="timeSpent">00:00</span>
+                        <div class="stat-label">Time Spent</div>
+                        <div class="stat-subtext"><span id="avgTimePerQuestion">0</span> per question</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-target"></i></div>
+                        <span class="stat-value" id="accuracyRate">0%</span>
+                        <div class="stat-label">Accuracy Rate</div>
+                        <div class="stat-subtext">of answered questions</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-brain"></i></div>
+                        <span class="stat-value" id="difficultyScore">N/A</span>
+                        <div class="stat-label">Difficulty Handled</div>
+                        <div class="stat-subtext">question complexity</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Upgrade Banner -->
+        <div class="upgrade-banner">
+            <h3><i class="fas fa-crown me-2"></i>Unlock Full LNAT Preparation</h3>
+            <p>Get access to all 10 comprehensive practice tests with 42 questions each</p>
+            
+            <div class="upgrade-features">
+                <div class="upgrade-feature">
+                    <i class="fas fa-check-circle"></i>
+                    <strong>420 Practice Questions</strong>
+                    <div style="font-size: 0.9rem; opacity: 0.9; margin-top: 5px;">
+                        Complete question bank with detailed explanations
+                    </div>
+                </div>
+                <div class="upgrade-feature">
+                    <i class="fas fa-chart-line"></i>
+                    <strong>Advanced Analytics</strong>
+                    <div style="font-size: 0.9rem; opacity: 0.9; margin-top: 5px;">
+                        Track progress and identify weak areas
+                    </div>
+                </div>
+                <div class="upgrade-feature">
+                    <i class="fas fa-pencil-alt"></i>
+                    <strong>Essay Practice</strong>
+                    <div style="font-size: 0.9rem; opacity: 0.9; margin-top: 5px;">
+                        Section B essay writing with topics
+                    </div>
+                </div>
+                <div class="upgrade-feature">
+                    <i class="fas fa-trophy"></i>
+                    <strong>Performance Reports</strong>
+                    <div style="font-size: 0.9rem; opacity: 0.9; margin-top: 5px;">
+                        Comprehensive feedback on every test
+                    </div>
+                </div>
+            </div>
+            
+            <a href="pricing.html" class="btn-action btn-upgrade">
+                <i class="fas fa-rocket me-2"></i>Upgrade to Full Access
+            </a>
+        </div>
+
+        <!-- Enhanced Analytics -->
+        <div class="analytics-section">
+            <div class="analytics-header">
+                <h3><i class="fas fa-chart-area me-2"></i>Performance Analytics</h3>
+            </div>
+            <div class="analytics-content">
+                
+                <div class="performance-breakdown">
+                    <div class="breakdown-item">
+                        <div class="breakdown-percentage" id="correctPercentage">0%</div>
+                        <div class="breakdown-label">Correct</div>
+                    </div>
+                    <div class="breakdown-item">
+                        <div class="breakdown-percentage" id="incorrectPercentage">0%</div>
+                        <div class="breakdown-label">Incorrect</div>
+                    </div>
+                    <div class="breakdown-item">
+                        <div class="breakdown-percentage" id="unansweredPercentage">0%</div>
+                        <div class="breakdown-label">Unanswered</div>
+                    </div>
+                </div>
+
+                <div class="progress-bar-container">
+                    <div class="progress-bar-label">
+                        <span>Time Management Efficiency</span>
+                        <span id="timeEfficiency">85%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="timeEfficiencyBar" style="width: 85%"></div>
+                    </div>
+                </div>
+
+                <div class="progress-bar-container">
+                    <div class="progress-bar-label">
+                        <span>Question Completion Rate</span>
+                        <span id="completionRate">100%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="completionRateBar" style="width: 100%"></div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Performance Insights -->
+        <div class="insights-section">
+            <div class="insights-header">
+                <h3><i class="fas fa-lightbulb me-2"></i>Performance Insights</h3>
+            </div>
+            <div class="insights-content" id="insightsContent">
+                <!-- Generated by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Question by Question Review -->
+        <div class="question-review">
+            <div class="review-header">
+                <h3><i class="fas fa-list-check me-2"></i>Question Review</h3>
+                
+                <div class="review-filters">
+                    <button class="filter-btn active" data-filter="all">All</button>
+                    <button class="filter-btn" data-filter="correct">Correct</button>
+                    <button class="filter-btn" data-filter="incorrect">Incorrect</button>
+                    <button class="filter-btn" data-filter="unanswered">Unanswered</button>
+                </div>
+            </div>
+            <div class="filter-summary" id="filterSummary">
+                Showing all questions
+            </div>
+            <div id="questionReviewList">
+                <!-- Generated by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+            <a href="pricing.html" class="btn-action btn-upgrade">
+                <i class="fas fa-crown me-2"></i>Upgrade Now
+            </a>
+            <a href="free-test.html" class="btn-action btn-secondary-action">
+                <i class="fas fa-redo me-2"></i>Retake Free Test
+            </a>
+            <a href="index.html" class="btn-action btn-secondary-action">
+                <i class="fas fa-home me-2"></i>Back to Home
+            </a>
+        </div>
+    </div>
+
+    <!-- Floating Navigation Button -->
+    <button class="floating-nav-btn" onclick="toggleNavModal()" title="Question Navigation">
+        <i class="fas fa-th"></i>
+    </button>
+
+    <!-- Navigation Modal -->
+    <div class="nav-modal" id="navModal" onclick="closeNavModalOnBackdrop(event)">
+        <div class="nav-modal-content">
+            <div class="nav-modal-header">
+                <h5 style="margin: 0; color: var(--primary-color);">
+                    <i class="fas fa-map-marked-alt me-2"></i>Question Navigation
+                </h5>
+                <button class="nav-modal-close" onclick="toggleNavModal()">×</button>
+            </div>
+            
+            <div style="display: flex; gap: 12px; margin-bottom: 15px; flex-wrap: wrap; justify-content: center;">
+                <span style="padding: 4px 8px; font-size: 0.8rem; background: var(--success-color); color: white; border-radius: 4px;">Correct</span>
+                <span style="padding: 4px 8px; font-size: 0.8rem; background: var(--danger-color); color: white; border-radius: 4px;">Incorrect</span>
+                <span style="padding: 4px 8px; font-size: 0.8rem; background: #fff3cd; color: #856404; border-radius: 4px;">Unanswered</span>
+            </div>
+            
+            <div id="resultsQuestionGrid" style="display: grid; grid-template-columns: repeat(7, 50px); gap: 8px; justify-content: center;"></div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        const API_BASE_URL = 'https://lexcello-backend.onrender.com';
+        
+        let testResults = null;
+        let questions = [];
+        let userAnswersMap = {};
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadResults();
+            setupFilterButtons();
+        });
+
+        async function loadResults() {
+            try {
+                const resultsData = sessionStorage.getItem('freeTestResults');
+                
+                if (!resultsData) {
+                    throw new Error('No test results found');
+                }
+                
+                testResults = JSON.parse(resultsData);
+                console.log('✓ Free test results loaded:', testResults);
+
+                // Build userAnswersMap from backend's results array
+                if (testResults.results && Array.isArray(testResults.results)) {
+                    testResults.results.forEach(result => {
+                        userAnswersMap[result.questionId] = {
+                            selected: result.selectedAnswer,
+                            correct: result.correctAnswer,
+                            isCorrect: result.isCorrect
+                        };
+                    });
+                    console.log('✓ Built user answers map:', userAnswersMap);
+                }
+
+                // Fetch question details for display
+                await fetchQuestionDetails();
+                
+                // Display everything
+                displayResults();
+                
+            } catch (error) {
+                console.error('❌ Error loading results:', error);
+                showError();
+            }
+        }
+
+        async function fetchQuestionDetails() {
+            try {
+                const token = localStorage.getItem('authToken');
+                
+                if (!token) {
+                    console.log('No auth token, skipping question details');
+                    return;
+                }
+                
+                console.log('Fetching free test questions...');
+                
+                const response = await fetch(`${API_BASE_URL}/api/tests/free/questions`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    questions = data.questions || [];
+                    console.log(`✓ Fetched ${questions.length} questions`);
+                } else {
+                    console.error('Failed to fetch questions:', response.status);
+                }
+            } catch (error) {
+                console.error('Error fetching questions:', error);
+            }
+        }
+
+        function displayResults() {
+            // Check for active scholarship
+            checkAndDisplayScholarship();
+            
+            document.getElementById('loadingScreen').style.display = 'none';
+            document.getElementById('resultsContent').style.display = 'block';
+            
+            // Calculate stats
+            const totalQuestions = 14; // Free test always has 14 questions
+            const correctCount = testResults.score || Object.values(userAnswersMap).filter(a => a.isCorrect).length;
+            const percentage = testResults.percentage || Math.round((correctCount / totalQuestions) * 100);
+            const timeSpent = testResults.timeSpent || 0;
+            const answeredQuestions = Object.keys(userAnswersMap).length;
+            const accuracyRate = answeredQuestions > 0 ? Math.round((correctCount / answeredQuestions) * 100) : 0;
+            const avgTimePerQuestion = timeSpent > 0 ? Math.round(timeSpent / totalQuestions) : 0;
+            const percentileRank = calculatePercentile(percentage);
+            
+            // Update all displays
+            updateScoreDisplay(percentage);
+            updateGradeDisplay(percentage);
+            updateStatsDisplay(correctCount, totalQuestions, timeSpent, accuracyRate, avgTimePerQuestion);
+            updatePercentileDisplay(percentileRank);
+            updateAnalytics(correctCount, totalQuestions, timeSpent, answeredQuestions);
+            generateInsights(percentage, timeSpent, answeredQuestions, totalQuestions);
+            displayQuestionReview();
+        }
+
+        function updateScoreDisplay(percentage) {
+            document.getElementById('scorePercentage').textContent = percentage + '%';
+            document.getElementById('scoreCircle').style.setProperty('--score-percentage', percentage + '%');
+        }
+
+        function updateGradeDisplay(percentage) {
+            const gradeBadge = document.getElementById('gradeBadge');
+            const gradeTitle = document.getElementById('gradeTitle');
+            const gradeText = document.getElementById('gradeText');
+            
+            let grade, className, title, description;
+            
+            if (percentage >= 85) {
+                grade = 'A';
+                className = 'grade-a';
+                title = 'Excellent Performance';
+                description = 'Outstanding analytical and reasoning skills demonstrated.';
+            } else if (percentage >= 70) {
+                grade = 'B';
+                className = 'grade-b';
+                title = 'Good Performance';
+                description = 'Solid understanding with room for targeted improvement.';
+            } else if (percentage >= 55) {
+                grade = 'C';
+                className = 'grade-c';
+                title = 'Satisfactory Performance';
+                description = 'Basic competency shown, additional practice recommended.';
+            } else {
+                grade = 'D';
+                className = 'grade-d';
+                title = 'Needs Improvement';
+                description = 'Focus on fundamental LNAT reasoning techniques.';
+            }
+            
+            gradeBadge.textContent = grade;
+            gradeBadge.className = 'grade-badge ' + className;
+            gradeTitle.textContent = title;
+            gradeText.textContent = description;
+        }
+
+        function updateStatsDisplay(correct, total, timeSpent, accuracy, avgTime) {
+            document.getElementById('correctCount').textContent = correct;
+            document.getElementById('timeSpent').textContent = formatTime(timeSpent);
+            document.getElementById('accuracyRate').textContent = accuracy + '%';
+            document.getElementById('avgTimePerQuestion').textContent = avgTime + 's';
+            
+            const difficultyScore = calculateDifficultyScore(correct, total);
+            document.getElementById('difficultyScore').textContent = difficultyScore;
+        }
+
+        function updatePercentileDisplay(percentile) {
+            document.getElementById('percentileRank').textContent = percentile + 'th percentile';
+        }
+
+        function updateAnalytics(correct, total, timeSpent, answered) {
+            const incorrect = answered - correct;
+            const unanswered = total - answered;
+            
+            document.getElementById('correctPercentage').textContent = Math.round((correct / total) * 100) + '%';
+            document.getElementById('incorrectPercentage').textContent = Math.round((incorrect / total) * 100) + '%';
+            document.getElementById('unansweredPercentage').textContent = Math.round((unanswered / total) * 100) + '%';
+            
+            const timeEfficiency = calculateTimeEfficiency(timeSpent, total);
+            const completionRate = Math.round((answered / total) * 100);
+            
+            updateProgressBar('timeEfficiency', 'timeEfficiencyBar', timeEfficiency);
+            updateProgressBar('completionRate', 'completionRateBar', completionRate);
+        }
+
+        function updateProgressBar(labelId, barId, value) {
+            document.getElementById(labelId).textContent = value + '%';
+            document.getElementById(barId).style.width = value + '%';
+        }
+
+        function calculatePercentile(percentage) {
+            if (percentage >= 90) return 95;
+            if (percentage >= 85) return 85;
+            if (percentage >= 80) return 75;
+            if (percentage >= 75) return 65;
+            if (percentage >= 70) return 55;
+            if (percentage >= 65) return 45;
+            if (percentage >= 60) return 35;
+            if (percentage >= 55) return 25;
+            if (percentage >= 50) return 15;
+            return 10;
+        }
+
+        function calculateDifficultyScore(correct, total) {
+            const percentage = (correct / total) * 100;
+            if (percentage >= 85) return 'Advanced';
+            if (percentage >= 70) return 'Intermediate';
+            if (percentage >= 55) return 'Basic';
+            return 'Beginner';
+        }
+
+        function calculateTimeEfficiency(timeSpent, total) {
+            const idealTime = total * 137; // ~2.3 minutes per question for free test
+            const efficiency = Math.min((idealTime / timeSpent) * 100, 100);
+            return Math.round(efficiency);
+        }
+
+        function generateInsights(percentage, timeSpent, answeredCount, totalQuestions) {
+            const insights = [];
+            
+            if (percentage >= 85) {
+                insights.push({
+                    type: 'positive',
+                    title: 'Exceptional Critical Reasoning',
+                    description: 'Your score demonstrates strong analytical skills. Ready for the full test!'
+                });
+            } else if (percentage >= 70) {
+                insights.push({
+                    type: 'positive',
+                    title: 'Solid Foundation',
+                    description: 'Good grasp of LNAT concepts. Full access will help refine your skills further.'
+                });
+            } else {
+                insights.push({
+                    type: 'warning',
+                    title: 'Room for Improvement',
+                    description: 'More practice needed. Our full course provides comprehensive preparation.'
+                });
+            }
+
+            const avgTimeExpected = 137; // seconds
+            const avgTimeActual = timeSpent / totalQuestions;
+            
+            if (avgTimeActual < avgTimeExpected * 0.7) {
+                insights.push({
+                    type: 'warning',
+                    title: 'Consider Slowing Down',
+                    description: 'Take more time to carefully analyze each passage and question.'
+                });
+            } else if (avgTimeActual > avgTimeExpected * 1.3) {
+                insights.push({
+                    type: 'info',
+                    title: 'Time Management Focus',
+                    description: 'Practice improving your reading speed with our full test suite.'
+                });
+            } else {
+                insights.push({
+                    type: 'positive',
+                    title: 'Good Time Management',
+                    description: 'Your pacing was appropriate for the LNAT format.'
+                });
+            }
+
+            if (answeredCount < totalQuestions) {
+                insights.push({
+                    type: 'warning',
+                    title: 'Answer All Questions',
+                    description: `You left ${totalQuestions - answeredCount} question(s) unanswered. No penalty for guessing!`
+                });
+            }
+
+            insights.push({
+                type: 'info',
+                title: 'Ready for More?',
+                description: 'Upgrade to access 420 practice questions across 10 comprehensive tests.'
+            });
+
+            const insightsContainer = document.getElementById('insightsContent');
+            insightsContainer.innerHTML = insights.map(insight => `
+                <div class="insight-item">
+                    <div class="insight-icon insight-${insight.type}">
+                        <i class="fas fa-${insight.type === 'positive' ? 'check' : insight.type === 'warning' ? 'exclamation' : 'info'}"></i>
+                    </div>
+                    <div class="insight-content">
+                        <div class="insight-title">${insight.title}</div>
+                        <div class="insight-description">${insight.description}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function displayQuestionReview() {
+            const reviewList = document.getElementById('questionReviewList');
+            
+            if (questions.length === 0) {
+                reviewList.innerHTML = `
+                    <div class="question-item">
+                        <div class="text-center text-muted py-5">
+                            <i class="fas fa-info-circle fa-2x mb-3"></i>
+                            <p>Question details not available.</p>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            let reviewHTML = '';
+            
+            questions.forEach((question, index) => {
+                const questionId = question.id;
+                const userAnswer = userAnswersMap[questionId];
+                
+                if (!userAnswer) {
+                    const correctAnswer = question.correct_answer;
+                    const answerChoicesHTML = generateAnswerChoicesHTML(
+                        question.options, 
+                        null,
+                        correctAnswer
+                    );
+                    
+                    reviewHTML += `
+                        <div class="question-item" data-filter="unanswered">
+                            <div class="question-header">
+                                <div class="question-number">Question ${index + 1}</div>
+                                <div class="answer-status status-unanswered">Unanswered</div>
+                            </div>
+                            
+                            ${question.passage_title && question.passage_text ? `
+                                <div class="passage-section">
+                                    <h6><i class="fas fa-book-open me-2"></i>${question.passage_title}</h6>
+                                    <div class="passage-text">${question.passage_text}</div>
+                                </div>
+                            ` : ''}
+                            
+                            <div class="question-text">${question.question_text}</div>
+                            
+                            <div class="alert alert-warning mt-3 mb-3">
+                                <i class="fas fa-info-circle me-2"></i>
+                                <strong>You did not answer this question.</strong> The correct answer is shown below.
+                            </div>
+                            
+                            <div class="answer-choices-section">
+                                <h6 class="answer-choices-title"><i class="fas fa-list me-2"></i>Answer Choices:</h6>
+                                ${answerChoicesHTML}
+                            </div>
+                            
+                            ${question.explanation ? `
+                                <div class="explanation">
+                                    <h6><i class="fas fa-lightbulb"></i> Explanation</h6>
+                                    <p>${question.explanation}</p>
+                                </div>
+                            ` : ''}
+                        </div>
+                    `;
+                    return;
+                }
+
+                const correctAnswer = question.correct_answer;
+                const isCorrect = userAnswer.isCorrect;
+                
+                const statusClass = isCorrect ? 'status-correct' : 'status-incorrect';
+                const statusText = isCorrect ? 'Correct' : 'Incorrect';
+                const filterClass = isCorrect ? 'correct' : 'incorrect';
+                
+                const answerChoicesHTML = generateAnswerChoicesHTML(
+                    question.options, 
+                    userAnswer.selected, 
+                    correctAnswer
+                );
+                
+                reviewHTML += `
+                    <div class="question-item" data-filter="${filterClass}">
+                        <div class="question-header">
+                            <div class="question-number">Question ${index + 1}</div>
+                            <div class="answer-status ${statusClass}">${statusText}</div>
+                        </div>
+                        
+                        ${question.passage_title && question.passage_text ? `
+                            <div class="passage-section">
+                                <h6><i class="fas fa-book-open me-2"></i>${question.passage_title}</h6>
+                                <div class="passage-text">${question.passage_text}</div>
+                            </div>
+                        ` : ''}
+                        
+                        <div class="question-text">${question.question_text}</div>
+                        
+                        <div class="answer-choices-section">
+                            <h6 class="answer-choices-title"><i class="fas fa-list me-2"></i>Answer Choices:</h6>
+                            ${answerChoicesHTML}
+                        </div>
+                        
+                        ${question.explanation ? `
+                            <div class="explanation">
+                                <h6><i class="fas fa-lightbulb"></i>Explanation</h6>
+                                <p>${question.explanation}</p>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            });
+            
+            reviewList.innerHTML = reviewHTML;
+            updateFilterSummary('all');
+            generateQuestionNavigationGrid();
+        }
+
+        function generateQuestionNavigationGrid() {
+            const grid = document.getElementById('resultsQuestionGrid');
+            if (!grid) return;
+            
+            grid.innerHTML = '';
+            
+            questions.forEach((question, index) => {
+                const questionId = question.id;
+                const userAnswer = userAnswersMap[questionId];
+                
+                const btn = document.createElement('button');
+                btn.className = 'results-question-btn';
+                btn.textContent = index + 1;
+                
+                if (!userAnswer) {
+                    btn.classList.add('unanswered');
+                } else if (userAnswer.isCorrect) {
+                    btn.classList.add('correct');
+                } else {
+                    btn.classList.add('incorrect');
+                }
+                
+                btn.onclick = () => {
+                    toggleNavModal();
+                    setTimeout(() => {
+                        const questionItems = document.querySelectorAll('.question-item');
+                        if (questionItems[index]) {
+                            questionItems[index].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
+                    }, 300);
+                };
+                
+                grid.appendChild(btn);
+            });
+        }
+
+        function generateAnswerChoicesHTML(options, userSelected, correctAnswer) {
+            if (!options || !Array.isArray(options)) {
+                return '<p class="text-muted">Options not available</p>';
+            }
+            
+            const letters = ['A', 'B', 'C', 'D', 'E'];
+            let html = '<div class="answer-choices-grid">';
+            
+            options.forEach((option, index) => {
+                const answerNumber = index + 1;
+                const letter = letters[index];
+                const isUserChoice = userSelected === answerNumber;
+                const isCorrectChoice = correctAnswer === answerNumber;
+                
+                let choiceClass = 'answer-choice';
+                let icon = '';
+                
+                if (isCorrectChoice && isUserChoice) {
+                    choiceClass += ' choice-correct-selected';
+                    icon = '<i class="fas fa-check-circle choice-icon"></i>';
+                } else if (isCorrectChoice) {
+                    choiceClass += ' choice-correct';
+                    icon = '<i class="fas fa-check choice-icon"></i>';
+                } else if (isUserChoice) {
+                    choiceClass += ' choice-user-incorrect';
+                    icon = '<i class="fas fa-times-circle choice-icon"></i>';
+                } else {
+                    choiceClass += ' choice-neutral';
+                }
+                
+                const optionText = typeof option === 'string' ? option : (option.text || option);
+                
+                html += `
+                    <div class="${choiceClass}">
+                        <div class="choice-header">
+                            <span class="choice-letter">${letter}</span>
+                            ${icon}
+                        </div>
+                        <div class="choice-text">${optionText}</div>
+                    </div>
+                `;
+            });
+            
+            html += '</div>';
+            return html;
+        }
+
+        function setupFilterButtons() {
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    const filter = this.getAttribute('data-filter');
+                    const questionItems = document.querySelectorAll('.question-item');
+                    let visibleCount = 0;
+                    
+                    questionItems.forEach(item => {
+                        const itemFilter = item.getAttribute('data-filter') || '';
+                        const shouldShow = filter === 'all' || itemFilter === filter;
+                        
+                        if (shouldShow) {
+                            item.classList.remove('hidden');
+                            visibleCount++;
+                        } else {
+                            item.classList.add('hidden');
+                        }
+                    });
+                    
+                    updateFilterSummary(filter, visibleCount);
+                });
+            });
+        }
+
+        function updateFilterSummary(filter, count = null) {
+            const filterSummary = document.getElementById('filterSummary');
+            const totalQuestions = document.querySelectorAll('.question-item').length;
+            
+            if (count === null) count = totalQuestions;
+            
+            let summaryText = '';
+            switch(filter) {
+                case 'all':
+                    summaryText = `Showing all ${count} questions`;
+                    break;
+                case 'correct':
+                    summaryText = `Showing ${count} correct answer${count !== 1 ? 's' : ''}`;
+                    break;
+                case 'incorrect':
+                    summaryText = `Showing ${count} incorrect answer${count !== 1 ? 's' : ''}`;
+                    break;
+                case 'unanswered':
+                    summaryText = `Showing ${count} unanswered question${count !== 1 ? 's' : ''}`;
+                    break;
+                default:
+                    summaryText = `Showing ${count} questions`;
+            }
+            
+            filterSummary.textContent = summaryText;
+        }
+
+        function formatTime(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${minutes}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        function showError() {
+            document.getElementById('loadingScreen').style.display = 'none';
+            document.getElementById('errorScreen').style.display = 'block';
+        }
+
+        function toggleNavModal() {
+            const modal = document.getElementById('navModal');
+            modal.classList.toggle('active');
+        }
+
+        function closeNavModalOnBackdrop(event) {
+            if (event.target.id === 'navModal') {
+                toggleNavModal();
+            }
+        }
+
+        // ============= SCHOLARSHIP DISPLAY FUNCTIONS =============
+        function checkAndDisplayScholarship() {
+            const scholarship = localStorage.getItem('activeScholarship');
+            
+            if (!scholarship) {
+                console.log('No active scholarship found');
+                return;
+            }
+            
+            try {
+                const scholarshipData = JSON.parse(scholarship);
+                console.log('✓ Active scholarship found:', scholarshipData);
+                
+                const validUntil = new Date(scholarshipData.validUntil);
+                const now = new Date();
+                const daysRemaining = Math.ceil((validUntil - now) / (1000 * 60 * 60 * 24));
+                
+                if (daysRemaining <= 0) {
+                    console.log('Scholarship expired');
+                    localStorage.removeItem('activeScholarship');
+                    return;
+                }
+                
+                displayScholarshipBanner(scholarshipData, daysRemaining);
+            } catch (error) {
+                console.error('Error parsing scholarship:', error);
+            }
+        }
+
+        function displayScholarshipBanner(scholarship, daysRemaining) {
+            const banner = document.getElementById('scholarshipBanner');
+            const isExpiringSoon = daysRemaining <= 2;
+            
+            banner.innerHTML = `
+                <div class="scholarship-banner ${scholarship.badgeColor}">
+                    <span class="badge-icon">${scholarship.tier === 'Gold' ? '🏆' : '📘'}</span>
+                    <h3>🎉 You've Earned a ${scholarship.discountPercentage}% Scholarship!</h3>
+                    <p style="color: #4a5568; margin-bottom: 20px;">
+                        ${scholarship.message || 'Congratulations on your performance!'}
+                    </p>
+                    
+                    <div class="scholarship-code-display">
+                        <div style="font-size: 0.9rem; color: #718096; margin-bottom: 5px;">Your Scholarship Code:</div>
+                        <strong>${scholarship.couponCode}</strong>
+                        <button onclick="copyScholarshipCodeResults('${scholarship.couponCode}')" 
+                                style="margin-left: 15px; padding: 5px 15px; background: #2b6cb0; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 0.9rem;">
+                            <i class="fas fa-copy me-1"></i> Copy
+                        </button>
+                    </div>
+                    
+                    <div class="scholarship-price">
+                        <span class="original">₹${scholarship.originalPrice.toLocaleString('en-IN')}</span>
+                        <i class="fas fa-arrow-right mx-2"></i>
+                        <span class="final">₹${scholarship.finalPrice.toLocaleString('en-IN')} only!</span>
+                    </div>
+                    
+                    ${isExpiringSoon ? `
+                        <div class="scholarship-expiry">
+                            <i class="fas fa-exclamation-triangle me-1"></i>
+                            Expires in ${daysRemaining} day${daysRemaining !== 1 ? 's' : ''}!
+                        </div>
+                    ` : `
+                        <div style="font-size: 0.9rem; color: #4a5568; margin-top: 10px;">
+                            Valid for ${daysRemaining} more days
+                        </div>
+                    `}
+                    
+                    <div class="scholarship-actions">
+                        <a href="pricing.html?scholarship=${scholarship.couponCode}" 
+                           class="scholarship-btn scholarship-btn-primary">
+                            <i class="fas fa-graduation-cap me-2"></i>Claim Your Scholarship
+                        </a>
+                        <button onclick="hideScholarshipBanner()" 
+                                class="scholarship-btn scholarship-btn-secondary">
+                            <i class="fas fa-times me-2"></i>Dismiss
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            banner.style.display = 'block';
+        }
+
+        function copyScholarshipCodeResults(code) {
+            navigator.clipboard.writeText(code).then(() => {
+                const btn = event.target.closest('button');
+                const originalHTML = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-check me-1"></i> Copied!';
+                btn.style.background = '#38a169';
+                
+                setTimeout(() => {
+                    btn.innerHTML = originalHTML;
+                    btn.style.background = '';
+                }, 2000);
+            }).catch(() => {
+                alert('✅ Scholarship code: ' + code);
+            });
+        }
+
+        function hideScholarshipBanner() {
+            document.getElementById('scholarshipBanner').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
