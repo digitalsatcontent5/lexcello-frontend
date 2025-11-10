@@ -9,9 +9,14 @@
       gtag('js', new Date());
       gtag('config', 'G-6EV4Y6N8M5');
     </script>
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Payment - Lexcello</title>
+    <title>Complete Your Purchase - Lexcello LNAT</title>
+    <meta name="description" content="Secure payment for Lexcello LNAT practice tests. Choose from Foundation, Advanced, or Complete packages.">
+    
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     
@@ -51,74 +56,101 @@
             padding: 30px;
             text-align: center;
         }
+
+        .payment-header h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .payment-header p {
+            margin: 0;
+            opacity: 0.95;
+        }
         
         .payment-body {
             padding: 40px;
         }
         
         .plan-card {
-            border: 2px solid #e2e8f0;
+            border: 2px solid var(--secondary-color);
             border-radius: 12px;
-            padding: 20px;
+            padding: 25px;
             margin-bottom: 20px;
-            cursor: pointer;
-            transition: all 0.3s ease;
+            background: rgba(43, 108, 176, 0.03);
         }
-        
-        .plan-card:hover {
-            border-color: var(--secondary-color);
-            box-shadow: 0 5px 15px rgba(43, 108, 176, 0.1);
-        }
-        
-        .plan-card.selected {
-            border-color: var(--secondary-color);
-            background: rgba(43, 108, 176, 0.05);
+
+        .package-badge {
+            display: inline-block;
+            background: var(--accent-gold);
+            color: var(--primary-color);
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-bottom: 10px;
         }
         
         .plan-price {
-            font-size: 2rem;
-            font-weight: bold;
+            font-size: 2.5rem;
+            font-weight: 800;
             color: var(--secondary-color);
+            margin: 15px 0;
+        }
+
+        .price-strike {
+            text-decoration: line-through;
+            opacity: 0.5;
+            font-size: 0.6em;
         }
         
         .plan-features {
             list-style: none;
             padding: 0;
-            margin: 15px 0;
+            margin: 20px 0;
         }
 
         .plan-features li {
-            padding: 5px 0;
+            padding: 8px 0;
             display: flex;
             align-items: center;
-            justify-content: center;
         }
 
         .plan-features li i {
             color: #28a745;
-            margin-right: 10px;
+            margin-right: 12px;
+            font-size: 1.1rem;
         }
         
         .btn-payment {
             background: var(--secondary-color);
             border: none;
-            padding: 15px 30px;
-            font-weight: 600;
-            border-radius: 8px;
+            padding: 18px 40px;
+            font-weight: 700;
+            border-radius: 10px;
             transition: all 0.3s ease;
             width: 100%;
-            font-size: 1.1rem;
+            font-size: 1.2rem;
+            color: white;
         }
         
         .btn-payment:hover {
             background: var(--primary-hover);
-            transform: translateY(-1px);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(43, 108, 176, 0.3);
         }
         
         .btn-payment:disabled {
             background: #6c757d;
             cursor: not-allowed;
             transform: none;
+        }
+
+        .btn-paypal {
+            background: #0070ba !important;
+        }
+
+        .btn-paypal:hover {
+            background: #005a94 !important;
         }
         
         .loading-spinner {
@@ -140,27 +172,29 @@
         .security-info {
             background: #f8f9fa;
             border-left: 4px solid var(--accent-gold);
-            padding: 15px;
-            margin: 20px 0;
+            padding: 20px;
+            margin: 25px 0;
             border-radius: 0 8px 8px 0;
         }
         
         .payment-methods {
             text-align: center;
-            margin: 20px 0;
+            margin: 25px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
         }
         
-        .payment-methods img {
-            height: 30px;
-            margin: 0 10px;
-            opacity: 0.7;
+        .payment-methods i {
+            font-size: 2rem;
+            margin: 0 8px;
         }
         
         .error-message {
             background: #f8d7da;
             border: 1px solid #f5c6cb;
             color: #721c24;
-            padding: 12px;
+            padding: 15px;
             border-radius: 8px;
             margin: 15px 0;
             display: none;
@@ -170,66 +204,110 @@
             background: #d4edda;
             border: 1px solid #c3e6cb;
             color: #155724;
-            padding: 12px;
+            padding: 15px;
             border-radius: 8px;
             margin: 15px 0;
             display: none;
+        }
+
+        .coupon-badge {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .coupon-badge strong {
+            color: #155724;
+        }
+
+        .currency-disclaimer {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            border-radius: 0 8px 8px 0;
+            margin: 20px 0;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: var(--secondary-color);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .back-link:hover {
+            color: var(--primary-hover);
+        }
+
+        @media (max-width: 768px) {
+            .payment-container {
+                margin: 20px auto;
+                padding: 10px;
+            }
+
+            .payment-body {
+                padding: 20px;
+            }
+
+            .plan-price {
+                font-size: 2rem;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="payment-container">
+            <a href="pricing.html" class="back-link">
+                <i class="fas fa-arrow-left me-2"></i>Back to Pricing
+            </a>
+
             <div class="payment-card">
                 <div class="payment-header">
-                    <h1><i class="fas fa-crown me-2"></i>Upgrade to Premium</h1>
-                    <p class="mb-0">Unlock all 10 LNAT practice tests with detailed analytics</p>
+                    <h1><i class="fas fa-lock me-2"></i>Secure Checkout</h1>
+                    <p id="header-subtitle">Complete your purchase to unlock premium LNAT practice tests</p>
                 </div>
                 
                 <div class="payment-body">
                     <div class="error-message" id="error-message"></div>
                     <div class="success-message" id="success-message"></div>
                     
-                    <!-- Plan Selection -->
-                    <h4 class="mb-4">Choose Your Plan</h4>
+                    <!-- Order Summary -->
+                    <h4 class="mb-4"><i class="fas fa-shopping-cart me-2"></i>Order Summary</h4>
 
-                    <div class="row justify-content-center">
-                        <div class="col-md-8">
-                            <div class="plan-card selected" id="main-plan">
-                                <div class="text-center mb-3">
-                                    <h5>12 Months Premium Access</h5>
-                                    <div class="badge bg-success mb-2">Best Value</div>
-                                </div>
-                                
-                                <!-- Currency Display -->
-                                <div class="d-flex justify-content-center align-items-center mb-3">
-                                    <div class="plan-price" id="display-price">₹9,000</div>
-                                </div>
-                                
-                                <ul class="plan-features">
-                                    <li><i class="fas fa-check-circle"></i>All 10 Complete Practice Tests</li>
-                                    <li><i class="fas fa-check-circle"></i>Detailed Performance Analytics</li>
-                                    <li><i class="fas fa-check-circle"></i>Expert Answer Explanations</li>
-                                    <li><i class="fas fa-check-circle"></i>12 Months Full Access</li>
-                                    <li><i class="fas fa-check-circle"></i>Unlimited Test Retakes</li>
-                                    <li><i class="fas fa-check-circle"></i>Mobile & Desktop Access</li>
-                                </ul>
-                                
-                                <div class="text-center">
-                                    <small class="text-muted" id="monthly-rate">₹750 per month</small>
-                                </div>
-                                
-                                <!-- Disclaimer for international currencies -->
-                                <div class="text-center mt-3" id="payment-disclaimer" style="display: none;">
-                                    <div class="alert alert-warning">
-                                        <small>
-                                            <i class="fas fa-info-circle"></i>
-                                            <strong>Payment Amount:</strong> ₹9,000 INR<br>
-                                            (Approximately <span id="approx-amount">$99 USD</span> at current exchange rates)
-                                        </small>
-                                    </div>
-                                </div>
+                    <div class="plan-card" id="plan-card">
+                        <div class="text-center">
+                            <div class="package-badge" id="package-badge">Loading...</div>
+                            <h5 id="package-title">Loading Package...</h5>
+                            <div id="package-subtitle" class="text-muted mb-3"></div>
+                        </div>
+                        
+                        <!-- Price Display -->
+                        <div class="text-center">
+                            <div class="plan-price" id="display-price">
+                                <span id="currency-symbol">₹</span><span id="price-value">0</span>
                             </div>
+                            <small class="text-muted" id="monthly-rate"></small>
+                        </div>
+                        
+                        <!-- Features List -->
+                        <ul class="plan-features" id="features-list">
+                            <li><i class="fas fa-check-circle"></i>Loading features...</li>
+                        </ul>
+                        
+                        <!-- Coupon Badge -->
+                        <div id="coupon-badge-container"></div>
+                        
+                        <!-- Currency Disclaimer -->
+                        <div id="currency-disclaimer" class="currency-disclaimer" style="display: none;">
+                            <small>
+                                <i class="fas fa-info-circle me-2"></i>
+                                <strong>Payment Amount:</strong> <span id="disclaimer-inr-amount"></span><br>
+                                <span id="disclaimer-approx"></span>
+                            </small>
                         </div>
                     </div>
                     
@@ -242,27 +320,36 @@
                     
                     <!-- Security Info -->
                     <div class="security-info">
-                        <div class="d-flex align-items-center">
-                            <i class="fas fa-shield-alt text-warning me-2"></i>
+                        <div class="d-flex align-items-start">
+                            <i class="fas fa-shield-alt text-warning me-3" style="font-size: 1.5rem;"></i>
                             <div>
                                 <strong>Secure Payment</strong><br>
-                                <small>Your payment is processed securely. Your card details are never stored on our servers.</small>
+                                <small>Your payment is processed securely through industry-standard encryption. Your card details are never stored on our servers. All transactions are protected by SSL/TLS security.</small>
                             </div>
                         </div>
                     </div>
                     
                     <!-- Payment Methods -->
                     <div class="payment-methods">
-                        <p class="mb-2"><strong>Accepted Payment Methods:</strong></p>
-                        <div>
-                            <i class="fab fa-cc-visa fa-2x text-primary me-2"></i>
-        <i class="fab fa-cc-mastercard fa-2x text-warning me-2"></i>
-        <i class="fab fa-cc-amex fa-2x text-info me-2"></i>
-        <i class="fab fa-paypal fa-2x me-2" style="color: #0070ba;"></i>
-        <i class="fas fa-university fa-2x text-success me-2"></i>
-        <i class="fas fa-mobile-alt fa-2x text-secondary"></i>
+                        <p class="mb-3"><strong>Accepted Payment Methods:</strong></p>
+                        <div class="mb-2">
+                            <i class="fab fa-cc-visa text-primary"></i>
+                            <i class="fab fa-cc-mastercard text-warning"></i>
+                            <i class="fab fa-cc-amex text-info"></i>
+                            <i class="fab fa-paypal" style="color: #0070ba;"></i>
+                            <i class="fas fa-university text-success"></i>
+                            <i class="fas fa-mobile-alt text-secondary"></i>
                         </div>
-    <small class="text-muted">PayPal, Credit Cards, Debit Cards, Net Banking, UPI & Wallets</small>
+                        <small class="text-muted">PayPal, Credit/Debit Cards, Net Banking, UPI & Wallets</small>
+                    </div>
+
+                    <!-- Money Back Guarantee -->
+                    <div class="text-center mt-4">
+                        <div class="alert alert-info">
+                            <i class="fas fa-shield-alt me-2"></i>
+                            <strong>3-Day Money-Back Guarantee</strong><br>
+                            <small>Not satisfied? Get a full refund within 3 days, no questions asked.</small>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -288,81 +375,124 @@
         <input type="hidden" name="udf5" id="payu-udf5">
     </form>
 
-    
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     
     <script>
-        // Configuration
         const API_BASE_URL = 'https://lexcello-backend.onrender.com/api';
         
-        // Price configuration
-        const prices = {
-            INR: { 
-                symbol: '₹', 
-                amount: 9000, 
-                display: '9,000', 
-                code: 'INR', 
-                monthly: '₹750',
-                showDisclaimer: false,
-                gateway: 'payu'
+        // Package definitions matching pricing.html
+        const packages = {
+            foundation: {
+                name: 'Foundation Package',
+                subtitle: 'Tests 1-5',
+                badge: 'Foundation',
+                features: [
+                    '5 Full Practice Tests (210 questions)',
+                    'Tests 1-5 with progressive difficulty',
+                    'Detailed answer explanations',
+                    'Performance analytics dashboard',
+                    'Timed practice sessions',
+                    'Unlimited retakes',
+                    'Mobile & desktop access',
+                    '12 months full access'
+                ],
+                prices: {
+                    GBP: { symbol: '£', price: 49, actualCharge: 5700 },
+                    USD: { symbol: '$', price: 65, actualCharge: 5700 },
+                    INR: { symbol: '₹', price: 5700, actualCharge: 5700 }
+                }
             },
-            USD: { 
-                symbol: '$', 
-                amount: 9000,
-                display: '99', 
-                code: 'INR',
-                monthly: '$8.25',
-                showDisclaimer: true,
-                actualCurrency: 'USD',
-                gateway: 'paypal'
+            advanced: {
+                name: 'Advanced Package',
+                subtitle: 'Tests 6-10',
+                badge: 'Advanced',
+                features: [
+                    '5 Advanced Practice Tests (210 questions)',
+                    'Tests 6-10 with challenging questions',
+                    'Detailed answer explanations',
+                    'Performance analytics dashboard',
+                    'Timed practice sessions',
+                    'Unlimited retakes',
+                    'Mobile & desktop access',
+                    '12 months full access'
+                ],
+                prices: {
+                    GBP: { symbol: '£', price: 59, actualCharge: 6900 },
+                    USD: { symbol: '$', price: 78, actualCharge: 6900 },
+                    INR: { symbol: '₹', price: 6900, actualCharge: 6900 }
+                }
             },
-            GBP: { 
-                symbol: '£', 
-                amount: 9000,
-                display: '79', 
-                code: 'INR',
-                monthly: '£6.58',
-                showDisclaimer: true,
-                actualCurrency: 'GBP',
-                gateway: 'paypal'
+            complete: {
+                name: 'Complete Series',
+                subtitle: 'All Tests 1-10',
+                badge: '⭐ Best Value',
+                features: [
+                    'All 10 Practice Tests (420 questions)',
+                    'Complete test series 1-10',
+                    'Foundation to advanced difficulty',
+                    'Detailed answer explanations',
+                    'Advanced performance analytics',
+                    'Score prediction algorithm',
+                    'Timed practice sessions',
+                    'Unlimited retakes',
+                    'Mobile & desktop access',
+                    '12 months full access'
+                ],
+                prices: {
+                    GBP: { symbol: '£', price: 99, actualCharge: 11500 },
+                    USD: { symbol: '$', price: 130, actualCharge: 11500 },
+                    INR: { symbol: '₹', price: 11500, actualCharge: 11500 }
+                }
             }
         };
         
         let selectedPlan = {
-            plan: 'premium-12',
-            amount: 9000,
-            duration: 12,
-            currency: 'INR',
-            gateway: 'payu'
+            package: 'complete',
+            currency: 'GBP',
+            amount: 11500,
+            gateway: 'paypal'
         };
         
-        // Coupon state
         let appliedCoupon = null;
         let discountAmount = 0;
-        let finalAmount = 9000;
+        let finalAmount = 11500;
         
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
+            loadSelectedPackage();
             loadSelectedCurrency();
             loadAppliedCoupon();
             checkAuthStatus();
         });
         
-        // Load currency selected from pricing page
-        function loadSelectedCurrency() {
-            const savedCurrency = localStorage.getItem('selectedCurrency') || 'INR';
+        // Load package selection from localStorage
+        function loadSelectedPackage() {
+            const savedPackage = localStorage.getItem('selectedPackage') || 'complete';
             
-            if (prices[savedCurrency]) {
-                selectedPlan.currency = savedCurrency;
-                selectedPlan.amount = 9000;
-                selectedPlan.gateway = prices[savedCurrency].gateway;
-                
-                console.log('Loaded currency:', savedCurrency, 'Gateway:', selectedPlan.gateway);
-                updatePaymentButtonDisplay();
+            if (packages[savedPackage]) {
+                selectedPlan.package = savedPackage;
+                console.log('Loaded package:', savedPackage);
+                updatePackageDisplay();
+            } else {
+                console.warn('Invalid package, defaulting to complete');
+                selectedPlan.package = 'complete';
+                updatePackageDisplay();
             }
         }
         
-        // Load applied coupon from pricing page
+        // Load currency from localStorage
+        function loadSelectedCurrency() {
+            const savedCurrency = localStorage.getItem('selectedCurrency') || 'GBP';
+            
+            if (['GBP', 'USD', 'INR'].includes(savedCurrency)) {
+                selectedPlan.currency = savedCurrency;
+                selectedPlan.gateway = savedCurrency === 'INR' ? 'payu' : 'paypal';
+                console.log('Loaded currency:', savedCurrency, 'Gateway:', selectedPlan.gateway);
+                updatePriceDisplay();
+            }
+        }
+        
+        // Load applied coupon
         function loadAppliedCoupon() {
             const couponData = localStorage.getItem('appliedCoupon');
             
@@ -377,10 +507,10 @@
                     console.log('Coupon loaded:', {
                         code: coupon.code,
                         discountINR: discountAmount,
-                        finalINR: finalAmount,
-                        displayCurrency: selectedPlan.currency
+                        finalINR: finalAmount
                     });
                     
+                    showCouponBadge();
                     updatePriceDisplay();
                     
                     try {
@@ -390,32 +520,52 @@
                             'value': discountAmount
                         });
                     } catch (error) {
-                        console.error('GA tracking error:', error);
+                        console.error('GA error:', error);
                     }
                 } catch (error) {
                     console.error('Error loading coupon:', error);
-                    finalAmount = 9000;
-                    selectedPlan.amount = 9000;
-                    updatePriceDisplay();
+                    resetToOriginalPrice();
                 }
             } else {
-                finalAmount = 9000;
-                selectedPlan.amount = 9000;
-                updatePriceDisplay();
+                resetToOriginalPrice();
             }
+        }
+
+        function resetToOriginalPrice() {
+            const pkg = packages[selectedPlan.package];
+            const priceData = pkg.prices[selectedPlan.currency];
+            finalAmount = priceData.actualCharge;
+            selectedPlan.amount = finalAmount;
+            updatePriceDisplay();
+        }
+        
+        // Update package display
+        function updatePackageDisplay() {
+            const pkg = packages[selectedPlan.package];
+            
+            document.getElementById('package-badge').textContent = pkg.badge;
+            document.getElementById('package-title').textContent = pkg.name;
+            document.getElementById('package-subtitle').textContent = pkg.subtitle;
+            
+            const featuresList = document.getElementById('features-list');
+            featuresList.innerHTML = pkg.features.map(feature => 
+                `<li><i class="fas fa-check-circle"></i>${feature}</li>`
+            ).join('');
+            
+            document.getElementById('header-subtitle').textContent = 
+                `Unlock ${pkg.name} - ${pkg.subtitle}`;
         }
         
         // Update price display
         function updatePriceDisplay() {
-            const price = prices[selectedPlan.currency];
-            const priceElement = document.getElementById('display-price');
-            const monthlyElement = document.getElementById('monthly-rate');
-            const disclaimer = document.getElementById('payment-disclaimer');
-            const approxAmount = document.getElementById('approx-amount');
+            const pkg = packages[selectedPlan.package];
+            const priceData = pkg.prices[selectedPlan.currency];
+            
+            document.getElementById('currency-symbol').textContent = priceData.symbol;
             
             if (appliedCoupon) {
-                const displayOriginal = parseFloat(price.display.replace(/,/g, ''));
-                const displayDiscount = (discountAmount * displayOriginal / 9000).toFixed(2);
+                const displayOriginal = priceData.price;
+                const displayDiscount = (discountAmount * displayOriginal / priceData.actualCharge).toFixed(2);
                 const displayFinal = (displayOriginal - displayDiscount).toFixed(2);
                 
                 const formattedOriginal = selectedPlan.currency === 'INR' 
@@ -425,82 +575,76 @@
                     ? parseFloat(displayFinal).toLocaleString('en-IN')
                     : displayFinal;
                 
-                priceElement.innerHTML = `
-                    <span style="text-decoration: line-through; opacity: 0.5; font-size: 0.6em;">${price.symbol}${formattedOriginal}</span>
-                    ${price.symbol}${formattedFinal}
-                `;
-                
-                showCouponBadge();
-                
-                if (price.showDisclaimer) {
-                    disclaimer.style.display = 'block';
-                    const discountedINR = finalAmount.toLocaleString('en-IN');
-                    approxAmount.textContent = `${price.symbol}${formattedFinal}`;
-                    disclaimer.innerHTML = `
-                        <div class="alert alert-warning">
-                            <small>
-                                <i class="fas fa-info-circle"></i>
-                                <strong>Payment Amount:</strong> ₹${discountedINR} INR<br>
-                                (Approximately ${price.symbol}${formattedFinal} at current exchange rates)
-                            </small>
-                        </div>
-                    `;
-                }
+                document.getElementById('price-value').innerHTML = 
+                    `<span class="price-strike">${formattedOriginal}</span> ${formattedFinal}`;
             } else {
-                priceElement.textContent = price.symbol + price.display;
-                monthlyElement.textContent = price.monthly + ' per month';
+                const formattedPrice = selectedPlan.currency === 'INR' 
+                    ? priceData.price.toLocaleString('en-IN')
+                    : priceData.price;
                 
-                if (price.showDisclaimer) {
-                    disclaimer.style.display = 'block';
-                    approxAmount.textContent = price.symbol + price.display.replace(',', '');
-                } else {
-                    disclaimer.style.display = 'none';
-                }
+                document.getElementById('price-value').textContent = formattedPrice;
+            }
+            
+            const monthlyRate = (priceData.price / 12).toFixed(2);
+            document.getElementById('monthly-rate').textContent = 
+                `${priceData.symbol}${monthlyRate} per month`;
+            
+            updateCurrencyDisclaimer(priceData);
+            updatePaymentButton();
+        }
+
+        function updateCurrencyDisclaimer(priceData) {
+            const disclaimer = document.getElementById('currency-disclaimer');
+            
+            if (selectedPlan.currency !== 'INR') {
+                const inrAmount = finalAmount.toLocaleString('en-IN');
+                const displayPrice = appliedCoupon
+                    ? (priceData.price - (discountAmount * priceData.price / priceData.actualCharge)).toFixed(2)
+                    : priceData.price;
+                
+                document.getElementById('disclaimer-inr-amount').textContent = `₹${inrAmount} INR`;
+                document.getElementById('disclaimer-approx').textContent = 
+                    `Approximately ${priceData.symbol}${displayPrice} at current exchange rates`;
+                
+                disclaimer.style.display = 'block';
+            } else {
+                disclaimer.style.display = 'none';
             }
         }
-        
-        // Update payment button display based on gateway
-        function updatePaymentButtonDisplay() {
+
+        function updatePaymentButton() {
             const paymentBtn = document.getElementById('payment-btn');
-            const price = prices[selectedPlan.currency];
             
-            if (price.gateway === 'paypal') {
+            if (selectedPlan.gateway === 'paypal') {
                 paymentBtn.innerHTML = '<i class="fab fa-paypal me-2"></i>Pay with PayPal';
-                paymentBtn.style.background = '#0070ba';
+                paymentBtn.classList.add('btn-paypal');
             } else {
                 paymentBtn.innerHTML = '<i class="fas fa-lock me-2"></i>Proceed to Secure Payment';
-                paymentBtn.style.background = '';
+                paymentBtn.classList.remove('btn-paypal');
             }
         }
         
         // Show coupon badge
         function showCouponBadge() {
-            if (document.getElementById('coupon-badge')) return;
-            
-            const planCard = document.getElementById('main-plan');
-            const badge = document.createElement('div');
-            badge.id = 'coupon-badge';
-            badge.className = 'alert alert-success mt-3';
-            badge.style.cssText = 'margin: 15px 0; padding: 12px; border-radius: 8px;';
-            badge.innerHTML = `
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <div>
-                        <strong style="color: #155724;">
-                            <i class="fas fa-check-circle"></i> Coupon Applied: ${appliedCoupon.code}
-                        </strong>
-                        <div style="font-size: 0.9rem; margin-top: 5px;">
-                            You save ₹${discountAmount.toLocaleString('en-IN')} INR
+            const container = document.getElementById('coupon-badge-container');
+            container.innerHTML = `
+                <div class="coupon-badge">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>
+                                <i class="fas fa-check-circle"></i> Coupon Applied: ${appliedCoupon.code}
+                            </strong>
+                            <div style="font-size: 0.9rem; margin-top: 5px; color: #155724;">
+                                You save ₹${discountAmount.toLocaleString('en-IN')} INR
+                            </div>
                         </div>
+                        <button onclick="removeCoupon()" 
+                                class="btn btn-sm btn-outline-danger">
+                            <i class="fas fa-times"></i> Remove
+                        </button>
                     </div>
-                    <button onclick="removeCoupon()" 
-                            class="btn btn-sm btn-outline-danger"
-                            style="font-size: 0.9rem;">
-                        <i class="fas fa-times"></i> Remove
-                    </button>
                 </div>
             `;
-            
-            planCard.appendChild(badge);
         }
         
         // Remove coupon
@@ -511,17 +655,12 @@
             
             appliedCoupon = null;
             discountAmount = 0;
-            finalAmount = 9000;
-            selectedPlan.amount = 9000;
             
             localStorage.removeItem('appliedCoupon');
             
-            const badge = document.getElementById('coupon-badge');
-            if (badge) {
-                badge.remove();
-            }
+            document.getElementById('coupon-badge-container').innerHTML = '';
             
-            updatePriceDisplay();
+            resetToOriginalPrice();
             
             try {
                 gtag('event', 'coupon_removed_payment_page', {
@@ -529,30 +668,28 @@
                     'event_label': 'user_removed_coupon'
                 });
             } catch (error) {
-                console.error('GA tracking error:', error);
+                console.error('GA error:', error);
             }
         }
         
-        // Check if user is authenticated
+        // Check authentication
         async function checkAuthStatus() {
             try {
                 gtag('event', 'payment_page_view', {
                     'event_category': 'payment',
-                    'event_label': 'landed_on_payment_page',
-                    'page_location': window.location.href,
-                    'page_path': window.location.pathname,
-                    'selected_currency': selectedPlan.currency,
+                    'event_label': `${selectedPlan.package}_${selectedPlan.currency}`,
+                    'package': selectedPlan.package,
+                    'currency': selectedPlan.currency,
                     'gateway': selectedPlan.gateway,
                     'coupon_applied': appliedCoupon ? appliedCoupon.code : 'none'
                 });
-                console.log('Payment page viewed - Currency:', selectedPlan.currency, 'Gateway:', selectedPlan.gateway);
             } catch (error) {
                 console.error('Tracking error:', error);
             }
             
             const token = localStorage.getItem('authToken');
             if (!token) {
-                showError('Please sign in to access premium features');
+                showError('Please sign in to continue');
                 setTimeout(() => {
                     window.location.href = 'login.html';
                 }, 2000);
@@ -581,7 +718,7 @@
                 }
                 
             } catch (error) {
-                console.error('Auth check error:', error);
+                console.error('Auth error:', error);
                 showError('Authentication failed. Please sign in again.');
                 setTimeout(() => {
                     window.location.href = 'login.html';
@@ -589,7 +726,7 @@
             }
         }
         
-        // Initiate payment (routes to PayU or PayPal)
+        // Initiate payment (routes to correct gateway)
         async function initiatePayment() {
             if (selectedPlan.gateway === 'paypal') {
                 await initiatePayPalPayment();
@@ -598,7 +735,7 @@
             }
         }
         
-        // Initiate PayPal payment
+        // PayPal payment
         async function initiatePayPalPayment() {
             const paymentBtn = document.getElementById('payment-btn');
             const originalText = paymentBtn.innerHTML;
@@ -615,7 +752,7 @@
                 try {
                     gtag('event', 'paypal_payment_initiated', {
                         'event_category': 'payment',
-                        'event_label': 'paypal_button_clicked',
+                        'event_label': selectedPlan.package,
                         'currency': selectedPlan.currency,
                         'final_amount': finalAmount
                     });
@@ -624,19 +761,13 @@
                 }
                 
                 if (!finalAmount || finalAmount < 100 || finalAmount > 100000) {
-                    throw new Error(`Invalid payment amount: ₹${finalAmount}. Please refresh and try again.`);
+                    throw new Error(`Invalid payment amount: ₹${finalAmount}`);
                 }
-
-                if (appliedCoupon && finalAmount >= 9000) {
-                    throw new Error('Coupon discount not applied correctly. Please try again.');
-                }
-
-                console.log('✓ PayPal payment validation passed - Amount: ₹' + finalAmount + ' INR');
                 
                 const requestBody = {
-                    planType: selectedPlan.plan,
+                    planType: `${selectedPlan.package}-12`,
                     amount: finalAmount,
-                    planDuration: selectedPlan.duration,
+                    planDuration: 12,
                     currency: selectedPlan.currency
                 };
                 
@@ -644,10 +775,10 @@
                     requestBody.couponCode = appliedCoupon.code;
                     requestBody.couponId = appliedCoupon.couponId;
                     requestBody.discountAmount = discountAmount;
-                    requestBody.originalAmount = 9000;
+                    requestBody.originalAmount = packages[selectedPlan.package].prices[selectedPlan.currency].actualCharge;
                 }
                 
-                console.log('Sending PayPal payment request:', JSON.stringify(requestBody, null, 2));
+                console.log('PayPal payment request:', requestBody);
                 
                 const response = await fetch(`${API_BASE_URL}/payments/paypal/create-order`, {
                     method: 'POST',
@@ -660,49 +791,35 @@
                 
                 if (!response.ok) {
                     const errorData = await response.json();
-                    
-                    try {
-                        gtag('event', 'paypal_initiation_failed', {
-                            'event_category': 'payment',
-                            'event_label': 'api_error',
-                            'error_message': errorData.error || 'Unknown error'
-                        });
-                    } catch (error) {
-                        console.error('Tracking error:', error);
-                    }
-                    
-                    throw new Error(errorData.error || 'PayPal payment initiation failed');
+                    throw new Error(errorData.error || 'PayPal payment failed');
                 }
                 
                 const paymentData = await response.json();
                 
                 if (paymentData.success && paymentData.approvalUrl) {
                     try {
-                        gtag('event', 'paypal_order_created', {
+                        gtag('event', 'paypal_redirect', {
                             'event_category': 'payment',
                             'event_label': 'redirecting_to_paypal',
-                            'transaction_id': paymentData.txnid,
-                            'order_id': paymentData.orderId
+                            'transaction_id': paymentData.txnid
                         });
                     } catch (error) {
                         console.error('Tracking error:', error);
                     }
                     
-                    // Redirect to PayPal
                     window.location.href = paymentData.approvalUrl;
                 } else {
                     throw new Error('PayPal order creation failed');
                 }
                 
             } catch (error) {
-                console.error('PayPal payment initiation error:', error);
-                showError(error.message || 'PayPal payment initiation failed. Please try again.');
+                console.error('PayPal error:', error);
+                showError(error.message || 'PayPal payment failed');
                 
                 try {
-                    gtag('event', 'paypal_payment_error', {
+                    gtag('event', 'paypal_error', {
                         'event_category': 'payment',
-                        'event_label': 'exception_caught',
-                        'error_message': error.message
+                        'event_label': error.message
                     });
                 } catch (trackError) {
                     console.error('Tracking error:', trackError);
@@ -713,7 +830,7 @@
             }
         }
         
-        // Initiate PayU payment (existing code)
+        // PayU payment
         async function initiatePayUPayment() {
             const paymentBtn = document.getElementById('payment-btn');
             const originalText = paymentBtn.innerHTML;
@@ -730,7 +847,7 @@
                 try {
                     gtag('event', 'payu_payment_initiated', {
                         'event_category': 'payment',
-                        'event_label': 'payu_button_clicked',
+                        'event_label': selectedPlan.package,
                         'final_amount': finalAmount
                     });
                 } catch (error) {
@@ -738,19 +855,13 @@
                 }
                 
                 if (!finalAmount || finalAmount < 100 || finalAmount > 100000) {
-                    throw new Error(`Invalid payment amount: ₹${finalAmount}. Please refresh and try again.`);
+                    throw new Error(`Invalid payment amount: ₹${finalAmount}`);
                 }
-
-                if (appliedCoupon && finalAmount >= 9000) {
-                    throw new Error('Coupon discount not applied correctly. Please try again.');
-                }
-
-                console.log('✓ PayU payment validation passed - Amount: ₹' + finalAmount + ' INR');
                 
                 const requestBody = {
-                    planType: selectedPlan.plan,
+                    planType: `${selectedPlan.package}-12`,
                     amount: finalAmount,
-                    planDuration: selectedPlan.duration,
+                    planDuration: 12,
                     currency: 'INR'
                 };
                 
@@ -758,10 +869,10 @@
                     requestBody.couponCode = appliedCoupon.code;
                     requestBody.couponId = appliedCoupon.couponId;
                     requestBody.discountAmount = discountAmount;
-                    requestBody.originalAmount = 9000;
+                    requestBody.originalAmount = packages[selectedPlan.package].prices.INR.actualCharge;
                 }
                 
-                console.log('Sending PayU payment request:', JSON.stringify(requestBody, null, 2));
+                console.log('PayU payment request:', requestBody);
                 
                 const response = await fetch(`${API_BASE_URL}/payments/create-order`, {
                     method: 'POST',
@@ -774,25 +885,14 @@
                 
                 if (!response.ok) {
                     const errorData = await response.json();
-                    
-                    try {
-                        gtag('event', 'payu_initiation_failed', {
-                            'event_category': 'payment',
-                            'event_label': 'api_error',
-                            'error_message': errorData.error || 'Unknown error'
-                        });
-                    } catch (error) {
-                        console.error('Tracking error:', error);
-                    }
-                    
-                    throw new Error(errorData.error || 'Payment initiation failed');
+                    throw new Error(errorData.error || 'Payment failed');
                 }
                 
                 const paymentData = await response.json();
                 
                 if (paymentData.success) {
                     try {
-                        gtag('event', 'payu_order_created', {
+                        gtag('event', 'payu_redirect', {
                             'event_category': 'payment',
                             'event_label': 'redirecting_to_payu',
                             'transaction_id': paymentData.txnid
@@ -808,14 +908,13 @@
                 }
                 
             } catch (error) {
-                console.error('PayU payment initiation error:', error);
-                showError(error.message || 'Payment initiation failed. Please try again.');
+                console.error('PayU error:', error);
+                showError(error.message || 'Payment failed');
                 
                 try {
-                    gtag('event', 'payu_payment_error', {
+                    gtag('event', 'payu_error', {
                         'event_category': 'payment',
-                        'event_label': 'exception_caught',
-                        'error_message': error.message
+                        'event_label': error.message
                     });
                 } catch (trackError) {
                     console.error('Tracking error:', trackError);
@@ -826,7 +925,7 @@
             }
         }
         
-        // Fill PayU form with payment data
+        // Fill PayU form
         function fillPayUForm(paymentData) {
             document.getElementById('payu-key').value = paymentData.key;
             document.getElementById('payu-txnid').value = paymentData.txnid;
