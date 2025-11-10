@@ -1137,32 +1137,37 @@
         function showFreeTestPromoIfNeeded() {
     const userPackage = getUserPackage(currentUser);
     
+    console.log('=== FREE TEST PROMO CHECK ===');
+    console.log('User package:', userPackage);
+    console.log('Should show promo:', !userPackage || userPackage === 'free' || userPackage === 'inactive');
+    
     // Only show for free/non-paying users
     if (!userPackage || userPackage === 'free' || userPackage === 'inactive') {
         const promoContainer = document.getElementById('freeTestPromo');
         
         if (promoContainer) {
             promoContainer.innerHTML = `
-                <div class="free-test-promo" style="position: relative; z-index: 5;">
+                <div class="free-test-promo" style="position: relative; z-index: 5; margin: 20px 0;">
                     <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
-                        <div>
-                            <h5 style="margin-bottom: 10px;">
+                        <div style="flex: 1;">
+                            <h5 style="margin-bottom: 10px; color: white;">
                                 <i class="fas fa-gift me-2"></i>Try Our Free 14-Question Practice Test!
                             </h5>
-                            <p class="mb-0" style="font-size: 1rem;">
+                            <p class="mb-0" style="font-size: 1rem; color: rgba(255,255,255,0.95);">
                                 Score 40%+ to earn an exclusive scholarship discount (30-50% off) on our premium packages.
                             </p>
                         </div>
-                        <a href="free-test.html" 
-                           class="btn btn-light btn-lg" 
-                           onclick="trackFreeTestClick(event)"
-                           style="white-space: nowrap; text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
-                            <i class="fas fa-rocket"></i>
-                            <span>Start Free Test</span>
-                        </a>
+                        <button 
+                            onclick="window.location.href='free-test.html'" 
+                            class="btn btn-light btn-lg" 
+                            style="white-space: nowrap; font-weight: 700; padding: 15px 30px; border: none; cursor: pointer;">
+                            <i class="fas fa-rocket me-2"></i>Start Free Test
+                        </button>
                     </div>
                 </div>
             `;
+            
+            console.log('✅ Free test promo banner added to DOM');
             
             // Track promo shown
             try {
@@ -1171,15 +1176,14 @@
                     'event_label': 'promo_banner_displayed',
                     'user_package': userPackage || 'none'
                 });
-                console.log('✓ Free test promo banner shown');
             } catch (error) {
                 console.error('GA tracking error:', error);
             }
         } else {
-            console.warn('Free test promo container not found in DOM');
+            console.error('❌ freeTestPromo container NOT FOUND in DOM');
         }
     } else {
-        console.log('User has package:', userPackage, '- not showing free test promo');
+        console.log('ℹ️ User has package:', userPackage, '- not showing free test promo');
     }
 }
 
@@ -2063,5 +2067,6 @@ async function checkAuthStatus() {
     </script>
 </body>
 </html>
+
 
 
