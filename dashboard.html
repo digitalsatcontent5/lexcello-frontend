@@ -1154,7 +1154,32 @@
                 `;
             }
         }
+// Track promo banner shown
+        try {
+            gtag('event', 'free_test_promo_shown', {
+                'event_category': 'dashboard',
+                'event_label': 'promo_banner_displayed'
+            });
+        } catch (error) {
+            console.error('GA tracking error:', error);
+        }
+    }
+}
 
+// Add this new function right after showFreeTestPromoIfNeeded()
+function goToFreeTest() {
+    try {
+        gtag('event', 'free_test_button_clicked', {
+            'event_category': 'dashboard',
+            'event_label': 'start_free_test_from_banner'
+        });
+    } catch (error) {
+        console.error('GA tracking error:', error);
+    }
+    
+    // Navigate to free test
+    window.location.href = 'free-test.html';
+}
         async function checkAuthStatus() {
             const token = localStorage.getItem('authToken');
             if (token) {
@@ -2020,3 +2045,4 @@
     </script>
 </body>
 </html>
+
