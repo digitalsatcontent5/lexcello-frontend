@@ -394,6 +394,9 @@
             btnText.innerHTML = '<span class="spinner"></span>Signing In...';
 
             try {
+                console.log('=== LOGIN ATTEMPT ===');
+                console.log('Email:', email);
+                
                 const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
                     method: 'POST',
                     headers: {
@@ -402,12 +405,31 @@
                     body: JSON.stringify({ email, password })
                 });
 
+                console.log('Response status:', response.status);
                 const data = await response.json();
+                console.log('Response data:', data);
 
                 if (response.ok) {
-                    // Store authentication data
+                    console.log('=== LOGIN SUCCESS ===');
+                    console.log('Token received:', data.token ? data.token.substring(0, 30) + '...' : 'MISSING');
+                    
+                    // ✅ CRITICAL: Store token in BOTH storages
                     localStorage.setItem('authToken', data.token);
+                    sessionStorage.setItem('authToken', data.token);
                     localStorage.setItem('userData', JSON.stringify(data.user));
+                    
+                    console.log('✅ Token saved to localStorage:', localStorage.getItem('authToken') ? 'YES' : 'NO');
+                    console.log('✅ Token saved to sessionStorage:', sessionStorage.getItem('authToken') ? 'YES' : 'NO');
+                    
+                    // Verify storage
+                    const storedToken = localStorage.getItem('authToken');
+                    if (!storedToken) {
+                        console.error('❌ CRITICAL: Token was NOT saved to localStorage!');
+                        showAlert('Storage error. Please try again or use a different browser.', 'danger');
+                        return;
+                    }
+                    
+                    console.log('✅ Verified token in storage:', storedToken.substring(0, 30) + '...');
                     
                     showAlert('Login successful! Redirecting...', 'success');
                     
@@ -422,10 +444,12 @@
                     }
                     
                     // Always redirect to dashboard after login
+                    console.log('Redirecting to dashboard...');
                     setTimeout(() => {
                         window.location.href = 'dashboard.html';
-                    }, 1500);
+                    }, 1000);
                 } else {
+                    console.error('❌ Login failed:', data.error);
                     showAlert(data.error || 'Login failed', 'danger');
                     
                     // Track failed login
@@ -439,7 +463,7 @@
                     }
                 }
             } catch (error) {
-                console.error('Login error:', error);
+                console.error('❌ Login error:', error);
                 showAlert('Network error. Please try again.', 'danger');
             } finally {
                 // Reset button state
@@ -481,20 +505,19 @@
                 .then(response => {
                     if (response.ok) {
                         console.log('Token valid, redirecting to dashboard');
-                        // User is already logged in, redirect to dashboard
                         window.location.href = 'dashboard.html';
                     } else {
                         console.log('Token invalid, clearing auth data');
-                        // Token is invalid, clear it
                         localStorage.removeItem('authToken');
                         localStorage.removeItem('userData');
+                        sessionStorage.removeItem('authToken');
                     }
                 })
                 .catch((error) => {
                     console.error('Token verification error:', error);
-                    // Token is invalid, clear it
                     localStorage.removeItem('authToken');
                     localStorage.removeItem('userData');
+                    sessionStorage.removeItem('authToken');
                 });
             } else {
                 console.log('No auth token found');
