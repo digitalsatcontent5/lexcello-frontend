@@ -178,6 +178,37 @@
         .trend-down {
             color: #FFB6C1;
         }
+
+        /* Free Test Promo Banner */
+        .free-test-promo {
+            background: linear-gradient(135deg, #48bb78, #38a169);
+            color: white;
+            border: none;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            box-shadow: 0 10px 30px rgba(72, 187, 120, 0.3);
+        }
+
+        .free-test-promo h5 {
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .free-test-promo .btn-light {
+            background: white;
+            color: var(--success-color);
+            font-weight: 700;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .free-test-promo .btn-light:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
         
         /* Content Sections */
         .content-section {
@@ -261,7 +292,7 @@
         
         .test-card.locked {
             border-left-color: #e2e8f0;
-            opacity: 0.7;
+            opacity: 0.8;
         }
         
         .test-header {
@@ -287,6 +318,10 @@
         .test-number.completed {
             background: var(--success-color);
         }
+
+        .test-number.locked {
+            background: #cbd5e0;
+        }
         
         .test-info {
             flex: 1;
@@ -305,6 +340,9 @@
             padding: 6px 12px;
             border-radius: 12px;
             font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
         }
         
         .status-completed {
@@ -318,8 +356,8 @@
         }
         
         .status-locked {
-            background: #e2e8f0;
-            color: #718096;
+            background: #fed7d7;
+            color: #c53030;
         }
 
         .test-score-display {
@@ -392,6 +430,7 @@
             font-weight: 600;
             border: none;
             transition: all 0.3s ease;
+            cursor: pointer;
         }
         
         .btn-start {
@@ -423,8 +462,12 @@
         
         .btn-locked {
             background: #e2e8f0;
-            color: #a0aec0;
-            cursor: not-allowed;
+            color: #718096;
+            cursor: pointer;
+        }
+
+        .btn-locked:hover {
+            background: #cbd5e0;
         }
         
         /* Performance Chart */
@@ -490,63 +533,38 @@
             font-size: 12px;
             fill: var(--text-light);
         }
-        
-        /* Study Recommendations */
-        .recommendation-card {
-            background: linear-gradient(135deg, var(--accent-gold), #f7c41f);
-            color: var(--primary-color);
-            border-radius: 15px;
-            padding: 25px;
-            margin-bottom: 20px;
-            position: relative;
-            overflow: hidden;
+
+        /* Achievement Badges */
+        .achievements-container {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin: 15px 0;
         }
 
-        .recommendation-card::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 70%);
-            animation: pulse 4s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 0.5; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.05); }
-        }
-        
-        .recommendation-card h5 {
-            font-weight: 700;
-            margin-bottom: 15px;
-            position: relative;
-            z-index: 2;
-        }
-
-        .recommendation-content {
-            position: relative;
-            z-index: 2;
-        }
-        
-        .recommendation-card .btn {
-            background: var(--primary-color);
+        .achievement-badge {
+            background: var(--success-color);
             color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 8px;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
             font-weight: 600;
-            margin-top: 15px;
-            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
 
-        .recommendation-card .btn:hover {
-            background: var(--primary-hover);
-            transform: translateY(-2px);
+        .achievement-badge.gold {
+            background: var(--accent-gold);
+            color: var(--primary-color);
         }
 
-        /* Enhanced Recent Activity */
+        .achievement-badge.silver {
+            background: #a0aec0;
+            color: white;
+        }
+        
+        /* Recent Activity */
         .activity-item {
             display: flex;
             align-items: center;
@@ -646,36 +664,6 @@
             color: var(--text-light);
             font-weight: 500;
         }
-
-        /* Achievement Badges */
-        .achievements-container {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin: 15px 0;
-        }
-
-        .achievement-badge {
-            background: var(--success-color);
-            color: white;
-            padding: 8px 12px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .achievement-badge.gold {
-            background: var(--accent-gold);
-            color: var(--primary-color);
-        }
-
-        .achievement-badge.silver {
-            background: #a0aec0;
-            color: white;
-        }
         
         /* Loading States */
         .loading {
@@ -687,29 +675,6 @@
         .spinner-border {
             width: 3rem;
             height: 3rem;
-        }
-
-        .skeleton {
-            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-            background-size: 200% 100%;
-            animation: loading 1.5s infinite;
-        }
-
-        @keyframes loading {
-            0% { background-position: 200% 0; }
-            100% { background-position: -200% 0; }
-        }
-
-        .skeleton-text {
-            height: 16px;
-            border-radius: 4px;
-            margin: 8px 0;
-        }
-
-        .skeleton-title {
-            height: 24px;
-            border-radius: 6px;
-            margin: 12px 0;
         }
         
         /* Footer */
@@ -729,6 +694,7 @@
         .footer-links a:hover {
             color: var(--primary-color);
         }
+
         /* Notification styles */
         .notification {
             position: fixed;
@@ -742,6 +708,7 @@
             opacity: 0;
             transform: translateX(300px);
             transition: all 0.3s ease;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
         }
         
         .notification.show {
@@ -760,6 +727,7 @@
         .notification.info {
             background: #17a2b8;
         }
+        
         /* Responsive */
         @media (max-width: 768px) {
             .welcome-text h1 {
@@ -850,6 +818,9 @@
                     </div>
                 </div>
             </div>
+            
+            <!-- Free Test Promo Banner (will be shown for free users) -->
+            <div id="freeTestPromo"></div>
         </div>
     </section>
 
@@ -891,14 +862,11 @@
                                 <i class="fas fa-chart-area fa-3x text-secondary mb-3"></i>
                                 <div class="h5">Score Progress</div>
                                 <div class="text-muted" id="progressText">Complete your first test to see progress</div>
-                                <div class="mt-3" id="improvementBadge">
-                                </div>
+                                <div class="mt-3" id="improvementBadge"></div>
                             </div>
                         </div>
                     </div>
                 </div>
-
-
 
                 <!-- Achievements -->
                 <div class="content-section">
@@ -955,8 +923,12 @@
                             </div>
                         </div>
                         <div class="test-detail">
+                            <span class="detail-label">Your Package:</span>
+                            <span class="detail-value" id="userPackageDisplay">Loading...</span>
+                        </div>
+                        <div class="test-detail">
                             <span class="detail-label">Account Status:</span>
-                            <span class="detail-value text-success">Active</span>
+                            <span class="detail-value text-success" id="accountStatus">Active</span>
                         </div>
                         <div class="test-detail">
                             <span class="detail-label">Tests Available:</span>
@@ -980,12 +952,14 @@
                     <a href="privacy-policy.html">Privacy Policy</a>
                     <a href="terms-of-service.html">Terms of Service</a>
                 </div>
-                <p class="text-muted">&copy; 2024 Lexcello. All rights reserved.</p>
+                <p class="text-muted">&copy; 2025 Lexcello. All rights reserved.</p>
             </div>
         </div>
     </footer>
-<!-- Notification container -->
+
+    <!-- Notification container -->
     <div id="notification" class="notification"></div>
+    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     
     <script>
@@ -994,6 +968,7 @@
         let currentUser = null;
         let userTestAttempts = [];
         let availableTests = {};
+        let userSubscriptionInfo = null;
         
         // Authentication check and initialization
         document.addEventListener('DOMContentLoaded', async function() {
@@ -1003,62 +978,183 @@
         async function initializeDashboard() {
             try {
                 await checkAuthStatus();
+                userSubscriptionInfo = await checkUserSubscriptionStatus();
                 await loadUserData();
                 await loadTests();
                 updateProgressStats();
                 updateRecentActivity();
                 generateAchievements();
+                showFreeTestPromoIfNeeded();
             } catch (error) {
                 console.error('Dashboard initialization error:', error);
                 showLoadingError();
             }
         }
-// Function to check user subscription status
-async function checkUserSubscriptionStatus() {
-    const token = localStorage.getItem('authToken');
-    
-    if (!token || !currentUser) {
-        return { isPaid: false, isDemo: true };
-    }
 
-    try {
-        // Use existing profile endpoint to get current subscription status
-        const response = await fetch(`${API_BASE_URL}/auth/profile`, {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            }
-        });
-        
-        if (response.ok) {
-            const userData = await response.json();
-            const subscriptionStatus = userData.subscriptionStatus || 'inactive';
-            const isPaid = subscriptionStatus === 'premium' || subscriptionStatus === 'active';
-            
-            // Check if subscription has expired
-            let isExpired = false;
-            if (userData.subscriptionExpiresAt) {
-                const expirationDate = new Date(userData.subscriptionExpiresAt);
-                isExpired = expirationDate < new Date();
+        // Package Access Functions
+        function getUserPackage(userData) {
+            if (!userData || !userData.subscriptionStatus) {
+                return 'free';
             }
             
-            return {
-                isPaid: isPaid && !isExpired,
-                subscriptionStatus: subscriptionStatus,
-                subscriptionType: isPaid ? 'premium' : 'free',
-                expiresAt: userData.subscriptionExpiresAt,
-                isExpired: isExpired,
-                isDemo: false
-            };
-        } else {
-            return { isPaid: false, isDemo: false };
+            // Check subscription_plan field first (new structure)
+            if (userData.subscriptionPlan) {
+                const plan = userData.subscriptionPlan.toLowerCase();
+                
+                if (plan.includes('foundation') || plan.includes('1-5') || plan.includes('tests-1-5')) {
+                    return 'foundation';
+                }
+                if (plan.includes('advanced') || plan.includes('6-10') || plan.includes('tests-6-10')) {
+                    return 'advanced';
+                }
+                if (plan.includes('complete') || plan.includes('1-10') || plan.includes('premium-complete')) {
+                    return 'complete';
+                }
+            }
+            
+            // Legacy check: if subscriptionStatus is 'premium', treat as complete package
+            if (userData.subscriptionStatus === 'premium' || userData.subscriptionStatus === 'active') {
+                return 'complete'; // Legacy users get full access
+            }
+            
+            return 'free';
         }
-    } catch (error) {
-        console.error('Subscription check failed:', error);
-        return { isPaid: false, isDemo: false };
-    }
-}
+
+        function getPackageDisplayName(packageType) {
+            const names = {
+                'foundation': 'Foundation (Tests 1-5)',
+                'advanced': 'Advanced (Tests 6-10)',
+                'complete': 'Complete Series (All Tests)',
+                'premium': 'Premium (All Tests)',
+                'free': 'Free (14-Question Test Only)'
+            };
+            return names[packageType] || 'Free Access';
+        }
+
+        function canAccessTest(testId, userPackage) {
+            // NO free tests in the main 10-test series
+            // The free 14-question test is on free-test.html
+            
+            if (!userPackage || userPackage === 'free' || userPackage === 'inactive' || userPackage === 'expired') {
+                return false; // No access to paid tests
+            }
+            
+            // Foundation package: Tests 1-5
+            if (userPackage === 'foundation' || userPackage === 'tests-1-5') {
+                return testId >= 1 && testId <= 5;
+            }
+            
+            // Advanced package: Tests 6-10
+            if (userPackage === 'advanced' || userPackage === 'tests-6-10') {
+                return testId >= 6 && testId <= 10;
+            }
+            
+            // Complete package OR legacy premium: All tests 1-10
+            if (userPackage === 'complete' || userPackage === 'premium' || userPackage === 'premium-12') {
+                return testId >= 1 && testId <= 10;
+            }
+            
+            return false;
+        }
+
+        async function checkUserSubscriptionStatus() {
+            const token = localStorage.getItem('authToken');
+            
+            if (!token || !currentUser) {
+                return { 
+                    isPaid: false, 
+                    isDemo: true,
+                    packageType: 'free',
+                    accessibleTests: [] // NO tests in main series for free users
+                };
+            }
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/auth/profile`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                if (response.ok) {
+                    const userData = await response.json();
+                    const subscriptionStatus = userData.subscriptionStatus || 'inactive';
+                    const packageType = getUserPackage(userData);
+                    const isPaid = subscriptionStatus === 'premium' || subscriptionStatus === 'active';
+                    
+                    // Check if subscription has expired
+                    let isExpired = false;
+                    if (userData.subscriptionExpiresAt) {
+                        const expirationDate = new Date(userData.subscriptionExpiresAt);
+                        isExpired = expirationDate < new Date();
+                    }
+                    
+                    // Determine accessible tests based on package
+                    let accessibleTests = []; // NO free tests - all require payment
+                    
+                    if (isPaid && !isExpired) {
+                        if (packageType === 'foundation') {
+                            accessibleTests = [1, 2, 3, 4, 5];
+                        } else if (packageType === 'advanced') {
+                            accessibleTests = [6, 7, 8, 9, 10];
+                        } else if (packageType === 'complete' || packageType === 'premium') {
+                            accessibleTests = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+                        }
+                    }
+                    
+                    return {
+                        isPaid: isPaid && !isExpired,
+                        subscriptionStatus: subscriptionStatus,
+                        subscriptionType: packageType,
+                        packageType: packageType,
+                        packageName: getPackageDisplayName(packageType),
+                        expiresAt: userData.subscriptionExpiresAt,
+                        isExpired: isExpired,
+                        isDemo: false,
+                        accessibleTests: accessibleTests
+                    };
+                } else {
+                    return { 
+                        isPaid: false, 
+                        isDemo: false,
+                        packageType: 'free',
+                        accessibleTests: []
+                    };
+                }
+            } catch (error) {
+                console.error('Subscription check failed:', error);
+                return { 
+                    isPaid: false, 
+                    isDemo: false,
+                    packageType: 'free',
+                    accessibleTests: []
+                };
+            }
+        }
+
+        function showFreeTestPromoIfNeeded() {
+            const userPackage = getUserPackage(currentUser);
+            
+            if (!userPackage || userPackage === 'free' || userPackage === 'inactive') {
+                const promoContainer = document.getElementById('freeTestPromo');
+                promoContainer.innerHTML = `
+                    <div class="free-test-promo">
+                        <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+                            <div>
+                                <h5><i class="fas fa-gift me-2"></i>Try Our Free 14-Question Practice Test!</h5>
+                                <p class="mb-0">Score 40%+ to earn an exclusive scholarship discount (30-50% off) on our premium packages.</p>
+                            </div>
+                            <a href="free-test.html" class="btn btn-light btn-lg">
+                                <i class="fas fa-rocket me-2"></i>Start Free Test
+                            </a>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
         async function checkAuthStatus() {
             const token = localStorage.getItem('authToken');
             if (token) {
@@ -1075,7 +1171,6 @@ async function checkUserSubscriptionStatus() {
                         currentUser = await response.json();
                         updateUserInfo();
                     } else {
-                        // Token invalid, remove it
                         localStorage.removeItem('authToken');
                         currentUser = null;
                     }
@@ -1088,7 +1183,7 @@ async function checkUserSubscriptionStatus() {
 
         function updateUserInfo() {
             if (currentUser) {
-                const userName = currentUser.name || currentUser.email || 'Student';
+                const userName = currentUser.name || currentUser.firstName || currentUser.email || 'Student';
                 const firstName = userName.split(' ')[0] || userName.split('@')[0] || 'Student';
                 
                 document.getElementById('userName').textContent = firstName;
@@ -1097,13 +1192,11 @@ async function checkUserSubscriptionStatus() {
             }
         }
         
-        // Load user test attempts and performance data
         async function loadUserData() {
             try {
                 userTestAttempts = [];
                 
                 if (currentUser) {
-                    // Try to fetch user's test attempts from API using existing endpoint
                     try {
                         const token = localStorage.getItem('authToken');
                         const response = await fetch(`${API_BASE_URL}/user/test-history`, {
@@ -1115,7 +1208,6 @@ async function checkUserSubscriptionStatus() {
                         
                         if (response.ok) {
                             const data = await response.json();
-                            // Convert test-history format to the format dashboard expects
                             userTestAttempts = (data.history || []).map(attempt => ({
                                 test_id: attempt.testId,
                                 score: attempt.percentage,
@@ -1129,20 +1221,18 @@ async function checkUserSubscriptionStatus() {
                             console.log('Loaded user test attempts:', userTestAttempts);
                         }
                     } catch (error) {
-                        console.log('Could not fetch user test attempts, checking localStorage');
+                        console.log('Could not fetch user test attempts');
                     }
                 }
 
-                // Also check localStorage for recent test results
                 const recentResults = sessionStorage.getItem('testResults');
                 if (recentResults) {
                     try {
                         const result = JSON.parse(recentResults);
                         if (result && result.score !== undefined) {
-                            // Add to attempts if not already present
                             const existingAttempt = userTestAttempts.find(a => 
                                 a.test_id === (result.test_id || 1) && 
-                                Math.abs(new Date(a.completed_at) - new Date()) < 60000 // Within last minute
+                                Math.abs(new Date(a.completed_at) - new Date()) < 60000
                             );
                             
                             if (!existingAttempt) {
@@ -1154,7 +1244,6 @@ async function checkUserSubscriptionStatus() {
                                     total_questions: result.total_questions || 42,
                                     completed_at: new Date().toISOString()
                                 });
-                                console.log('Added recent test result to attempts');
                             }
                         }
                     } catch (error) {
@@ -1167,7 +1256,6 @@ async function checkUserSubscriptionStatus() {
             }
         }
         
-        // Load available tests with content checking
         async function loadTests() {
             try {
                 console.log('Loading tests...');
@@ -1182,7 +1270,6 @@ async function checkUserSubscriptionStatus() {
             }
         }
         
-        // Check which tests actually have questions
         async function checkTestContent() {
             const testStatuses = {};
             
@@ -1195,14 +1282,11 @@ async function checkUserSubscriptionStatus() {
                         let questionCount = 0;
                         
                         if (data.questionCount !== undefined) {
-                        questionCount = data.questionCount;
+                            questionCount = data.questionCount;
                         } else if (Array.isArray(data)) {
                             questionCount = data.length;
                         } else if (data.questions && Array.isArray(data.questions)) {
                             questionCount = data.questions.length;
-                        } else if (data.message && data.message.includes('questions found')) {
-                            const match = data.message.match(/(\d+)\s+questions?\s+found/i);
-                            questionCount = match ? parseInt(match[1]) : 0;
                         } else if (data.count !== undefined) {
                             questionCount = data.count;
                         }
@@ -1231,7 +1315,6 @@ async function checkUserSubscriptionStatus() {
             return testStatuses;
         }
         
-        // Render tests with user progress integration
         function renderTestsWithUserProgress(testStatuses) {
             const container = document.getElementById('testsContainer');
             container.innerHTML = '<div class="tests-grid"></div>';
@@ -1239,49 +1322,81 @@ async function checkUserSubscriptionStatus() {
             
             let testsHTML = '';
             
-            // Render each test with user progress
+            const userPackage = getUserPackage(currentUser);
+            
             for (let testId = 1; testId <= 10; testId++) {
                 const status = testStatuses[testId] || { hasContent: false, questionCount: 0, status: 'empty' };
                 const userAttempts = userTestAttempts.filter(attempt => attempt.test_id === testId);
                 const hasCompleted = userAttempts.length > 0;
                 
-                // FIXED: Proper score conversion for best score calculation
-let bestScore = 0;
-if (hasCompleted) {
-    bestScore = Math.max(...userAttempts.map(attempt => {
-        // Calculate percentage score from correct_answers and total_questions
-        let score = attempt.score;
-        
-        // If score is undefined or invalid, calculate from correct_answers
-        if (score === undefined || score === null || isNaN(score)) {
-            if (attempt.correct_answers !== undefined && attempt.total_questions > 0) {
-                score = Math.round((attempt.correct_answers / attempt.total_questions) * 100);
-            } else {
-                score = 0;
-            }
-        } else {
-            // Handle string format like "85%" or "85"
-            if (typeof score === 'string') {
-                score = score.replace('%', '');
-                score = parseFloat(score);
-            } else {
-                score = Number(score);
-            }
-        }
-        
-        return isNaN(score) ? 0 : score;
-    }));
-}
+                const canAccess = canAccessTest(testId, userPackage);
+                
+                let bestScore = 0;
+                if (hasCompleted) {
+                    bestScore = Math.max(...userAttempts.map(attempt => {
+                        let score = attempt.score;
+                        
+                        if (score === undefined || score === null || isNaN(score)) {
+                            if (attempt.correct_answers !== undefined && attempt.total_questions > 0) {
+                                score = Math.round((attempt.correct_answers / attempt.total_questions) * 100);
+                            } else {
+                                score = 0;
+                            }
+                        } else {
+                            if (typeof score === 'string') {
+                                score = score.replace('%', '');
+                                score = parseFloat(score);
+                            } else {
+                                score = Number(score);
+                            }
+                        }
+                        
+                        return isNaN(score) ? 0 : score;
+                    }));
+                }
                 
                 const latestAttempt = hasCompleted ? userAttempts[userAttempts.length - 1] : null;
                 
-                if (status.hasContent || testId === 1) {
-                    const cardClass = hasCompleted ? 'completed' : (status.hasContent ? 'available' : 'locked');
-                    const statusText = hasCompleted ? `Completed (${Math.round(bestScore)}%)` : (status.hasContent ? 'Ready to Start' : 'No Content');
-                    const statusClass = hasCompleted ? 'status-completed' : (status.hasContent ? 'status-available' : 'status-locked');
+                if (status.hasContent || testId <= 10) {
+                    const cardClass = hasCompleted ? 'completed' : (canAccess && status.hasContent ? 'available' : 'locked');
+                    
+                    let statusText = '';
+                    let statusClass = '';
+                    
+                    if (!canAccess) {
+                        if (testId >= 1 && testId <= 5) {
+                            statusText = 'Requires Foundation or Complete';
+                        } else if (testId >= 6 && testId <= 10) {
+                            statusText = 'Requires Advanced or Complete';
+                        }
+                        statusClass = 'status-locked';
+                    } else if (hasCompleted) {
+                        statusText = `Completed (${Math.round(bestScore)}%)`;
+                        statusClass = 'status-completed';
+                    } else if (status.hasContent) {
+                        statusText = 'Ready to Start';
+                        statusClass = 'status-available';
+                    } else {
+                        statusText = 'Coming Soon';
+                        statusClass = 'status-locked';
+                    }
                     
                     let actionButtons = '';
-                    if (status.hasContent) {
+                    
+                    if (!canAccess) {
+                        let upgradeText = '';
+                        if (testId >= 1 && testId <= 5) {
+                            upgradeText = userPackage === 'advanced' ? 'Upgrade to Complete' : 'Get Foundation or Complete';
+                        } else {
+                            upgradeText = userPackage === 'foundation' ? 'Upgrade to Complete' : 'Get Advanced or Complete';
+                        }
+                        
+                        actionButtons = `
+                            <button class="btn btn-test-action btn-locked" onclick="upgradePrompt('${upgradeText}', ${testId})">
+                                <i class="fas fa-lock me-1"></i>${upgradeText}
+                            </button>
+                        `;
+                    } else if (status.hasContent) {
                         if (hasCompleted) {
                             actionButtons = `
                                 <button class="btn btn-test-action btn-review" onclick="viewTestResults(${testId})">
@@ -1301,21 +1416,23 @@ if (hasCompleted) {
                     } else {
                         actionButtons = `
                             <button class="btn btn-test-action btn-locked" disabled>
-                                <i class="fas fa-lock me-1"></i>Add Content
+                                <i class="fas fa-clock me-1"></i>Coming Soon
                             </button>
                         `;
                     }
 
-                    // Calculate progress for this test
                     const progress = hasCompleted ? 100 : 0;
                     
                     testsHTML += `
                         <div class="test-card ${cardClass}">
                             <div class="test-header">
-                                <div class="test-number ${hasCompleted ? 'completed' : ''}">${testId}</div>
+                                <div class="test-number ${hasCompleted ? 'completed' : canAccess ? '' : 'locked'}">${testId}</div>
                                 <div class="test-info">
                                     <h4 class="test-title">Practice Test ${testId}</h4>
-                                    <span class="test-status ${statusClass}">${statusText}</span>
+                                    <span class="test-status ${statusClass}">
+                                        ${!canAccess ? '<i class="fas fa-lock me-1"></i>' : ''}
+                                        ${statusText}
+                                    </span>
                                 </div>
                                 ${hasCompleted ? `
                                     <div class="test-score-display">
@@ -1328,15 +1445,17 @@ if (hasCompleted) {
                             <div class="test-details">
                                 <div class="test-detail">
                                     <span class="detail-label">Questions:</span>
-                                    <span class="detail-value">${status.questionCount}</span>
+                                    <span class="detail-value">${status.questionCount > 0 ? status.questionCount : 'TBA'}</span>
                                 </div>
                                 <div class="test-detail">
                                     <span class="detail-label">Time Limit:</span>
                                     <span class="detail-value">95 minutes</span>
                                 </div>
                                 <div class="test-detail">
-                                    <span class="detail-label">Progress:</span>
-                                    <span class="detail-value">${progress}%</span>
+                                    <span class="detail-label">Access:</span>
+                                    <span class="detail-value ${canAccess ? 'text-success' : 'text-danger'}">
+                                        ${canAccess ? '<i class="fas fa-check-circle"></i> Available' : '<i class="fas fa-lock"></i> Locked'}
+                                    </span>
                                 </div>
                                 ${hasCompleted && latestAttempt ? `
                                     <div class="test-detail">
@@ -1357,86 +1476,57 @@ if (hasCompleted) {
             }
             
             testsGrid.innerHTML = testsHTML;
-            console.log(`Rendered tests with user progress`);
+            console.log(`Rendered tests with package-based access control`);
         }
 
         function updateTestsAvailableCount(testStatuses) {
-            const availableCount = Object.values(testStatuses).filter(s => s.hasContent).length;
-            document.getElementById('testsAvailable').textContent = availableCount;
+            const userPackage = getUserPackage(currentUser);
+            const accessibleTests = userSubscriptionInfo?.accessibleTests || [];
+            const availableWithContent = accessibleTests.filter(testId => testStatuses[testId]?.hasContent).length;
+            
+            document.getElementById('testsAvailable').textContent = availableWithContent;
         }
         
-        // Fallback rendering
         function renderTestsFallback() {
             const container = document.getElementById('testsContainer');
             container.innerHTML = `
                 <div class="alert alert-warning mb-4">
                     <i class="fas fa-exclamation-triangle me-2"></i>
-                    <strong>Connection Issue:</strong> Using cached data. Some features may be limited.
-                </div>
-                <div class="tests-grid">
-                    <div class="test-card available">
-                        <div class="test-header">
-                            <div class="test-number">1</div>
-                            <div class="test-info">
-                                <h4 class="test-title">Practice Test 1</h4>
-                                <span class="test-status status-available">Available</span>
-                            </div>
-                        </div>
-                        <div class="test-details">
-                            <div class="test-detail">
-                                <span class="detail-label">Questions:</span>
-                                <span class="detail-value">42</span>
-                            </div>
-                            <div class="test-detail">
-                                <span class="detail-label">Time Limit:</span>
-                                <span class="detail-value">95 minutes</span>
-                            </div>
-                        </div>
-                        <div class="test-actions">
-                            <button class="btn btn-test-action btn-start" onclick="startTest(1)">
-                                <i class="fas fa-play me-1"></i>Start Test
-                            </button>
-                        </div>
-                    </div>
+                    <strong>Connection Issue:</strong> Unable to load tests. Please refresh the page.
                 </div>
             `;
         }
         
-        // FIXED: Update progress statistics with proper number conversion
         function updateProgressStats() {
             const completedTests = userTestAttempts.length;
             const uniqueTests = [...new Set(userTestAttempts.map(a => a.test_id))].length;
             
-            // FIXED: Ensure scores are properly converted to numbers and filter invalid ones
-const validScores = userTestAttempts
-    .map(attempt => {
-        let score = attempt.score;
-        
-        // If score is undefined or invalid, calculate from correct_answers
-        if (score === undefined || score === null || isNaN(score)) {
-            if (attempt.correct_answers !== undefined && attempt.total_questions > 0) {
-                score = Math.round((attempt.correct_answers / attempt.total_questions) * 100);
-            } else {
-                score = 0;
-            }
-        } else {
-            // Handle different score formats
-            if (typeof score === 'string') {
-                score = score.replace('%', ''); // Remove % if present
-                score = parseFloat(score);
-            } else {
-                score = Number(score);
-            }
-        }
-        return isNaN(score) ? 0 : score;
-    })
-    .filter(score => score > 0);
+            const validScores = userTestAttempts
+                .map(attempt => {
+                    let score = attempt.score;
+                    
+                    if (score === undefined || score === null || isNaN(score)) {
+                        if (attempt.correct_answers !== undefined && attempt.total_questions > 0) {
+                            score = Math.round((attempt.correct_answers / attempt.total_questions) * 100);
+                        } else {
+                            score = 0;
+                        }
+                    } else {
+                        if (typeof score === 'string') {
+                            score = score.replace('%', '');
+                            score = parseFloat(score);
+                        } else {
+                            score = Number(score);
+                        }
+                    }
+                    return isNaN(score) ? 0 : score;
+                })
+                .filter(score => score > 0);
             
             const totalScore = validScores.reduce((sum, score) => sum + score, 0);
             const averageScore = validScores.length > 0 ? Math.round(totalScore / validScores.length) : 0;
             const bestScore = validScores.length > 0 ? Math.max(...validScores) : 0;
             
-            // Calculate improvement with validation
             let improvement = 0;
             if (validScores.length >= 2) {
                 const firstScore = validScores[0];
@@ -1446,22 +1536,18 @@ const validScores = userTestAttempts
                 }
             }
 
-            // Calculate study streak (simplified)
             const studyStreak = Math.min(uniqueTests * 2, 14);
             
-            // Animate progress numbers
             animateNumber('testsCompleted', uniqueTests);
             animateNumber('averageScore', averageScore, '%');
             animateNumber('bestScore', bestScore, '%');
             animateNumber('studyStreak', studyStreak);
 
-            // Update trends
             updateTrend('testsCompletedTrend', uniqueTests > 0 ? 'up' : '', uniqueTests > 0 ? `+${uniqueTests} this week` : '');
             updateTrend('averageScoreTrend', improvement > 0 ? 'up' : improvement < 0 ? 'down' : '', improvement !== 0 ? `${improvement > 0 ? '+' : ''}${improvement}%` : '');
             updateTrend('bestScoreTrend', bestScore > averageScore ? 'up' : '', bestScore > 0 ? `${bestScore - averageScore > 0 ? '+' : ''}${bestScore - averageScore}% above avg` : '');
             updateTrend('studyStreakTrend', studyStreak > 0 ? 'up' : '', studyStreak > 0 ? 'Keep it up!' : '');
             
-            // Update mini stats
             const totalTime = userTestAttempts.reduce((sum, attempt) => sum + (attempt.time_spent || 0), 0);
             const accuracy = completedTests > 0 ? Math.round((userTestAttempts.reduce((sum, attempt) => sum + (attempt.correct_answers || 0), 0) / userTestAttempts.reduce((sum, attempt) => sum + (attempt.total_questions || 42), 0)) * 100) : 0;
             
@@ -1469,11 +1555,29 @@ const validScores = userTestAttempts
             document.getElementById('accuracy').textContent = `${accuracy}%`;
             document.getElementById('improvement').textContent = improvement > 0 ? `+${improvement}%` : improvement < 0 ? `${improvement}%` : '0%';
             
-            // Update next goal
             const nextTestId = Math.max(1, uniqueTests + 1);
             document.getElementById('nextGoal').textContent = nextTestId <= 10 ? `Test ${nextTestId}` : 'Complete!';
 
-            // Update performance chart
+            // Update package display
+            const userPackage = getUserPackage(currentUser);
+            const packageDisplay = document.getElementById('userPackageDisplay');
+            if (packageDisplay) {
+                packageDisplay.textContent = getPackageDisplayName(userPackage);
+                packageDisplay.className = 'detail-value ' + (userPackage !== 'free' ? 'text-success' : 'text-warning');
+            }
+
+            // Update account status
+            const accountStatus = document.getElementById('accountStatus');
+            if (accountStatus) {
+                if (userPackage !== 'free') {
+                    accountStatus.textContent = 'Premium';
+                    accountStatus.className = 'detail-value text-success';
+                } else {
+                    accountStatus.textContent = 'Free';
+                    accountStatus.className = 'detail-value text-warning';
+                }
+            }
+
             updatePerformanceChart();
         }
 
@@ -1485,43 +1589,41 @@ const validScores = userTestAttempts
 
         function updatePerformanceChart() {
             if (userTestAttempts.length === 0) {
-                return; // Keep placeholder
+                return;
             }
 
             const container = document.getElementById('performanceChartContainer');
             
-            // Group attempts by test_id and get best score for each
-const testScores = {};
-userTestAttempts.forEach(attempt => {
-    // FIXED: Calculate score from correct_answers if score is undefined
-    let score = attempt.score;
-    
-    if (score === undefined || score === null || isNaN(score)) {
-        if (attempt.correct_answers !== undefined && attempt.total_questions > 0) {
-            score = Math.round((attempt.correct_answers / attempt.total_questions) * 100);
-        } else {
-            score = 0;
-        }
-    } else {
-        if (typeof score === 'string') {
-            score = score.replace('%', '');
-            score = parseFloat(score);
-        } else {
-            score = Number(score);
-        }
-    }
-    
-    if (isNaN(score)) score = 0;
-    
-    if (!testScores[attempt.test_id] || testScores[attempt.test_id] < score) {
-        testScores[attempt.test_id] = score;
-    }
-});
+            const testScores = {};
+            userTestAttempts.forEach(attempt => {
+                let score = attempt.score;
+                
+                if (score === undefined || score === null || isNaN(score)) {
+                    if (attempt.correct_answers !== undefined && attempt.total_questions > 0) {
+                        score = Math.round((attempt.correct_answers / attempt.total_questions) * 100);
+                    } else {
+                        score = 0;
+                    }
+                } else {
+                    if (typeof score === 'string') {
+                        score = score.replace('%', '');
+                        score = parseFloat(score);
+                    } else {
+                        score = Number(score);
+                    }
+                }
+                
+                if (isNaN(score)) score = 0;
+                
+                if (!testScores[attempt.test_id] || testScores[attempt.test_id] < score) {
+                    testScores[attempt.test_id] = score;
+                }
+            });
+
             const scores = Object.values(testScores);
             const testNumbers = Object.keys(testScores).sort((a, b) => a - b);
 
             if (scores.length < 2) {
-                // Show single score with enhanced styling
                 container.innerHTML = `
                     <div class="chart-placeholder">
                         <div style="background: linear-gradient(135deg, var(--success-color), #38a169); width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; color: white; font-size: 1.5rem; font-weight: 700;">
@@ -1537,102 +1639,21 @@ userTestAttempts.forEach(attempt => {
                 return;
             }
 
-            // Create enhanced interactive chart for multiple tests
+            // For multiple tests, create a simple chart
             const width = 300;
             const height = 200;
             const padding = 50;
             const maxScore = Math.max(...scores, 100);
             const minScore = Math.max(0, Math.min(...scores) - 10);
 
-            // Calculate improvement
             const firstScore = scores[0];
             const latestScore = scores[scores.length - 1];
             const bestScore = Math.max(...scores);
             const averageScore = Math.round(scores.reduce((a, b) => a + b) / scores.length);
             const improvement = Math.round(((bestScore - firstScore) / firstScore) * 100);
 
-            let chartHTML = `
-                <div style="position: relative; width: 100%; height: 100%;">
-                    <svg class="performance-chart-real" viewBox="0 0 ${width} ${height}" style="width: 100%; height: 250px;">
-                        <defs>
-                            <linearGradient id="gradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                                <stop offset="0%" style="stop-color:var(--secondary-color);stop-opacity:0.4" />
-                                <stop offset="100%" style="stop-color:var(--secondary-color);stop-opacity:0.1" />
-                            </linearGradient>
-                            <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
-                                <feDropShadow dx="2" dy="2" stdDeviation="3" flood-color="rgba(0,0,0,0.3)"/>
-                            </filter>
-                        </defs>
-                        
-                        <!-- Grid lines -->
-                        <g class="grid" opacity="0.3">
-                            <line x1="${padding}" y1="${padding}" x2="${padding}" y2="${height - padding}" stroke="#e2e8f0" stroke-width="1"/>
-                            <line x1="${padding}" y1="${height - padding}" x2="${width - padding}" y2="${height - padding}" stroke="#e2e8f0" stroke-width="1"/>
-                            
-                            <!-- Horizontal grid lines -->
-                            ${[25, 50, 75, 100].map(percent => {
-                                const y = height - padding - ((percent - minScore) * (height - 2 * padding)) / (maxScore - minScore);
-                                return `<line x1="${padding}" y1="${y}" x2="${width - padding}" y2="${y}" stroke="#e2e8f0" stroke-width="1" opacity="0.5"/>`;
-                            }).join('')}
-                        </g>
-                        
-                        <!-- Y-axis labels -->
-                        ${[0, 25, 50, 75, 100].map(percent => {
-                            const y = height - padding - ((percent - minScore) * (height - 2 * padding)) / (maxScore - minScore);
-                            return `<text x="${padding - 10}" y="${y + 5}" class="chart-label" text-anchor="end" fill="var(--text-light)" font-size="11">${percent}%</text>`;
-                        }).join('')}
-            `;
-
-            // Create points and lines
-            const points = scores.map((score, index) => {
-                const x = padding + (index * (width - 2 * padding)) / (scores.length - 1);
-                const y = height - padding - ((score - minScore) * (height - 2 * padding)) / (maxScore - minScore);
-                return { x, y, score, test: testNumbers[index] };
-            });
-
-            // Draw area under curve
-            let areaPath = `M ${points[0].x} ${height - padding}`;
-            points.forEach(point => {
-                areaPath += ` L ${point.x} ${point.y}`;
-            });
-            areaPath += ` L ${points[points.length - 1].x} ${height - padding} Z`;
-            
-            chartHTML += `<path d="${areaPath}" fill="url(#gradient)"/>`;
-
-            // Draw smooth connecting line
-            let linePath = `M ${points[0].x} ${points[0].y}`;
-            for (let i = 1; i < points.length; i++) {
-                const cp1x = points[i - 1].x + (points[i].x - points[i - 1].x) / 3;
-                const cp1y = points[i - 1].y;
-                const cp2x = points[i].x - (points[i].x - points[i - 1].x) / 3;
-                const cp2y = points[i].y;
-                linePath += ` C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${points[i].x} ${points[i].y}`;
-            }
-            chartHTML += `<path d="${linePath}" stroke="var(--secondary-color)" stroke-width="3" fill="none" stroke-linecap="round"/>`;
-
-            // Draw enhanced points with hover effects
-            points.forEach((point, index) => {
-                const isHighest = point.score === bestScore;
-                const pointColor = isHighest ? 'var(--accent-gold)' : 'var(--secondary-color)';
-                chartHTML += `
-                    <circle cx="${point.x}" cy="${point.y}" r="6" fill="${pointColor}" stroke="white" stroke-width="3" 
-                            style="cursor: pointer; transition: all 0.3s ease; filter: url(#shadow)" 
-                            onmouseover="this.setAttribute('r', '8'); showTooltip(event, 'Test ${point.test}: ${Math.round(point.score)}%')"
-                            onmouseout="this.setAttribute('r', '6'); hideTooltip()"
-                            onclick="highlightTest(${point.test})"/>
-                `;
-            });
-
-            // X-axis labels
-            points.forEach(point => {
-                chartHTML += `<text x="${point.x}" y="${height - padding + 20}" class="chart-label" text-anchor="middle" fill="var(--text-light)" font-size="12">Test ${point.test}</text>`;
-            });
-
-            chartHTML += `</svg>`;
-
-            // Add summary statistics below chart
-            chartHTML += `
-                <div style="margin-top: 20px;">
+            container.innerHTML = `
+                <div style="padding: 15px;">
                     <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 15px;">
                         <div style="background: var(--bg-light); padding: 12px; border-radius: 8px; text-align: center;">
                             <div style="font-size: 1.3rem; font-weight: 700; color: var(--primary-color);">${averageScore}%</div>
@@ -1644,75 +1665,44 @@ userTestAttempts.forEach(attempt => {
                         </div>
                     </div>
                     
-                    <div style="background: linear-gradient(135deg, #e6f3ff, #f0f8ff); border-left: 4px solid ${improvement > 0 ? 'var(--success-color)' : improvement < 0 ? 'var(--danger-color)' : 'var(--warning-color)'}; padding: 12px; border-radius: 8px;">
+                    <div style="background: linear-gradient(135deg, #e6f3ff, #f0f8ff); border-left: 4px solid ${improvement > 0 ? 'var(--success-color)' : 'var(--warning-color)'}; padding: 12px; border-radius: 8px;">
                         <div style="font-weight: 600; color: var(--text-dark); margin-bottom: 3px;">
-                            ${improvement > 0 ? '📈 Improving Trend' : improvement < 0 ? '📉 Focus Needed' : '📊 Consistent Performance'}
+                            ${improvement > 0 ? '📈 Improving Trend' : '📊 Keep Practicing'}
                         </div>
                         <div style="font-size: 0.85rem; color: var(--text-light);">
-                            ${improvement > 0 ? `+${improvement}% improvement from first to best score` : 
-                              improvement < 0 ? `${improvement}% change - review weak areas` : 
-                              'Maintaining steady performance across tests'}
+                            ${improvement > 0 ? `+${improvement}% improvement from first to best score` : 'You\'re building consistency across tests'}
                         </div>
                     </div>
                 </div>
-                
-                <!-- Tooltip element -->
-                <div id="chartTooltip" style="position: absolute; background: var(--primary-color); color: white; padding: 6px 10px; border-radius: 6px; font-size: 12px; font-weight: 600; pointer-events: none; opacity: 0; transition: opacity 0.3s ease; z-index: 1000;"></div>
-            </div>
             `;
-
-            container.innerHTML = chartHTML;
-
-            // Add tooltip functionality
-            window.showTooltip = function(event, text) {
-                const tooltip = document.getElementById('chartTooltip');
-                tooltip.textContent = text;
-                tooltip.style.opacity = '1';
-                const rect = container.getBoundingClientRect();
-                tooltip.style.left = (event.clientX - rect.left + 10) + 'px';
-                tooltip.style.top = (event.clientY - rect.top - 30) + 'px';
-            };
-
-            window.hideTooltip = function() {
-                const tooltip = document.getElementById('chartTooltip');
-                tooltip.style.opacity = '0';
-            };
-
-            window.highlightTest = function(testId) {
-                console.log(`Highlighting test ${testId} - could navigate to test details`);
-            };
         }
         
-        // Update recent activity with real data
         function updateRecentActivity() {
             const activityContainer = document.getElementById('recentActivity');
             let activityHTML = '';
 
-            // Sort attempts by date
             const sortedAttempts = [...userTestAttempts].sort((a, b) => new Date(b.completed_at) - new Date(a.completed_at));
 
             sortedAttempts.slice(0, 5).forEach(attempt => {
-    // FIXED: Calculate score from correct_answers if score is undefined
-    let score = attempt.score;
-    
-    if (score === undefined || score === null || isNaN(score)) {
-        if (attempt.correct_answers !== undefined && attempt.total_questions > 0) {
-            score = Math.round((attempt.correct_answers / attempt.total_questions) * 100);
-        } else {
-            score = 0;
-        }
-    } else {
-        if (typeof score === 'string') {
-            score = score.replace('%', '');
-            score = parseFloat(score);
-        } else {
-            score = Number(score);
-        }
-    }
-    
-    if (isNaN(score)) score = 0;
+                let score = attempt.score;
                 
-                const isGoodScore = score >= 70;
+                if (score === undefined || score === null || isNaN(score)) {
+                    if (attempt.correct_answers !== undefined && attempt.total_questions > 0) {
+                        score = Math.round((attempt.correct_answers / attempt.total_questions) * 100);
+                    } else {
+                        score = 0;
+                    }
+                } else {
+                    if (typeof score === 'string') {
+                        score = score.replace('%', '');
+                        score = parseFloat(score);
+                    } else {
+                        score = Number(score);
+                    }
+                }
+                
+                if (isNaN(score)) score = 0;
+                
                 const isGreatScore = score >= 85;
                 
                 activityHTML += `
@@ -1746,12 +1736,10 @@ userTestAttempts.forEach(attempt => {
             activityContainer.innerHTML = activityHTML;
         }
 
-        // Generate achievements based on user progress
         function generateAchievements() {
             const achievementsContainer = document.getElementById('achievementsContainer');
             const completedTests = [...new Set(userTestAttempts.map(a => a.test_id))].length;
             
-            // FIXED: Ensure best score calculation uses proper number conversion
             let bestScore = 0;
             if (userTestAttempts.length > 0) {
                 const validScores = userTestAttempts.map(a => {
@@ -1764,17 +1752,13 @@ userTestAttempts.forEach(attempt => {
             
             const totalAttempts = userTestAttempts.length;
             
-            let achievementsHTML = '';
-
-            // Welcome achievement
-            achievementsHTML += `
+            let achievementsHTML = `
                 <div class="achievement-badge">
                     <i class="fas fa-star"></i>
                     Welcome!
                 </div>
             `;
 
-            // Test completion achievements
             if (completedTests >= 1) {
                 achievementsHTML += `
                     <div class="achievement-badge">
@@ -1802,7 +1786,6 @@ userTestAttempts.forEach(attempt => {
                 `;
             }
 
-            // Score achievements
             if (bestScore >= 70) {
                 achievementsHTML += `
                     <div class="achievement-badge">
@@ -1821,7 +1804,6 @@ userTestAttempts.forEach(attempt => {
                 `;
             }
 
-            // Persistence achievements
             if (totalAttempts >= 5) {
                 achievementsHTML += `
                     <div class="achievement-badge silver">
@@ -1834,7 +1816,6 @@ userTestAttempts.forEach(attempt => {
             achievementsContainer.innerHTML = achievementsHTML;
         }
         
-        // Animate numbers counting up
         function animateNumber(elementId, target, suffix = '') {
             const element = document.getElementById(elementId);
             let current = 0;
@@ -1851,96 +1832,143 @@ userTestAttempts.forEach(attempt => {
             }, 50);
         }
 
-        // Utility functions
         function formatDate(dateString) {
-    // Handle null, undefined, or invalid dates
-    if (!dateString) return 'Recently';
-    
-    try {
-        const date = new Date(dateString);
-        
-        // Check if date is valid
-        if (isNaN(date.getTime())) {
-            return 'Recently';
+            if (!dateString) return 'Recently';
+            
+            try {
+                const date = new Date(dateString);
+                
+                if (isNaN(date.getTime())) {
+                    return 'Recently';
+                }
+                
+                const now = new Date();
+                const diffTime = Math.abs(now - date);
+                const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+                
+                if (diffDays === 0) return 'Today';
+                if (diffDays === 1) return 'Yesterday';
+                if (diffDays <= 7) return `${diffDays} days ago`;
+                if (diffDays <= 30) return `${Math.floor(diffDays / 7)} weeks ago`;
+                
+                return date.toLocaleDateString('en-US', { 
+                    month: 'short', 
+                    day: 'numeric',
+                    year: date.getFullYear() !== now.getFullYear() ? 'numeric' : undefined
+                });
+            } catch (error) {
+                console.error('Date formatting error:', error);
+                return 'Recently';
+            }
         }
-        
-        const now = new Date();
-        const diffTime = Math.abs(now - date);
-        const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-        
-        if (diffDays === 0) return 'Today';
-        if (diffDays === 1) return 'Yesterday';
-        if (diffDays <= 7) return `${diffDays} days ago`;
-        if (diffDays <= 30) return `${Math.floor(diffDays / 7)} weeks ago`;
-        
-        // Format as readable date for older items
-        return date.toLocaleDateString('en-US', { 
-            month: 'short', 
-            day: 'numeric',
-            year: date.getFullYear() !== now.getFullYear() ? 'numeric' : undefined
-        });
-    } catch (error) {
-        console.error('Date formatting error:', error);
-        return 'Recently';
-    }
-}
         
         // Navigation functions
-function startTest(testNumber) {
-    if (!currentUser) {
-        showNotification('Please sign in to access practice tests', 'info');
-        window.location.href = 'login.html';
-        return;
-    }
-    
-    if (testNumber > 1 && currentUser.subscriptionStatus !== 'premium') {
-        showNotification('Premium subscription required for this test', 'info');
-        window.location.href = 'pricing.html';
-        return;
-    }
-    
-    if (confirm(`Ready to start Practice Test ${testNumber}? This test must be completed in one session and will take approximately 95 minutes.`)) {
-        if (testNumber === 1) {
-            window.location.href = 'practice-test-1.html';
-        } else {
-            window.location.href = `practice-test-1.html?test=${testNumber}`;
-        }
-    }
-}
-
-       async function viewTestResults(testNumber) {
-    try {
-        const token = localStorage.getItem('authToken');
-        if (!token) {
-            showNotification('Please sign in to view results', 'error');
-            return;
-        }
-
-        // Fetch the full test attempt data from the backend
-        const response = await fetch(`${API_BASE_URL}/user/test-attempts/${testNumber}`, {
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
+        function startTest(testNumber) {
+            if (!currentUser) {
+                showNotification('Please sign in to access practice tests', 'info');
+                window.location.href = 'login.html';
+                return;
             }
-        });
-
-        if (response.ok) {
-            const attemptData = await response.json();
-            // Store in sessionStorage with the correct key that test-results.html expects
-            sessionStorage.setItem('sectionAResults', JSON.stringify(attemptData));
-            // Navigate to results page
-            window.location.href = `test-results.html?test=${testNumber}`;
-        } else {
-            showNotification('Could not load test results', 'error');
+            
+            const userPackage = getUserPackage(currentUser);
+            const hasAccess = canAccessTest(testNumber, userPackage);
+            
+            if (!hasAccess) {
+                let requiredPackage = '';
+                let upgradeMessage = '';
+                
+                if (testNumber >= 1 && testNumber <= 5) {
+                    requiredPackage = 'Foundation or Complete Package';
+                    upgradeMessage = userPackage === 'advanced' 
+                        ? 'Upgrade to Complete Package to access Tests 1-5' 
+                        : 'Purchase Foundation or Complete Package to access Tests 1-5';
+                } else if (testNumber >= 6 && testNumber <= 10) {
+                    requiredPackage = 'Advanced or Complete Package';
+                    upgradeMessage = userPackage === 'foundation' 
+                        ? 'Upgrade to Complete Package to access Tests 6-10' 
+                        : 'Purchase Advanced or Complete Package to access Tests 6-10';
+                }
+                
+                showNotification(upgradeMessage, 'info');
+                
+                if (confirm(`Test ${testNumber} requires ${requiredPackage}. Would you like to view pricing?`)) {
+                    try {
+                        gtag('event', 'upgrade_from_test_click', {
+                            'event_category': 'dashboard',
+                            'event_label': `test_${testNumber}`,
+                            'current_package': userPackage || 'none'
+                        });
+                    } catch (error) {
+                        console.error('GA error:', error);
+                    }
+                    
+                    window.location.href = 'pricing.html';
+                }
+                return;
+            }
+            
+            if (confirm(`Ready to start Practice Test ${testNumber}? This test must be completed in one session and will take approximately 95 minutes.`)) {
+                try {
+                    gtag('event', 'test_started', {
+                        'event_category': 'dashboard',
+                        'event_label': `test_${testNumber}`,
+                        'value': testNumber
+                    });
+                } catch (error) {
+                    console.error('GA error:', error);
+                }
+                
+                window.location.href = `practice-test-1.html?test=${testNumber}`;
+            }
         }
-    } catch (error) {
-        console.error('Error loading test results:', error);
-        showNotification('Failed to load test results', 'error');
-    }
-}
+
+        async function viewTestResults(testNumber) {
+            try {
+                const token = localStorage.getItem('authToken');
+                if (!token) {
+                    showNotification('Please sign in to view results', 'error');
+                    return;
+                }
+
+                const response = await fetch(`${API_BASE_URL}/user/test-attempts/${testNumber}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    const attemptData = await response.json();
+                    sessionStorage.setItem('sectionAResults', JSON.stringify(attemptData));
+                    window.location.href = `test-results.html?test=${testNumber}`;
+                } else {
+                    showNotification('Could not load test results', 'error');
+                }
+            } catch (error) {
+                console.error('Error loading test results:', error);
+                showNotification('Failed to load test results', 'error');
+            }
+        }
+
+        function upgradePrompt(requiredPackage, testId) {
+            const message = `Test ${testId} requires ${requiredPackage}. Would you like to view our pricing options?`;
+            
+            if (confirm(message)) {
+                try {
+                    gtag('event', 'upgrade_prompt_clicked', {
+                        'event_category': 'dashboard',
+                        'event_label': `test_${testId}_${requiredPackage}`,
+                        'value': testId
+                    });
+                } catch (error) {
+                    console.error('GA error:', error);
+                }
+                
+                window.location.href = 'pricing.html';
+            }
+        }
 
         function showAllTests() {
-            // Scroll to tests section
             document.querySelector('.tests-grid').scrollIntoView({ behavior: 'smooth' });
         }
         
@@ -1965,12 +1993,21 @@ function startTest(testNumber) {
             `;
         }
         
-        // Error handling
+        function showNotification(message, type = 'info') {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = `notification ${type}`;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
         window.addEventListener('unhandledrejection', function(event) {
             console.error('Unhandled promise rejection:', event.reason);
         });
 
-        // Auto-refresh data every 5 minutes
         setInterval(async () => {
             try {
                 await loadUserData();
@@ -1979,23 +2016,7 @@ function startTest(testNumber) {
             } catch (error) {
                 console.log('Auto-refresh failed:', error);
             }
-        }, 300000); // 5 minutes
-        // Notification function
-        function showNotification(message, type = 'info') {
-            const notification = document.getElementById('notification');
-            notification.textContent = message;
-            notification.className = `notification ${type}`;
-            notification.classList.add('show');
-            
-            // Auto-hide after 3 seconds
-            setTimeout(() => {
-                notification.classList.remove('show');
-            }, 3000);
-        }
+        }, 300000);
     </script>
 </body>
 </html>
-
-
-
-
