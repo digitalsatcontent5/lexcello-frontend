@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free LNAT Practice Test - 14 Questions | Lexcello</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #1a365d;
+            --secondary-color: #2b6cb0;
+            --accent-gold: #d69e2e;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #fafafa;
+        }
+        
+        .test-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 20px 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .test-content {
+            margin-top: 100px;
+            padding: 20px 0 100px 0;
+        }
+        
+        .timer {
+            background: #e53e3e;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: 700;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .timer.warning {
+            animation: pulse 1s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        .question-layout {
+            display: flex;
+            min-height: 600px;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        
+        .passage-panel {
+            width: 55%;
+            background: #f8f9fa;
+            border-right: 2px solid #e2e8f0;
+            padding: 30px;
+            overflow-y: auto;
+            max-height: 600px;
+        }
+        
+        .question-panel {
+            width: 45%;
+            padding: 30px;
+            overflow-y: auto;
+            max-height: 600px;
+        }
+        
+        .option {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 15px 20px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            gap: 15px;
+        }
+        
+        .option:hover {
+            border-color: var(--secondary-color);
+            transform: translateX(5px);
+        }
+        
+        .option.selected {
+            border-color: var(--secondary-color);
+            background: #e6f3ff;
+        }
+        
+        .question-nav {
+            background: var(--primary-color);
+            padding: 20px;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+        
+        .question-grid {
+            display: grid;
+            grid-template-columns: repeat(14, 1fr);
+            gap: 8px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .question-btn {
+            height: 45px;
+            border: 2px solid white;
+            background: transparent;
+            color: white;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
+        .question-btn.current {
+            background: var(--accent-gold);
+            color: var(--primary-color);
+        }
+        
+        .question-btn.answered {
+            background: #48bb78;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 50px;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-header">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="fw-bold fs-5">
+                    <i class="fas fa-graduation-cap me-2"></i>
+                    Free LNAT Practice Test
+                </div>
+                <div class="d-flex align-items-center gap-3">
+                    <span class="fw-bold">Question <span id="currentQuestion">1</span> of 14</span>
+                    <div class="timer" id="timer">32:00</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="test-content">
+        <div class="container">
+            <div id="loadingScreen" class="loading">
+                <div class="spinner-border text-primary" role="status"></div>
+                <p class="mt-3">Loading test questions...</p>
+            </div>
+
+            <div id="testContainer" style="display: none;">
+                <div class="alert alert-warning mb-3">
+                    🎉 <strong>FREE TRIAL</strong> | Complete this test to discover your scholarship eligibility!
+                </div>
+                
+                <div class="question-layout">
+                    <div class="passage-panel">
+                        <h5 class="text-primary border-bottom pb-2 mb-3" id="passageTitle"></h5>
+                        <div id="passageText" style="line-height: 1.8; text-align: justify;"></div>
+                    </div>
+                    
+                    <div class="question-panel">
+                        <h6 class="mb-4" id="questionText"></h6>
+                        <div id="optionsContainer"></div>
+                    </div>
+                </div>
+                
+                <div class="bg-white p-3 border-top mt-3">
+                    <div class="d-flex justify-content-between">
+                        <button class="btn btn-secondary" id="prevBtn" onclick="previousQuestion()">
+                            <i class="fas fa-chevron-left me-2"></i>Previous
+                        </button>
+                        <small class="text-muted align-self-center">
+                            <i class="fas fa-info-circle me-1"></i>Progress auto-saved
+                        </small>
+                        <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()">
+                            Next<i class="fas fa-chevron-right ms-2"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="question-nav">
+        <div class="container">
+            <div class="question-grid" id="questionGrid"></div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="submitModal" tabindex="-1" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title">Submit Your Test?</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-info">
+                        <strong>Progress:</strong>
+                        <div class="mt-2">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            Answered: <span id="answeredCount">0</span> / 14
+                        </div>
+                        <div class="mt-1">
+                            <i class="fas fa-question-circle text-warning me-2"></i>
+                            Unanswered: <span id="unansweredCount">14</span>
+                        </div>
+                    </div>
+                    <p class="mt-3">Ready to see your results and scholarship eligibility?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        Continue Testing
+                    </button>
+                    <button type="button" class="btn btn-success" onclick="submitTest()">
+                        <i class="fas fa-paper-plane me-2"></i>Submit & See Results
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        const API_BASE_URL = 'https://lexcello-backend.onrender.com';
+        
+        let questions = [];
+        let currentQuestionIndex = 0;
+        let userAnswers = {};
+        let timeLeft = 32 * 60;
+        let timerInterval;
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            loadFreeTest();
+        });
+        
+        async function loadFreeTest() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/tests/free/questions`);
+                
+                if (!response.ok) {
+                    throw new Error('Failed to load test');
+                }
+                
+                const data = await response.json();
+                
+                if (!data.success || !data.questions) {
+                    throw new Error('Invalid response format');
+                }
+                
+                questions = data.questions;
+                
+                document.getElementById('loadingScreen').style.display = 'none';
+                document.getElementById('testContainer').style.display = 'block';
+                
+                initializeTest();
+                
+            } catch (error) {
+                console.error('Error loading test:', error);
+                document.getElementById('loadingScreen').innerHTML = `
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        Failed to load test. Please refresh the page.
+                    </div>
+                `;
+            }
+        }
+        
+        function initializeTest() {
+            createQuestionNavigation();
+            loadQuestion(0);
+            startTimer();
+        }
+        
+        function createQuestionNavigation() {
+            const grid = document.getElementById('questionGrid');
+            grid.innerHTML = '';
+            
+            for (let i = 0; i < 14; i++) {
+                const btn = document.createElement('button');
+                btn.className = 'question-btn';
+                btn.textContent = i + 1;
+                btn.onclick = () => loadQuestion(i);
+                grid.appendChild(btn);
+            }
+        }
+        
+        function loadQuestion(index) {
+            if (index < 0 || index >= questions.length) return;
+            
+            currentQuestionIndex = index;
+            const question = questions[index];
+            
+            document.getElementById('currentQuestion').textContent = index + 1;
+            document.getElementById('passageTitle').textContent = question.passage_title;
+            document.getElementById('passageText').textContent = question.passage_text;
+            document.getElementById('questionText').textContent = question.question_text;
+            
+            const optionsContainer = document.getElementById('optionsContainer');
+            optionsContainer.innerHTML = question.options.map(option => `
+                <div class="option ${userAnswers[question.id] === option.label ? 'selected' : ''}" 
+                     onclick="selectAnswer('${option.label}', ${question.id})">
+                    <div class="fw-bold text-primary">${option.label}</div>
+                    <div>${option.text}</div>
+                </div>
+            `).join('');
+            
+            updateQuestionNavigation();
+            updateNavigationButtons();
+            
+            document.querySelector('.passage-panel').scrollTop = 0;
+            document.querySelector('.question-panel').scrollTop = 0;
+        }
+        
+        function selectAnswer(answer, questionId) {
+            userAnswers[questionId] = answer;
+            updateQuestionNavigation();
+            loadQuestion(currentQuestionIndex);
+            
+            setTimeout(() => {
+                if (currentQuestionIndex < questions.length - 1) {
+                    nextQuestion();
+                }
+            }, 300);
+        }
+        
+        function updateQuestionNavigation() {
+            const buttons = document.querySelectorAll('.question-btn');
+            buttons.forEach((btn, index) => {
+                const questionId = questions[index].id;
+                btn.className = 'question-btn';
+                
+                if (index === currentQuestionIndex) {
+                    btn.classList.add('current');
+                } else if (userAnswers[questionId]) {
+                    btn.classList.add('answered');
+                }
+            });
+        }
+        
+        function previousQuestion() {
+            if (currentQuestionIndex > 0) {
+                loadQuestion(currentQuestionIndex - 1);
+            }
+        }
+        
+        function nextQuestion() {
+            if (currentQuestionIndex < questions.length - 1) {
+                loadQuestion(currentQuestionIndex + 1);
+            } else {
+                showSubmitModal();
+            }
+        }
+        
+        function updateNavigationButtons() {
+            document.getElementById('prevBtn').disabled = currentQuestionIndex === 0;
+            
+            const nextBtn = document.getElementById('nextBtn');
+            if (currentQuestionIndex === questions.length - 1) {
+                nextBtn.innerHTML = '<i class="fas fa-check me-2"></i>Submit Test';
+                nextBtn.className = 'btn btn-success';
+                nextBtn.onclick = showSubmitModal;
+            } else {
+                nextBtn.innerHTML = 'Next<i class="fas fa-chevron-right ms-2"></i>';
+                nextBtn.className = 'btn btn-primary';
+                nextBtn.onclick = nextQuestion;
+            }
+        }
+        
+        function startTimer() {
+            updateTimerDisplay();
+            timerInterval = setInterval(function() {
+                timeLeft--;
+                updateTimerDisplay();
+                
+                if (timeLeft <= 300) {
+                    document.getElementById('timer').classList.add('warning');
+                }
+                
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    alert('Time is up! Your test will be submitted automatically.');
+                    submitTest();
+                }
+            }, 1000);
+        }
+        
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            document.getElementById('timer').textContent = 
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+        
+        function showSubmitModal() {
+            const answeredCount = Object.keys(userAnswers).length;
+            const unansweredCount = questions.length - answeredCount;
+            
+            document.getElementById('answeredCount').textContent = answeredCount;
+            document.getElementById('unansweredCount').textContent = unansweredCount;
+            
+            const modal = new bootstrap.Modal(document.getElementById('submitModal'));
+            modal.show();
+        }
+        
+        async function submitTest() {
+            try {
+                clearInterval(timerInterval);
+                
+                const modal = bootstrap.Modal.getInstance(document.getElementById('submitModal'));
+                if (modal) modal.hide();
+                
+                document.getElementById('testContainer').innerHTML = `
+                    <div class="loading">
+                        <div class="spinner-border text-primary"></div>
+                        <p class="mt-3">Calculating your results...</p>
+                    </div>
+                `;
+                
+                const timeSpent = (32 * 60) - timeLeft;
+                
+                const answersArray = Object.entries(userAnswers).map(([questionId, letter]) => {
+    return {
+        questionId: parseInt(questionId),
+        selectedAnswer: letter  // ✅ Send 'A', 'B', 'C', 'D' directly
+    };
+});
+                
+                const response = await fetch(`${API_BASE_URL}/api/tests/free/submit`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        answers: answersArray,
+                        timeSpent: timeSpent
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Submission failed');
+                }
+                
+                const results = await response.json();
+                
+                sessionStorage.setItem('freeTestResults', JSON.stringify(results));
+                window.location.href = 'free-test-results.html';
+                
+            } catch (error) {
+                console.error('Error submitting test:', error);
+                alert('Failed to submit test. Please try again.');
+                location.reload();
+            }
+        }
+        
+        window.addEventListener('beforeunload', function(e) {
+            if (timeLeft > 0 && questions.length > 0) {
+                e.preventDefault();
+                e.returnValue = '';
+            }
+        });
+    </script>
+</body>
+</html>
