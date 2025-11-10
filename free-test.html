@@ -82,7 +82,7 @@
             border-right: 2px solid #e2e8f0;
             padding: 30px;
             overflow-y: auto;
-            max-height: 600px;
+            max-height: none;
         }
         
         .question-panel {
@@ -900,11 +900,8 @@
             updateQuestionNavigation();
             loadQuestion(currentQuestionIndex);
             
-            setTimeout(() => {
-                if (currentQuestionIndex < questions.length - 1) {
-                    nextQuestion();
-                }
-            }, 300);
+            // Don't auto-advance - let user click Next button
+
         }
         
         function updateQuestionNavigation() {
