@@ -1430,62 +1430,79 @@
         }
 
         // Scholarship Auto-Apply
-        function checkForScholarshipCode() {
-            console.log('🔍 Checking for scholarship code...');
-            
-            const urlParams = new URLSearchParams(window.location.search);
-            const scholarshipParam = urlParams.get('scholarship');
-            
-            if (scholarshipParam) {
-                console.log('🎓 Scholarship code found in URL:', scholarshipParam);
-                
-                // Apply to Complete package by default
-                const couponInput = document.getElementById('coupon-input-complete');
-                if (couponInput) {
-                    couponInput.value = scholarshipParam;
-                }
-                
-                setTimeout(() => {
-                    applyCoupon('complete');
-                    showScholarshipWelcome();
-                    window.history.replaceState({}, document.title, window.location.pathname);
-                }, 500);
-                
-                return;
+       function checkForScholarshipCode() {
+    console.log('🔍 Checking for scholarship code...');
+    
+    const urlParams = new URLSearchParams(window.location.search);
+    const scholarshipParam = urlParams.get('scholarship');
+    
+    if (scholarshipParam) {
+        console.log('🎓 Scholarship code found in URL:', scholarshipParam);
+        
+        // ✅ APPLY TO ALL THREE PACKAGES
+        ['foundation', 'advanced', 'complete'].forEach(pkg => {
+            const couponInput = document.getElementById(`coupon-input-${pkg}`);
+            if (couponInput) {
+                couponInput.value = scholarshipParam;
             }
+        });
+        
+        // Apply coupons sequentially with delays
+        setTimeout(() => {
+            applyCoupon('foundation');
+        }, 300);
+        
+        setTimeout(() => {
+            applyCoupon('advanced');
+        }, 600);
+        
+        setTimeout(() => {
+            applyCoupon('complete');
+            showScholarshipWelcome();
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }, 900);
+        
+        return;
+    }
             
             // Check localStorage for active scholarships
-            const scholarship = localStorage.getItem('activeScholarship');
-            const couponCode = localStorage.getItem('scholarshipCoupon');
+    const scholarship = localStorage.getItem('activeScholarship');
+    const couponCode = localStorage.getItem('scholarshipCoupon');
+    
+    if (scholarship || couponCode) {
+        try {
+            const scholarshipData = scholarship ? JSON.parse(scholarship) : null;
+            const code = scholarshipData?.couponCode || couponCode;
             
-            if (scholarship || couponCode) {
-                try {
-                    const scholarshipData = scholarship ? JSON.parse(scholarship) : null;
-                    const code = scholarshipData?.couponCode || couponCode;
-                    
-                    if (code) {
-                        console.log('🎓 Scholarship found in localStorage:', code);
-                        
-                        if (scholarshipData?.validUntil) {
-                            const validUntil = new Date(scholarshipData.validUntil);
-                            if (validUntil < new Date()) {
-                                console.log('❌ Scholarship expired');
-                                localStorage.removeItem('activeScholarship');
-                                localStorage.removeItem('scholarshipCoupon');
-                                return;
-                            }
-                        }
-                        
-                        const couponInput = document.getElementById('coupon-input-complete');
-                        if (couponInput) {
-                            couponInput.value = code;
-                        }
-                        
-                        setTimeout(() => {
-                            applyCoupon('complete');
-                            showScholarshipWelcome();
-                        }, 500);
+            if (code) {
+                console.log('🎓 Scholarship found in localStorage:', code);
+                
+                if (scholarshipData?.validUntil) {
+                    const validUntil = new Date(scholarshipData.validUntil);
+                    if (validUntil < new Date()) {
+                        console.log('❌ Scholarship expired');
+                        localStorage.removeItem('activeScholarship');
+                        localStorage.removeItem('scholarshipCoupon');
+                        return;
                     }
+                }
+                
+                // ✅ APPLY TO ALL THREE PACKAGES
+                ['foundation', 'advanced', 'complete'].forEach(pkg => {
+                    const couponInput = document.getElementById(`coupon-input-${pkg}`);
+                    if (couponInput) {
+                        couponInput.value = code;
+                    }
+                });
+                
+                // Apply with delays
+                setTimeout(() => { applyCoupon('foundation'); }, 300);
+                setTimeout(() => { applyCoupon('advanced'); }, 600);
+                setTimeout(() => { 
+                    applyCoupon('complete'); 
+                    showScholarshipWelcome();
+                }, 900);
+            }
                 } catch (error) {
                     console.error('❌ Error parsing scholarship:', error);
                 }
@@ -1614,3 +1631,4 @@
     </script>
 </body>
 </html>
+
