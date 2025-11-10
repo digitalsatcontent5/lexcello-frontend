@@ -229,6 +229,8 @@
     </div>
 
     <script>
+        const API_BASE_URL = 'https://lexcello-backend.onrender.com/api';
+        
         // Create confetti effect
         function createConfetti() {
             const confettiContainer = document.getElementById('confetti');
@@ -250,18 +252,106 @@
             }, 6000);
         }
         
+        // ✅ NEW: Wait for subscription to be activated
+        async function waitForSubscriptionActivation() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const gateway = urlParams.get('gateway'); // 'payu' or 'paypal'
+            const txnid = urlParams.get('txnid');
+            const token = localStorage.getItem('authToken');
+            
+            if (!token) {
+                console.error('No auth token found');
+                return;
+            }
+            
+            console.log(`⏳ Waiting for ${gateway || 'payment'} subscription activation...`);
+            
+            // PayPal is usually instant, PayU needs more time
+            const maxAttempts = gateway === 'paypal' ? 5 : 10;
+            
+            let attempts = 0;
+            
+            const checkInterval = setInterval(async () => {
+                attempts++;
+                
+                try {
+                    // Check user profile to see if subscription is active
+                    const response = await fetch(`${API_BASE_URL}/auth/profile`, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                    
+                    if (response.ok) {
+                        const userData = await response.json();
+                        
+                        console.log(`Attempt ${attempts}/${maxAttempts}: Status = ${userData.subscriptionStatus}`);
+                        
+                        if (userData.subscriptionStatus === 'premium') {
+                            console.log('✅ Subscription activated!');
+                            clearInterval(checkInterval);
+                            
+                            // Show success message
+                            const alertDiv = document.querySelector('.alert-success');
+                            if (alertDiv) {
+                                alertDiv.innerHTML = `
+                                    <i class="fas fa-crown me-2"></i>
+                                    <strong>Premium Access Activated</strong><br>
+                                    Your subscription is now active! You have access to all premium features.
+                                `;
+                            }
+                        } else if (attempts >= maxAttempts) {
+                            console.log('⏰ Max attempts reached, still processing...');
+                            clearInterval(checkInterval);
+                            
+                            // Still show success but with a note
+                            const alertDiv = document.querySelector('.alert-success');
+                            if (alertDiv) {
+                                alertDiv.innerHTML = `
+                                    <i class="fas fa-clock me-2"></i>
+                                    <strong>Payment Processing</strong><br>
+                                    Your payment was successful! Your premium access will be activated shortly (usually within 1-2 minutes). Please check your dashboard.
+                                `;
+                            }
+                        }
+                    } else {
+                        console.error('Failed to fetch profile:', response.status);
+                        
+                        if (attempts >= maxAttempts) {
+                            clearInterval(checkInterval);
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error checking subscription status:', error);
+                    
+                    if (attempts >= maxAttempts) {
+                        clearInterval(checkInterval);
+                    }
+                }
+            }, 1000); // Check every second
+        }
+        
         // Initialize page
         document.addEventListener('DOMContentLoaded', function() {
             createConfetti();
             
-            // Get URL parameters to show transaction details if available
+            // Get URL parameters
             const urlParams = new URLSearchParams(window.location.search);
+            const gateway = urlParams.get('gateway');
             const txnid = urlParams.get('txnid');
             const amount = urlParams.get('amount');
             
+            console.log('Payment Success Page Loaded');
+            console.log('Gateway:', gateway);
+            console.log('Transaction ID:', txnid);
+            console.log('Amount:', amount);
+            
             if (txnid) {
-                console.log('Transaction ID:', txnid);
-                // You could fetch and display transaction details here
+                // ✅ Wait for subscription activation
+                waitForSubscriptionActivation();
+            } else {
+                console.warn('No transaction ID found in URL');
             }
         });
     </script>
