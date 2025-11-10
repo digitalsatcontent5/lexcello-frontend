@@ -2,18 +2,21 @@
 <html lang="en">
 <head>
     <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-6EV4Y6N8M5"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-6EV4Y6N8M5');
-</script>
-<link rel="icon" type="image/png" href="/favicon.png">
-<link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-6EV4Y6N8M5"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-6EV4Y6N8M5');
+    </script>
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pricing - Lexcello LNAT Practice Tests</title>
+    <meta name="description" content="Choose from 3 flexible LNAT practice test packages. Tests 1-5 (£49), Tests 6-10 (£59), or Complete Series 1-10 (£99). Perfect for Oxford, Cambridge, LSE preparation.">
+    
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     
@@ -59,69 +62,30 @@
         .nav-link:hover {
             color: var(--secondary-color) !important;
         }
-/* Free Test Link - Special Styling */
-.free-test-link {
-    background: linear-gradient(135deg, #48bb78, #38a169) !important;
-    color: white !important;
-    border-radius: 8px;
-    padding: 8px 16px !important;
-    font-weight: 600 !important;
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-}
 
-.free-test-link:hover {
-    background: linear-gradient(135deg, #38a169, #2f855a) !important;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(72, 187, 120, 0.4);
-}
-
-.free-test-link::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 0;
-    height: 0;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.3);
-    transform: translate(-50%, -50%);
-    transition: width 0.6s, height 0.6s;
-}
-
-.free-test-link:hover::before {
-    width: 300px;
-    height: 300px;
-}
-
-.free-test-link i {
-    animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-    0%, 100% {
-        transform: scale(1);
-    }
-    50% {
-        transform: scale(1.2);
-    }
-}
-
-/* Mobile adjustments */
-@media (max-width: 768px) {
-    .free-test-link {
-        margin: 10px 0;
-        text-align: center;
-        display: block;
-    }
-}
-        .navbar-collapse.show {
-            background-color: white;
-            padding: 15px;
+        /* Free Test Link */
+        .free-test-link {
+            background: linear-gradient(135deg, #48bb78, #38a169) !important;
+            color: white !important;
             border-radius: 8px;
-            margin-top: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            padding: 8px 16px !important;
+            font-weight: 600 !important;
+            transition: all 0.3s ease;
+        }
+
+        .free-test-link:hover {
+            background: linear-gradient(135deg, #38a169, #2f855a) !important;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(72, 187, 120, 0.4);
+        }
+
+        .free-test-link i {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
         }
 
         .btn-primary {
@@ -151,7 +115,7 @@
             color: white;
         }
 
-        /* User menu styles */
+        /* User menu */
         .user-menu {
             position: relative;
         }
@@ -208,44 +172,62 @@
             background: #e2e8f0;
             margin: 5px 0;
         }
-        /* Force proper display of auth elements */
-#auth-buttons {
-    display: flex;
-    gap: 0.5rem;
-}
 
-#auth-buttons.hide {
-    display: none !important;
-}
-
-#user-menu.show {
-    display: block !important;
-}
-
-#user-menu.hide {
-    display: none !important;
-}
-
-/* Header Section */
+        /* Header */
         .pricing-header {
             background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             color: white;
-            padding: 50px 0 40px;
+            padding: 60px 0 50px;
             text-align: center;
         }
 
         .pricing-header h1 {
-            font-size: 2.5rem;
+            font-size: 2.8rem;
             font-weight: 800;
             margin-bottom: 15px;
         }
 
         .pricing-header p {
-            font-size: 1.1rem;
-            opacity: 0.9;
-            max-width: 900px;
+            font-size: 1.2rem;
+            opacity: 0.95;
+            max-width: 800px;
             margin: 0 auto;
-            line-height: 1.4;
+        }
+        
+        /* Currency Switcher */
+        .currency-switcher-section {
+            background: white;
+            padding: 30px 0;
+            border-bottom: 2px solid var(--bg-light);
+        }
+        
+        .currency-switch {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .currency-btn {
+            background: transparent;
+            border: 2px solid var(--secondary-color);
+            color: var(--secondary-color);
+            padding: 10px 24px;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .currency-btn.active {
+            background: var(--secondary-color);
+            color: white;
+            box-shadow: 0 4px 15px rgba(43, 108, 176, 0.3);
+        }
+        
+        .currency-btn:hover {
+            transform: translateY(-2px);
         }
         
         /* Pricing Cards */
@@ -257,22 +239,28 @@
         .pricing-card {
             background: white;
             border-radius: 20px;
-            padding: 40px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            padding: 40px 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
             border: 3px solid transparent;
             position: relative;
             height: 100%;
             transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
         }
         
         .pricing-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-8px);
             box-shadow: 0 20px 50px rgba(0,0,0,0.15);
         }
         
         .pricing-card.featured {
             border-color: var(--accent-gold);
-            transform: scale(1.05);
+            transform: scale(1.03);
+        }
+        
+        .pricing-card.featured:hover {
+            transform: scale(1.03) translateY(-8px);
         }
         
         .featured-badge {
@@ -286,54 +274,82 @@
             border-radius: 20px;
             font-size: 0.9rem;
             font-weight: 700;
+            box-shadow: 0 4px 15px rgba(214, 158, 46, 0.4);
+        }
+        
+        .plan-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+        
+        .plan-subtitle {
+            text-align: center;
+            color: var(--text-light);
+            margin-bottom: 25px;
+            font-size: 1rem;
         }
         
         .price-tag {
             text-align: center;
             margin-bottom: 30px;
-        }
-        
-        .currency-switch {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        
-        .currency-btn {
-            background: transparent;
-            border: 2px solid var(--secondary-color);
-            color: var(--secondary-color);
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-        
-        .currency-btn.active {
-            background: var(--secondary-color);
-            color: white;
+            padding: 20px 0;
+            border-bottom: 2px solid var(--bg-light);
         }
         
         .price-amount {
-            font-size: 3.5rem;
+            font-size: 3rem;
             font-weight: 800;
             color: var(--primary-color);
             line-height: 1;
         }
         
         .price-currency {
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             vertical-align: top;
         }
         
         .price-period {
-            font-size: 1rem;
+            font-size: 0.95rem;
             color: var(--text-light);
-            margin-top: 5px;
+            margin-top: 8px;
         }
-        
+
+        /* Coupon Section */
+        .coupon-section {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .coupon-input-group {
+            display: flex;
+            gap: 10px;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        #coupon-input {
+            text-transform: uppercase;
+            flex: 1;
+        }
+
+        #coupon-message {
+            margin-top: 10px;
+            display: none;
+        }
+
+        #discount-display {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            background: #d4edda;
+            border-radius: 8px;
+            border-left: 4px solid #28a745;
+        }
+
         .currency-disclaimer {
             margin-top: 15px;
             padding: 12px;
@@ -341,6 +357,7 @@
             border-left: 4px solid #ffc107;
             border-radius: 4px;
             text-align: left;
+            display: none;
         }
 
         .currency-disclaimer small {
@@ -353,49 +370,38 @@
             margin-right: 5px;
         }
         
-        .plan-title {
-            font-size: 1.8rem;
-            font-weight: 700;
-            text-align: center;
-            margin-bottom: 20px;
-            color: var(--primary-color);
-        }
-        
-        .plan-description {
-            text-align: center;
-            color: var(--text-light);
-            margin-bottom: 30px;
-            font-size: 1.1rem;
-        }
-        
         .features-list {
             list-style: none;
             padding: 0;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
+            flex-grow: 1;
         }
         
         .features-list li {
             display: flex;
-            align-items: center;
-            margin-bottom: 15px;
-            font-size: 1.1rem;
+            align-items: flex-start;
+            margin-bottom: 12px;
+            font-size: 0.95rem;
         }
         
         .features-list i {
-            color: #48bb78;
-            margin-right: 12px;
-            font-size: 1.2rem;
+            color: var(--success-color);
+            margin-right: 10px;
+            font-size: 1.1rem;
+            margin-top: 3px;
+            flex-shrink: 0;
         }
         
         .cta-button {
             width: 100%;
             padding: 16px;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-weight: 700;
             border-radius: 12px;
             border: none;
             transition: all 0.3s ease;
             cursor: pointer;
+            margin-top: auto;
         }
         
         .btn-primary-custom {
@@ -406,31 +412,74 @@
         .btn-primary-custom:hover {
             background: var(--primary-hover);
             transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(43, 108, 176, 0.4);
         }
         
-        /* Already subscribed state */
-        .btn-subscribed {
-            background: var(--success-color);
+        .btn-outline-custom {
+            background: white;
+            color: var(--secondary-color);
+            border: 2px solid var(--secondary-color);
+        }
+        
+        .btn-outline-custom:hover {
+            background: var(--secondary-color);
             color: white;
-            cursor: default;
         }
         
-        .btn-subscribed:hover {
-            background: var(--success-color);
-            transform: none;
+        /* Comparison Table */
+        .comparison-section {
+            padding: 80px 0;
+            background: white;
+        }
+        
+        .comparison-table {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+        
+        .comparison-table table {
+            width: 100%;
+        }
+        
+        .comparison-table th {
+            background: var(--primary-color);
+            color: white;
+            padding: 20px;
+            font-weight: 700;
+            text-align: center;
+        }
+        
+        .comparison-table td {
+            padding: 18px;
+            border-bottom: 1px solid #e2e8f0;
+            text-align: center;
+        }
+        
+        .comparison-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .check-icon {
+            color: var(--success-color);
+            font-size: 1.3rem;
         }
         
         /* FAQ Section */
         .faq-section {
             padding: 80px 0;
-            background: white;
+            background: var(--bg-light);
         }
         
         .faq-item {
-            background: var(--bg-light);
+            background: white;
             border-radius: 12px;
             margin-bottom: 20px;
             overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         }
         
         .faq-question {
@@ -439,19 +488,24 @@
             border: none;
             padding: 25px 30px;
             text-align: left;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-weight: 600;
             color: var(--primary-color);
             cursor: pointer;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            transition: background 0.3s ease;
+        }
+        
+        .faq-question:hover {
+            background: var(--bg-light);
         }
         
         .faq-answer {
             padding: 0 30px 25px;
             color: var(--text-light);
-            font-size: 1.1rem;
+            font-size: 1rem;
             line-height: 1.7;
         }
         
@@ -475,8 +529,10 @@
         }
         
         .guarantee-section p {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto;
         }
         
         /* Footer */
@@ -496,245 +552,388 @@
             color: white;
         }
         
-        @media (max-width: 768px) {
-            .pricing-header h1 {
-                font-size: 2.2rem;
-            }
-            
+        @media (max-width: 992px) {
             .pricing-card.featured {
                 transform: none;
                 margin-top: 20px;
+            }
+            
+            .pricing-card.featured:hover {
+                transform: translateY(-5px);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .pricing-header h1 {
+                font-size: 2rem;
+            }
+            
+            .price-amount {
+                font-size: 2.5rem;
+            }
+            
+            .plan-title {
+                font-size: 1.5rem;
+            }
+
+            .coupon-input-group {
+                flex-direction: column;
+            }
+
+            #apply-coupon-btn {
+                width: 100%;
+            }
+        }
+
+        /* Animation for scholarship welcome */
+        @keyframes slideDown {
+            from {
+                transform: translate(-50%, -100px);
+                opacity: 0;
+            }
+            to {
+                transform: translate(-50%, 0);
+                opacity: 1;
             }
         }
     </style>
 </head>
 <body>
     <!-- Navigation -->
-<nav class="navbar navbar-expand-lg fixed-top">
-    <div class="container">
-        <a class="navbar-brand" href="index.html">Lexcello</a>
-        
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav mx-auto">
-    <li class="nav-item">
-        <a class="nav-link" href="index.html">Home</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link free-test-link" href="free-test.html">
-            <i class="fas fa-gift me-1"></i>Free Test
-        </a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="index.html#tests">Practice Tests</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="about-lnat.html">About LNAT</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="resources.html">Resources</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link active" href="pricing.html">Pricing</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="contact.html">Contact</a>
-    </li>
-</ul>
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">Lexcello</a>
             
-            <!-- Authentication Section - Always visible container -->
-            <div id="nav-auth-container">
-                <!-- Authentication buttons (shown when not logged in) -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link free-test-link" href="free-test.html">
+                            <i class="fas fa-gift me-1"></i>Free Test
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="lnat-practice-tests.html">Practice Tests</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="about-lnat.html">About LNAT</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="resources.html">Resources</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="pricing.html">Pricing</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="contact.html">Contact</a>
+                    </li>
+                </ul>
+                
                 <div class="d-flex gap-2" id="auth-buttons">
-                    <button class="btn btn-outline-primary" onclick="signIn()">Sign In</button>
-                    <button class="btn btn-primary" onclick="getStarted()">Get Started</button>
+                    <button class="btn btn-outline-primary" onclick="window.location.href='login.html'">Sign In</button>
+                    <button class="btn btn-primary" onclick="window.location.href='register.html'">Get Started</button>
                 </div>
                 
-                <!-- User menu (shown when logged in) -->
                 <div class="user-menu" id="user-menu" style="display: none;">
-                    <div class="user-avatar" onclick="toggleUserDropdown()" id="user-avatar">
-                        U
-                    </div>
+                    <div class="user-avatar" onclick="toggleUserDropdown()" id="user-avatar">U</div>
                     <div class="user-dropdown" id="user-dropdown">
-                        <a href="dashboard.html">
-                            <i class="fas fa-tachometer-alt me-2"></i>Dashboard
-                        </a>
-                        <a href="profile.html">
-                            <i class="fas fa-user me-2"></i>Profile
-                        </a>
-                        <a href="test-history.html">
-                            <i class="fas fa-history me-2"></i>Test History
-                        </a>
+                        <a href="dashboard.html"><i class="fas fa-tachometer-alt me-2"></i>Dashboard</a>
+                        <a href="profile.html"><i class="fas fa-user me-2"></i>Profile</a>
+                        <a href="test-history.html"><i class="fas fa-history me-2"></i>Test History</a>
                         <div class="divider"></div>
-                        <a href="#" onclick="signOut()">
-                            <i class="fas fa-sign-out-alt me-2"></i>Sign Out
-                        </a>
+                        <a href="#" onclick="signOut()"><i class="fas fa-sign-out-alt me-2"></i>Sign Out</a>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</nav>
+    </nav>
 
     <!-- Header -->
     <section class="pricing-header">
         <div class="container">
-            <h1>Simple, Transparent Pricing</h1>
-            <p>Get unlimited access to all 10 LNAT practice tests and premium features with one comprehensive package</p>
+            <h1>Choose Your Perfect LNAT Prep Package</h1>
+            <p>Flexible pricing options designed for every student's needs and budget. All packages include detailed explanations, analytics, and unlimited retakes.</p>
         </div>
     </section>
 
-    <!-- Pricing Section -->
+    <!-- Currency Switcher -->
+    <section class="currency-switcher-section">
+        <div class="container">
+            <div class="currency-switch">
+                <button class="currency-btn active" onclick="switchCurrency('GBP')" id="btn-GBP">
+                    <i class="fas fa-pound-sign me-2"></i>GBP (£)
+                </button>
+                <button class="currency-btn" onclick="switchCurrency('USD')" id="btn-USD">
+                    <i class="fas fa-dollar-sign me-2"></i>USD ($)
+                </button>
+                <button class="currency-btn" onclick="switchCurrency('INR')" id="btn-INR">
+                    <i class="fas fa-rupee-sign me-2"></i>INR (₹)
+                </button>
+            </div>
+            <div class="text-center mt-3">
+                <small class="text-muted">
+                    <i class="fas fa-info-circle me-1"></i>
+                    All payments processed in INR. Currency shown for reference only.
+                </small>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Cards -->
     <section class="pricing-section">
         <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-lg-8 col-xl-7">
-                    <div class="pricing-card featured">
-                        <div class="featured-badge">Most Popular</div>
-                        <div style="background: #e6fffa; border-left: 4px solid #38a169; padding: 15px; border-radius: 8px; margin-bottom: 20px; text-align: center;">
-        <p style="margin: 0; color: #234e52; font-size: 0.95rem;">
-            <i class="fas fa-info-circle" style="color: #38a169; margin-right: 5px;"></i>
-            <strong>First time here?</strong> Take our <a href="free-test.html" style="color: #38a169; text-decoration: underline; font-weight: 600;">free 14-question test</a> to see the quality before you buy!
-        </p>
-    </div>
-                        <div class="currency-switch">
-                            <button class="currency-btn active" onclick="switchCurrency('GBP')">£ GBP</button>
-                            <button class="currency-btn" onclick="switchCurrency('USD')">$ USD</button>
-                            <button class="currency-btn" onclick="switchCurrency('INR')">₹ INR</button>
-                        </div>
+            <!-- Free Test Banner -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="alert alert-success text-center" style="background: #d1fae5; border-left: 4px solid #059669;">
+                        <i class="fas fa-gift me-2"></i>
+                        <strong>New to Lexcello?</strong> Try our <a href="free-test.html" style="color: #059669; font-weight: 600; text-decoration: underline;">free 14-question practice test</a> before purchasing!
+                    </div>
+                </div>
+            </div>
 
+            <div class="row g-4">
+                <!-- Package 1: Tests 1-5 (Foundation) -->
+                <div class="col-lg-4">
+                    <div class="pricing-card">
+                        <div class="plan-title">Foundation</div>
+                        <div class="plan-subtitle">Tests 1-5</div>
+                        
                         <div class="price-tag">
                             <div class="price-amount">
-                                <span class="price-currency" id="currency-symbol">£</span><span id="price-amount">79</span>
+                                <span class="price-currency" data-currency-symbol>£</span><span data-price="foundation">49</span>
                             </div>
-                            <div class="price-period">12 months access • One-time payment</div>
-                            
-                            <!-- Coupon Input Section -->
-                            <div class="coupon-section" style="margin-top: 25px;">
-                                <div style="display: flex; gap: 10px; max-width: 400px; margin: 0 auto;">
-                                    <input type="text" 
-                                           id="coupon-input" 
-                                           class="form-control" 
-                                           placeholder="Have a coupon code?" 
-                                           style="text-transform: uppercase; flex: 1;">
-                                    <button class="btn btn-outline-primary" 
-                                            onclick="applyCoupon()" 
-                                            id="apply-coupon-btn"
-                                            style="white-space: nowrap;">
-                                        Apply
-                                    </button>
-                                </div>
-                                
-                                <!-- Coupon Status Messages -->
-                                <div id="coupon-message" style="margin-top: 10px; display: none;"></div>
-                                
-                                <!-- Discount Display -->
-                                <div id="discount-display" style="display: none; margin-top: 15px; padding: 15px; background: #d4edda; border-radius: 8px; border-left: 4px solid #28a745;">
-                                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                                        <div>
-                                            <strong style="color: #155724;">✓ Coupon Applied: <span id="applied-coupon-code"></span></strong>
-                                            <div style="font-size: 0.9rem; color: #155724; margin-top: 5px;">
-                                                <span id="discount-description"></span>
-                                            </div>
-                                        </div>
-                                        <button onclick="removeCoupon()" 
-                                                style="background: none; border: none; color: #721c24; font-size: 1.2rem; cursor: pointer; padding: 5px 10px;"
-                                                title="Remove coupon">
-                                            ×
-                                        </button>
-                                    </div>
-                                    <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #c3e6cb;">
-                                        <div style="display: flex; justify-content: space-between; font-size: 0.95rem; color: #666; margin-bottom: 5px;">
-                                            <span>Original Price:</span>
-                                            <span style="text-decoration: line-through;" id="original-price-display">£79</span>
-                                        </div>
-                                        <div style="display: flex; justify-content: space-between; font-size: 1.1rem; font-weight: bold; color: #155724;">
-                                            <span>Final Price:</span>
-                                            <span id="final-price-display">£59</span>
-                                        </div>
-                                        <div style="display: flex; justify-content: space-between; font-size: 0.9rem; color: #28a745; margin-top: 5px;">
-                                            <span>You Save:</span>
-                                            <span id="savings-display">£20</span>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="price-period">One-time payment • 12 months access</div>
+                        </div>
+
+                        <!-- Coupon Section for Foundation -->
+                        <div class="coupon-section">
+                            <div class="coupon-input-group">
+                                <input type="text" 
+                                       id="coupon-input-foundation" 
+                                       class="form-control coupon-input" 
+                                       placeholder="Coupon code?" 
+                                       data-package="foundation">
+                                <button class="btn btn-outline-primary apply-coupon-btn" 
+                                        onclick="applyCoupon('foundation')" 
+                                        id="apply-coupon-btn-foundation">
+                                    Apply
+                                </button>
                             </div>
-                            
-                            <div class="currency-disclaimer" id="currency-disclaimer" style="display: block;">
-                                <small class="text-muted">
-                                    <i class="fas fa-info-circle"></i> 
-                                    You will be charged <strong>₹9,000 INR</strong> (approximately <span id="selected-currency-name">£79</span>). 
-                                    Final amount in your currency may vary based on current exchange rates.
-                                </small>
-                            </div>
+                            <div id="coupon-message-foundation" class="coupon-message"></div>
+                            <div id="discount-display-foundation" class="discount-display"></div>
+                            <div id="currency-disclaimer-foundation" class="currency-disclaimer"></div>
                         </div>
                         
-                        <div class="plan-title">Complete LNAT Preparation</div>
-                        <div class="plan-description">Everything you need to excel at the LNAT</div>
-                        
                         <ul class="features-list">
-                            <li>
-                                <i class="fas fa-check-circle"></i>
-                                <span><strong>All 10 Practice Tests</strong> (8 available now, 2 more coming)</span>
-                            </li>
-                            <li>
-                                <i class="fas fa-check-circle"></i>
-                                <span><strong>400+ Authentic Questions</strong> mirroring real LNAT format</span>
-                            </li>
-                            <li>
-                                <i class="fas fa-check-circle"></i>
-                                <span><strong>Detailed Performance Analytics</strong> tracking your progress</span>
-                            </li>
-                            <li>
-                                <i class="fas fa-check-circle"></i>
-                                <span><strong>Timed Practice Sessions</strong> with real exam conditions</span>
-                            </li>
-                            <li>
-                                <i class="fas fa-check-circle"></i>
-                                <span><strong>Comprehensive Answer Explanations</strong> for every question</span>
-                            </li>
-                            <li>
-                                <i class="fas fa-check-circle"></i>
-                                <span><strong>Score Prediction Algorithm</strong> based on performance data</span>
-                            </li>
-                            <li>
-                                <i class="fas fa-check-circle"></i>
-                                <span><strong>Unlimited Retakes</strong> for all practice tests</span>
-                            </li>
-                            <li>
-                                <i class="fas fa-check-circle"></i>
-                                <span><strong>Mobile & Desktop Access</strong> study anywhere, anytime</span>
-                            </li>
-                            <li>
-                                <i class="fas fa-check-circle"></i>
-                                <span><strong>12 Months Access</strong> from purchase date</span>
-                            </li>
-                            <li>
-                                <i class="fas fa-check-circle"></i>
-                                <span><strong>Free Updates</strong> when new tests are released</span>
-                            </li>
+                            <li><i class="fas fa-check-circle"></i><span><strong>5 Full Practice Tests</strong> (210 questions)</span></li>
+                            <li><i class="fas fa-check-circle"></i><span>Tests 1-5 with progressive difficulty</span></li>
+                            <li><i class="fas fa-check-circle"></i><span>Detailed answer explanations</span></li>
+                            <li><i class="fas fa-check-circle"></i><span>Performance analytics dashboard</span></li>
+                            <li><i class="fas fa-check-circle"></i><span>Timed practice sessions</span></li>
+                            <li><i class="fas fa-check-circle"></i><span>Unlimited retakes</span></li>
+                            <li><i class="fas fa-check-circle"></i><span>Mobile & desktop access</span></li>
+                            <li><i class="fas fa-check-circle"></i><span>Perfect for foundation building</span></li>
                         </ul>
                         
-                        <button class="cta-button btn-primary-custom" id="ctaButton" onclick="handleSubscription()">
-                            <i class="fas fa-rocket me-2"></i>Start Your LNAT Preparation
+                        <button class="cta-button btn-outline-custom" onclick="selectPackage('foundation')">
+                            <i class="fas fa-shopping-cart me-2"></i>Get Foundation Package
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Package 2: Tests 6-10 (Advanced) -->
+                <div class="col-lg-4">
+                    <div class="pricing-card">
+                        <div class="plan-title">Advanced</div>
+                        <div class="plan-subtitle">Tests 6-10</div>
+                        
+                        <div class="price-tag">
+                            <div class="price-amount">
+                                <span class="price-currency" data-currency-symbol>£</span><span data-price="advanced">59</span>
+                            </div>
+                            <div class="price-period">One-time payment • 12 months access</div>
+                        </div>
+
+                        <!-- Coupon Section for Advanced -->
+                        <div class="coupon-section">
+                            <div class="coupon-input-group">
+                                <input type="text" 
+                                       id="coupon-input-advanced" 
+                                       class="form-control coupon-input" 
+                                       placeholder="Coupon code?" 
+                                       data-package="advanced">
+                                <button class="btn btn-outline-primary apply-coupon-btn" 
+                                        onclick="applyCoupon('advanced')" 
+                                        id="apply-coupon-btn-advanced">
+                                    Apply
+                                </button>
+                            </div>
+                            <div id="coupon-message-advanced" class="coupon-message"></div>
+                            <div id="discount-display-advanced" class="discount-display"></div>
+                            <div id="currency-disclaimer-advanced" class="currency-disclaimer"></div>
+                        </div>
+                        
+                        <ul class="features-list">
+                            <li><i class="fas fa-check-circle"></i><span><strong>5 Advanced Practice Tests</strong> (210 questions)</span></li>
+                            <li><i class="fas fa-check-circle"></i><span>Tests 6-10 with challenging questions</span></li>
+                            <li><i class="fas fa-check-circle"></i><span>Detailed answer explanations</span></li>
+                            <li><i class="fas fa-check-circle"></i><span>Performance analytics dashboard</span></li>
+                            <li><i class="fas fa-check-circle"></i><span>Timed practice sessions</span></li>
+                            <li><i class="fas fa-check-circle"></i><span>Unlimited retakes</span></li>
+                            <li><i class="fas fa-check-circle"></i><span>Mobile & desktop access</span></li>
+                            <li><i class="fas fa-check-circle"></i><span>Perfect for skill refinement</span></li>
+                        </ul>
+                        
+                        <button class="cta-button btn-outline-custom" onclick="selectPackage('advanced')">
+                            <i class="fas fa-shopping-cart me-2"></i>Get Advanced Package
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Package 3: Tests 1-10 (Complete) - FEATURED -->
+                <div class="col-lg-4">
+                    <div class="pricing-card featured">
+                        <div class="featured-badge">⭐ Best Value</div>
+                        <div class="plan-title">Complete Series</div>
+                        <div class="plan-subtitle">All Tests 1-10</div>
+                        
+                        <div class="price-tag">
+                            <div class="price-amount">
+                                <span class="price-currency" data-currency-symbol>£</span><span data-price="complete">99</span>
+                            </div>
+                            <div class="price-period">One-time payment • 12 months access</div>
+                            <div class="mt-2" style="color: var(--success-color); font-weight: 600; font-size: 0.9rem;">
+                                <i class="fas fa-tag me-1"></i>Save <span data-savings>£9</span>!
+                            </div>
+                        </div>
+
+                        <!-- Coupon Section for Complete -->
+                        <div class="coupon-section">
+                            <div class="coupon-input-group">
+                                <input type="text" 
+                                       id="coupon-input-complete" 
+                                       class="form-control coupon-input" 
+                                       placeholder="Coupon code?" 
+                                       data-package="complete">
+                                <button class="btn btn-outline-primary apply-coupon-btn" 
+                                        onclick="applyCoupon('complete')" 
+                                        id="apply-coupon-btn-complete">
+                                    Apply
+                                </button>
+                            </div>
+                            <div id="coupon-message-complete" class="coupon-message"></div>
+                            <div id="discount-display-complete" class="discount-display"></div>
+                            <div id="currency-disclaimer-complete" class="currency-disclaimer"></div>
+                        </div>
+                        
+                        <ul class="features-list">
+                            <li><i class="fas fa-check-circle"></i><span><strong>All 10 Practice Tests</strong> (420 questions)</span></li>
+                            <li><i class="fas fa-check-circle"></i><span>Complete test series 1-10</span></li>
+                            <li><i class="fas fa-check-circle"></i><span>Foundation to advanced difficulty</span></li>
+                            <li><i class="fas fa-check-circle"></i><span>Detailed answer explanations</span></li>
+                            <li><i class="fas fa-check-circle"></i><span>Advanced performance analytics</span></li>
+                            <li><i class="fas fa-check-circle"></i><span>Score prediction algorithm</span></li>
+                            <li><i class="fas fa-check-circle"></i><span>Timed practice sessions</span></li>
+                            <li><i class="fas fa-check-circle"></i><span>Unlimited retakes</span></li>
+                            <li><i class="fas fa-check-circle"></i><span>Mobile & desktop access</span></li>
+                            <li><i class="fas fa-check-circle"></i><span>Complete LNAT preparation</span></li>
+                        </ul>
+                        
+                        <button class="cta-button btn-primary-custom" onclick="selectPackage('complete')">
+                            <i class="fas fa-rocket me-2"></i>Get Complete Series
                         </button>
                     </div>
                 </div>
             </div>
-            
-            <div class="text-center mt-5">
-                <div class="row justify-content-center">
-                    <div class="col-lg-8">
-                        <div class="alert alert-info">
-                            <i class="fas fa-info-circle me-2"></i>
-                            <strong>International Pricing Available:</strong> Choose your preferred currency. Get full access to all 10 tests. 
-                            As we add more tests and features, this price may increase.
-                        </div>
+
+            <!-- Pricing Note -->
+            <div class="row mt-5">
+                <div class="col-lg-8 mx-auto">
+                    <div class="alert alert-info text-center">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>All packages include:</strong> 12 months access, unlimited retakes, detailed explanations, and performance analytics. Choose the package that fits your timeline and budget.
                     </div>
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Comparison Table -->
+    <section class="comparison-section">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="display-5 fw-bold text-primary">Compare Packages</h2>
+                <p class="text-muted">Find the perfect fit for your LNAT preparation journey</p>
+            </div>
+            
+            <div class="comparison-table">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th style="text-align: left;">Feature</th>
+                            <th>Foundation<br><small>(Tests 1-5)</small></th>
+                            <th>Advanced<br><small>(Tests 6-10)</small></th>
+                            <th>Complete<br><small>(Tests 1-10)</small></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="text-align: left;"><strong>Number of Tests</strong></td>
+                            <td>5 Tests</td>
+                            <td>5 Tests</td>
+                            <td><strong>10 Tests</strong></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: left;"><strong>Total Questions</strong></td>
+                            <td>210</td>
+                            <td>210</td>
+                            <td><strong>420</strong></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: left;"><strong>Difficulty Level</strong></td>
+                            <td>Foundation</td>
+                            <td>Advanced</td>
+                            <td><strong>Foundation to Advanced</strong></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: left;"><strong>Detailed Explanations</strong></td>
+                            <td><i class="fas fa-check check-icon"></i></td>
+                            <td><i class="fas fa-check check-icon"></i></td>
+                            <td><i class="fas fa-check check-icon"></i></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: left;"><strong>Performance Analytics</strong></td>
+                            <td><i class="fas fa-check check-icon"></i></td>
+                            <td><i class="fas fa-check check-icon"></i></td>
+                            <td><i class="fas fa-check check-icon"></i></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: left;"><strong>Unlimited Retakes</strong></td>
+                            <td><i class="fas fa-check check-icon"></i></td>
+                            <td><i class="fas fa-check check-icon"></i></td>
+                            <td><i class="fas fa-check check-icon"></i></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: left;"><strong>12 Months Access</strong></td>
+                            <td><i class="fas fa-check check-icon"></i></td>
+                            <td><i class="fas fa-check check-icon"></i></td>
+                            <td><i class="fas fa-check check-icon"></i></td>
+                        </tr>
+                        <tr style="background: #f0f9ff;">
+                            <td style="text-align: left;"><strong>Price</strong></td>
+                            <td><strong data-compare-price="foundation">£49</strong></td>
+                            <td><strong data-compare-price="advanced">£59</strong></td>
+                            <td><strong data-compare-price="complete">£99</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </section>
@@ -746,7 +945,7 @@
                 <i class="fas fa-shield-alt"></i>
             </div>
             <h3>3-Day Money-Back Guarantee</h3>
-            <p>We're confident you'll love our LNAT preparation platform. If you're not completely satisfied within 3 days, we'll refund your money, no questions asked.</p>
+            <p>We're confident you'll love our LNAT preparation platform. If you're not completely satisfied within 3 days of purchase, we'll refund your money—no questions asked.</p>
         </div>
     </section>
 
@@ -754,28 +953,50 @@
     <section class="faq-section">
         <div class="container">
             <div class="text-center mb-5">
-                <h2 class="display-4 fw-bold text-primary">Frequently Asked Questions</h2>
+                <h2 class="display-5 fw-bold text-primary">Frequently Asked Questions</h2>
             </div>
             
             <div class="row justify-content-center">
                 <div class="col-lg-8">
                     <div class="faq-item">
                         <button class="faq-question" onclick="toggleFaq(this)">
-                            How long do I have access to the platform?
+                            What's the difference between the packages?
                             <i class="fas fa-plus"></i>
                         </button>
                         <div class="faq-answer" style="display: none;">
-                            You get 12 months of full access from your purchase date. This gives you plenty of time to prepare thoroughly for the LNAT, whether you're taking it soon or planning ahead for next year's application cycle.
+                            <strong>Foundation (Tests 1-5):</strong> Perfect for building foundational skills with progressive difficulty.<br>
+                            <strong>Advanced (Tests 6-10):</strong> Ideal for students who want challenging practice at higher difficulty levels.<br>
+                            <strong>Complete Series (Tests 1-10):</strong> Our most popular option offering the full range from foundation to advanced, giving you comprehensive preparation at the best value.
                         </div>
                     </div>
                     
                     <div class="faq-item">
                         <button class="faq-question" onclick="toggleFaq(this)">
-                            What happens when the remaining 2 tests are released?
+                            Can I upgrade from Foundation or Advanced to Complete later?
                             <i class="fas fa-plus"></i>
                         </button>
                         <div class="faq-answer" style="display: none;">
-                            You'll automatically get access to all new tests as they're released - no additional payment required. We're releasing approximately 1-2 new tests per month until all 10 are available.
+                            Yes! You can upgrade at any time by paying the difference. For example, if you start with Foundation (£49) and want to upgrade to Complete (£99), you'd pay £50. Contact us at support@lexcello.com to arrange an upgrade.
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <button class="faq-question" onclick="toggleFaq(this)">
+                            How long do I have access to the tests?
+                            <i class="fas fa-plus"></i>
+                        </button>
+                        <div class="faq-answer" style="display: none;">
+                            All packages include 12 months of full access from your purchase date. This gives you plenty of time to prepare thoroughly for the LNAT, whether you're taking it soon or planning ahead for next year's application cycle.
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <button class="faq-question" onclick="toggleFaq(this)">
+                            Can I retake the tests multiple times?
+                            <i class="fas fa-plus"></i>
+                        </button>
+                        <div class="faq-answer" style="display: none;">
+                            Absolutely! All packages include unlimited retakes for all purchased tests during your 12-month access period. This helps you track improvement and work on specific areas where you need more practice.
                         </div>
                     </div>
                     
@@ -785,37 +1006,29 @@
                             <i class="fas fa-plus"></i>
                         </button>
                         <div class="faq-answer" style="display: none;">
-                            Yes, our questions are crafted by legal education experts to mirror the real LNAT in format, difficulty, and style. We've analyzed thousands of past LNAT questions to ensure authenticity in our practice materials.
+                            Yes! Our questions are crafted by legal education experts to mirror the real LNAT in format, difficulty, and style. We've analyzed thousands of past LNAT questions to ensure authenticity in our practice materials.
                         </div>
                     </div>
                     
                     <div class="faq-item">
                         <button class="faq-question" onclick="toggleFaq(this)">
-                            Can I retake the practice tests?
+                            Which package should I choose?
                             <i class="fas fa-plus"></i>
                         </button>
                         <div class="faq-answer" style="display: none;">
-                            Absolutely! You can retake any practice test as many times as you want during your 12-month access period. This helps you track improvement and work on specific areas where you need more practice.
+                            <strong>Choose Foundation</strong> if you're just starting LNAT prep and want to build basics.<br>
+                            <strong>Choose Advanced</strong> if you're already familiar with LNAT format and want challenging practice.<br>
+                            <strong>Choose Complete</strong> (most popular) if you want comprehensive preparation from foundation to advanced levels at the best value—you save £9 compared to buying both packages separately!
                         </div>
                     </div>
-                    
+
                     <div class="faq-item">
                         <button class="faq-question" onclick="toggleFaq(this)">
-                            Is there a free trial available?
+                            Do you offer discounts or scholarship codes?
                             <i class="fas fa-plus"></i>
                         </button>
                         <div class="faq-answer" style="display: none;">
-                            We offer a sample test with 14 questions that you can try for free on our homepage. This gives you a taste of our question quality and platform interface.
-                        </div>
-                    </div>
-                    
-                    <div class="faq-item">
-                        <button class="faq-question" onclick="toggleFaq(this)">
-                            How does the performance analytics work?
-                            <i class="fas fa-plus"></i>
-                        </button>
-                        <div class="faq-answer" style="display: none;">
-                            Our analytics track your performance across all practice tests, showing trends in accuracy, timing, and question types. You'll see detailed breakdowns of your strengths and weaknesses, helping you focus your study time effectively.
+                            Yes! Take our free 14-question test first - if you score 40% or higher, you'll earn an automatic scholarship discount (30% for 40-69%, 50% for 70%+). You can apply the scholarship code during checkout on this page.
                         </div>
                     </div>
                 </div>
@@ -832,10 +1045,10 @@
                     <a href="about-lnat.html">About LNAT</a>
                     <a href="pricing.html">Pricing</a>
                     <a href="contact.html">Contact</a>
-                    <a href="#privacy">Privacy Policy</a>
-                    <a href="#terms">Terms of Service</a>
+                    <a href="privacy-policy.html">Privacy Policy</a>
+                    <a href="terms-of-service.html">Terms of Service</a>
                 </div>
-                <p class="text-muted">&copy; 2024 Lexcello. All rights reserved. LNAT® is a trademark of the LNAT Consortium.</p>
+                <p class="text-muted">&copy; 2025 Lexcello. All rights reserved. LNAT® is a trademark of the LNAT Consortium.</p>
             </div>
         </div>
     </footer>
@@ -843,50 +1056,58 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     
     <script>
-        // Configuration
         const API_BASE_URL = 'https://lexcello-backend.onrender.com/api';
         
-        // State management
-        let currentUser = null;
+        // Pricing data with all 3 tiers (correct values)
+        const packages = {
+            foundation: {
+                GBP: { symbol: '£', price: 49, actualCharge: 5700 },
+                USD: { symbol: '$', price: 65, actualCharge: 5700 },
+                INR: { symbol: '₹', price: 5700, actualCharge: 5700 }
+            },
+            advanced: {
+                GBP: { symbol: '£', price: 59, actualCharge: 6900 },
+                USD: { symbol: '$', price: 78, actualCharge: 6900 },
+                INR: { symbol: '₹', price: 6900, actualCharge: 6900 }
+            },
+            complete: {
+                GBP: { symbol: '£', price: 99, actualCharge: 11500 },
+                USD: { symbol: '$', price: 130, actualCharge: 11500 },
+                INR: { symbol: '₹', price: 11500, actualCharge: 11500 }
+            }
+        };
         
-        // Initialize the app
+        let selectedCurrency = 'GBP';
+        let currentUser = null;
+        let appliedCoupons = {
+            foundation: null,
+            advanced: null,
+            complete: null
+        };
+        
+        // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             checkAuthStatus();
             checkForScholarshipCode();
-            
-            // Add click listener to close dropdown when clicking outside
-            document.addEventListener('click', function(event) {
-                const userMenu = document.getElementById('user-menu');
-                const dropdown = document.getElementById('user-dropdown');
-                
-                if (userMenu && !userMenu.contains(event.target)) {
-                    dropdown.classList.remove('show');
-                }
-            });
+            switchCurrency('GBP');
         });
         
-        // Authentication functions
+        // Authentication
         async function checkAuthStatus() {
             const token = localStorage.getItem('authToken');
             if (token) {
                 try {
                     const response = await fetch(`${API_BASE_URL}/auth/profile`, {
-                        method: 'GET',
-                        headers: {
-                            'Authorization': `Bearer ${token}`,
-                            'Content-Type': 'application/json'
-                        }
+                        headers: { 'Authorization': `Bearer ${token}` }
                     });
                     
                     if (response.ok) {
-                        const userData = await response.json();
-                        updateUIForLoggedInUser(userData);
+                        currentUser = await response.json();
+                        updateUIForLoggedInUser(currentUser);
                     } else {
-                        localStorage.removeItem('authToken');
                         updateUIForLoggedOutUser();
                     }
                 } catch (error) {
-                    console.error('Error checking auth status:', error);
                     updateUIForLoggedOutUser();
                 }
             } else {
@@ -895,377 +1116,112 @@
         }
         
         function updateUIForLoggedInUser(userData) {
-    currentUser = userData;
-    
-    // NUCLEAR OPTION: Force hide with multiple methods
-    const authButtons = document.getElementById('auth-buttons');
-    const userMenu = document.getElementById('user-menu');
-    
-    if (authButtons) {
-        // Set inline style with !important
-        authButtons.style.setProperty('display', 'none', 'important');
-        authButtons.style.visibility = 'hidden';
-        authButtons.style.opacity = '0';
-        authButtons.style.height = '0';
-        authButtons.style.overflow = 'hidden';
-        authButtons.classList.add('hide');
-        
-        // Also hide all child elements
-        const buttons = authButtons.querySelectorAll('button');
-        buttons.forEach(btn => {
-            btn.style.setProperty('display', 'none', 'important');
-            btn.style.visibility = 'hidden';
-        });
-    }
-    
-    if (userMenu) {
-        userMenu.style.setProperty('display', 'block', 'important');
-        userMenu.style.visibility = 'visible';
-        userMenu.style.opacity = '1';
-        userMenu.classList.remove('hide');
-        userMenu.classList.add('show');
-    }
-    
-    const userAvatar = document.getElementById('user-avatar');
-    if (userAvatar) {
-        const firstLetter = (userData.name || userData.email || 'U').charAt(0).toUpperCase();
-        userAvatar.textContent = firstLetter;
-        userAvatar.title = userData.email || 'User';
-    }
-    
-    updateCTAButton();
-    
-    console.log('✅ UI updated for logged in user:', userData.email);
-    console.log('Auth buttons display:', authButtons?.style.display);
-    console.log('Auth buttons visibility:', authButtons?.style.visibility);
-    console.log('User menu display:', userMenu?.style.display);
-}
+            document.getElementById('auth-buttons').style.display = 'none';
+            document.getElementById('user-menu').style.display = 'block';
+            
+            const avatar = document.getElementById('user-avatar');
+            avatar.textContent = (userData.name || userData.email || 'U').charAt(0).toUpperCase();
+        }
         
         function updateUIForLoggedOutUser() {
-    currentUser = null;
-    
-    // Show auth buttons and hide user menu with classes
-    const authButtons = document.getElementById('auth-buttons');
-    const userMenu = document.getElementById('user-menu');
-    
-    if (authButtons) {
-        authButtons.style.display = 'flex';
-        authButtons.classList.remove('hide');
-    }
-    
-    if (userMenu) {
-        userMenu.style.display = 'none';
-        userMenu.classList.add('hide');
-        userMenu.classList.remove('show');
-    }
-    
-    updateCTAButton();
-    
-    console.log('✅ UI updated for logged out user');
-    console.log('Auth buttons display:', authButtons?.style.display);
-    console.log('User menu display:', userMenu?.style.display);
-}
-        
-        function updateCTAButton() {
-            const ctaButton = document.getElementById('ctaButton');
-            
-            if (currentUser) {
-                if (currentUser.subscriptionStatus === 'premium') {
-                    ctaButton.innerHTML = '<i class="fas fa-check me-2"></i>Access Your Dashboard';
-                    ctaButton.className = 'cta-button btn-subscribed';
-                    ctaButton.onclick = () => window.location.href = 'dashboard.html';
-                } else {
-                    ctaButton.innerHTML = '<i class="fas fa-credit-card me-2"></i>Complete Your Purchase';
-                    ctaButton.className = 'cta-button btn-primary-custom';
-                    ctaButton.onclick = handleSubscription;
-                }
-            } else {
-                ctaButton.innerHTML = '<i class="fas fa-rocket me-2"></i>Start Your LNAT Preparation';
-                ctaButton.className = 'cta-button btn-primary-custom';
-                ctaButton.onclick = handleSubscription;
-            }
+            document.getElementById('auth-buttons').style.display = 'flex';
+            document.getElementById('user-menu').style.display = 'none';
         }
         
         function toggleUserDropdown() {
-            const dropdown = document.getElementById('user-dropdown');
-            dropdown.classList.toggle('show');
+            document.getElementById('user-dropdown').classList.toggle('show');
         }
         
         async function signOut() {
-    try {
-        const token = localStorage.getItem('authToken');
-        if (token) {
-            await fetch(`${API_BASE_URL}/auth/logout`, {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
+            const token = localStorage.getItem('authToken');
+            if (token) {
+                try {
+                    await fetch(`${API_BASE_URL}/auth/logout`, {
+                        method: 'POST',
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                } catch (error) {
+                    console.error('Logout error:', error);
                 }
-            });
-        }
-    } catch (error) {
-        console.error('Error during logout:', error);
-    } finally {
-        localStorage.removeItem('authToken');
-        
-        // FORCE show auth buttons and hide user menu
-        const authButtons = document.getElementById('auth-buttons');
-        const userMenu = document.getElementById('user-menu');
-        
-        if (authButtons) {
-            // Force show with multiple methods
-            authButtons.style.setProperty('display', 'flex', 'important');
-            authButtons.style.visibility = 'visible';
-            authButtons.style.opacity = '1';
-            authButtons.style.height = 'auto';
-            authButtons.style.overflow = 'visible';
-            authButtons.classList.remove('hide');
+            }
             
-            // Show all child buttons
-            const buttons = authButtons.querySelectorAll('button');
-            buttons.forEach(btn => {
-                btn.style.setProperty('display', 'block', 'important');
-                btn.style.visibility = 'visible';
-            });
-        }
-        
-        if (userMenu) {
-            // Force hide user menu
-            userMenu.style.setProperty('display', 'none', 'important');
-            userMenu.style.visibility = 'hidden';
-            userMenu.style.opacity = '0';
-            userMenu.style.height = '0';
-            userMenu.classList.add('hide');
-            userMenu.classList.remove('show');
-        }
-        
-        currentUser = null;
-        updateCTAButton();
-        
-        console.log('✅ Logged out - UI updated');
-        console.log('Auth buttons display:', authButtons?.style.display);
-        console.log('User menu display:', userMenu?.style.display);
-        
-        if (window.location.pathname.includes('dashboard') || 
-            window.location.pathname.includes('profile')) {
+            localStorage.removeItem('authToken');
+            currentUser = null;
+            updateUIForLoggedOutUser();
             window.location.href = 'index.html';
         }
-    }
-}
         
-        // Navigation functions
-        function signIn() {
-            window.location.href = 'login.html';
-        }
-        
-        function getStarted() {
-            if (currentUser) {
-                if (currentUser.subscriptionStatus === 'premium') {
-                    window.location.href = 'dashboard.html';
-                } else {
-                    window.location.href = 'payment.html';
-                }
-            } else {
-                window.location.href = 'register.html';
-            }
-        }
-        
-        // Pricing functions
-        const prices = {
-            INR: { 
-                symbol: '₹', 
-                amount: 9000, 
-                display: '9,000', 
-                code: 'INR', 
-                monthly: '₹750',
-                name: 'Indian Rupees',
-                showDisclaimer: false
-            },
-            USD: { 
-                symbol: '$', 
-                amount: 9000,
-                display: '99', 
-                code: 'INR',
-                monthly: '$8.25',
-                name: 'US Dollars',
-                showDisclaimer: true,
-                actualCurrency: 'USD'
-            },
-            GBP: { 
-                symbol: '£', 
-                amount: 9000,
-                display: '79', 
-                code: 'INR',
-                monthly: '£6.58',
-                name: 'British Pounds',
-                showDisclaimer: true,
-                actualCurrency: 'GBP'
-            }
-        };
-        
-        let selectedCurrency = 'GBP';
-        
+        // Currency switching
         function switchCurrency(currency) {
             selectedCurrency = currency;
             
-            const buttons = document.querySelectorAll('.currency-btn');
-            buttons.forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-            
-            const price = prices[currency];
-            document.getElementById('currency-symbol').textContent = price.symbol;
-            
-            if (appliedCoupon) {
-                const displayOriginal = parseFloat(price.display.replace(/,/g, ''));
-                const displayDiscount = (discountAmount * displayOriginal / price.amount).toFixed(2);
-                const displayFinal = (displayOriginal - displayDiscount).toFixed(2);
-                
-                const formattedOriginal = selectedCurrency === 'INR' 
-                    ? displayOriginal.toLocaleString('en-IN')
-                    : displayOriginal;
-                const formattedFinal = selectedCurrency === 'INR' 
-                    ? parseFloat(displayFinal).toLocaleString('en-IN')
-                    : displayFinal;
-                const formattedDiscount = selectedCurrency === 'INR'
-                    ? parseFloat(displayDiscount).toLocaleString('en-IN')
-                    : displayDiscount;
-                
-                document.getElementById('price-amount').innerHTML = 
-                    `<span style="text-decoration: line-through; opacity: 0.5; font-size: 0.6em;">${formattedOriginal}</span> ${formattedFinal}`;
-                
-                document.getElementById('original-price-display').textContent = 
-                    `${price.symbol}${formattedOriginal}`;
-                document.getElementById('final-price-display').textContent = 
-                    `${price.symbol}${formattedFinal}`;
-                document.getElementById('savings-display').textContent = 
-                    `${price.symbol}${formattedDiscount}`;
-                
-                if (price.showDisclaimer) {
-                    const disclaimer = document.getElementById('currency-disclaimer');
-                    const discountedINR = (9000 - discountAmount).toFixed(0);
-                    const formattedDiscountedINR = Number(discountedINR).toLocaleString('en-IN');
-                    const formattedFinalForDisclaimer = selectedCurrency === 'INR' 
-                        ? parseFloat(displayFinal).toLocaleString('en-IN')
-                        : displayFinal;
-                    
-                    disclaimer.innerHTML = `
-                        <small class="text-muted">
-                            <i class="fas fa-info-circle"></i> 
-                            You will be charged <strong>₹${formattedDiscountedINR} INR</strong> (approximately ${price.symbol}${formattedFinalForDisclaimer}). 
-                            Final amount in your currency may vary based on current exchange rates.
-                        </small>
-                    `;
-                }
-            } else {
-                document.getElementById('price-amount').textContent = price.display;
-                
-                const disclaimer = document.getElementById('currency-disclaimer');
-                const currencyName = document.getElementById('selected-currency-name');
-                
-                if (price.showDisclaimer) {
-                    disclaimer.style.display = 'block';
-                    currencyName.textContent = `${price.symbol}${price.display}`;
+            ['GBP', 'USD', 'INR'].forEach(curr => {
+                const btn = document.getElementById(`btn-${curr}`);
+                if (curr === currency) {
+                    btn.classList.add('active');
                 } else {
-                    disclaimer.style.display = 'none';
+                    btn.classList.remove('active');
                 }
-            }
-        }
-        
-        function toggleFaq(button) {
-            const answer = button.nextElementSibling;
-            const icon = button.querySelector('i');
+            });
             
-            if (answer.style.display === 'none' || answer.style.display === '') {
-                answer.style.display = 'block';
-                icon.classList.remove('fa-plus');
-                icon.classList.add('fa-minus');
-            } else {
-                answer.style.display = 'none';
-                icon.classList.remove('fa-minus');
-                icon.classList.add('fa-plus');
-            }
-        }
-        
-        async function handleSubscription() {
-            try {
-                gtag('event', 'pricing_cta_click', {
-                    'event_category': 'pricing',
-                    'event_label': 'start_lnat_preparation',
-                    'user_logged_in': currentUser ? 'yes' : 'no',
-                    'subscription_status': currentUser ? currentUser.subscriptionStatus : 'not_logged_in',
-                    'selected_currency': selectedCurrency
-                });
-            } catch (error) {
-                console.error('Tracking error:', error);
-            }
+            document.querySelectorAll('[data-currency-symbol]').forEach(el => {
+                el.textContent = packages.foundation[currency].symbol;
+            });
             
-            if (!currentUser) {
-                try {
-                    gtag('event', 'redirect_to_register', {
-                        'event_category': 'pricing',
-                        'event_label': 'from_pricing_page'
-                    });
-                } catch (error) {
-                    console.error('Tracking error:', error);
-                }
-                
-                window.location.href = 'register.html';
-                return;
-            }
+            document.querySelector('[data-price="foundation"]').textContent = 
+                formatPrice(packages.foundation[currency].price, currency);
+            document.querySelector('[data-price="advanced"]').textContent = 
+                formatPrice(packages.advanced[currency].price, currency);
+            document.querySelector('[data-price="complete"]').textContent = 
+                formatPrice(packages.complete[currency].price, currency);
             
-            if (currentUser.subscriptionStatus === 'premium') {
-                try {
-                    gtag('event', 'redirect_to_dashboard', {
-                        'event_category': 'pricing',
-                        'event_label': 'already_subscribed'
-                    });
-                } catch (error) {
-                    console.error('Tracking error:', error);
-                }
-                
-                window.location.href = 'dashboard.html';
-                return;
-            }
+            document.querySelector('[data-compare-price="foundation"]').textContent = 
+                packages.foundation[currency].symbol + formatPrice(packages.foundation[currency].price, currency);
+            document.querySelector('[data-compare-price="advanced"]').textContent = 
+                packages.advanced[currency].symbol + formatPrice(packages.advanced[currency].price, currency);
+            document.querySelector('[data-compare-price="complete"]').textContent = 
+                packages.complete[currency].symbol + formatPrice(packages.complete[currency].price, currency);
             
-            localStorage.setItem('selectedCurrency', selectedCurrency);
-            localStorage.setItem('selectedAmount', prices[selectedCurrency].amount);
+            const foundationPrice = packages.foundation[currency].price;
+            const advancedPrice = packages.advanced[currency].price;
+            const completePrice = packages.complete[currency].price;
+            const savings = (foundationPrice + advancedPrice) - completePrice;
             
-            try {
-                gtag('event', 'redirect_to_payment', {
-                    'event_category': 'pricing',
-                    'event_label': 'from_pricing_page',
-                    'user_email': currentUser.email,
-                    'currency': selectedCurrency,
-                    'amount': prices[selectedCurrency].amount
-                });
-            } catch (error) {
-                console.error('Tracking error:', error);
-            }
-            
-            window.location.href = 'payment.html';
-        }
-        
-        // Coupon Management
-        let appliedCoupon = null;
-        let discountAmount = 0;
-        let finalPrice = 0;
+            document.querySelector('[data-savings]').textContent = 
+                packages.complete[currency].symbol + savings;
 
-        async function applyCoupon() {
-            const couponInput = document.getElementById('coupon-input');
+            // Update currency disclaimers if coupons are applied
+            ['foundation', 'advanced', 'complete'].forEach(pkg => {
+                if (appliedCoupons[pkg]) {
+                    updateCurrencyDisclaimer(pkg, appliedCoupons[pkg].discountAmount);
+                }
+            });
+        }
+        
+        function formatPrice(price, currency) {
+            if (currency === 'INR') {
+                return price.toLocaleString('en-IN');
+            }
+            return price.toString();
+        }
+
+        // Coupon Management
+        async function applyCoupon(packageType) {
+            const couponInput = document.getElementById(`coupon-input-${packageType}`);
             const couponCode = couponInput.value.trim().toUpperCase();
             
             if (!couponCode) {
-                showCouponMessage('Please enter a coupon code', 'error');
+                showCouponMessage(packageType, 'Please enter a coupon code', 'error');
                 return;
             }
             
-            const applyBtn = document.getElementById('apply-coupon-btn');
+            const applyBtn = document.getElementById(`apply-coupon-btn-${packageType}`);
             applyBtn.disabled = true;
             applyBtn.textContent = 'Checking...';
             
             try {
-                const currentPrice = prices[selectedCurrency];
-                const originalAmount = currentPrice.amount;
+                const currentPrice = packages[packageType][selectedCurrency];
+                const originalAmount = currentPrice.actualCharge;
                 
                 const validateResponse = await fetch(`${API_BASE_URL}/coupons/validate`, {
                     method: 'POST',
@@ -1275,11 +1231,13 @@
                 
                 if (!validateResponse.ok) {
                     const error = await validateResponse.json();
-                    showCouponMessage(error.error || 'Invalid coupon code', 'error');
+                    showCouponMessage(packageType, error.error || 'Invalid coupon code', 'error');
                     applyBtn.disabled = false;
                     applyBtn.textContent = 'Apply';
                     return;
                 }
+                
+                const couponData = await validateResponse.json();
                 
                 const calculateResponse = await fetch(`${API_BASE_URL}/coupons/calculate`, {
                     method: 'POST',
@@ -1292,7 +1250,7 @@
                 
                 if (!calculateResponse.ok) {
                     const error = await calculateResponse.json();
-                    showCouponMessage(error.error || 'Failed to apply coupon', 'error');
+                    showCouponMessage(packageType, error.error || 'Failed to apply coupon', 'error');
                     applyBtn.disabled = false;
                     applyBtn.textContent = 'Apply';
                     return;
@@ -1301,28 +1259,27 @@
                 const discountData = await calculateResponse.json();
                 
                 if (discountData.success) {
-                    appliedCoupon = discountData.coupon;
-                    discountAmount = discountData.discountAmount;
-                    finalPrice = discountData.finalAmount;
-                    
-                    displayDiscount(discountData, currentPrice);
-                    showCouponMessage('Coupon applied successfully!', 'success');
-                    
-                    localStorage.setItem('appliedCoupon', JSON.stringify({
+                    appliedCoupons[packageType] = {
                         code: couponCode,
-                        couponId: discountData.couponId,
-                        discountAmount: discountAmount,
-                        finalAmount: finalPrice
-                    }));
+                        couponId: couponData.coupon.id,
+                        discountAmount: discountData.discountAmount,
+                        finalAmount: discountData.finalAmount,
+                        originalAmount: originalAmount
+                    };
+                    
+                    displayDiscount(packageType, discountData, currentPrice);
+                    showCouponMessage(packageType, 'Coupon applied successfully!', 'success');
+                    
+                    localStorage.setItem(`appliedCoupon_${packageType}`, JSON.stringify(appliedCoupons[packageType]));
                     
                     try {
                         gtag('event', 'coupon_applied', {
                             'event_category': 'pricing',
-                            'event_label': couponCode,
-                            'value': discountAmount
+                            'event_label': `${packageType}_${couponCode}`,
+                            'value': discountData.discountAmount
                         });
                     } catch (error) {
-                        console.error('GA tracking error:', error);
+                        console.error('GA error:', error);
                     }
                     
                     couponInput.disabled = true;
@@ -1330,25 +1287,18 @@
                 
             } catch (error) {
                 console.error('Coupon error:', error);
-                showCouponMessage('Failed to apply coupon. Please try again.', 'error');
+                showCouponMessage(packageType, 'Failed to apply coupon. Please try again.', 'error');
             } finally {
                 applyBtn.disabled = false;
                 applyBtn.textContent = 'Apply';
             }
         }
 
-        function displayDiscount(discountData, currentPrice) {
-            document.getElementById('discount-display').style.display = 'block';
+        function displayDiscount(packageType, discountData, currentPrice) {
+            const discountDisplay = document.getElementById(`discount-display-${packageType}`);
             
-            document.getElementById('applied-coupon-code').textContent = discountData.coupon.code;
-            
-            const description = discountData.coupon.description || 
-                `${discountData.discountAmount === discountData.originalAmount ? 'Free' : 
-                  `Save ${currentPrice.symbol}${(discountData.discountAmount * parseFloat(currentPrice.display) / currentPrice.amount).toFixed(2)}`}`;
-            document.getElementById('discount-description').textContent = description;
-            
-            const displayOriginal = parseFloat(currentPrice.display.replace(/,/g, ''));
-            const displayDiscount = (discountData.discountAmount * displayOriginal / currentPrice.amount).toFixed(2);
+            const displayOriginal = parseFloat(currentPrice.price);
+            const displayDiscount = (discountData.discountAmount * displayOriginal / currentPrice.actualCharge).toFixed(2);
             const displayFinal = (displayOriginal - displayDiscount).toFixed(2);
             
             const formattedOriginal = selectedCurrency === 'INR' 
@@ -1361,71 +1311,98 @@
                 ? parseFloat(displayDiscount).toLocaleString('en-IN')
                 : displayDiscount;
             
-            document.getElementById('original-price-display').textContent = 
-                `${currentPrice.symbol}${formattedOriginal}`;
-            document.getElementById('final-price-display').textContent = 
-                `${currentPrice.symbol}${formattedFinal}`;
-            document.getElementById('savings-display').textContent = 
-                `${currentPrice.symbol}${formattedDiscount}`;
+            discountDisplay.innerHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <strong style="color: #155724;">✓ Coupon Applied: ${discountData.coupon.code}</strong>
+                        <div style="font-size: 0.9rem; color: #155724; margin-top: 5px;">
+                            ${discountData.coupon.description || 'Discount applied'}
+                        </div>
+                    </div>
+                    <button onclick="removeCoupon('${packageType}')" 
+                            style="background: none; border: none; color: #721c24; font-size: 1.2rem; cursor: pointer; padding: 5px 10px;"
+                            title="Remove coupon">×</button>
+                </div>
+                <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #c3e6cb;">
+                    <div style="display: flex; justify-content: space-between; font-size: 0.95rem; color: #666; margin-bottom: 5px;">
+                        <span>Original Price:</span>
+                        <span style="text-decoration: line-through;">${currentPrice.symbol}${formattedOriginal}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-size: 1.1rem; font-weight: bold; color: #155724;">
+                        <span>Final Price:</span>
+                        <span>${currentPrice.symbol}${formattedFinal}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-size: 0.9rem; color: #28a745; margin-top: 5px;">
+                        <span>You Save:</span>
+                        <span>${currentPrice.symbol}${formattedDiscount}</span>
+                    </div>
+                </div>
+            `;
             
-            document.getElementById('price-amount').innerHTML = 
-                `<span style="text-decoration: line-through; opacity: 0.5; font-size: 0.6em;">${formattedOriginal}</span> ${formattedFinal}`;
+            discountDisplay.style.display = 'block';
             
-            if (currentPrice.showDisclaimer) {
-                const disclaimer = document.getElementById('currency-disclaimer');
-                const discountedINR = (9000 - discountData.discountAmount).toFixed(0);
+            // Update price display
+            const priceDisplay = document.querySelector(`[data-price="${packageType}"]`);
+            priceDisplay.innerHTML = `<span style="text-decoration: line-through; opacity: 0.5; font-size: 0.6em;">${formattedOriginal}</span> ${formattedFinal}`;
+            
+            // Update currency disclaimer
+            updateCurrencyDisclaimer(packageType, discountData.discountAmount);
+        }
+
+        function updateCurrencyDisclaimer(packageType, discountAmount) {
+            if (selectedCurrency !== 'INR') {
+                const disclaimer = document.getElementById(`currency-disclaimer-${packageType}`);
+                const currentPrice = packages[packageType][selectedCurrency];
+                const discountedINR = (currentPrice.actualCharge - discountAmount).toFixed(0);
+                const formattedDiscountedINR = Number(discountedINR).toLocaleString('en-IN');
+                
+                const displayPrice = parseFloat(currentPrice.price);
+                const displayDiscount = (discountAmount * displayPrice / currentPrice.actualCharge).toFixed(2);
+                const displayFinal = (displayPrice - displayDiscount).toFixed(2);
+                const formattedFinal = selectedCurrency === 'INR' 
+                    ? parseFloat(displayFinal).toLocaleString('en-IN')
+                    : displayFinal;
                 
                 disclaimer.innerHTML = `
                     <small class="text-muted">
                         <i class="fas fa-info-circle"></i> 
-                        You will be charged <strong>₹${Number(discountedINR).toLocaleString('en-IN')} INR</strong> (approximately ${currentPrice.symbol}${displayFinal}). 
+                        You will be charged <strong>₹${formattedDiscountedINR} INR</strong> (approximately ${currentPrice.symbol}${formattedFinal}). 
                         Final amount in your currency may vary based on current exchange rates.
                     </small>
                 `;
+                disclaimer.style.display = 'block';
             }
         }
 
-        function removeCoupon() {
-            appliedCoupon = null;
-            discountAmount = 0;
-            finalPrice = 0;
+        function removeCoupon(packageType) {
+            appliedCoupons[packageType] = null;
+            localStorage.removeItem(`appliedCoupon_${packageType}`);
             
-            localStorage.removeItem('appliedCoupon');
+            document.getElementById(`discount-display-${packageType}`).style.display = 'none';
+            document.getElementById(`currency-disclaimer-${packageType}`).style.display = 'none';
             
-            document.getElementById('discount-display').style.display = 'none';
-            
-            const couponInput = document.getElementById('coupon-input');
+            const couponInput = document.getElementById(`coupon-input-${packageType}`);
             couponInput.value = '';
             couponInput.disabled = false;
             
-            const currentPrice = prices[selectedCurrency];
-            document.getElementById('price-amount').textContent = currentPrice.display;
+            const currentPrice = packages[packageType][selectedCurrency];
+            document.querySelector(`[data-price="${packageType}"]`).textContent = 
+                formatPrice(currentPrice.price, selectedCurrency);
             
-            if (currentPrice.showDisclaimer) {
-                const disclaimer = document.getElementById('currency-disclaimer');
-                disclaimer.innerHTML = `
-                    <small class="text-muted">
-                        <i class="fas fa-info-circle"></i> 
-                        You will be charged <strong>₹9,000 INR</strong> (approximately ${currentPrice.symbol}${currentPrice.display}). 
-                        Final amount in your currency may vary based on current exchange rates.
-                    </small>
-                `;
-            }
-            
-            showCouponMessage('Coupon removed', 'info');
+            showCouponMessage(packageType, 'Coupon removed', 'info');
             
             try {
                 gtag('event', 'coupon_removed', {
                     'event_category': 'pricing',
-                    'event_label': 'user_action'
+                    'event_label': packageType
                 });
             } catch (error) {
-                console.error('GA tracking error:', error);
+                console.error('GA error:', error);
             }
         }
 
-        function showCouponMessage(message, type) {
-            const messageDiv = document.getElementById('coupon-message');
+        function showCouponMessage(packageType, message, type) {
+            const messageDiv = document.getElementById(`coupon-message-${packageType}`);
             
             const colors = {
                 success: { bg: '#d4edda', text: '#155724', border: '#c3e6cb' },
@@ -1442,6 +1419,7 @@
             messageDiv.style.color = color.text;
             messageDiv.style.border = `1px solid ${color.border}`;
             messageDiv.style.fontSize = '0.9rem';
+            messageDiv.style.marginTop = '10px';
             messageDiv.textContent = message;
             
             setTimeout(() => {
@@ -1451,88 +1429,69 @@
             }, 5000);
         }
 
-        // Scholarship Auto-Apply Functions
+        // Scholarship Auto-Apply
         function checkForScholarshipCode() {
-    console.log('🔍 Checking for scholarship code...');
-    
-    const urlParams = new URLSearchParams(window.location.search);
-    const scholarshipParam = urlParams.get('scholarship');
-    
-    console.log('URL search params:', window.location.search);
-    console.log('Scholarship param from URL:', scholarshipParam);
-    
-    if (scholarshipParam) {
-        console.log('🎓 Scholarship code found in URL:', scholarshipParam);
-        
-        const couponInput = document.getElementById('coupon-input');
-        if (couponInput) {
-            couponInput.value = scholarshipParam;
-            console.log('✅ Set coupon input to:', scholarshipParam);
-        } else {
-            console.error('❌ Coupon input element not found!');
-        }
-        
-        setTimeout(() => {
-            console.log('⏰ Attempting to apply coupon...');
-            applyCoupon();
-            showScholarshipWelcome();
-            window.history.replaceState({}, document.title, window.location.pathname);
-        }, 500);
-        
-        return;
-    }
-    
-    // Check localStorage
-    const scholarship = localStorage.getItem('activeScholarship');
-    const couponCode = localStorage.getItem('scholarshipCoupon');
-    
-    console.log('activeScholarship in localStorage:', scholarship);
-    console.log('scholarshipCoupon in localStorage:', couponCode);
-    
-    if (scholarship || couponCode) {
-        try {
-            const scholarshipData = scholarship ? JSON.parse(scholarship) : null;
-            const code = scholarshipData?.couponCode || couponCode;
+            console.log('🔍 Checking for scholarship code...');
             
-            if (code) {
-                console.log('🎓 Scholarship found in localStorage:', code);
+            const urlParams = new URLSearchParams(window.location.search);
+            const scholarshipParam = urlParams.get('scholarship');
+            
+            if (scholarshipParam) {
+                console.log('🎓 Scholarship code found in URL:', scholarshipParam);
                 
-                if (scholarshipData?.validUntil) {
-                    const validUntil = new Date(scholarshipData.validUntil);
-                    const now = new Date();
-                    
-                    console.log('Valid until:', validUntil);
-                    console.log('Current time:', now);
-                    
-                    if (validUntil < now) {
-                        console.log('❌ Scholarship expired');
-                        localStorage.removeItem('activeScholarship');
-                        localStorage.removeItem('scholarshipCoupon');
-                        return;
-                    }
-                }
-                
-                const couponInput = document.getElementById('coupon-input');
+                // Apply to Complete package by default
+                const couponInput = document.getElementById('coupon-input-complete');
                 if (couponInput) {
-                    couponInput.value = code;
-                    console.log('✅ Set coupon input to:', code);
+                    couponInput.value = scholarshipParam;
                 }
                 
                 setTimeout(() => {
-                    console.log('⏰ Attempting to apply coupon from localStorage...');
-                    applyCoupon();
+                    applyCoupon('complete');
                     showScholarshipWelcome();
+                    window.history.replaceState({}, document.title, window.location.pathname);
                 }, 500);
-            } else {
-                console.log('⚠️ No valid code found in scholarship data');
+                
+                return;
             }
-        } catch (error) {
-            console.error('❌ Error parsing scholarship:', error);
+            
+            // Check localStorage for active scholarships
+            const scholarship = localStorage.getItem('activeScholarship');
+            const couponCode = localStorage.getItem('scholarshipCoupon');
+            
+            if (scholarship || couponCode) {
+                try {
+                    const scholarshipData = scholarship ? JSON.parse(scholarship) : null;
+                    const code = scholarshipData?.couponCode || couponCode;
+                    
+                    if (code) {
+                        console.log('🎓 Scholarship found in localStorage:', code);
+                        
+                        if (scholarshipData?.validUntil) {
+                            const validUntil = new Date(scholarshipData.validUntil);
+                            if (validUntil < new Date()) {
+                                console.log('❌ Scholarship expired');
+                                localStorage.removeItem('activeScholarship');
+                                localStorage.removeItem('scholarshipCoupon');
+                                return;
+                            }
+                        }
+                        
+                        const couponInput = document.getElementById('coupon-input-complete');
+                        if (couponInput) {
+                            couponInput.value = code;
+                        }
+                        
+                        setTimeout(() => {
+                            applyCoupon('complete');
+                            showScholarshipWelcome();
+                        }, 500);
+                    }
+                } catch (error) {
+                    console.error('❌ Error parsing scholarship:', error);
+                }
+            }
         }
-    } else {
-        console.log('ℹ️ No scholarship found in localStorage or URL');
-    }
-}
+
         function showScholarshipWelcome() {
             const welcomeDiv = document.createElement('div');
             welcomeDiv.style.cssText = `
@@ -1556,7 +1515,7 @@
                 <div style="font-size: 2rem; margin-bottom: 10px;">🎉</div>
                 <h4 style="color: #1a365d; margin-bottom: 10px; font-weight: 700;">Scholarship Applied!</h4>
                 <p style="color: #4a5568; margin: 0; font-size: 0.95rem;">
-                    Your exclusive discount has been automatically applied to your purchase.
+                    Your exclusive discount has been automatically applied to the Complete Series package.
                 </p>
                 <button onclick="this.parentElement.remove()" 
                         style="margin-top: 15px; padding: 8px 20px; background: #1a365d; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">
@@ -1580,30 +1539,78 @@
                     'event_label': 'automatic_application'
                 });
             } catch (error) {
-                console.error('GA tracking error:', error);
+                console.error('GA error:', error);
             }
         }
-
-        // Add CSS animation
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes slideDown {
-                from {
-                    transform: translate(-50%, -100px);
-                    opacity: 0;
-                }
-                to {
-                    transform: translate(-50%, 0);
-                    opacity: 1;
-                }
+        
+        // Package selection
+        function selectPackage(packageType) {
+            try {
+                gtag('event', 'package_selected', {
+                    'event_category': 'pricing',
+                    'event_label': packageType,
+                    'currency': selectedCurrency,
+                    'value': packages[packageType][selectedCurrency].actualCharge
+                });
+            } catch (error) {
+                console.error('GA error:', error);
             }
-        `;
-        document.head.appendChild(style);
+            
+            if (!currentUser) {
+                localStorage.setItem('selectedPackage', packageType);
+                localStorage.setItem('selectedCurrency', selectedCurrency);
+                
+                // Store coupon if applied
+                if (appliedCoupons[packageType]) {
+                    localStorage.setItem('appliedCoupon', JSON.stringify(appliedCoupons[packageType]));
+                }
+                
+                window.location.href = 'register.html';
+                return;
+            }
+            
+            if (currentUser.subscriptionStatus === 'premium') {
+                window.location.href = 'dashboard.html';
+                return;
+            }
+            
+            localStorage.setItem('selectedPackage', packageType);
+            localStorage.setItem('selectedCurrency', selectedCurrency);
+            localStorage.setItem('selectedAmount', packages[packageType][selectedCurrency].actualCharge);
+            
+            // Store coupon if applied
+            if (appliedCoupons[packageType]) {
+                localStorage.setItem('appliedCoupon', JSON.stringify(appliedCoupons[packageType]));
+            }
+            
+            window.location.href = 'payment.html';
+        }
+        
+        // FAQ toggle
+        function toggleFaq(button) {
+            const answer = button.nextElementSibling;
+            const icon = button.querySelector('i');
+            
+            if (answer.style.display === 'none' || answer.style.display === '') {
+                answer.style.display = 'block';
+                icon.classList.remove('fa-plus');
+                icon.classList.add('fa-minus');
+            } else {
+                answer.style.display = 'none';
+                icon.classList.remove('fa-minus');
+                icon.classList.add('fa-plus');
+            }
+        }
+        
+        // Close dropdown
+        document.addEventListener('click', function(event) {
+            const userMenu = document.getElementById('user-menu');
+            const dropdown = document.getElementById('user-dropdown');
+            
+            if (userMenu && !userMenu.contains(event.target)) {
+                dropdown.classList.remove('show');
+            }
+        });
     </script>
 </body>
 </html>
-
-
-
-
-
