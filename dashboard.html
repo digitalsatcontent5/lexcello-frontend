@@ -991,34 +991,50 @@
             }
         }
 
-        // Package Access Functions
         function getUserPackage(userData) {
-            if (!userData || !userData.subscriptionStatus) {
-                return 'free';
-            }
-            
-            // Check subscription_plan field first (new structure)
-            if (userData.subscriptionPlan) {
-                const plan = userData.subscriptionPlan.toLowerCase();
-                
-                if (plan.includes('foundation') || plan.includes('1-5') || plan.includes('tests-1-5')) {
-                    return 'foundation';
-                }
-                if (plan.includes('advanced') || plan.includes('6-10') || plan.includes('tests-6-10')) {
-                    return 'advanced';
-                }
-                if (plan.includes('complete') || plan.includes('1-10') || plan.includes('premium-complete')) {
-                    return 'complete';
-                }
-            }
-            
-            // Legacy check: if subscriptionStatus is 'premium', treat as complete package
-            if (userData.subscriptionStatus === 'premium' || userData.subscriptionStatus === 'active') {
-                return 'complete'; // Legacy users get full access
-            }
-            
-            return 'free';
+    if (!userData || !userData.subscriptionStatus) {
+        return 'free';
+    }
+    
+    // Priority 1: Check subscription_package field (NEW - from payments)
+    if (userData.subscriptionPackage) {
+        const pkg = userData.subscriptionPackage.toLowerCase();
+        
+        if (pkg === 'foundation' || pkg === 'tests-1-5') {
+            return 'foundation';
         }
+        if (pkg === 'advanced' || pkg === 'tests-6-10') {
+            return 'advanced';
+        }
+        if (pkg === 'complete' || pkg === 'premium-12') {
+            return 'complete';
+        }
+    }
+    
+    // Priority 2: Check subscription_plan field (OLD - legacy)
+    if (userData.subscriptionPlan) {
+        const plan = userData.subscriptionPlan.toLowerCase();
+        
+        if (plan.includes('foundation') || plan.includes('1-5') || plan.includes('tests-1-5')) {
+            return 'foundation';
+        }
+        if (plan.includes('advanced') || plan.includes('6-10') || plan.includes('tests-6-10')) {
+            return 'advanced';
+        }
+        if (plan.includes('complete') || plan.includes('1-10') || plan.includes('premium-complete')) {
+            return 'complete';
+        }
+    }
+    
+    // Priority 3: Legacy check - ONLY if no package specified
+    // This ensures old premium users still get access
+    if ((userData.subscriptionStatus === 'premium' || userData.subscriptionStatus === 'active') 
+        && !userData.subscriptionPackage && !userData.subscriptionPlan) {
+        return 'complete'; // Legacy users without package = complete access
+    }
+    
+    return 'free';
+}
 
         function getPackageDisplayName(packageType) {
             const names = {
@@ -2104,6 +2120,7 @@ function navigateToFreeTest() {
     </script>
 </body>
 </html>
+
 
 
 
