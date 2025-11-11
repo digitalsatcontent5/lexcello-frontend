@@ -594,23 +594,32 @@
         }
 
         function updateCurrencyDisclaimer(priceData) {
-            const disclaimer = document.getElementById('currency-disclaimer');
-            
-            if (selectedPlan.currency !== 'INR') {
-                const inrAmount = finalAmount.toLocaleString('en-IN');
-                const displayPrice = appliedCoupon
-                    ? (priceData.price - (discountAmount * priceData.price / priceData.actualCharge)).toFixed(2)
-                    : priceData.price;
-                
-                document.getElementById('disclaimer-inr-amount').textContent = `₹${inrAmount} INR`;
-                document.getElementById('disclaimer-approx').textContent = 
-                    `Approximately ${priceData.symbol}${displayPrice} at current exchange rates`;
-                
-                disclaimer.style.display = 'block';
-            } else {
-                disclaimer.style.display = 'none';
-            }
+    const disclaimer = document.getElementById('currency-disclaimer');
+    
+    if (selectedPlan.currency !== 'INR') {
+        // ✅ ALWAYS show the actual INR amount being charged
+        const actualINRAmount = finalAmount.toLocaleString('en-IN');
+        
+        // Calculate the equivalent display currency amount
+        let displayAmount;
+        if (appliedCoupon) {
+            // With coupon: calculate discounted display price
+            const displayDiscount = (discountAmount * priceData.price / priceData.actualCharge);
+            displayAmount = (priceData.price - displayDiscount).toFixed(2);
+        } else {
+            // Without coupon: use original price
+            displayAmount = priceData.price;
         }
+        
+        document.getElementById('disclaimer-inr-amount').textContent = `₹${actualINRAmount} INR`;
+        document.getElementById('disclaimer-approx').textContent = 
+            `Approximately ${priceData.symbol}${displayAmount} ${selectedPlan.currency}`;
+        
+        disclaimer.style.display = 'block';
+    } else {
+        disclaimer.style.display = 'none';
+    }
+}
 
         function updatePaymentButton() {
             const paymentBtn = document.getElementById('payment-btn');
@@ -626,26 +635,41 @@
         
         // Show coupon badge
         function showCouponBadge() {
-            const container = document.getElementById('coupon-badge-container');
-            container.innerHTML = `
-                <div class="coupon-badge">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <strong>
-                                <i class="fas fa-check-circle"></i> Coupon Applied: ${appliedCoupon.code}
-                            </strong>
-                            <div style="font-size: 0.9rem; margin-top: 5px; color: #155724;">
-                                You save ₹${discountAmount.toLocaleString('en-IN')} INR
-                            </div>
-                        </div>
-                        <button onclick="removeCoupon()" 
-                                class="btn btn-sm btn-outline-danger">
-                            <i class="fas fa-times"></i> Remove
-                        </button>
+    const container = document.getElementById('coupon-badge-container');
+    
+    // Determine what to show based on currency
+    let savingsText = '';
+    
+    if (selectedPlan.currency === 'INR') {
+        // For INR payments, show INR savings
+        savingsText = `You save ₹${discountAmount.toLocaleString('en-IN')} INR`;
+    } else {
+        // For GBP/USD, show the display currency savings
+        const pkg = packages[selectedPlan.package];
+        const priceData = pkg.prices[selectedPlan.currency];
+        const displayDiscount = (discountAmount * priceData.price / priceData.actualCharge).toFixed(2);
+        savingsText = `You save ${priceData.symbol}${displayDiscount} ${selectedPlan.currency}`;
+    }
+    
+    container.innerHTML = `
+        <div class="coupon-badge">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <strong>
+                        <i class="fas fa-check-circle"></i> Coupon Applied: ${appliedCoupon.code}
+                    </strong>
+                    <div style="font-size: 0.9rem; margin-top: 5px; color: #155724;">
+                        ${savingsText}
                     </div>
                 </div>
-            `;
-        }
+                <button onclick="removeCoupon()" 
+                        class="btn btn-sm btn-outline-danger">
+                    <i class="fas fa-times"></i> Remove
+                </button>
+            </div>
+        </div>
+    `;
+}
         
         // Remove coupon
         function removeCoupon() {
