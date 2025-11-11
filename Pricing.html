@@ -666,13 +666,13 @@
     <section class="currency-switcher-section">
         <div class="container">
             <div class="currency-switch">
-                <button class="currency-btn active" onclick="switchCurrency('GBP')" id="btn-GBP">
+                <button class="currency-btn active" onclick="window.switchCurrency('GBP'); return false;" id="btn-GBP">
                     <i class="fas fa-pound-sign me-2"></i>GBP (£)
                 </button>
-                <button class="currency-btn" onclick="switchCurrency('USD')" id="btn-USD">
+                <button class="currency-btn" onclick="window.switchCurrency('USD'); return false;" id="btn-USD">
                     <i class="fas fa-dollar-sign me-2"></i>USD ($)
                 </button>
-                <button class="currency-btn" onclick="switchCurrency('INR')" id="btn-INR">
+                <button class="currency-btn" onclick="window.switchCurrency('INR'); return false;" id="btn-INR">
                     <i class="fas fa-rupee-sign me-2"></i>INR (₹)
                 </button>
             </div>
@@ -721,7 +721,7 @@
                                        placeholder="Coupon code?" 
                                        data-package="foundation">
                                 <button class="btn btn-outline-primary apply-coupon-btn" 
-                                        onclick="applyCoupon('foundation')" 
+                                        onclick="window.applyCoupon('foundation'); return false;" 
                                         id="apply-coupon-btn-foundation">
                                     Apply
                                 </button>
@@ -742,7 +742,7 @@
                             <li><i class="fas fa-check-circle"></i><span>Perfect for foundation building</span></li>
                         </ul>
                         
-                        <button class="cta-button btn-outline-custom" onclick="selectPackage('foundation')">
+                        <button class="cta-button btn-outline-custom" onclick="window.selectPackage('foundation'); return false;">
                             <i class="fas fa-shopping-cart me-2"></i>Get Foundation Package
                         </button>
                     </div>
@@ -770,7 +770,7 @@
                                        placeholder="Coupon code?" 
                                        data-package="advanced">
                                 <button class="btn btn-outline-primary apply-coupon-btn" 
-                                        onclick="applyCoupon('advanced')" 
+                                        onclick="window.applyCoupon('advanced'); return false;" 
                                         id="apply-coupon-btn-advanced">
                                     Apply
                                 </button>
@@ -791,7 +791,7 @@
                             <li><i class="fas fa-check-circle"></i><span>Perfect for skill refinement</span></li>
                         </ul>
                         
-                        <button class="cta-button btn-outline-custom" onclick="selectPackage('advanced')">
+                        <button class="cta-button btn-outline-custom" onclick="window.selectPackage('advanced'); return false;">
                             <i class="fas fa-shopping-cart me-2"></i>Get Advanced Package
                         </button>
                     </div>
@@ -823,7 +823,7 @@
                                        placeholder="Coupon code?" 
                                        data-package="complete">
                                 <button class="btn btn-outline-primary apply-coupon-btn" 
-                                        onclick="applyCoupon('complete')" 
+                                        onclick="window.applyCoupon('complete'); return false;" 
                                         id="apply-coupon-btn-complete">
                                     Apply
                                 </button>
@@ -846,7 +846,7 @@
                             <li><i class="fas fa-check-circle"></i><span>Complete LNAT preparation</span></li>
                         </ul>
                         
-                        <button class="cta-button btn-primary-custom" onclick="selectPackage('complete')">
+                        <button class="cta-button btn-primary-custom" onclick="window.selectPackage('complete'); return false;">
                             <i class="fas fa-rocket me-2"></i>Get Complete Series
                         </button>
                     </div>
@@ -1087,35 +1087,51 @@
         
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
-            checkAuthStatus();
-            checkForScholarshipCode();
+            console.log('🟢 Pricing page loaded');
             switchCurrency('GBP');
+            checkForScholarshipCode();
+            
+            // Check auth in background (non-blocking)
+            setTimeout(() => {
+                checkAuthStatus();
+            }, 100);
         });
         
-        // Authentication
+        // Authentication (NON-BLOCKING VERSION)
         async function checkAuthStatus() {
             const token = localStorage.getItem('authToken');
-            if (token) {
-                try {
-                    const response = await fetch(`${API_BASE_URL}/auth/profile`, {
-                        headers: { 'Authorization': `Bearer ${token}` }
-                    });
-                    
-                    if (response.ok) {
-                        currentUser = await response.json();
-                        updateUIForLoggedInUser(currentUser);
-                    } else {
-                        updateUIForLoggedOutUser();
-                    }
-                } catch (error) {
+            
+            if (!token) {
+                updateUIForLoggedOutUser();
+                return;
+            }
+            
+            try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 5000);
+                
+                const response = await fetch(`${API_BASE_URL}/auth/profile`, {
+                    headers: { 'Authorization': `Bearer ${token}` },
+                    signal: controller.signal
+                });
+                
+                clearTimeout(timeoutId);
+                
+                if (response.ok) {
+                    currentUser = await response.json();
+                    updateUIForLoggedInUser(currentUser);
+                } else {
+                    console.warn('Auth check failed');
                     updateUIForLoggedOutUser();
                 }
-            } else {
+            } catch (error) {
+                console.error('Auth error:', error.message);
                 updateUIForLoggedOutUser();
             }
         }
         
         function updateUIForLoggedInUser(userData) {
+            console.log('✅ User logged in:', userData.email);
             document.getElementById('auth-buttons').style.display = 'none';
             document.getElementById('user-menu').style.display = 'block';
             
@@ -1124,6 +1140,7 @@
         }
         
         function updateUIForLoggedOutUser() {
+            console.log('ℹ️ User not logged in');
             document.getElementById('auth-buttons').style.display = 'flex';
             document.getElementById('user-menu').style.display = 'none';
         }
@@ -1152,7 +1169,9 @@
         }
         
         // Currency switching
-        function switchCurrency(currency) {
+        window.switchCurrency = function(currency) {
+            console.log('💱 Currency switched to:', currency);
+            
             selectedCurrency = currency;
             
             ['GBP', 'USD', 'INR'].forEach(curr => {
@@ -1189,81 +1208,64 @@
             
             document.querySelector('[data-savings]').textContent = 
                 packages.complete[currency].symbol + savings;
-// ✅✅✅ ADD THIS NEW CODE HERE ✅✅✅
-    
-    // Refresh applied coupon displays with new currency
-    ['foundation', 'advanced', 'complete'].forEach(pkg => {
-        if (appliedCoupons[pkg]) {
-            const coupon = appliedCoupons[pkg];
-            const freshPrice = packages[pkg][currency];
-            
-            // Recalculate display values
-            const displayOriginal = parseFloat(freshPrice.price);
-            const displayDiscount = (coupon.discountAmount * displayOriginal / freshPrice.actualCharge).toFixed(2);
-            const displayFinal = (displayOriginal - displayDiscount).toFixed(2);
-            
-            const formattedOriginal = currency === 'INR' 
-                ? displayOriginal.toLocaleString('en-IN')
-                : displayOriginal;
-            const formattedFinal = currency === 'INR' 
-                ? parseFloat(displayFinal).toLocaleString('en-IN')
-                : displayFinal;
-            const formattedDiscount = currency === 'INR'
-                ? parseFloat(displayDiscount).toLocaleString('en-IN')
-                : displayDiscount;
-            
-            // Update discount display
-            const discountDisplay = document.getElementById(`discount-display-${pkg}`);
-            if (discountDisplay && discountDisplay.style.display !== 'none') {
-                discountDisplay.innerHTML = `
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <div>
-                            <strong style="color: #155724;">✓ Coupon Applied: ${coupon.code}</strong>
-                            <div style="font-size: 0.9rem; color: #155724; margin-top: 5px;">
-                                Discount applied
-                            </div>
-                        </div>
-                        <button onclick="removeCoupon('${pkg}')" 
-                                style="background: none; border: none; color: #721c24; font-size: 1.2rem; cursor: pointer; padding: 5px 10px;"
-                                title="Remove coupon">×</button>
-                    </div>
-                    <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #c3e6cb;">
-                        <div style="display: flex; justify-content: space-between; font-size: 0.95rem; color: #666; margin-bottom: 5px;">
-                            <span>Original Price:</span>
-                            <span style="text-decoration: line-through;">${freshPrice.symbol}${formattedOriginal}</span>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; font-size: 1.1rem; font-weight: bold; color: #155724;">
-                            <span>Final Price:</span>
-                            <span>${freshPrice.symbol}${formattedFinal}</span>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; font-size: 0.9rem; color: #28a745; margin-top: 5px;">
-                            <span>You Save:</span>
-                            <span>${freshPrice.symbol}${formattedDiscount}</span>
-                        </div>
-                    </div>
-                `;
-            }
-            
-            // Update main price display
-            const priceDisplay = document.querySelector(`[data-price="${pkg}"]`);
-            if (priceDisplay) {
-                priceDisplay.innerHTML = `<span style="text-decoration: line-through; opacity: 0.5; font-size: 0.6em;">${formattedOriginal}</span> ${formattedFinal}`;
-            }
-            
-            // Update currency disclaimer
-            updateCurrencyDisclaimer(pkg, coupon.discountAmount);
-        }
-    });
-    
-    // ✅✅✅ END OF NEW CODE ✅✅✅
-}
 
-            
-
-            // Update currency disclaimers if coupons are applied
+            // Refresh applied coupon displays with new currency
             ['foundation', 'advanced', 'complete'].forEach(pkg => {
                 if (appliedCoupons[pkg]) {
-                    updateCurrencyDisclaimer(pkg, appliedCoupons[pkg].discountAmount);
+                    const coupon = appliedCoupons[pkg];
+                    const freshPrice = packages[pkg][currency];
+                    
+                    const displayOriginal = parseFloat(freshPrice.price);
+                    const displayDiscount = (coupon.discountAmount * displayOriginal / freshPrice.actualCharge).toFixed(2);
+                    const displayFinal = (displayOriginal - displayDiscount).toFixed(2);
+                    
+                    const formattedOriginal = currency === 'INR' 
+                        ? displayOriginal.toLocaleString('en-IN')
+                        : displayOriginal;
+                    const formattedFinal = currency === 'INR' 
+                        ? parseFloat(displayFinal).toLocaleString('en-IN')
+                        : displayFinal;
+                    const formattedDiscount = currency === 'INR'
+                        ? parseFloat(displayDiscount).toLocaleString('en-IN')
+                        : displayDiscount;
+                    
+                    const discountDisplay = document.getElementById(`discount-display-${pkg}`);
+                    if (discountDisplay && discountDisplay.style.display !== 'none') {
+                        discountDisplay.innerHTML = `
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <strong style="color: #155724;">✓ Coupon Applied: ${coupon.code}</strong>
+                                    <div style="font-size: 0.9rem; color: #155724; margin-top: 5px;">
+                                        Discount applied
+                                    </div>
+                                </div>
+                                <button onclick="window.removeCoupon('${pkg}'); return false;" 
+                                        style="background: none; border: none; color: #721c24; font-size: 1.2rem; cursor: pointer; padding: 5px 10px;"
+                                        title="Remove coupon">×</button>
+                            </div>
+                            <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #c3e6cb;">
+                                <div style="display: flex; justify-content: space-between; font-size: 0.95rem; color: #666; margin-bottom: 5px;">
+                                    <span>Original Price:</span>
+                                    <span style="text-decoration: line-through;">${freshPrice.symbol}${formattedOriginal}</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; font-size: 1.1rem; font-weight: bold; color: #155724;">
+                                    <span>Final Price:</span>
+                                    <span>${freshPrice.symbol}${formattedFinal}</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; font-size: 0.9rem; color: #28a745; margin-top: 5px;">
+                                    <span>You Save:</span>
+                                    <span>${freshPrice.symbol}${formattedDiscount}</span>
+                                </div>
+                            </div>
+                        `;
+                    }
+                    
+                    const priceDisplay = document.querySelector(`[data-price="${pkg}"]`);
+                    if (priceDisplay) {
+                        priceDisplay.innerHTML = `<span style="text-decoration: line-through; opacity: 0.5; font-size: 0.6em;">${formattedOriginal}</span> ${formattedFinal}`;
+                    }
+                    
+                    updateCurrencyDisclaimer(pkg, coupon.discountAmount);
                 }
             });
         }
@@ -1276,7 +1278,9 @@
         }
 
         // Coupon Management
-        async function applyCoupon(packageType) {
+        window.applyCoupon = async function(packageType) {
+            console.log('🎫 Applying coupon for:', packageType);
+            
             const couponInput = document.getElementById(`coupon-input-${packageType}`);
             const couponCode = couponInput.value.trim().toUpperCase();
             
@@ -1365,62 +1369,59 @@
         }
 
         function displayDiscount(packageType, discountData, currentPrice) {
-    const discountDisplay = document.getElementById(`discount-display-${packageType}`);
-    
-    // ✅ FIX: Always get FRESH currency data from packages object
-    const freshPrice = packages[packageType][selectedCurrency];
-    
-    const displayOriginal = parseFloat(freshPrice.price);
-    const displayDiscount = (discountData.discountAmount * displayOriginal / freshPrice.actualCharge).toFixed(2);
-    const displayFinal = (displayOriginal - displayDiscount).toFixed(2);
-    
-    const formattedOriginal = selectedCurrency === 'INR' 
-        ? displayOriginal.toLocaleString('en-IN')
-        : displayOriginal;
-    const formattedFinal = selectedCurrency === 'INR' 
-        ? parseFloat(displayFinal).toLocaleString('en-IN')
-        : displayFinal;
-    const formattedDiscount = selectedCurrency === 'INR'
-        ? parseFloat(displayDiscount).toLocaleString('en-IN')
-        : displayDiscount;
-    
-    discountDisplay.innerHTML = `
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-            <div>
-                <strong style="color: #155724;">✓ Coupon Applied: ${discountData.coupon.code}</strong>
-                <div style="font-size: 0.9rem; color: #155724; margin-top: 5px;">
-                    ${discountData.coupon.description || 'Discount applied'}
-                </div>
-            </div>
-            <button onclick="removeCoupon('${packageType}')" 
-                    style="background: none; border: none; color: #721c24; font-size: 1.2rem; cursor: pointer; padding: 5px 10px;"
-                    title="Remove coupon">×</button>
-        </div>
-        <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #c3e6cb;">
-            <div style="display: flex; justify-content: space-between; font-size: 0.95rem; color: #666; margin-bottom: 5px;">
-                <span>Original Price:</span>
-                <span style="text-decoration: line-through;">${freshPrice.symbol}${formattedOriginal}</span>
-            </div>
-            <div style="display: flex; justify-content: space-between; font-size: 1.1rem; font-weight: bold; color: #155724;">
-                <span>Final Price:</span>
-                <span>${freshPrice.symbol}${formattedFinal}</span>
-            </div>
-            <div style="display: flex; justify-content: space-between; font-size: 0.9rem; color: #28a745; margin-top: 5px;">
-                <span>You Save:</span>
-                <span>${freshPrice.symbol}${formattedDiscount}</span>
-            </div>
-        </div>
-    `;
-    
-    discountDisplay.style.display = 'block';
+            const discountDisplay = document.getElementById(`discount-display-${packageType}`);
             
-            /// Update price display
-    const priceDisplay = document.querySelector(`[data-price="${packageType}"]`);
-    priceDisplay.innerHTML = `<span style="text-decoration: line-through; opacity: 0.5; font-size: 0.6em;">${formattedOriginal}</span> ${formattedFinal}`;
-    
-    // Update currency disclaimer
-    updateCurrencyDisclaimer(packageType, discountData.discountAmount);
-}
+            const freshPrice = packages[packageType][selectedCurrency];
+            
+            const displayOriginal = parseFloat(freshPrice.price);
+            const displayDiscount = (discountData.discountAmount * displayOriginal / freshPrice.actualCharge).toFixed(2);
+            const displayFinal = (displayOriginal - displayDiscount).toFixed(2);
+            
+            const formattedOriginal = selectedCurrency === 'INR' 
+                ? displayOriginal.toLocaleString('en-IN')
+                : displayOriginal;
+            const formattedFinal = selectedCurrency === 'INR' 
+                ? parseFloat(displayFinal).toLocaleString('en-IN')
+                : displayFinal;
+            const formattedDiscount = selectedCurrency === 'INR'
+                ? parseFloat(displayDiscount).toLocaleString('en-IN')
+                : displayDiscount;
+            
+            discountDisplay.innerHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <strong style="color: #155724;">✓ Coupon Applied: ${discountData.coupon.code}</strong>
+                        <div style="font-size: 0.9rem; color: #155724; margin-top: 5px;">
+                            ${discountData.coupon.description || 'Discount applied'}
+                        </div>
+                    </div>
+                    <button onclick="window.removeCoupon('${packageType}'); return false;" 
+                            style="background: none; border: none; color: #721c24; font-size: 1.2rem; cursor: pointer; padding: 5px 10px;"
+                            title="Remove coupon">×</button>
+                </div>
+                <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #c3e6cb;">
+                    <div style="display: flex; justify-content: space-between; font-size: 0.95rem; color: #666; margin-bottom: 5px;">
+                        <span>Original Price:</span>
+                        <span style="text-decoration: line-through;">${freshPrice.symbol}${formattedOriginal}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-size: 1.1rem; font-weight: bold; color: #155724;">
+                        <span>Final Price:</span>
+                        <span>${freshPrice.symbol}${formattedFinal}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-size: 0.9rem; color: #28a745; margin-top: 5px;">
+                        <span>You Save:</span>
+                        <span>${freshPrice.symbol}${formattedDiscount}</span>
+                    </div>
+                </div>
+            `;
+            
+            discountDisplay.style.display = 'block';
+            
+            const priceDisplay = document.querySelector(`[data-price="${packageType}"]`);
+            priceDisplay.innerHTML = `<span style="text-decoration: line-through; opacity: 0.5; font-size: 0.6em;">${formattedOriginal}</span> ${formattedFinal}`;
+            
+            updateCurrencyDisclaimer(packageType, discountData.discountAmount);
+        }
 
         function updateCurrencyDisclaimer(packageType, discountAmount) {
             if (selectedCurrency !== 'INR') {
@@ -1447,7 +1448,9 @@
             }
         }
 
-        function removeCoupon(packageType) {
+        window.removeCoupon = function(packageType) {
+            console.log('🗑️ Removing coupon for:', packageType);
+            
             appliedCoupons[packageType] = null;
             localStorage.removeItem(`appliedCoupon_${packageType}`);
             
@@ -1503,79 +1506,68 @@
         }
 
         // Scholarship Auto-Apply
-       function checkForScholarshipCode() {
-    console.log('🔍 Checking for scholarship code...');
-    
-    const urlParams = new URLSearchParams(window.location.search);
-    const scholarshipParam = urlParams.get('scholarship');
-    
-    if (scholarshipParam) {
-        console.log('🎓 Scholarship code found in URL:', scholarshipParam);
-        
-        // ✅ APPLY TO ALL THREE PACKAGES
-        ['foundation', 'advanced', 'complete'].forEach(pkg => {
-            const couponInput = document.getElementById(`coupon-input-${pkg}`);
-            if (couponInput) {
-                couponInput.value = scholarshipParam;
-            }
-        });
-        
-        // Apply coupons sequentially with delays
-        setTimeout(() => {
-            applyCoupon('foundation');
-        }, 300);
-        
-        setTimeout(() => {
-            applyCoupon('advanced');
-        }, 600);
-        
-        setTimeout(() => {
-            applyCoupon('complete');
-            showScholarshipWelcome();
-            window.history.replaceState({}, document.title, window.location.pathname);
-        }, 900);
-        
-        return;
-    }
+        function checkForScholarshipCode() {
+            console.log('🔍 Checking for scholarship code...');
             
-            // Check localStorage for active scholarships
-    const scholarship = localStorage.getItem('activeScholarship');
-    const couponCode = localStorage.getItem('scholarshipCoupon');
-    
-    if (scholarship || couponCode) {
-        try {
-            const scholarshipData = scholarship ? JSON.parse(scholarship) : null;
-            const code = scholarshipData?.couponCode || couponCode;
+            const urlParams = new URLSearchParams(window.location.search);
+            const scholarshipParam = urlParams.get('scholarship');
             
-            if (code) {
-                console.log('🎓 Scholarship found in localStorage:', code);
+            if (scholarshipParam) {
+                console.log('🎓 Scholarship code found in URL:', scholarshipParam);
                 
-                if (scholarshipData?.validUntil) {
-                    const validUntil = new Date(scholarshipData.validUntil);
-                    if (validUntil < new Date()) {
-                        console.log('❌ Scholarship expired');
-                        localStorage.removeItem('activeScholarship');
-                        localStorage.removeItem('scholarshipCoupon');
-                        return;
-                    }
-                }
-                
-                // ✅ APPLY TO ALL THREE PACKAGES
                 ['foundation', 'advanced', 'complete'].forEach(pkg => {
                     const couponInput = document.getElementById(`coupon-input-${pkg}`);
                     if (couponInput) {
-                        couponInput.value = code;
+                        couponInput.value = scholarshipParam;
                     }
                 });
                 
-                // Apply with delays
                 setTimeout(() => { applyCoupon('foundation'); }, 300);
                 setTimeout(() => { applyCoupon('advanced'); }, 600);
                 setTimeout(() => { 
                     applyCoupon('complete'); 
                     showScholarshipWelcome();
+                    window.history.replaceState({}, document.title, window.location.pathname);
                 }, 900);
+                
+                return;
             }
+            
+            const scholarship = localStorage.getItem('activeScholarship');
+            const couponCode = localStorage.getItem('scholarshipCoupon');
+            
+            if (scholarship || couponCode) {
+                try {
+                    const scholarshipData = scholarship ? JSON.parse(scholarship) : null;
+                    const code = scholarshipData?.couponCode || couponCode;
+                    
+                    if (code) {
+                        console.log('🎓 Scholarship found in localStorage:', code);
+                        
+                        if (scholarshipData?.validUntil) {
+                            const validUntil = new Date(scholarshipData.validUntil);
+                            if (validUntil < new Date()) {
+                                console.log('❌ Scholarship expired');
+                                localStorage.removeItem('activeScholarship');
+                                localStorage.removeItem('scholarshipCoupon');
+                                return;
+                            }
+                        }
+                        
+                        ['foundation', 'advanced', 'complete'].forEach(pkg => {
+                            const couponInput = document.getElementById(`coupon-input-${pkg}`);
+                            if (couponInput) {
+                                couponInput.value = code;
+                            }
+                        });
+                        
+                        setTimeout(() => { applyCoupon('foundation'); }, 300);
+                        setTimeout(() => { applyCoupon('advanced'); }, 600);
+                        setTimeout(() => { 
+                            applyCoupon('complete'); 
+                            showScholarshipWelcome();
+                        }, 900);
+                    }
                 } catch (error) {
                     console.error('❌ Error parsing scholarship:', error);
                 }
@@ -1605,7 +1597,7 @@
                 <div style="font-size: 2rem; margin-bottom: 10px;">🎉</div>
                 <h4 style="color: #1a365d; margin-bottom: 10px; font-weight: 700;">Scholarship Applied!</h4>
                 <p style="color: #4a5568; margin: 0; font-size: 0.95rem;">
-                    Your exclusive discount has been automatically applied to the Complete Series package.
+                    Your exclusive discount has been automatically applied to all packages.
                 </p>
                 <button onclick="this.parentElement.remove()" 
                         style="margin-top: 15px; padding: 8px 20px; background: #1a365d; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">
@@ -1634,7 +1626,9 @@
         }
         
         // Package selection
-        function selectPackage(packageType) {
+        window.selectPackage = function(packageType) {
+            console.log('📦 Package selected:', packageType);
+            
             try {
                 gtag('event', 'package_selected', {
                     'event_category': 'pricing',
@@ -1646,24 +1640,13 @@
                 console.error('GA error:', error);
             }
             
-            if (!currentUser) {
-                localStorage.setItem('selectedPackage', packageType);
-                localStorage.setItem('selectedCurrency', selectedCurrency);
-                
-                // Store coupon if applied
-                if (appliedCoupons[packageType]) {
-                    localStorage.setItem('appliedCoupon', JSON.stringify(appliedCoupons[packageType]));
-                }
-                
-                window.location.href = 'register.html';
+            if (!packageType || !packages[packageType]) {
+                console.error('Invalid package type:', packageType);
+                alert('Please select a valid package');
                 return;
             }
             
-            if (currentUser.subscriptionStatus === 'premium') {
-                window.location.href = 'dashboard.html';
-                return;
-            }
-            
+            // Store package selection immediately
             localStorage.setItem('selectedPackage', packageType);
             localStorage.setItem('selectedCurrency', selectedCurrency);
             localStorage.setItem('selectedAmount', packages[packageType][selectedCurrency].actualCharge);
@@ -1673,6 +1656,21 @@
                 localStorage.setItem('appliedCoupon', JSON.stringify(appliedCoupons[packageType]));
             }
             
+            const token = localStorage.getItem('authToken');
+            
+            if (!token) {
+                console.log('➡️ No token, redirecting to register');
+                window.location.href = 'register.html';
+                return;
+            }
+            
+            if (currentUser && currentUser.subscriptionStatus === 'premium') {
+                console.log('➡️ User already premium, redirecting to dashboard');
+                window.location.href = 'dashboard.html';
+                return;
+            }
+            
+            console.log('➡️ Redirecting to payment');
             window.location.href = 'payment.html';
         }
         
@@ -1704,5 +1702,3 @@
     </script>
 </body>
 </html>
-
-
