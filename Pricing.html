@@ -1189,6 +1189,76 @@
             
             document.querySelector('[data-savings]').textContent = 
                 packages.complete[currency].symbol + savings;
+// ✅✅✅ ADD THIS NEW CODE HERE ✅✅✅
+    
+    // Refresh applied coupon displays with new currency
+    ['foundation', 'advanced', 'complete'].forEach(pkg => {
+        if (appliedCoupons[pkg]) {
+            const coupon = appliedCoupons[pkg];
+            const freshPrice = packages[pkg][currency];
+            
+            // Recalculate display values
+            const displayOriginal = parseFloat(freshPrice.price);
+            const displayDiscount = (coupon.discountAmount * displayOriginal / freshPrice.actualCharge).toFixed(2);
+            const displayFinal = (displayOriginal - displayDiscount).toFixed(2);
+            
+            const formattedOriginal = currency === 'INR' 
+                ? displayOriginal.toLocaleString('en-IN')
+                : displayOriginal;
+            const formattedFinal = currency === 'INR' 
+                ? parseFloat(displayFinal).toLocaleString('en-IN')
+                : displayFinal;
+            const formattedDiscount = currency === 'INR'
+                ? parseFloat(displayDiscount).toLocaleString('en-IN')
+                : displayDiscount;
+            
+            // Update discount display
+            const discountDisplay = document.getElementById(`discount-display-${pkg}`);
+            if (discountDisplay && discountDisplay.style.display !== 'none') {
+                discountDisplay.innerHTML = `
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <strong style="color: #155724;">✓ Coupon Applied: ${coupon.code}</strong>
+                            <div style="font-size: 0.9rem; color: #155724; margin-top: 5px;">
+                                Discount applied
+                            </div>
+                        </div>
+                        <button onclick="removeCoupon('${pkg}')" 
+                                style="background: none; border: none; color: #721c24; font-size: 1.2rem; cursor: pointer; padding: 5px 10px;"
+                                title="Remove coupon">×</button>
+                    </div>
+                    <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #c3e6cb;">
+                        <div style="display: flex; justify-content: space-between; font-size: 0.95rem; color: #666; margin-bottom: 5px;">
+                            <span>Original Price:</span>
+                            <span style="text-decoration: line-through;">${freshPrice.symbol}${formattedOriginal}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; font-size: 1.1rem; font-weight: bold; color: #155724;">
+                            <span>Final Price:</span>
+                            <span>${freshPrice.symbol}${formattedFinal}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; font-size: 0.9rem; color: #28a745; margin-top: 5px;">
+                            <span>You Save:</span>
+                            <span>${freshPrice.symbol}${formattedDiscount}</span>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            // Update main price display
+            const priceDisplay = document.querySelector(`[data-price="${pkg}"]`);
+            if (priceDisplay) {
+                priceDisplay.innerHTML = `<span style="text-decoration: line-through; opacity: 0.5; font-size: 0.6em;">${formattedOriginal}</span> ${formattedFinal}`;
+            }
+            
+            // Update currency disclaimer
+            updateCurrencyDisclaimer(pkg, coupon.discountAmount);
+        }
+    });
+    
+    // ✅✅✅ END OF NEW CODE ✅✅✅
+}
+
+            
 
             // Update currency disclaimers if coupons are applied
             ['foundation', 'advanced', 'complete'].forEach(pkg => {
@@ -1295,59 +1365,62 @@
         }
 
         function displayDiscount(packageType, discountData, currentPrice) {
-            const discountDisplay = document.getElementById(`discount-display-${packageType}`);
-            
-            const displayOriginal = parseFloat(currentPrice.price);
-            const displayDiscount = (discountData.discountAmount * displayOriginal / currentPrice.actualCharge).toFixed(2);
-            const displayFinal = (displayOriginal - displayDiscount).toFixed(2);
-            
-            const formattedOriginal = selectedCurrency === 'INR' 
-                ? displayOriginal.toLocaleString('en-IN')
-                : displayOriginal;
-            const formattedFinal = selectedCurrency === 'INR' 
-                ? parseFloat(displayFinal).toLocaleString('en-IN')
-                : displayFinal;
-            const formattedDiscount = selectedCurrency === 'INR'
-                ? parseFloat(displayDiscount).toLocaleString('en-IN')
-                : displayDiscount;
-            
-            discountDisplay.innerHTML = `
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <div>
-                        <strong style="color: #155724;">✓ Coupon Applied: ${discountData.coupon.code}</strong>
-                        <div style="font-size: 0.9rem; color: #155724; margin-top: 5px;">
-                            ${discountData.coupon.description || 'Discount applied'}
-                        </div>
-                    </div>
-                    <button onclick="removeCoupon('${packageType}')" 
-                            style="background: none; border: none; color: #721c24; font-size: 1.2rem; cursor: pointer; padding: 5px 10px;"
-                            title="Remove coupon">×</button>
+    const discountDisplay = document.getElementById(`discount-display-${packageType}`);
+    
+    // ✅ FIX: Always get FRESH currency data from packages object
+    const freshPrice = packages[packageType][selectedCurrency];
+    
+    const displayOriginal = parseFloat(freshPrice.price);
+    const displayDiscount = (discountData.discountAmount * displayOriginal / freshPrice.actualCharge).toFixed(2);
+    const displayFinal = (displayOriginal - displayDiscount).toFixed(2);
+    
+    const formattedOriginal = selectedCurrency === 'INR' 
+        ? displayOriginal.toLocaleString('en-IN')
+        : displayOriginal;
+    const formattedFinal = selectedCurrency === 'INR' 
+        ? parseFloat(displayFinal).toLocaleString('en-IN')
+        : displayFinal;
+    const formattedDiscount = selectedCurrency === 'INR'
+        ? parseFloat(displayDiscount).toLocaleString('en-IN')
+        : displayDiscount;
+    
+    discountDisplay.innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <strong style="color: #155724;">✓ Coupon Applied: ${discountData.coupon.code}</strong>
+                <div style="font-size: 0.9rem; color: #155724; margin-top: 5px;">
+                    ${discountData.coupon.description || 'Discount applied'}
                 </div>
-                <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #c3e6cb;">
-                    <div style="display: flex; justify-content: space-between; font-size: 0.95rem; color: #666; margin-bottom: 5px;">
-                        <span>Original Price:</span>
-                        <span style="text-decoration: line-through;">${currentPrice.symbol}${formattedOriginal}</span>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; font-size: 1.1rem; font-weight: bold; color: #155724;">
-                        <span>Final Price:</span>
-                        <span>${currentPrice.symbol}${formattedFinal}</span>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; font-size: 0.9rem; color: #28a745; margin-top: 5px;">
-                        <span>You Save:</span>
-                        <span>${currentPrice.symbol}${formattedDiscount}</span>
-                    </div>
-                </div>
-            `;
+            </div>
+            <button onclick="removeCoupon('${packageType}')" 
+                    style="background: none; border: none; color: #721c24; font-size: 1.2rem; cursor: pointer; padding: 5px 10px;"
+                    title="Remove coupon">×</button>
+        </div>
+        <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #c3e6cb;">
+            <div style="display: flex; justify-content: space-between; font-size: 0.95rem; color: #666; margin-bottom: 5px;">
+                <span>Original Price:</span>
+                <span style="text-decoration: line-through;">${freshPrice.symbol}${formattedOriginal}</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 1.1rem; font-weight: bold; color: #155724;">
+                <span>Final Price:</span>
+                <span>${freshPrice.symbol}${formattedFinal}</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 0.9rem; color: #28a745; margin-top: 5px;">
+                <span>You Save:</span>
+                <span>${freshPrice.symbol}${formattedDiscount}</span>
+            </div>
+        </div>
+    `;
+    
+    discountDisplay.style.display = 'block';
             
-            discountDisplay.style.display = 'block';
-            
-            // Update price display
-            const priceDisplay = document.querySelector(`[data-price="${packageType}"]`);
-            priceDisplay.innerHTML = `<span style="text-decoration: line-through; opacity: 0.5; font-size: 0.6em;">${formattedOriginal}</span> ${formattedFinal}`;
-            
-            // Update currency disclaimer
-            updateCurrencyDisclaimer(packageType, discountData.discountAmount);
-        }
+            /// Update price display
+    const priceDisplay = document.querySelector(`[data-price="${packageType}"]`);
+    priceDisplay.innerHTML = `<span style="text-decoration: line-through; opacity: 0.5; font-size: 0.6em;">${formattedOriginal}</span> ${formattedFinal}`;
+    
+    // Update currency disclaimer
+    updateCurrencyDisclaimer(packageType, discountData.discountAmount);
+}
 
         function updateCurrencyDisclaimer(packageType, discountAmount) {
             if (selectedCurrency !== 'INR') {
@@ -1631,4 +1704,5 @@
     </script>
 </body>
 </html>
+
 
