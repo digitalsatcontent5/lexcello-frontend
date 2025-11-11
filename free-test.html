@@ -899,9 +899,6 @@
             
             updateQuestionNavigation();
             loadQuestion(currentQuestionIndex);
-            
-            // Don't auto-advance - let user click Next button
-
         }
         
         function updateQuestionNavigation() {
@@ -1050,6 +1047,14 @@
                 const results = await response.json();
                 console.log('Received results:', results);
                 
+                // ✅ CRITICAL FIX: Extract and store attemptId
+                const attemptId = results.attemptId || results.id || Date.now();
+                console.log('✅ Free test attemptId:', attemptId);
+                sessionStorage.setItem('freeTestAttemptId', attemptId);
+                
+                // Store results in sessionStorage
+                sessionStorage.setItem('freeTestResults', JSON.stringify(results));
+                
                 try {
                     gtag('event', 'free_test_completed', {
                         'event_category': 'free_test',
@@ -1059,9 +1064,6 @@
                 } catch (error) {
                     console.error('GA tracking error:', error);
                 }
-                
-                // Store results in sessionStorage
-                sessionStorage.setItem('freeTestResults', JSON.stringify(results));
                 
                 // Hide loading and show feedback modal
                 document.getElementById('testContainer').style.display = 'block';
@@ -1191,8 +1193,16 @@
             
             const token = localStorage.getItem('authToken');
             
+            // ✅ CRITICAL FIX: Get testAttemptId from sessionStorage
+            const testAttemptId = sessionStorage.getItem('freeTestAttemptId');
+            
+            console.log('🔍 DEBUG: Feedback submission starting...');
+            console.log('🔍 DEBUG: freeTestAttemptId from sessionStorage:', testAttemptId);
+            console.log('🔍 DEBUG: testAttemptId type:', typeof testAttemptId);
+            
             const feedbackPayload = {
                 testId: 1, // Free test is treated as test 1
+                testAttemptId: testAttemptId ? parseInt(testAttemptId) : null,  // ✅ ADD THIS
                 lnatDate: document.getElementById('lnatDate').value,
                 experienceRating: selectedRating,
                 wouldSubscribe: wouldSubscribe,
@@ -1203,7 +1213,7 @@
                 phoneNumber: phoneNumber
             };
             
-            console.log('🔍 Submitting feedback:', feedbackPayload);
+            console.log('🔍 DEBUG: Complete feedback payload:', JSON.stringify(feedbackPayload, null, 2));
             
             try {
                 const response = await fetch(`${API_BASE_URL}/api/feedback`, {
