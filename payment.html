@@ -596,29 +596,8 @@
         function updateCurrencyDisclaimer(priceData) {
     const disclaimer = document.getElementById('currency-disclaimer');
     
-    if (selectedPlan.currency !== 'INR') {
-        // ✅ ALWAYS show the actual INR amount being charged
-        const actualINRAmount = finalAmount.toLocaleString('en-IN');
-        
-        // Calculate the equivalent display currency amount
-        let displayAmount;
-        if (appliedCoupon) {
-            // With coupon: calculate discounted display price
-            const displayDiscount = (discountAmount * priceData.price / priceData.actualCharge);
-            displayAmount = (priceData.price - displayDiscount).toFixed(2);
-        } else {
-            // Without coupon: use original price
-            displayAmount = priceData.price;
-        }
-        
-        document.getElementById('disclaimer-inr-amount').textContent = `₹${actualINRAmount} INR`;
-        document.getElementById('disclaimer-approx').textContent = 
-            `Approximately ${priceData.symbol}${displayAmount} ${selectedPlan.currency}`;
-        
-        disclaimer.style.display = 'block';
-    } else {
-        disclaimer.style.display = 'none';
-    }
+    // Always hide the disclaimer - PayPal handles currency conversion
+    disclaimer.style.display = 'none';
 }
 
         function updatePaymentButton() {
