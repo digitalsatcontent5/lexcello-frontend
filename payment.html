@@ -765,11 +765,12 @@
                 }
                 
                 const requestBody = {
-                    planType: 'premium-12',  // ✅ FIXED
-                    amount: finalAmount,
-                    planDuration: 12,
-                    currency: selectedPlan.currency
-                };
+    planType: 'premium-12',
+    amount: finalAmount,
+    planDuration: 12,
+    currency: selectedPlan.currency,
+    packageType: selectedPlan.package  // ✅ ADD THIS LINE
+};
                 
                 if (appliedCoupon) {
                     requestBody.couponCode = appliedCoupon.code;
@@ -859,11 +860,12 @@
                 }
                 
                 const requestBody = {
-                planType: 'premium-12',  // ✅ FIXED
-                    amount: finalAmount,
-                    planDuration: 12,
-                    currency: 'INR'
-                };
+    planType: 'premium-12',
+    amount: finalAmount,
+    planDuration: 12,
+    currency: 'INR',
+    packageType: selectedPlan.package  // ✅ ADD THIS LINE
+};
                 
                 if (appliedCoupon) {
                     requestBody.couponCode = appliedCoupon.code;
