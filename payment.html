@@ -765,7 +765,7 @@
                 }
                 
                 const requestBody = {
-                    planType: `${selectedPlan.package}-12`,
+                    planType: 'premium-12',  // ✅ FIXED
                     amount: finalAmount,
                     planDuration: 12,
                     currency: selectedPlan.currency
@@ -859,7 +859,7 @@
                 }
                 
                 const requestBody = {
-                    planType: `${selectedPlan.package}-12`,
+                planType: 'premium-12',  // ✅ FIXED
                     amount: finalAmount,
                     planDuration: 12,
                     currency: 'INR'
