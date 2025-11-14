@@ -2789,6 +2789,8 @@ console.log('Loaded options:', options); // Debug log
                 if (data.users) {
                     displayUsers(data.users);
                     updateUserStats(data.users);
+                    updateSidebarBadges();
+
                 } else {
                     usersList.innerHTML = '<p style="padding: 20px; text-align: center; color: #666;">No users found or API endpoint not available.</p>';
                 }
@@ -3887,6 +3889,7 @@ async function loadFeedback() {
             filteredFeedback = [...feedbackData];
             
             updateFeedbackStats(feedbackData);
+            updateSidebarBadges();
             displayFeedback(filteredFeedback);
         } else {
             listContainer.innerHTML = `
@@ -4301,6 +4304,7 @@ document.addEventListener('DOMContentLoaded', () => {
 </div>
 </body>
 </html>
+
 
 
 
