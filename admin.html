@@ -760,6 +760,12 @@
     cursor: pointer;
     font-size: 1rem;
 }
+        <!-- Desktop Header (shown on desktop only) -->
+<div class="header">
+    <h1>LNAT Admin Panel</h1>
+    <p>Question Management System - All 10 Practice Tests</p>
+    <button id="logout-btn" class="logout-btn" onclick="securityLogout()">Logout</button>
+</div>
 
 /* Sidebar Navigation */
 .sidebar {
@@ -1729,26 +1735,38 @@
         
         // Authenticate user
         function securityAuthenticate() {
-            isSecurityAuthenticated = true;
-            securityOverlay.classList.add('hidden');
-            mainContent.classList.remove('locked');
-            logoutBtn.style.display = 'block';
-            localStorage.setItem('lexcello_admin_auth', 'authenticated');
-        }
+    isSecurityAuthenticated = true;
+    securityOverlay.classList.add('hidden');
+    mainContent.classList.remove('locked');
+    
+    // Show both logout buttons
+    const logoutBtn = document.getElementById('logout-btn');
+    const logoutBtnMobile = document.getElementById('logout-btn-mobile');
+    if (logoutBtn) logoutBtn.style.display = 'block';
+    if (logoutBtnMobile) logoutBtnMobile.style.display = 'block';
+    
+    localStorage.setItem('lexcello_admin_auth', 'authenticated');
+}
         
         // Logout user
         function securityLogout() {
-            if (confirm('Are you sure you want to logout?')) {
-                isSecurityAuthenticated = false;
-                securityOverlay.classList.remove('hidden');
-                mainContent.classList.add('locked');
-                logoutBtn.style.display = 'none';
-                localStorage.removeItem('lexcello_admin_auth');
-                document.getElementById('admin-username').value = '';
-                document.getElementById('admin-password').value = '';
-                loginError.style.display = 'none';
-            }
-        }
+    if (confirm('Are you sure you want to logout?')) {
+        isSecurityAuthenticated = false;
+        securityOverlay.classList.remove('hidden');
+        mainContent.classList.add('locked');
+        
+        // Hide both logout buttons
+        const logoutBtn = document.getElementById('logout-btn');
+        const logoutBtnMobile = document.getElementById('logout-btn-mobile');
+        if (logoutBtn) logoutBtn.style.display = 'none';
+        if (logoutBtnMobile) logoutBtnMobile.style.display = 'none';
+        
+        localStorage.removeItem('lexcello_admin_auth');
+        document.getElementById('admin-username').value = '';
+        document.getElementById('admin-password').value = '';
+        loginError.style.display = 'none';
+    }
+}
         
          // Login form handler
 document.getElementById('security-login-form').addEventListener('submit', async (e) => {
@@ -4304,6 +4322,7 @@ document.addEventListener('DOMContentLoaded', () => {
 </div>
 </body>
 </html>
+
 
 
 
