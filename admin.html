@@ -715,6 +715,220 @@
     margin-bottom: 20px;
     opacity: 0.3;
 }
+        /* ============================================
+   NEW MOBILE-FRIENDLY NAVIGATION STYLES
+   ============================================ */
+
+/* Mobile Header */
+.mobile-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(135deg, #2c3e50, #3498db);
+    color: white;
+    padding: 15px 20px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 999;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.mobile-header h1 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.hamburger-menu {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.8rem;
+    cursor: pointer;
+    padding: 5px 10px;
+    line-height: 1;
+}
+
+.logout-btn-mobile {
+    background: rgba(231, 76, 60, 0.9);
+    border: none;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+/* Sidebar Navigation */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: -280px;
+    width: 280px;
+    height: 100vh;
+    background: white;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+    transition: left 0.3s ease;
+    z-index: 1001;
+    overflow-y: auto;
+}
+
+.sidebar.open {
+    left: 0;
+}
+
+.sidebar-header {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.sidebar-header h2 {
+    font-size: 1.3rem;
+    margin: 0;
+}
+
+.close-sidebar {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 2rem;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+}
+
+/* Navigation Groups */
+.nav-group {
+    border-bottom: 1px solid #eee;
+}
+
+.nav-group-title {
+    padding: 15px 20px 10px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #666;
+    letter-spacing: 0.5px;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    padding: 15px 20px;
+    color: #2c3e50;
+    text-decoration: none;
+    transition: all 0.3s;
+    cursor: pointer;
+    border-left: 4px solid transparent;
+}
+
+.nav-item:hover {
+    background: #f8f9fa;
+    border-left-color: #3498db;
+}
+
+.nav-item.active {
+    background: #e3f2fd;
+    border-left-color: #3498db;
+    color: #3498db;
+    font-weight: 600;
+}
+
+.nav-item-icon {
+    font-size: 1.3rem;
+    margin-right: 15px;
+    width: 25px;
+    text-align: center;
+}
+
+.nav-item-text {
+    flex: 1;
+}
+
+.nav-item-badge {
+    background: #e74c3c;
+    color: white;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    min-width: 20px;
+    text-align: center;
+}
+
+/* Overlay */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 1000;
+    display: none;
+}
+
+.overlay.active {
+    display: block;
+}
+
+/* Adjust main content for mobile header */
+.admin-panel {
+    padding-top: 70px;
+}
+
+/* Hide old header and tabs on mobile */
+.header {
+    display: none;
+}
+
+.tabs {
+    display: none !important;
+}
+
+/* Desktop Styles (768px and above) */
+@media (min-width: 768px) {
+    .mobile-header {
+        display: none;
+    }
+    
+    .sidebar {
+        left: 0;
+        width: 260px;
+    }
+    
+    .header {
+        display: block;
+        margin-left: 260px;
+    }
+    
+    .admin-panel {
+        margin-left: 260px;
+        padding-top: 40px;
+    }
+    
+    .overlay {
+        display: none !important;
+    }
+}
+
+/* Tablet Styles */
+@media (min-width: 768px) and (max-width: 1024px) {
+    .sidebar {
+        width: 240px;
+    }
+    
+    .admin-panel,
+    .header {
+        margin-left: 240px;
+    }
+}
     </style>
 </head>
 <body>
@@ -743,24 +957,82 @@
     <!-- MAIN ADMIN PANEL -->
     <div id="main-content" class="main-content locked">
         <div class="container">
-            <div class="header">
-                <h1>LNAT Admin Panel</h1>
-                <p>Question Management System - All 10 Practice Tests</p>
-                <button id="logout-btn" class="logout-btn" onclick="securityLogout()">Logout</button>
-            </div>
+            <div class="mobile-header">
+    <button class="hamburger-menu" onclick="toggleSidebar()">☰</button>
+    <h1>Lexcello Admin</h1>
+    <button id="logout-btn-mobile" class="logout-btn-mobile" onclick="securityLogout()">
+        <i class="fas fa-sign-out-alt"></i>
+    </button>
+</div>
             
             <div class="admin-panel">
-                <div class="tabs">
-                    <button class="tab active" onclick="showTab('add-question')">Add Question</button>
-                    <button class="tab" onclick="showTab('manage-questions')">Manage Questions</button>
-                    <button class="tab" onclick="showTab('import-questions')">Import Questions</button>
-                    <button class="tab" onclick="showTab('article-management')">Article Management</button>
-                    <button class="tab" onclick="showTab('user-management')">User Management</button>
-                    <button class="tab" onclick="showTab('teacher-management')">Teachers</button>
-                    <button class="tab" onclick="showTab('student-progress')">Student Progress</button> <!-- ADD THIS -->
-                    <button class="tab" onclick="showTab('feedback-management')">Feedback</button>
-                    <button class="tab" onclick="showTab('dashboard')">Dashboard</button>
-                </div>
+                <nav class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+        <h2>📚 Lexcello</h2>
+        <button class="close-sidebar" onclick="toggleSidebar()">×</button>
+    </div>
+    
+    <!-- Dashboard & Overview -->
+    <div class="nav-group">
+        <div class="nav-group-title">Overview</div>
+        <a class="nav-item active" onclick="showTab('dashboard')" data-tab="dashboard">
+            <span class="nav-item-icon">📊</span>
+            <span class="nav-item-text">Dashboard</span>
+        </a>
+    </div>
+    
+    <!-- Content Management -->
+    <div class="nav-group">
+        <div class="nav-group-title">Content</div>
+        <a class="nav-item" onclick="showTab('add-question')" data-tab="add-question">
+            <span class="nav-item-icon">➕</span>
+            <span class="nav-item-text">Add Question</span>
+        </a>
+        <a class="nav-item" onclick="showTab('manage-questions')" data-tab="manage-questions">
+            <span class="nav-item-icon">📝</span>
+            <span class="nav-item-text">Manage Questions</span>
+        </a>
+        <a class="nav-item" onclick="showTab('import-questions')" data-tab="import-questions">
+            <span class="nav-item-icon">📤</span>
+            <span class="nav-item-text">Import Questions</span>
+        </a>
+        <a class="nav-item" onclick="showTab('article-management')" data-tab="article-management">
+            <span class="nav-item-icon">📄</span>
+            <span class="nav-item-text">Articles</span>
+        </a>
+    </div>
+    
+    <!-- User Management -->
+    <div class="nav-group">
+        <div class="nav-group-title">Users</div>
+        <a class="nav-item" onclick="showTab('user-management')" data-tab="user-management">
+            <span class="nav-item-icon">👥</span>
+            <span class="nav-item-text">Students</span>
+            <span class="nav-item-badge" id="nav-total-users">-</span>
+        </a>
+        <a class="nav-item" onclick="showTab('teacher-management')" data-tab="teacher-management">
+            <span class="nav-item-icon">👨‍🏫</span>
+            <span class="nav-item-text">Teachers</span>
+        </a>
+        <a class="nav-item" onclick="showTab('student-progress')" data-tab="student-progress">
+            <span class="nav-item-icon">📈</span>
+            <span class="nav-item-text">Progress Tracking</span>
+        </a>
+    </div>
+    
+    <!-- Analytics -->
+    <div class="nav-group">
+        <div class="nav-group-title">Analytics</div>
+        <a class="nav-item" onclick="showTab('feedback-management')" data-tab="feedback-management">
+            <span class="nav-item-icon">💬</span>
+            <span class="nav-item-text">Feedback</span>
+            <span class="nav-item-badge" id="nav-total-feedback">-</span>
+        </a>
+    </div>
+</nav>
+
+<!-- Overlay -->
+<div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
                 
                 <div id="status-message" class="status-message"></div>
                 
@@ -1577,27 +1849,72 @@ function requireAuth() {
             }
         }
         
-        // Tab Management
-        function showTab(tabName) {
-            if (!requireAuth()) return;
-            
-            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-            
-            event.target.classList.add('active');
-            document.getElementById(tabName).classList.add('active');
-            
-            if (tabName === 'manage-questions') {
-                loadQuestions();
-            } else if (tabName === 'dashboard') {
-                loadDashboard();
-            } else if (tabName === 'user-management') {
-                loadUsers();
-            } else if (tabName === 'article-management') {
-                // Default to showing manage articles section
-                showArticleSection('manage-articles');
-            }
-        }
+        // Tab Management - Updated for Sidebar Navigation
+function showTab(tabName) {
+    if (!requireAuth()) return;
+    
+    // Hide all tab contents
+    document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+    
+    // Remove active class from all nav items
+    document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+    
+    // Show selected tab content
+    document.getElementById(tabName).classList.add('active');
+    
+    // Set active nav item
+    const activeNavItem = document.querySelector(`.nav-item[data-tab="${tabName}"]`);
+    if (activeNavItem) {
+        activeNavItem.classList.add('active');
+    }
+    
+    // Close sidebar on mobile after selection
+    if (window.innerWidth < 768) {
+        toggleSidebar();
+    }
+    
+    // Load data for specific tabs
+    if (tabName === 'manage-questions') {
+        loadQuestions();
+    } else if (tabName === 'dashboard') {
+        loadDashboard();
+    } else if (tabName === 'user-management') {
+        loadUsers();
+    } else if (tabName === 'article-management') {
+        showArticleSection('manage-articles');
+    } else if (tabName === 'student-progress') {
+        loadStudentProgress();
+    } else if (tabName === 'feedback-management') {
+        loadFeedback();
+    } else if (tabName === 'teacher-management') {
+        loadTeachers();
+    }
+}
+
+// Toggle Sidebar Function (NEW)
+function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+    
+    if (sidebar && overlay) {
+        sidebar.classList.toggle('open');
+        overlay.classList.toggle('active');
+    }
+}
+
+// Update user stats in sidebar badges (call this when loading users)
+function updateSidebarBadges() {
+    const totalUsersElement = document.getElementById('nav-total-users');
+    const totalFeedbackElement = document.getElementById('nav-total-feedback');
+    
+    if (totalUsersElement && document.getElementById('total-users')) {
+        totalUsersElement.textContent = document.getElementById('total-users').textContent;
+    }
+    
+    if (totalFeedbackElement && document.getElementById('total-feedback')) {
+        totalFeedbackElement.textContent = document.getElementById('total-feedback').textContent;
+    }
+}
         
         // Status Messages
         function showMessage(message, type = 'success') {
@@ -2478,7 +2795,9 @@ console.log('Loaded options:', options); // Debug log
             } catch (error) {
                 console.error('Error loading users:', error);
                 usersList.innerHTML = `<p style="padding: 20px; text-align: center; color: #e74c3c;">Error loading users: ${error.message}<br><br>Make sure the /api/admin/users endpoint is implemented on your backend.</p>`;
+                
             }
+            
         }
         
         function displayUsers(users) {
@@ -3810,7 +4129,25 @@ function exportFeedback() {
     
     showMessage(`✅ Exported ${filteredFeedback.length} feedback responses`, 'success');
 }
+    // Initialize sidebar on page load
+document.addEventListener('DOMContentLoaded', () => {
+    // Set dashboard as default active tab
+    showTab('dashboard');
+    
+    // Close sidebar when clicking outside on mobile
+    document.addEventListener('click', (e) => {
+        const sidebar = document.getElementById('sidebar');
+        const hamburger = document.querySelector('.hamburger-menu');
         
+        if (window.innerWidth < 768 && 
+            sidebar && 
+            sidebar.classList.contains('open') &&
+            !sidebar.contains(e.target) &&
+            !hamburger.contains(e.target)) {
+            toggleSidebar();
+        }
+    });
+});    
     </script>
     <!-- Edit Question Modal -->
 <div id="editQuestionModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 10001; overflow-y: auto;">
@@ -3964,24 +4301,6 @@ function exportFeedback() {
 </div>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
