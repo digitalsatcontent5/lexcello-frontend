@@ -3976,7 +3976,7 @@ function displayFeedback(feedback) {
     listContainer.innerHTML = feedback.map(item => {
         // Handle both snake_case and camelCase from API
         const rating = item.experience_rating || item.experienceRating || 0;
-const stars = '<span style="font-size: 0.7em;">⭐'.repeat(rating) + '</span>';
+const stars = '<span style="font-size: 0.5em;">⭐'.repeat(rating) + '</span>';
         
         const wouldSubscribe = item.would_subscribe || item.wouldSubscribe || 'no';
         const subscriptionBadge = wouldSubscribe === 'yes'
@@ -4322,6 +4322,7 @@ document.addEventListener('DOMContentLoaded', () => {
 </div>
 </body>
 </html>
+
 
 
 
