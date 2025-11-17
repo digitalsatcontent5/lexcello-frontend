@@ -767,12 +767,14 @@
                     throw new Error(`Invalid payment amount: ₹${finalAmount}`);
                 }
                 
-                const requestBody = {
+                // ✅ ALWAYS send INR amount to backend (PayPal handles conversion)
+const requestBody = {
     planType: 'premium-12',
-    amount: finalAmount,
+    amount: finalAmount,  // This is ALWAYS INR (5700, 6900, or 11500)
     planDuration: 12,
-    currency: selectedPlan.currency,
-    packageType: selectedPlan.package  // ✅ ADD THIS LINE
+    currency: 'INR',  // ✅ ALWAYS INR (PayPal converts automatically)
+    displayCurrency: selectedPlan.currency,  // ✅ NEW: What to show user
+    packageType: selectedPlan.package
 };
                 
                 if (appliedCoupon) {
@@ -862,12 +864,14 @@
                     throw new Error(`Invalid payment amount: ₹${finalAmount}`);
                 }
                 
-                const requestBody = {
+                // ✅ ALWAYS send INR amount to backend (PayPal handles conversion)
+const requestBody = {
     planType: 'premium-12',
-    amount: finalAmount,
+    amount: finalAmount,  // This is ALWAYS INR (5700, 6900, or 11500)
     planDuration: 12,
-    currency: 'INR',
-    packageType: selectedPlan.package  // ✅ ADD THIS LINE
+    currency: 'INR',  // ✅ ALWAYS INR (PayPal converts automatically)
+    displayCurrency: selectedPlan.currency,  // ✅ NEW: What to show user
+    packageType: selectedPlan.package
 };
                 
                 if (appliedCoupon) {
