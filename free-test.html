@@ -1282,49 +1282,57 @@
             }
             
             const modal = document.createElement('div');
-            modal.className = 'scholarship-modal';
-            modal.innerHTML = `
-                <div class="scholarship-content">
-                    <div class="scholarship-icon">${scholarship.tier === 'Gold' ? '🏆' : '📘'}</div>
-                    <h1>🎉 Congratulations!</h1>
-                    <h2>You've Earned a ${scholarship.discountPercentage}% Scholarship!</h2>
-                    
-                    <div class="scholarship-tier ${scholarship.badgeColor}">
-                        ${scholarship.tier} Performance
-                    </div>
-                    
-                    <div class="scholarship-code">
-                        <div style="margin-bottom: 10px;">Your Exclusive Scholarship Code:</div>
-                        <strong id="coupon-code-text">${scholarship.couponCode}</strong>
-                        <button onclick="copyScholarshipCode('${scholarship.couponCode}')">
-                            <i class="fas fa-copy me-1"></i> Copy Code
-                        </button>
-                    </div>
-                    
-                    <div class="price-breakdown">
-                        <div class="original-price">Original Price: ₹${scholarship.originalPrice.toLocaleString('en-IN')}</div>
-                        <div class="discount">Your Scholarship: -₹${scholarship.discountAmount.toLocaleString('en-IN')} (${scholarship.discountPercentage}% OFF)</div>
-                        <div class="final-price">Your Price: ₹${scholarship.finalPrice.toLocaleString('en-IN')} only!</div>
-                    </div>
-                    
-                    <div class="scholarship-info">
-                        ✅ Valid for ${scholarship.daysValid} days<br>
-                        ✅ Access all 10 comprehensive LNAT practice tests<br>
-                        ✅ Detailed explanations & performance analytics<br>
-                        ✅ Progress tracking and improvement recommendations
-                    </div>
-                    
-                    <button class="claim-btn" onclick="claimScholarship()">
-                        🚀 Claim Your Scholarship Now
-                    </button>
-                    
-                    <p class="motivation">${scholarship.message}</p>
-                    
-                    <button onclick="closeScholarshipModal()" style="background: transparent; border: none; color: #718096; cursor: pointer; margin-top: 10px; text-decoration: underline; font-size: 0.9rem;">
-                        I'll view my results first
-                    </button>
+modal.className = 'scholarship-modal';
+modal.innerHTML = `
+    <div class="scholarship-content">
+        <div class="scholarship-icon">${scholarship.tier === 'Gold' ? '🏆' : '📘'}</div>
+        <h1>🎉 Congratulations!</h1>
+        <h2>You've Earned a ${scholarship.discountPercentage}% Scholarship!</h2>
+        
+        <div class="scholarship-tier ${scholarship.badgeColor}">
+            ${scholarship.tier} Performance
+        </div>
+        
+        <div class="scholarship-code">
+            <div style="margin-bottom: 10px;">Your Exclusive Scholarship Code:</div>
+            <strong id="coupon-code-text">${scholarship.couponCode}</strong>
+            <button onclick="copyScholarshipCode('${scholarship.couponCode}')">
+                <i class="fas fa-copy me-1"></i> Copy Code
+            </button>
+        </div>
+        
+        <div class="price-breakdown">
+            <div style="text-align: center; padding: 30px 20px;">
+                <div style="font-size: 3rem; font-weight: 800; color: #38a169; margin-bottom: 15px;">
+                    ${scholarship.discountPercentage}% OFF
                 </div>
-            `;
+                <div style="font-size: 1.2rem; color: #2b6cb0; font-weight: 600; margin-bottom: 10px;">
+                    Your Exclusive Scholarship Discount
+                </div>
+                <div style="color: #718096; font-size: 1rem;">
+                    Valid on all our premium LNAT packages
+                </div>
+            </div>
+        </div>
+        
+        <div class="scholarship-info">
+            ✅ Valid for ${scholarship.daysValid} days<br>
+            ✅ Access all 10 comprehensive LNAT practice tests<br>
+            ✅ Detailed explanations & performance analytics<br>
+            ✅ Progress tracking and improvement recommendations
+        </div>
+        
+        <button class="claim-btn" onclick="claimScholarship()">
+            🚀 Claim Your Scholarship Now
+        </button>
+        
+        <p class="motivation">${scholarship.message}</p>
+        
+        <button onclick="closeScholarshipModal()" style="background: transparent; border: none; color: #718096; cursor: pointer; margin-top: 10px; text-decoration: underline; font-size: 0.9rem;">
+            I'll view my results first
+        </button>
+    </div>
+`;
             
             document.body.appendChild(modal);
         }
