@@ -2044,58 +2044,74 @@
         }
 
         function displayScholarshipBanner(scholarship, daysRemaining) {
-            const banner = document.getElementById('scholarshipBanner');
-            const isExpiringSoon = daysRemaining <= 2;
-            
-            banner.innerHTML = `
-                <div class="scholarship-banner ${scholarship.badgeColor}">
-                    <span class="badge-icon">${scholarship.tier === 'Gold' ? '🏆' : '📘'}</span>
-                    <h3>🎉 You've Earned a ${scholarship.discountPercentage}% Scholarship!</h3>
-                    <p style="color: #4a5568; margin-bottom: 20px;">
-                        ${scholarship.message || 'Congratulations on your performance!'}
-                    </p>
-                    
-                    <div class="scholarship-code-display">
-                        <div style="font-size: 0.9rem; color: #718096; margin-bottom: 5px;">Your Scholarship Code:</div>
-                        <strong>${scholarship.couponCode}</strong>
-                        <button onclick="copyScholarshipCodeResults('${scholarship.couponCode}')" 
-                                style="margin-left: 15px; padding: 5px 15px; background: #2b6cb0; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 0.9rem;">
-                            <i class="fas fa-copy me-1"></i> Copy
-                        </button>
-                    </div>
-                    
-                    <div class="scholarship-price">
-                        <span class="original">₹${scholarship.originalPrice.toLocaleString('en-IN')}</span>
-                        <i class="fas fa-arrow-right mx-2"></i>
-                        <span class="final">₹${scholarship.finalPrice.toLocaleString('en-IN')} only!</span>
-                    </div>
-                    
-                    ${isExpiringSoon ? `
-                        <div class="scholarship-expiry">
-                            <i class="fas fa-exclamation-triangle me-1"></i>
-                            Expires in ${daysRemaining} day${daysRemaining !== 1 ? 's' : ''}!
-                        </div>
-                    ` : `
-                        <div style="font-size: 0.9rem; color: #4a5568; margin-top: 10px;">
-                            Valid for ${daysRemaining} more days
-                        </div>
-                    `}
-                    
-                    <div class="scholarship-actions">
-                        <a href="pricing.html?scholarship=${scholarship.couponCode}" 
-                           class="scholarship-btn scholarship-btn-primary">
-                            <i class="fas fa-graduation-cap me-2"></i>Claim Your Scholarship
-                        </a>
-                        <button onclick="hideScholarshipBanner()" 
-                                class="scholarship-btn scholarship-btn-secondary">
-                            <i class="fas fa-times me-2"></i>Dismiss
-                        </button>
-                    </div>
-                </div>
-            `;
-            
-            banner.style.display = 'block';
-        }
+    const banner = document.getElementById('scholarshipBanner');
+    const isExpiringSoon = daysRemaining <= 2;
+    
+    // Clear and rebuild properly
+    banner.innerHTML = '';
+    banner.style.display = 'block';
+    
+    // Create container
+    const container = document.createElement('div');
+    container.className = `scholarship-banner ${scholarship.badgeColor}`;
+    
+    container.innerHTML = `
+        <span class="badge-icon">${scholarship.tier === 'Gold' ? '🏆' : '📘'}</span>
+        <h3>🎉 You've Earned a ${scholarship.discountPercentage}% Scholarship!</h3>
+        <p style="color: #4a5568; margin-bottom: 20px;">
+            ${scholarship.message || 'Congratulations on your performance!'}
+        </p>
+        
+        <div class="scholarship-code-display">
+            <div style="font-size: 0.9rem; color: #718096; margin-bottom: 5px;">Your Scholarship Code:</div>
+            <strong>${scholarship.couponCode}</strong>
+        </div>
+        
+        <div style="text-align: center; padding: 20px; background: white; border-radius: 10px; margin: 20px 0;">
+            <div style="font-size: 2.5rem; font-weight: 800; color: #38a169; margin-bottom: 10px;">
+                ${scholarship.discountPercentage}% OFF
+            </div>
+            <div style="font-size: 1rem; color: #2b6cb0; font-weight: 600;">
+                Your Exclusive Scholarship Discount
+            </div>
+        </div>
+        
+        ${isExpiringSoon ? `
+            <div class="scholarship-expiry">
+                <i class="fas fa-exclamation-triangle me-1"></i>
+                Expires in ${daysRemaining} day${daysRemaining !== 1 ? 's' : ''}!
+            </div>
+        ` : `
+            <div style="font-size: 0.9rem; color: #4a5568; margin-top: 10px;">
+                Valid for ${daysRemaining} more days
+            </div>
+        `}
+        
+        <div class="scholarship-actions">
+            <a href="pricing.html?scholarship=${scholarship.couponCode}" 
+               class="scholarship-btn scholarship-btn-primary"
+               style="display: inline-block; text-decoration: none;">
+                <i class="fas fa-graduation-cap me-2"></i>Claim Your Scholarship
+            </a>
+        </div>
+    `;
+    
+    // Add copy button with actual onclick
+    const copyBtn = document.createElement('button');
+    copyBtn.innerHTML = '<i class="fas fa-copy me-1"></i> Copy';
+    copyBtn.style.cssText = 'margin-left: 15px; padding: 5px 15px; background: #2b6cb0; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 0.9rem;';
+    copyBtn.onclick = () => copyScholarshipCodeResults(scholarship.couponCode);
+    container.querySelector('.scholarship-code-display').appendChild(copyBtn);
+    
+    // Add dismiss button with actual onclick
+    const dismissBtn = document.createElement('button');
+    dismissBtn.className = 'scholarship-btn scholarship-btn-secondary';
+    dismissBtn.innerHTML = '<i class="fas fa-times me-2"></i>Dismiss';
+    dismissBtn.onclick = hideScholarshipBanner;
+    container.querySelector('.scholarship-actions').appendChild(dismissBtn);
+    
+    banner.appendChild(container);
+}
 
         function copyScholarshipCodeResults(code) {
             navigator.clipboard.writeText(code).then(() => {
