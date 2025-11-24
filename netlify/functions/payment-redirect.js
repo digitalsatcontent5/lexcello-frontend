@@ -1,4 +1,4 @@
-const fetch = require('node-fetch');
+const https = require('https');
 
 exports.handler = async (event, context) => {
   const type = event.queryStringParameters?.type || 'success';
@@ -8,35 +8,23 @@ exports.handler = async (event, context) => {
   console.log('Method:', event.httpMethod);
   
   let txnid = '';
-  let paymentProcessed = false;
   
   // If POST request with payment data, forward to backend
   if (event.httpMethod === 'POST' && event.body) {
     try {
       console.log('📦 Payment data received, forwarding to backend...');
       
-      // Forward the entire POST body to your backend
-      const backendResponse = await fetch('https://lexcello-backend.onrender.com/api/payments/success', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: event.body
-      });
-      
-      const result = await backendResponse.json();
-      console.log('✅ Backend response:', result);
-      paymentProcessed = true;
-      
-      // Extract txnid for redirect URL
+      // Extract txnid and status for redirect
       const formData = new URLSearchParams(event.body);
       txnid = formData.get('txnid') || '';
-      
-      // Check payment status from PayU response
       const status = formData.get('status') || '';
+      
+      // Forward to backend using native https
+      await forwardToBackend(event.body);
+      
+      // Check payment status
       if (status !== 'success') {
-        // Payment failed, redirect to failure page
-        const failureUrl = `/payment-failure.html?txnid=${txnid}&status=${status}`;
+        const failureUrl = `/payment-failure.html?gateway=payu&txnid=${txnid}&status=${status}`;
         return {
           statusCode: 200,
           headers: { 'Content-Type': 'text/html' },
@@ -55,11 +43,10 @@ exports.handler = async (event, context) => {
       
     } catch (error) {
       console.error('❌ Error forwarding to backend:', error);
-      // Still redirect user, but log the error
     }
   }
   
-  // Determine target page
+  // Redirect to success page
   const targetPage = type === 'failure' ? 'payment-failure.html' : 'payment-success.html';
   let redirectUrl = `/${targetPage}?gateway=payu`;
   
@@ -67,12 +54,9 @@ exports.handler = async (event, context) => {
     redirectUrl += `&txnid=${txnid}`;
   }
   
-  // Return redirect HTML
   return {
     statusCode: 200,
-    headers: {
-      'Content-Type': 'text/html',
-    },
+    headers: { 'Content-Type': 'text/html' },
     body: `<!DOCTYPE html>
 <html>
 <head>
@@ -85,3 +69,36 @@ exports.handler = async (event, context) => {
 </html>`
   };
 };
+
+// Helper function to forward data to backend
+function forwardToBackend(body) {
+  return new Promise((resolve, reject) => {
+    const options = {
+      hostname: 'lexcello-backend.onrender.com',
+      port: 443,
+      path: '/api/payments/success',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Content-Length': Buffer.byteLength(body)
+      }
+    };
+    
+    const req = https.request(options, (res) => {
+      let data = '';
+      res.on('data', (chunk) => { data += chunk; });
+      res.on('end', () => {
+        console.log('✅ Backend response:', data);
+        resolve(data);
+      });
+    });
+    
+    req.on('error', (error) => {
+      console.error('❌ Backend request error:', error);
+      reject(error);
+    });
+    
+    req.write(body);
+    req.end();
+  });
+}
