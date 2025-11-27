@@ -1609,7 +1609,18 @@
             return;
         }
         
-        tbody.innerHTML = feedback.map((f, index) => {
+        // Deduplicate feedback based on unique combination of date + maskedName + rating + score
+        const seen = new Set();
+        const uniqueFeedback = feedback.filter(f => {
+            const key = `${f.date}-${f.maskedName}-${f.rating}-${f.score}`;
+            if (seen.has(key)) {
+                return false;
+            }
+            seen.add(key);
+            return true;
+        });
+        
+        tbody.innerHTML = uniqueFeedback.map((f, index) => {
             // Format date
             const date = new Date(f.date);
             const formattedDate = date.toLocaleDateString('en-GB', {
