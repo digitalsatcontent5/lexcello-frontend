@@ -883,17 +883,16 @@
                 <table class="table table-hover mb-0" id="feedbackTable" style="margin-bottom: 0;">
                     <thead style="background: #edf2f7;">
                         <tr>
-                            <th style="padding: 15px; font-weight: 600; color: #1a365d;">Date</th>
-                            <th style="padding: 15px; font-weight: 600; color: #1a365d;">Student</th>
-                            <th style="padding: 15px; font-weight: 600; color: #1a365d;">Country</th>
-                            <th style="padding: 15px; font-weight: 600; color: #1a365d;">Test Score</th>
-                            <th style="padding: 15px; font-weight: 600; color: #1a365d;">Rating</th>
-                            <th style="padding: 15px; font-weight: 600; color: #1a365d;">Would Subscribe</th>
-                        </tr>
+    <th style="padding: 15px; font-weight: 600; color: #1a365d;">Date</th>
+    <th style="padding: 15px; font-weight: 600; color: #1a365d;">Student</th>
+    <th style="padding: 15px; font-weight: 600; color: #1a365d;">Country</th>
+    <th style="padding: 15px; font-weight: 600; color: #1a365d;">Test Score</th>
+    <th style="padding: 15px; font-weight: 600; color: #1a365d;">Rating</th>
+</tr>
                     </thead>
                     <tbody id="feedbackTableBody">
     <tr>
-        <td colspan="6" style="text-align: center; padding: 30px;">
+<td colspan="5" style="text-align: center; padding: 30px;">
             <div class="spinner-border text-primary" role="status">
                 <span class="visually-hidden">Loading...</span>
             </div>
@@ -1578,7 +1577,7 @@
             console.error('Error loading feedback:', error);
             document.getElementById('feedbackTableBody').innerHTML = `
                 <tr>
-                    <td colspan="6" style="text-align: center; padding: 30px; color: #718096;">
+<td colspan="5" style="text-align: center; padding: 30px; color: #718096;">
                         <i class="fas fa-exclamation-circle me-2"></i>
                         Unable to load feedback at this time
                     </td>
@@ -1587,12 +1586,11 @@
         }
     }
 
-    function updateFeedbackStats(stats) {
-        document.getElementById('statAvgRating').textContent = stats.averageRating + '/10';
-        document.getElementById('statTotalReviews').textContent = stats.totalReviews;
-        document.getElementById('statPositive').textContent = stats.positivePercentage + '%';
-        document.getElementById('statSubscribe').textContent = stats.wouldSubscribePercentage + '%';
-    }
+   function updateFeedbackStats(stats) {
+    document.getElementById('statAvgRating').textContent = stats.averageRating + '/10';
+    document.getElementById('statTotalReviews').textContent = stats.totalReviews;
+    document.getElementById('statPositive').textContent = stats.positivePercentage + '%';
+}
 
     function updateFeedbackTable(feedback) {
         const tbody = document.getElementById('feedbackTableBody');
@@ -1638,24 +1636,20 @@
                 ? `<span class="score-badge">${f.score}%</span>` 
                 : '<span style="color: #a0aec0;">—</span>';
             
-            // Would subscribe display
-            const subscribeDisplay = f.wouldSubscribe === 'yes'
-                ? '<span class="subscribe-yes"><i class="fas fa-check-circle me-1"></i>Yes</span>'
-                : '<span class="subscribe-no">No</span>';
+            
             
             // Country flag (optional enhancement)
             const countryDisplay = f.country || 'Not specified';
             
             return `
-                <tr class="${index === 0 ? 'new-feedback-row' : ''}">
-                    <td style="white-space: nowrap;">${formattedDate}</td>
-                    <td><strong>${f.maskedName}</strong></td>
-                    <td>${countryDisplay}</td>
-                    <td>${scoreDisplay}</td>
-                    <td><span class="rating-badge ${ratingClass}">${f.rating}/10</span></td>
-                    <td>${subscribeDisplay}</td>
-                </tr>
-            `;
+    <tr class="${index === 0 ? 'new-feedback-row' : ''}">
+        <td style="white-space: nowrap;">${formattedDate}</td>
+        <td><strong>${f.maskedName}</strong></td>
+        <td>${countryDisplay}</td>
+        <td>${scoreDisplay}</td>
+        <td><span class="rating-badge ${ratingClass}">${f.rating}/10</span></td>
+    </tr>
+`;
         }).join('');
     }
 
