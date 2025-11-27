@@ -684,6 +684,83 @@
                 overflow-x: auto;
             }
         }
+
+        /* ============= LIVE FEEDBACK TABLE STYLES ============= */
+        .live-feedback-section .table {
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        .live-feedback-section .table thead th {
+            border-bottom: 2px solid #cbd5e0;
+            white-space: nowrap;
+        }
+
+        .live-feedback-section .table tbody tr {
+            transition: all 0.2s ease;
+        }
+
+        .live-feedback-section .table tbody tr:hover {
+            background: #edf2f7;
+        }
+
+        .live-feedback-section .table td {
+            padding: 12px 15px;
+            vertical-align: middle;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .rating-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .rating-high {
+            background: #c6f6d5;
+            color: #22543d;
+        }
+
+        .rating-medium {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .rating-low {
+            background: #fed7d7;
+            color: #c53030;
+        }
+
+        .subscribe-yes {
+            color: #38a169;
+            font-weight: 600;
+        }
+
+        .subscribe-no {
+            color: #718096;
+        }
+
+        .score-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            background: #e6fffa;
+            color: #234e52;
+        }
+
+        /* New row animation */
+        @keyframes highlightNew {
+            0% { background-color: #fef3c7; }
+            100% { background-color: transparent; }
+        }
+
+        .new-feedback-row {
+            animation: highlightNew 3s ease;
+        }
     </style>
 </head>
 <body>
@@ -770,284 +847,75 @@
             </div>
         </div>
     </section>
-<!-- ============= LIVE FEEDBACK SECTION ============= -->
-<!-- Add this section AFTER the "Trust Indicators" section and BEFORE the "Features Section" -->
 
-<section class="live-feedback-section" id="live-feedback" style="padding: 60px 0; background: white;">
-    <div class="container">
-        <div class="section-title">
-            <h2>What Students Say About Our LNAT Practice Tests</h2>
-            <p>Real feedback from students who've taken our free practice test</p>
-        </div>
-        
-        <!-- Aggregate Stats Banner -->
-        <div class="row mb-4">
-            <div class="col-12">
-                <div id="feedbackStats" style="background: linear-gradient(135deg, #1a365d 0%, #2b6cb0 100%); color: white; border-radius: 12px; padding: 25px; text-align: center;">
-                    <div class="row">
-                        <div class="col-md-3 col-6 mb-3 mb-md-0">
-                            <div style="font-size: 2.5rem; font-weight: 800;" id="statAvgRating">--</div>
-                            <div style="font-size: 0.9rem; opacity: 0.9;">Average Rating</div>
-                        </div>
-                        <div class="col-md-3 col-6 mb-3 mb-md-0">
-                            <div style="font-size: 2.5rem; font-weight: 800;" id="statTotalReviews">--</div>
-                            <div style="font-size: 0.9rem; opacity: 0.9;">Student Reviews</div>
-                        </div>
-                        <div class="col-md-3 col-6">
-                            <div style="font-size: 2.5rem; font-weight: 800;" id="statPositive">--%</div>
-                            <div style="font-size: 0.9rem; opacity: 0.9;">Positive (8+/10)</div>
-                        </div>
-                        <div class="col-md-3 col-6">
-                            <div style="font-size: 2.5rem; font-weight: 800;" id="statSubscribe">--%</div>
-                            <div style="font-size: 0.9rem; opacity: 0.9;">Would Subscribe</div>
+    <!-- ============= LIVE FEEDBACK SECTION ============= -->
+    <section class="live-feedback-section" id="live-feedback" style="padding: 60px 0; background: white;">
+        <div class="container">
+            <div class="section-title">
+                <h2>What Students Say About Our LNAT Practice Tests</h2>
+                <p>Real feedback from students who've taken our free practice test</p>
+            </div>
+            
+            <!-- Aggregate Stats Banner -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div id="feedbackStats" style="background: linear-gradient(135deg, #1a365d 0%, #2b6cb0 100%); color: white; border-radius: 12px; padding: 25px; text-align: center;">
+                        <div class="row">
+                            <div class="col-md-3 col-6 mb-3 mb-md-0">
+                                <div style="font-size: 2.5rem; font-weight: 800;" id="statAvgRating">--</div>
+                                <div style="font-size: 0.9rem; opacity: 0.9;">Average Rating</div>
+                            </div>
+                            <div class="col-md-3 col-6 mb-3 mb-md-0">
+                                <div style="font-size: 2.5rem; font-weight: 800;" id="statTotalReviews">--</div>
+                                <div style="font-size: 0.9rem; opacity: 0.9;">Student Reviews</div>
+                            </div>
+                            <div class="col-md-3 col-6">
+                                <div style="font-size: 2.5rem; font-weight: 800;" id="statPositive">--%</div>
+                                <div style="font-size: 0.9rem; opacity: 0.9;">Positive (8+/10)</div>
+                            </div>
+                            <div class="col-md-3 col-6">
+                                <div style="font-size: 2.5rem; font-weight: 800;" id="statSubscribe">--%</div>
+                                <div style="font-size: 0.9rem; opacity: 0.9;">Would Subscribe</div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        
-        <!-- Live Feedback Table -->
-        <div class="table-responsive" style="background: #f8fafc; border-radius: 12px; padding: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
-            <table class="table table-hover mb-0" id="feedbackTable" style="margin-bottom: 0;">
-                <thead style="background: #edf2f7;">
-                    <tr>
-                        <th style="padding: 15px; font-weight: 600; color: #1a365d;">Date</th>
-                        <th style="padding: 15px; font-weight: 600; color: #1a365d;">Student</th>
-                        <th style="padding: 15px; font-weight: 600; color: #1a365d;">Country</th>
-                        <th style="padding: 15px; font-weight: 600; color: #1a365d;">Test Score</th>
-                        <th style="padding: 15px; font-weight: 600; color: #1a365d;">Rating</th>
-                        <th style="padding: 15px; font-weight: 600; color: #1a365d;">Would Subscribe</th>
-                    </tr>
-                </thead>
-                <tbody id="feedbackTableBody">
-                    <tr>
-                        <td colspan="6" style="text-align: center; padding: 30px;">
-                            <div class="spinner-border text-primary" role="status">
-                                <span class="visually-hidden">Loading...</span>
-                            </div>
-                            <p class="mt-2 mb-0 text-muted">Loading feedback...</p>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        
-        <div class="text-center mt-4">
-            <p style="color: #718096; font-size: 0.9rem;">
-                <i class="fas fa-sync-alt me-2"></i>Updated in real-time as students complete our free practice test
-            </p>
-        </div>
-    </div>
-</section>
-
-<!-- ============= STYLES TO ADD ============= -->
-<!-- Add these styles inside the existing <style> tag -->
-
-<style>
-/* Live Feedback Table Styles */
-.live-feedback-section .table {
-    border-collapse: separate;
-    border-spacing: 0;
-}
-
-.live-feedback-section .table thead th {
-    border-bottom: 2px solid #cbd5e0;
-    white-space: nowrap;
-}
-
-.live-feedback-section .table tbody tr {
-    transition: all 0.2s ease;
-}
-
-.live-feedback-section .table tbody tr:hover {
-    background: #edf2f7;
-}
-
-.live-feedback-section .table td {
-    padding: 12px 15px;
-    vertical-align: middle;
-    border-bottom: 1px solid #e2e8f0;
-}
-
-.rating-badge {
-    display: inline-block;
-    padding: 4px 12px;
-    border-radius: 20px;
-    font-weight: 600;
-    font-size: 0.9rem;
-}
-
-.rating-high {
-    background: #c6f6d5;
-    color: #22543d;
-}
-
-.rating-medium {
-    background: #fef3c7;
-    color: #92400e;
-}
-
-.rating-low {
-    background: #fed7d7;
-    color: #c53030;
-}
-
-.subscribe-yes {
-    color: #38a169;
-    font-weight: 600;
-}
-
-.subscribe-no {
-    color: #718096;
-}
-
-.score-badge {
-    display: inline-block;
-    padding: 4px 10px;
-    border-radius: 6px;
-    font-weight: 600;
-    font-size: 0.85rem;
-    background: #e6fffa;
-    color: #234e52;
-}
-
-/* New row animation */
-@keyframes highlightNew {
-    0% { background-color: #fef3c7; }
-    100% { background-color: transparent; }
-}
-
-.new-feedback-row {
-    animation: highlightNew 3s ease;
-}
-</style>
-
-<!-- ============= JAVASCRIPT TO ADD ============= -->
-<!-- Add this script before the closing </body> tag -->
-
-<script>
-// ============= LIVE FEEDBACK LOADER =============
-const FEEDBACK_API_URL = 'https://lexcello-backend.onrender.com/api/public/feedback-summary';
-
-// Load feedback on page load
-document.addEventListener('DOMContentLoaded', function() {
-    loadLiveFeedback();
-    // Refresh every 5 minutes
-    setInterval(loadLiveFeedback, 5 * 60 * 1000);
-});
-
-async function loadLiveFeedback() {
-    try {
-        const response = await fetch(FEEDBACK_API_URL);
-        
-        if (!response.ok) {
-            throw new Error('Failed to fetch feedback');
-        }
-        
-        const data = await response.json();
-        
-        if (data.success) {
-            updateFeedbackStats(data.statistics);
-            updateFeedbackTable(data.feedback);
-            updateSchemaMarkup(data.statistics);
-        }
-        
-    } catch (error) {
-        console.error('Error loading feedback:', error);
-        document.getElementById('feedbackTableBody').innerHTML = `
-            <tr>
-                <td colspan="6" style="text-align: center; padding: 30px; color: #718096;">
-                    <i class="fas fa-exclamation-circle me-2"></i>
-                    Unable to load feedback at this time
-                </td>
-            </tr>
-        `;
-    }
-}
-
-function updateFeedbackStats(stats) {
-    document.getElementById('statAvgRating').textContent = stats.averageRating + '/10';
-    document.getElementById('statTotalReviews').textContent = stats.totalReviews;
-    document.getElementById('statPositive').textContent = stats.positivePercentage + '%';
-    document.getElementById('statSubscribe').textContent = stats.wouldSubscribePercentage + '%';
-}
-
-function updateFeedbackTable(feedback) {
-    const tbody = document.getElementById('feedbackTableBody');
-    
-    if (!feedback || feedback.length === 0) {
-        tbody.innerHTML = `
-            <tr>
-                <td colspan="6" style="text-align: center; padding: 30px; color: #718096;">
-                    No feedback yet. Be the first to take our free practice test!
-                </td>
-            </tr>
-        `;
-        return;
-    }
-    
-    tbody.innerHTML = feedback.map((f, index) => {
-        // Format date
-        const date = new Date(f.date);
-        const formattedDate = date.toLocaleDateString('en-GB', {
-            day: 'numeric',
-            month: 'short',
-            year: 'numeric'
-        });
-        
-        // Rating badge class
-        let ratingClass = 'rating-medium';
-        if (f.rating >= 8) ratingClass = 'rating-high';
-        else if (f.rating <= 5) ratingClass = 'rating-low';
-        
-        // Score display
-        const scoreDisplay = f.showScore 
-            ? `<span class="score-badge">${f.score}%</span>` 
-            : '<span style="color: #a0aec0;">—</span>';
-        
-        // Would subscribe display
-        const subscribeDisplay = f.wouldSubscribe === 'yes'
-            ? '<span class="subscribe-yes"><i class="fas fa-check-circle me-1"></i>Yes</span>'
-            : '<span class="subscribe-no">No</span>';
-        
-        // Country flag (optional enhancement)
-        const countryDisplay = f.country || 'Not specified';
-        
-        return `
-            <tr class="${index === 0 ? 'new-feedback-row' : ''}">
-                <td style="white-space: nowrap;">${formattedDate}</td>
-                <td><strong>${f.maskedName}</strong></td>
-                <td>${countryDisplay}</td>
-                <td>${scoreDisplay}</td>
-                <td><span class="rating-badge ${ratingClass}">${f.rating}/10</span></td>
-                <td>${subscribeDisplay}</td>
-            </tr>
-        `;
-    }).join('');
-}
-
-// Update schema markup dynamically
-function updateSchemaMarkup(stats) {
-    // Find and update the existing Product schema
-    const schemas = document.querySelectorAll('script[type="application/ld+json"]');
-    
-    schemas.forEach(schema => {
-        try {
-            const data = JSON.parse(schema.textContent);
             
-            // Update if it's the Product schema with aggregateRating
-            if (data['@type'] === 'Product' && data.aggregateRating) {
-                data.aggregateRating.ratingValue = stats.averageRating;
-                data.aggregateRating.reviewCount = stats.totalReviews.toString();
-                schema.textContent = JSON.stringify(data, null, 2);
-                console.log('✅ Schema markup updated with live data');
-            }
-        } catch (e) {
-            // Not valid JSON, skip
-        }
-    });
-}
-</script>
+            <!-- Live Feedback Table -->
+            <div class="table-responsive" style="background: #f8fafc; border-radius: 12px; padding: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
+                <table class="table table-hover mb-0" id="feedbackTable" style="margin-bottom: 0;">
+                    <thead style="background: #edf2f7;">
+                        <tr>
+                            <th style="padding: 15px; font-weight: 600; color: #1a365d;">Date</th>
+                            <th style="padding: 15px; font-weight: 600; color: #1a365d;">Student</th>
+                            <th style="padding: 15px; font-weight: 600; color: #1a365d;">Country</th>
+                            <th style="padding: 15px; font-weight: 600; color: #1a365d;">Test Score</th>
+                            <th style="padding: 15px; font-weight: 600; color: #1a365d;">Rating</th>
+                            <th style="padding: 15px; font-weight: 600; color: #1a365d;">Would Subscribe</th>
+                        </tr>
+                    </thead>
+                    <tbody id="feedbackTableBody">
+                        <tr>
+                            <td colspan="6" style="text-align: center; padding: 30px;">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                                <p class="mt-2 mb-0 text-muted">Loading feedback...</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="text-center mt-4">
+                <p style="color: #718096; font-size: 0.9rem;">
+                    <i class="fas fa-sync-alt me-2"></i>Updated in real-time as students complete our free practice test
+                </p>
+            </div>
+        </div>
+    </section>
+
     <!-- Features Section -->
     <section class="features-section" id="features">
         <div class="container">
@@ -1679,5 +1547,129 @@ function updateSchemaMarkup(stats) {
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- ============= LIVE FEEDBACK LOADER SCRIPT ============= -->
+    <script>
+    const FEEDBACK_API_URL = 'https://lexcello-backend.onrender.com/api/public/feedback-summary';
+
+    // Load feedback on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        loadLiveFeedback();
+        // Refresh every 5 minutes
+        setInterval(loadLiveFeedback, 5 * 60 * 1000);
+    });
+
+    async function loadLiveFeedback() {
+        try {
+            const response = await fetch(FEEDBACK_API_URL);
+            
+            if (!response.ok) {
+                throw new Error('Failed to fetch feedback');
+            }
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                updateFeedbackStats(data.statistics);
+                updateFeedbackTable(data.feedback);
+                updateSchemaMarkup(data.statistics);
+            }
+            
+        } catch (error) {
+            console.error('Error loading feedback:', error);
+            document.getElementById('feedbackTableBody').innerHTML = `
+                <tr>
+                    <td colspan="6" style="text-align: center; padding: 30px; color: #718096;">
+                        <i class="fas fa-exclamation-circle me-2"></i>
+                        Unable to load feedback at this time
+                    </td>
+                </tr>
+            `;
+        }
+    }
+
+    function updateFeedbackStats(stats) {
+        document.getElementById('statAvgRating').textContent = stats.averageRating + '/10';
+        document.getElementById('statTotalReviews').textContent = stats.totalReviews;
+        document.getElementById('statPositive').textContent = stats.positivePercentage + '%';
+        document.getElementById('statSubscribe').textContent = stats.wouldSubscribePercentage + '%';
+    }
+
+    function updateFeedbackTable(feedback) {
+        const tbody = document.getElementById('feedbackTableBody');
+        
+        if (!feedback || feedback.length === 0) {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="6" style="text-align: center; padding: 30px; color: #718096;">
+                        No feedback yet. Be the first to take our free practice test!
+                    </td>
+                </tr>
+            `;
+            return;
+        }
+        
+        tbody.innerHTML = feedback.map((f, index) => {
+            // Format date
+            const date = new Date(f.date);
+            const formattedDate = date.toLocaleDateString('en-GB', {
+                day: 'numeric',
+                month: 'short',
+                year: 'numeric'
+            });
+            
+            // Rating badge class
+            let ratingClass = 'rating-medium';
+            if (f.rating >= 8) ratingClass = 'rating-high';
+            else if (f.rating <= 5) ratingClass = 'rating-low';
+            
+            // Score display
+            const scoreDisplay = f.showScore 
+                ? `<span class="score-badge">${f.score}%</span>` 
+                : '<span style="color: #a0aec0;">—</span>';
+            
+            // Would subscribe display
+            const subscribeDisplay = f.wouldSubscribe === 'yes'
+                ? '<span class="subscribe-yes"><i class="fas fa-check-circle me-1"></i>Yes</span>'
+                : '<span class="subscribe-no">No</span>';
+            
+            // Country flag (optional enhancement)
+            const countryDisplay = f.country || 'Not specified';
+            
+            return `
+                <tr class="${index === 0 ? 'new-feedback-row' : ''}">
+                    <td style="white-space: nowrap;">${formattedDate}</td>
+                    <td><strong>${f.maskedName}</strong></td>
+                    <td>${countryDisplay}</td>
+                    <td>${scoreDisplay}</td>
+                    <td><span class="rating-badge ${ratingClass}">${f.rating}/10</span></td>
+                    <td>${subscribeDisplay}</td>
+                </tr>
+            `;
+        }).join('');
+    }
+
+    // Update schema markup dynamically
+    function updateSchemaMarkup(stats) {
+        // Find and update the existing Product schema
+        const schemas = document.querySelectorAll('script[type="application/ld+json"]');
+        
+        schemas.forEach(schema => {
+            try {
+                const data = JSON.parse(schema.textContent);
+                
+                // Update if it's the Product schema with aggregateRating
+                if (data['@type'] === 'Product' && data.aggregateRating) {
+                    data.aggregateRating.ratingValue = stats.averageRating;
+                    data.aggregateRating.reviewCount = stats.totalReviews.toString();
+                    schema.textContent = JSON.stringify(data, null, 2);
+                    console.log('✅ Schema markup updated with live data');
+                }
+            } catch (e) {
+                // Not valid JSON, skip
+            }
+        });
+    }
+    </script>
 </body>
 </html>
