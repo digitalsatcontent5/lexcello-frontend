@@ -1087,15 +1087,22 @@
         
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('🟢 Pricing page loaded');
-            switchCurrency('GBP');
-            checkForScholarshipCode();
-            
-            // Check auth in background (non-blocking)
-            setTimeout(() => {
-                checkAuthStatus();
-            }, 100);
-        });
+    console.log('🟢 Pricing page loaded');
+    switchCurrency('GBP');
+    
+    // Check final offer FIRST (higher priority - time-limited)
+    const hasFinalOffer = checkForFinalOffer();
+    
+    // Only check scholarship if no final offer applied
+    if (!hasFinalOffer) {
+        checkForScholarshipCode();
+    }
+    
+    // Check auth in background (non-blocking)
+    setTimeout(() => {
+        checkAuthStatus();
+    }, 100);
+});
         
         // Authentication (NON-BLOCKING VERSION)
         async function checkAuthStatus() {
@@ -1573,7 +1580,133 @@
                 }
             }
         }
+// Final Offer Auto-Apply (from negotiation flow)
+function checkForFinalOffer() {
+    console.log('🔍 Checking for final offer...');
+    
+    const finalOfferData = localStorage.getItem('finalOffer');
+    
+    if (!finalOfferData) {
+        return false;
+    }
+    
+    try {
+        const finalOffer = JSON.parse(finalOfferData);
+        
+        // Check if expired
+        if (finalOffer.expiresAt) {
+            const expiresAt = new Date(finalOffer.expiresAt);
+            if (expiresAt < new Date()) {
+                console.log('❌ Final offer expired');
+                localStorage.removeItem('finalOffer');
+                return false;
+            }
+            
+            // Calculate remaining time
+            const now = new Date();
+            const minutesRemaining = Math.ceil((expiresAt - now) / (1000 * 60));
+            console.log(`⏰ Final offer valid for ${minutesRemaining} more minutes`);
+        }
+        
+        const code = finalOffer.couponCode;
+        
+        if (code) {
+            console.log('🎁 Final offer found:', code, `(${finalOffer.discount}% off)`);
+            
+            // Pre-fill coupon inputs
+            ['foundation', 'advanced', 'complete'].forEach(pkg => {
+                const couponInput = document.getElementById(`coupon-input-${pkg}`);
+                if (couponInput) {
+                    couponInput.value = code;
+                }
+            });
+            
+            // Auto-apply with delays
+            setTimeout(() => { applyCoupon('foundation'); }, 300);
+            setTimeout(() => { applyCoupon('advanced'); }, 600);
+            setTimeout(() => { 
+                applyCoupon('complete'); 
+                showFinalOfferWelcome(finalOffer);
+            }, 900);
+            
+            return true;
+        }
+    } catch (error) {
+        console.error('❌ Error parsing final offer:', error);
+        localStorage.removeItem('finalOffer');
+    }
+    
+    return false;
+}
 
+function showFinalOfferWelcome(finalOffer) {
+    // Calculate time remaining
+    let timeMessage = '';
+    if (finalOffer.expiresAt) {
+        const expiresAt = new Date(finalOffer.expiresAt);
+        const now = new Date();
+        const minutesRemaining = Math.ceil((expiresAt - now) / (1000 * 60));
+        timeMessage = `<div style="color: #dc3545; font-weight: 600; margin-top: 10px;">
+            ⏰ Offer expires in ${minutesRemaining} minutes!
+        </div>`;
+    }
+    
+    const welcomeDiv = document.createElement('div');
+    welcomeDiv.style.cssText = `
+        position: fixed;
+        top: 100px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: linear-gradient(135deg, #48bb78, #38a169);
+        border: 3px solid #2f855a;
+        border-radius: 15px;
+        padding: 20px 30px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        z-index: 10000;
+        text-align: center;
+        animation: slideDown 0.5s ease;
+        max-width: 500px;
+        width: 90%;
+        color: white;
+    `;
+    
+    welcomeDiv.innerHTML = `
+        <div style="font-size: 2rem; margin-bottom: 10px;">🎁</div>
+        <h4 style="color: white; margin-bottom: 10px; font-weight: 700;">
+            Exclusive ${finalOffer.discount}% Off Applied!
+        </h4>
+        <p style="color: rgba(255,255,255,0.9); margin: 0; font-size: 0.95rem;">
+            Your special final offer discount has been automatically applied to all packages.
+        </p>
+        ${timeMessage}
+        <button onclick="this.parentElement.remove()" 
+                style="margin-top: 15px; padding: 8px 20px; background: white; color: #2f855a; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">
+            Choose Your Package
+        </button>
+    `;
+    
+    document.body.appendChild(welcomeDiv);
+    
+    // Auto-dismiss after 10 seconds
+    setTimeout(() => {
+        if (welcomeDiv.parentElement) {
+            welcomeDiv.style.opacity = '0';
+            welcomeDiv.style.transition = 'opacity 0.5s ease';
+            setTimeout(() => welcomeDiv.remove(), 500);
+        }
+    }, 10000);
+    
+    // Track in GA
+    try {
+        gtag('event', 'final_offer_auto_applied', {
+            'event_category': 'pricing',
+            'event_label': finalOffer.couponCode,
+            'value': finalOffer.discount
+        });
+    } catch (error) {
+        console.error('GA error:', error);
+    }
+}
         function showScholarshipWelcome() {
             const welcomeDiv = document.createElement('div');
             welcomeDiv.style.cssText = `
@@ -1702,4 +1835,5 @@
     </script>
 </body>
 </html>
+
 
