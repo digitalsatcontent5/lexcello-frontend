@@ -1074,12 +1074,12 @@
                     return;
                 }
                 
-                // If reason is "lower-price", trigger scholarship reveal
-                if (selectedReason === 'lower-price') {
-                    await saveFeedbackData(wouldSubscribe, selectedReason);
-                    showScholarshipReveal();
-                    return;
-                }
+                // If reason is "lower-price", go directly to final offer
+if (selectedReason === 'lower-price') {
+    await saveFeedbackData(wouldSubscribe, selectedReason);
+    showFinalOfferDirectly();
+    return;
+}
                 
                 // If reason is "other", check for text
                 if (selectedReason === 'other') {
@@ -1279,7 +1279,87 @@
                 console.error('GA error:', error);
             }
         }
+        // ============= DIRECT FINAL OFFER (Skip Steps 2 & 3) =============
+async function showFinalOfferDirectly() {
+    // Hide step 1, show step 4 directly
+    document.getElementById('feedbackStep1').classList.remove('active');
+    document.getElementById('feedbackStep4').classList.add('active');
+    
+    const content = document.getElementById('finalOfferContent');
+    
+    // Get current scholarship info
+    const percentage = testResultsData?.percentage || 0;
+    let currentDiscount = 0;
+    
+    if (percentage >= 70) {
+        currentDiscount = 50;
+        scholarshipData = { tier: 'Gold', discountPercentage: 50 };
+    } else if (percentage >= 40) {
+        currentDiscount = 30;
+        scholarshipData = { tier: 'Silver', discountPercentage: 30 };
+    } else {
+        scholarshipData = { tier: null, discountPercentage: 0 };
+    }
+    
+    // Show loading
+    content.innerHTML = `
+        <div class="text-center py-5">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-3">Generating your exclusive offer...</p>
+        </div>
+    `;
+    
+    try {
+        const token = localStorage.getItem('authToken');
         
+        const response = await fetch(`${API_BASE_URL}/api/coupons/final-offer`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                testAttemptId: sessionStorage.getItem('freeTestAttemptId'),
+                currentScholarshipDiscount: currentDiscount
+            })
+        });
+        
+        if (!response.ok) {
+            throw new Error('Failed to generate offer');
+        }
+        
+        const offerData = await response.json();
+        console.log('✅ Final offer created (direct):', offerData);
+        
+        displayFinalOffer(offerData);
+        
+        // Track this event
+        try {
+            gtag('event', 'final_offer_direct', {
+                'event_category': 'negotiation_flow',
+                'event_label': 'lower_price_direct_offer',
+                'value': offerData.totalDiscount
+            });
+        } catch (e) {}
+        
+    } catch (error) {
+        console.error('❌ Error creating final offer:', error);
+        
+        content.innerHTML = `
+            <div class="text-center py-4">
+                <div style="font-size: 3rem;">😕</div>
+                <h4 style="color: #1a365d; margin-top: 15px;">Something went wrong</h4>
+                <p class="text-muted">We couldn't generate your offer at this time.</p>
+                <p>Please contact us at <a href="mailto:support@lexcello.com">support@lexcello.com</a> for a special discount.</p>
+                <button class="feedback-action-btn secondary mt-3" onclick="skipToResults()">
+                    View My Results
+                </button>
+            </div>
+        `;
+    }
+}
         function acceptScholarshipOffer() {
             console.log('🎓 User accepted scholarship offer');
             
