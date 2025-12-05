@@ -1027,7 +1027,6 @@
     }
     
     // Priority 3: Legacy check - ONLY if no package specified
-    // This ensures old premium users still get access
     if ((userData.subscriptionStatus === 'premium' || userData.subscriptionStatus === 'active') 
         && !userData.subscriptionPackage && !userData.subscriptionPlan) {
         return 'complete'; // Legacy users without package = complete access
@@ -1096,10 +1095,21 @@
                 
                 if (response.ok) {
                     const userData = await response.json();
+                    // ✅✅✅ ADD THESE LINES HERE - RIGHT AFTER userData IS RECEIVED ✅✅✅
+            console.log('=== USER DATA FROM API ===');
+            console.log('Full userData:', userData);
+            console.log('subscriptionStatus:', userData.subscriptionStatus);
+            console.log('subscriptionPackage:', userData.subscriptionPackage);
+            console.log('subscriptionPlan:', userData.subscriptionPlan);
+            console.log('==========================');
+            // ✅✅✅ END OF NEW LINES ✅✅✅
                     const subscriptionStatus = userData.subscriptionStatus || 'inactive';
                     const packageType = getUserPackage(userData);
                     const isPaid = subscriptionStatus === 'premium' || subscriptionStatus === 'active';
-                    
+                    // ✅✅✅ ADD THESE TWO LINES HERE ✅✅✅
+            console.log('📦 Detected package type:', packageType);
+            console.log('💰 isPaid:', isPaid);
+            // ✅✅✅ END OF NEW LINES ✅✅✅
                     // Check if subscription has expired
                     let isExpired = false;
                     if (userData.subscriptionExpiresAt) {
@@ -2120,6 +2130,7 @@ function navigateToFreeTest() {
     </script>
 </body>
 </html>
+
 
 
 
