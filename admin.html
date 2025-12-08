@@ -3144,20 +3144,39 @@ async function showEditUserModal(userId) {
     if (!requireAuth()) return;
     
     try {
-        // Fetch user data
+        console.log('📝 Loading user data for ID:', userId); // Debug log
+        
+        // Show modal immediately with loading state
+        document.getElementById('editUserModal').style.display = 'block';
+        
+        // Disable form while loading
+        const form = document.getElementById('editUserForm');
+        const inputs = form.querySelectorAll('input, select, textarea, button');
+        inputs.forEach(input => input.disabled = true);
+        
+        // Fetch ALL users
         const response = await fetch(`${API_BASE}/api/admin/users`);
-        const data = await response.json();
         
-        const user = data.users.find(u => u.id === userId);
-        
-        if (!user) {
-            showMessage('User not found', 'error');
-            return;
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
         }
         
-        // Populate form
+        const data = await response.json();
+        console.log('📦 API Response:', data); // Debug log
+        
+        // Find the specific user
+        const user = data.users?.find(u => u.id === userId);
+        
+        if (!user) {
+            console.error('❌ User not found. UserId:', userId, 'Available users:', data.users?.length);
+            throw new Error('User not found');
+        }
+        
+        console.log('✅ Found user:', user); // Debug log
+        
+        // Populate form with user data
         document.getElementById('editUserId').value = user.id;
-        document.getElementById('editUserEmail').value = user.email;
+        document.getElementById('editUserEmail').value = user.email || '';
         document.getElementById('editUserFirstName').value = user.first_name || '';
         document.getElementById('editUserLastName').value = user.last_name || '';
         document.getElementById('editUserCountry').value = user.country || '';
@@ -3168,14 +3187,17 @@ async function showEditUserModal(userId) {
         document.getElementById('editUserSubscriptionPlan').value = user.subscription_plan || '';
         document.getElementById('editUserPassword').value = ''; // Always empty for security
         
-        // Show modal
-        document.getElementById('editUserModal').style.display = 'block';
+        // Re-enable form
+        inputs.forEach(input => input.disabled = false);
+        
+        console.log('✅ Modal populated and displayed'); // Debug log
+        
     } catch (error) {
-        console.error('Error loading user data:', error);
-        showMessage('Error loading user data', 'error');
+        console.error('❌ Error loading user data:', error);
+        showMessage('Error loading user data: ' + error.message, 'error');
+        closeEditUserModal(); // Close modal on error
     }
 }
-
 function closeEditUserModal() {
     document.getElementById('editUserModal').style.display = 'none';
     document.getElementById('editUserForm').reset();
@@ -4322,6 +4344,7 @@ document.addEventListener('DOMContentLoaded', () => {
 </div>
 </body>
 </html>
+
 
 
 
