@@ -1500,6 +1500,18 @@
                         <option value="expired">Expired</option>
                     </select>
                 </div>
+                <!-- ✅ ADD THIS ENTIRE BLOCK HERE ✅ -->
+<div class="form-group">
+    <label for="editUserSubscriptionPackage">Subscription Package</label>
+    <select id="editUserSubscriptionPackage" class="form-control">
+        <option value="">No Package</option>
+        <option value="foundation">Foundation (Tests 1-5)</option>
+        <option value="advanced">Advanced (Tests 6-10)</option>
+        <option value="complete">Complete (All Tests)</option>
+        <option value="premium-12">Legacy Premium</option>
+    </select>
+</div>
+<!-- ✅ END OF NEW BLOCK ✅ -->
             </div>
             
             <div class="form-group">
@@ -3184,6 +3196,8 @@ async function showEditUserModal(userId) {
         document.getElementById('editUserContactNumber').value = user.contact_number || '';
         document.getElementById('editUserPhone').value = user.phone || '';
         document.getElementById('editUserSubscriptionStatus').value = user.subscription_status || 'inactive';
+        document.getElementById('editUserSubscriptionPackage').value = user.subscription_package || '';  // ✅ ADD THIS LINE
+
         document.getElementById('editUserSubscriptionPlan').value = user.subscription_plan || '';
         document.getElementById('editUserPassword').value = ''; // Always empty for security
         
@@ -3219,6 +3233,8 @@ async function submitEditUser(event) {
         contactNumber: document.getElementById('editUserContactNumber').value.trim() || null,
         phone: document.getElementById('editUserPhone').value.trim() || null,
         subscriptionStatus: document.getElementById('editUserSubscriptionStatus').value,
+            subscriptionPackage: document.getElementById('editUserSubscriptionPackage').value.trim() || null,  // ✅ ADD THIS LINE
+
         subscriptionPlan: document.getElementById('editUserSubscriptionPlan').value.trim() || null
     };
     
@@ -4344,6 +4360,7 @@ document.addEventListener('DOMContentLoaded', () => {
 </div>
 </body>
 </html>
+
 
 
 
