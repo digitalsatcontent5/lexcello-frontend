@@ -618,7 +618,7 @@ function showInfo(message) {
                     console.log('✅ Login successful');
                     
                     // Store token and user data
-                    localStorage.setItem('token', data.token);
+localStorage.setItem('authToken', data.token);
                     localStorage.setItem('user', JSON.stringify(data.user));
                     
                     // Redirect to dashboard
@@ -651,4 +651,5 @@ function showInfo(message) {
     </script>
 </body>
 </html>
+
 
