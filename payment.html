@@ -283,6 +283,41 @@
                 font-size: 2rem;
             }
         }
+        /* Currency Selector for Single Test */
+.currency-selector {
+    text-align: center;
+    margin: 20px 0;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
+}
+
+.currency-switch {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.currency-btn {
+    padding: 10px 24px;
+    border: 2px solid var(--secondary-color);
+    background: white;
+    border-radius: 25px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.currency-btn:hover {
+    transform: translateY(-2px);
+}
+
+.currency-btn.active {
+    background: var(--secondary-color);
+    color: white;
+}
     </style>
 </head>
 <body>
@@ -332,9 +367,25 @@
                             </small>
                         </div>
                     </div>
+                    <!-- Currency Selector (for single-test only) -->
+                    <div id="currency-selector" class="currency-selector" style="display: none;">
+                        <p class="mb-2"><strong><i class="fas fa-globe me-2"></i>Select Your Currency:</strong></p>
+                        <div class="currency-switch">
+                            <button type="button" class="currency-btn active" onclick="switchCurrency('GBP')" id="btn-GBP">
+                                <i class="fas fa-pound-sign me-1"></i>GBP (£)
+                            </button>
+                            <button type="button" class="currency-btn" onclick="switchCurrency('USD')" id="btn-USD">
+                                <i class="fas fa-dollar-sign me-1"></i>USD ($)
+                            </button>
+                            <button type="button" class="currency-btn" onclick="switchCurrency('INR')" id="btn-INR">
+                                <i class="fas fa-rupee-sign me-1"></i>INR (₹)
+                            </button>
+                        </div>
+                        <small class="text-muted mt-2 d-block">All payments processed in INR. Currency shown for reference.</small>
+                    </div>
                     
                     <div class="text-center mt-4">
-                        <button class="btn btn-payment" id="payment-btn" onclick="initiatePayment()">
+                       <button class="btn btn-payment" id="payment-btn" onclick="initiatePayment()">
                             <i class="fas fa-lock me-2"></i>Proceed to Secure Payment
                         </button>
                     </div>
@@ -517,7 +568,8 @@
                 document.getElementById('plan-card').classList.add('single-test');
                 document.getElementById('back-link').href = 'dashboard.html';
                 document.getElementById('back-link').innerHTML = '<i class="fas fa-arrow-left me-2"></i>Back to Dashboard';
-                
+                document.getElementById('currency-selector').style.display = 'block';
+
                 updatePackageDisplay();
             } else if (packages[savedPackage]) {
                 selectedPlan.package = savedPackage;
@@ -655,7 +707,24 @@
                 paymentBtn.classList.remove('btn-single-test');
             }
         }
-        
+        function switchCurrency(currency) {
+    selectedPlan.currency = currency;
+    selectedPlan.gateway = currency === 'INR' ? 'payu' : 'paypal';
+    
+    // Update button states
+    ['GBP', 'USD', 'INR'].forEach(c => {
+        const btn = document.getElementById(`btn-${c}`);
+        if (btn) {
+            btn.classList.toggle('active', c === currency);
+        }
+    });
+    
+    // Reset to original price with new currency
+    resetToOriginalPrice();
+    updatePaymentButton();
+    
+    console.log('Currency switched to:', currency, 'Gateway:', selectedPlan.gateway);
+}
         function showCouponBadge() {
             const container = document.getElementById('coupon-badge-container');
             
