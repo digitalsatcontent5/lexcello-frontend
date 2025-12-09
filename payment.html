@@ -57,6 +57,10 @@
             text-align: center;
         }
 
+        .payment-header.single-test {
+            background: linear-gradient(135deg, var(--accent-gold), #b7791f);
+        }
+
         .payment-header h1 {
             font-size: 2rem;
             margin-bottom: 10px;
@@ -79,6 +83,11 @@
             background: rgba(43, 108, 176, 0.03);
         }
 
+        .plan-card.single-test {
+            border-color: var(--accent-gold);
+            background: rgba(214, 158, 46, 0.05);
+        }
+
         .package-badge {
             display: inline-block;
             background: var(--accent-gold);
@@ -89,12 +98,21 @@
             font-weight: 700;
             margin-bottom: 10px;
         }
+
+        .package-badge.single-test {
+            background: linear-gradient(135deg, var(--accent-gold), #b7791f);
+            color: white;
+        }
         
         .plan-price {
             font-size: 2.5rem;
             font-weight: 800;
             color: var(--secondary-color);
             margin: 15px 0;
+        }
+
+        .plan-price.single-test {
+            color: var(--accent-gold);
         }
 
         .price-strike {
@@ -151,6 +169,15 @@
 
         .btn-paypal:hover {
             background: #005a94 !important;
+        }
+
+        .btn-single-test {
+            background: linear-gradient(135deg, var(--accent-gold), #b7791f) !important;
+        }
+
+        .btn-single-test:hover {
+            background: linear-gradient(135deg, #b7791f, #975a16) !important;
+            box-shadow: 0 8px 25px rgba(214, 158, 46, 0.4);
         }
         
         .loading-spinner {
@@ -261,12 +288,12 @@
 <body>
     <div class="container">
         <div class="payment-container">
-            <a href="pricing.html" class="back-link">
+            <a href="pricing.html" class="back-link" id="back-link">
                 <i class="fas fa-arrow-left me-2"></i>Back to Pricing
             </a>
 
             <div class="payment-card">
-                <div class="payment-header">
+                <div class="payment-header" id="payment-header">
                     <h1><i class="fas fa-lock me-2"></i>Secure Checkout</h1>
                     <p id="header-subtitle">Complete your purchase to unlock premium LNAT practice tests</p>
                 </div>
@@ -275,7 +302,6 @@
                     <div class="error-message" id="error-message"></div>
                     <div class="success-message" id="success-message"></div>
                     
-                    <!-- Order Summary -->
                     <h4 class="mb-4"><i class="fas fa-shopping-cart me-2"></i>Order Summary</h4>
 
                     <div class="plan-card" id="plan-card">
@@ -285,7 +311,6 @@
                             <div id="package-subtitle" class="text-muted mb-3"></div>
                         </div>
                         
-                        <!-- Price Display -->
                         <div class="text-center">
                             <div class="plan-price" id="display-price">
                                 <span id="currency-symbol">₹</span><span id="price-value">0</span>
@@ -293,15 +318,12 @@
                             <small class="text-muted" id="monthly-rate"></small>
                         </div>
                         
-                        <!-- Features List -->
                         <ul class="plan-features" id="features-list">
                             <li><i class="fas fa-check-circle"></i>Loading features...</li>
                         </ul>
                         
-                        <!-- Coupon Badge -->
                         <div id="coupon-badge-container"></div>
                         
-                        <!-- Currency Disclaimer -->
                         <div id="currency-disclaimer" class="currency-disclaimer" style="display: none;">
                             <small>
                                 <i class="fas fa-info-circle me-2"></i>
@@ -311,25 +333,22 @@
                         </div>
                     </div>
                     
-                    <!-- Payment Button -->
                     <div class="text-center mt-4">
                         <button class="btn btn-payment" id="payment-btn" onclick="initiatePayment()">
                             <i class="fas fa-lock me-2"></i>Proceed to Secure Payment
                         </button>
                     </div>
                     
-                    <!-- Security Info -->
                     <div class="security-info">
                         <div class="d-flex align-items-start">
                             <i class="fas fa-shield-alt text-warning me-3" style="font-size: 1.5rem;"></i>
                             <div>
                                 <strong>Secure Payment</strong><br>
-                                <small>Your payment is processed securely through industry-standard encryption. Your card details are never stored on our servers. All transactions are protected by SSL/TLS security.</small>
+                                <small>Your payment is processed securely through industry-standard encryption. Your card details are never stored on our servers.</small>
                             </div>
                         </div>
                     </div>
                     
-                    <!-- Payment Methods -->
                     <div class="payment-methods">
                         <p class="mb-3"><strong>Accepted Payment Methods:</strong></p>
                         <div class="mb-2">
@@ -343,7 +362,6 @@
                         <small class="text-muted">PayPal, Credit/Debit Cards, Net Banking, UPI & Wallets</small>
                     </div>
 
-                    <!-- Money Back Guarantee -->
                     <div class="text-center mt-4">
                         <div class="alert alert-info">
                             <i class="fas fa-shield-alt me-2"></i>
@@ -356,7 +374,6 @@
         </div>
     </div>
 
-    <!-- Hidden PayU Form -->
     <form id="payu-form" method="post" style="display: none;">
         <input type="hidden" name="key" id="payu-key">
         <input type="hidden" name="txnid" id="payu-txnid">
@@ -380,7 +397,6 @@
     <script>
         const API_BASE_URL = 'https://lexcello-backend.onrender.com/api';
         
-        // Package definitions matching pricing.html
         const packages = {
             foundation: {
                 name: 'Foundation Package',
@@ -443,6 +459,25 @@
                     USD: { symbol: '$', price: 130, actualCharge: 11500 },
                     INR: { symbol: '₹', price: 11500, actualCharge: 11500 }
                 }
+            },
+            'single-test': {
+                name: 'Single Practice Test',
+                subtitle: 'Test #',
+                badge: '🎯 Single Test',
+                features: [
+                    '1 Full Practice Test (42 questions)',
+                    'Detailed answer explanations',
+                    'Performance analytics',
+                    'Timed practice session',
+                    'Unlimited retakes',
+                    'Mobile & desktop access',
+                    '12 months access'
+                ],
+                prices: {
+                    GBP: { symbol: '£', price: 18, actualCharge: 1900 },
+                    USD: { symbol: '$', price: 23, actualCharge: 1900 },
+                    INR: { symbol: '₹', price: 1900, actualCharge: 1900 }
+                }
             }
         };
         
@@ -450,14 +485,14 @@
             package: 'complete',
             currency: 'GBP',
             amount: 11500,
-            gateway: 'paypal'
+            gateway: 'paypal',
+            testId: null
         };
         
         let appliedCoupon = null;
         let discountAmount = 0;
         let finalAmount = 11500;
         
-        // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             loadSelectedPackage();
             loadSelectedCurrency();
@@ -465,34 +500,44 @@
             checkAuthStatus();
         });
         
-        // Load package selection from localStorage
         function loadSelectedPackage() {
             const savedPackage = localStorage.getItem('selectedPackage') || 'complete';
+            const savedTestId = localStorage.getItem('selectedTestId');
             
-            if (packages[savedPackage]) {
+            console.log('Loading package:', savedPackage, 'TestId:', savedTestId);
+            
+            if (savedPackage === 'single-test' && savedTestId) {
+                selectedPlan.package = 'single-test';
+                selectedPlan.testId = parseInt(savedTestId);
+                
+                packages['single-test'].subtitle = `Test ${savedTestId}`;
+                packages['single-test'].name = `Practice Test ${savedTestId}`;
+                
+                document.getElementById('payment-header').classList.add('single-test');
+                document.getElementById('plan-card').classList.add('single-test');
+                document.getElementById('back-link').href = 'dashboard.html';
+                document.getElementById('back-link').innerHTML = '<i class="fas fa-arrow-left me-2"></i>Back to Dashboard';
+                
+                updatePackageDisplay();
+            } else if (packages[savedPackage]) {
                 selectedPlan.package = savedPackage;
-                console.log('Loaded package:', savedPackage);
                 updatePackageDisplay();
             } else {
-                console.warn('Invalid package, defaulting to complete');
                 selectedPlan.package = 'complete';
                 updatePackageDisplay();
             }
         }
         
-        // Load currency from localStorage
         function loadSelectedCurrency() {
             const savedCurrency = localStorage.getItem('selectedCurrency') || 'GBP';
             
             if (['GBP', 'USD', 'INR'].includes(savedCurrency)) {
                 selectedPlan.currency = savedCurrency;
                 selectedPlan.gateway = savedCurrency === 'INR' ? 'payu' : 'paypal';
-                console.log('Loaded currency:', savedCurrency, 'Gateway:', selectedPlan.gateway);
                 updatePriceDisplay();
             }
         }
         
-        // Load applied coupon
         function loadAppliedCoupon() {
             const couponData = localStorage.getItem('appliedCoupon');
             
@@ -504,26 +549,9 @@
                     finalAmount = coupon.finalAmount;
                     selectedPlan.amount = finalAmount;
                     
-                    console.log('Coupon loaded:', {
-                        code: coupon.code,
-                        discountINR: discountAmount,
-                        finalINR: finalAmount
-                    });
-                    
                     showCouponBadge();
                     updatePriceDisplay();
-                    
-                    try {
-                        gtag('event', 'coupon_on_payment_page', {
-                            'event_category': 'payment',
-                            'event_label': coupon.code,
-                            'value': discountAmount
-                        });
-                    } catch (error) {
-                        console.error('GA error:', error);
-                    }
                 } catch (error) {
-                    console.error('Error loading coupon:', error);
                     resetToOriginalPrice();
                 }
             } else {
@@ -539,11 +567,15 @@
             updatePriceDisplay();
         }
         
-        // Update package display
         function updatePackageDisplay() {
             const pkg = packages[selectedPlan.package];
             
-            document.getElementById('package-badge').textContent = pkg.badge;
+            const badgeElement = document.getElementById('package-badge');
+            badgeElement.textContent = pkg.badge;
+            if (selectedPlan.package === 'single-test') {
+                badgeElement.classList.add('single-test');
+            }
+            
             document.getElementById('package-title').textContent = pkg.name;
             document.getElementById('package-subtitle').textContent = pkg.subtitle;
             
@@ -552,16 +584,25 @@
                 `<li><i class="fas fa-check-circle"></i>${feature}</li>`
             ).join('');
             
-            document.getElementById('header-subtitle').textContent = 
-                `Unlock ${pkg.name} - ${pkg.subtitle}`;
+            if (selectedPlan.package === 'single-test') {
+                document.getElementById('header-subtitle').textContent = 
+                    `Purchase Practice Test ${selectedPlan.testId} - Unlock immediately!`;
+            } else {
+                document.getElementById('header-subtitle').textContent = 
+                    `Unlock ${pkg.name} - ${pkg.subtitle}`;
+            }
         }
         
-        // Update price display
         function updatePriceDisplay() {
             const pkg = packages[selectedPlan.package];
             const priceData = pkg.prices[selectedPlan.currency];
             
             document.getElementById('currency-symbol').textContent = priceData.symbol;
+            
+            const priceElement = document.getElementById('display-price');
+            if (selectedPlan.package === 'single-test') {
+                priceElement.classList.add('single-test');
+            }
             
             if (appliedCoupon) {
                 const displayOriginal = priceData.price;
@@ -585,72 +626,70 @@
                 document.getElementById('price-value').textContent = formattedPrice;
             }
             
-            const monthlyRate = (priceData.price / 12).toFixed(2);
-            document.getElementById('monthly-rate').textContent = 
-                `${priceData.symbol}${monthlyRate} per month`;
+            const monthlyRateElement = document.getElementById('monthly-rate');
+            if (selectedPlan.package === 'single-test') {
+                monthlyRateElement.textContent = 'One-time payment • 12 months access';
+            } else {
+                const monthlyRate = (priceData.price / 12).toFixed(2);
+                monthlyRateElement.textContent = `${priceData.symbol}${monthlyRate} per month`;
+            }
             
-            updateCurrencyDisclaimer(priceData);
+            document.getElementById('currency-disclaimer').style.display = 'none';
             updatePaymentButton();
         }
-
-        function updateCurrencyDisclaimer(priceData) {
-    const disclaimer = document.getElementById('currency-disclaimer');
-    
-    // Always hide the disclaimer - PayPal handles currency conversion
-    disclaimer.style.display = 'none';
-}
 
         function updatePaymentButton() {
             const paymentBtn = document.getElementById('payment-btn');
             
-            if (selectedPlan.gateway === 'paypal') {
+            if (selectedPlan.package === 'single-test') {
+                paymentBtn.innerHTML = '<i class="fas fa-shopping-cart me-2"></i>Buy Test Now';
+                paymentBtn.classList.add('btn-single-test');
+                paymentBtn.classList.remove('btn-paypal');
+            } else if (selectedPlan.gateway === 'paypal') {
                 paymentBtn.innerHTML = '<i class="fab fa-paypal me-2"></i>Pay with PayPal';
                 paymentBtn.classList.add('btn-paypal');
+                paymentBtn.classList.remove('btn-single-test');
             } else {
                 paymentBtn.innerHTML = '<i class="fas fa-lock me-2"></i>Proceed to Secure Payment';
                 paymentBtn.classList.remove('btn-paypal');
+                paymentBtn.classList.remove('btn-single-test');
             }
         }
         
-        // Show coupon badge
         function showCouponBadge() {
-    const container = document.getElementById('coupon-badge-container');
-    
-    // Determine what to show based on currency
-    let savingsText = '';
-    
-    if (selectedPlan.currency === 'INR') {
-        // For INR payments, show INR savings
-        savingsText = `You save ₹${discountAmount.toLocaleString('en-IN')} INR`;
-    } else {
-        // For GBP/USD, show the display currency savings
-        const pkg = packages[selectedPlan.package];
-        const priceData = pkg.prices[selectedPlan.currency];
-        const displayDiscount = (discountAmount * priceData.price / priceData.actualCharge).toFixed(2);
-        savingsText = `You save ${priceData.symbol}${displayDiscount} ${selectedPlan.currency}`;
-    }
-    
-    container.innerHTML = `
-        <div class="coupon-badge">
-            <div class="d-flex justify-content-between align-items-center">
-                <div>
-                    <strong>
-                        <i class="fas fa-check-circle"></i> Coupon Applied: ${appliedCoupon.code}
-                    </strong>
-                    <div style="font-size: 0.9rem; margin-top: 5px; color: #155724;">
-                        ${savingsText}
+            const container = document.getElementById('coupon-badge-container');
+            
+            let savingsText = '';
+            
+            if (selectedPlan.currency === 'INR') {
+                savingsText = `You save ₹${discountAmount.toLocaleString('en-IN')} INR`;
+            } else {
+                const pkg = packages[selectedPlan.package];
+                const priceData = pkg.prices[selectedPlan.currency];
+                const displayDiscount = (discountAmount * priceData.price / priceData.actualCharge).toFixed(2);
+                savingsText = `You save ${priceData.symbol}${displayDiscount} ${selectedPlan.currency}`;
+            }
+            
+            container.innerHTML = `
+                <div class="coupon-badge">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>
+                                <i class="fas fa-check-circle"></i> Coupon Applied: ${appliedCoupon.code}
+                            </strong>
+                            <div style="font-size: 0.9rem; margin-top: 5px; color: #155724;">
+                                ${savingsText}
+                            </div>
+                        </div>
+                        <button onclick="removeCoupon()" 
+                                class="btn btn-sm btn-outline-danger">
+                            <i class="fas fa-times"></i> Remove
+                        </button>
                     </div>
                 </div>
-                <button onclick="removeCoupon()" 
-                        class="btn btn-sm btn-outline-danger">
-                    <i class="fas fa-times"></i> Remove
-                </button>
-            </div>
-        </div>
-    `;
-}
+            `;
+        }
         
-        // Remove coupon
         function removeCoupon() {
             if (!confirm('Remove coupon code? You will be charged the full amount.')) {
                 return;
@@ -658,38 +697,12 @@
             
             appliedCoupon = null;
             discountAmount = 0;
-            
             localStorage.removeItem('appliedCoupon');
-            
             document.getElementById('coupon-badge-container').innerHTML = '';
-            
             resetToOriginalPrice();
-            
-            try {
-                gtag('event', 'coupon_removed_payment_page', {
-                    'event_category': 'payment',
-                    'event_label': 'user_removed_coupon'
-                });
-            } catch (error) {
-                console.error('GA error:', error);
-            }
         }
         
-        // Check authentication
         async function checkAuthStatus() {
-            try {
-                gtag('event', 'payment_page_view', {
-                    'event_category': 'payment',
-                    'event_label': `${selectedPlan.package}_${selectedPlan.currency}`,
-                    'package': selectedPlan.package,
-                    'currency': selectedPlan.currency,
-                    'gateway': selectedPlan.gateway,
-                    'coupon_applied': appliedCoupon ? appliedCoupon.code : 'none'
-                });
-            } catch (error) {
-                console.error('Tracking error:', error);
-            }
-            
             const token = localStorage.getItem('authToken');
             if (!token) {
                 showError('Please sign in to continue');
@@ -713,7 +726,18 @@
                 
                 const userData = await response.json();
                 
-                if (userData.subscriptionStatus === 'premium') {
+                if (selectedPlan.package === 'single-test' && selectedPlan.testId) {
+                    const purchasedTests = userData.purchasedTests || [];
+                    if (purchasedTests.includes(selectedPlan.testId)) {
+                        showSuccess('You already have access to this test!');
+                        setTimeout(() => {
+                            window.location.href = 'dashboard.html';
+                        }, 2000);
+                        return;
+                    }
+                }
+                
+                if (selectedPlan.package !== 'single-test' && userData.subscriptionStatus === 'premium') {
                     showSuccess('You already have premium access!');
                     setTimeout(() => {
                         window.location.href = 'dashboard.html';
@@ -721,7 +745,6 @@
                 }
                 
             } catch (error) {
-                console.error('Auth error:', error);
                 showError('Authentication failed. Please sign in again.');
                 setTimeout(() => {
                     window.location.href = 'login.html';
@@ -729,7 +752,6 @@
             }
         }
         
-        // Initiate payment (routes to correct gateway)
         async function initiatePayment() {
             if (selectedPlan.gateway === 'paypal') {
                 await initiatePayPalPayment();
@@ -738,7 +760,6 @@
             }
         }
         
-        // PayPal payment
         async function initiatePayPalPayment() {
             const paymentBtn = document.getElementById('payment-btn');
             const originalText = paymentBtn.innerHTML;
@@ -752,30 +773,22 @@
                     throw new Error('Please sign in to continue');
                 }
                 
-                try {
-                    gtag('event', 'paypal_payment_initiated', {
-                        'event_category': 'payment',
-                        'event_label': selectedPlan.package,
-                        'currency': selectedPlan.currency,
-                        'final_amount': finalAmount
-                    });
-                } catch (error) {
-                    console.error('Tracking error:', error);
-                }
-                
                 if (!finalAmount || finalAmount < 100 || finalAmount > 100000) {
                     throw new Error(`Invalid payment amount: ₹${finalAmount}`);
                 }
                 
-                // ✅ ALWAYS send INR amount to backend (PayPal handles conversion)
-const requestBody = {
-    planType: 'premium-12',
-    amount: finalAmount,  // This is ALWAYS INR (5700, 6900, or 11500)
-    planDuration: 12,
-    currency: 'INR',  // ✅ ALWAYS INR (PayPal converts automatically)
-    displayCurrency: selectedPlan.currency,  // ✅ NEW: What to show user
-    packageType: selectedPlan.package
-};
+                const requestBody = {
+                    planType: selectedPlan.package === 'single-test' ? 'single-test' : 'premium-12',
+                    amount: finalAmount,
+                    planDuration: 12,
+                    currency: 'INR',
+                    displayCurrency: selectedPlan.currency,
+                    packageType: selectedPlan.package === 'single-test' ? 'single-test' : selectedPlan.package
+                };
+                
+                if (selectedPlan.package === 'single-test' && selectedPlan.testId) {
+                    requestBody.testId = selectedPlan.testId;
+                }
                 
                 if (appliedCoupon) {
                     requestBody.couponCode = appliedCoupon.code;
@@ -803,16 +816,6 @@ const requestBody = {
                 const paymentData = await response.json();
                 
                 if (paymentData.success && paymentData.approvalUrl) {
-                    try {
-                        gtag('event', 'paypal_redirect', {
-                            'event_category': 'payment',
-                            'event_label': 'redirecting_to_paypal',
-                            'transaction_id': paymentData.txnid
-                        });
-                    } catch (error) {
-                        console.error('Tracking error:', error);
-                    }
-                    
                     window.location.href = paymentData.approvalUrl;
                 } else {
                     throw new Error('PayPal order creation failed');
@@ -821,22 +824,12 @@ const requestBody = {
             } catch (error) {
                 console.error('PayPal error:', error);
                 showError(error.message || 'PayPal payment failed');
-                
-                try {
-                    gtag('event', 'paypal_error', {
-                        'event_category': 'payment',
-                        'event_label': error.message
-                    });
-                } catch (trackError) {
-                    console.error('Tracking error:', trackError);
-                }
             } finally {
                 paymentBtn.disabled = false;
                 paymentBtn.innerHTML = originalText;
             }
         }
         
-        // PayU payment
         async function initiatePayUPayment() {
             const paymentBtn = document.getElementById('payment-btn');
             const originalText = paymentBtn.innerHTML;
@@ -850,29 +843,22 @@ const requestBody = {
                     throw new Error('Please sign in to continue');
                 }
                 
-                try {
-                    gtag('event', 'payu_payment_initiated', {
-                        'event_category': 'payment',
-                        'event_label': selectedPlan.package,
-                        'final_amount': finalAmount
-                    });
-                } catch (error) {
-                    console.error('Tracking error:', error);
-                }
-                
                 if (!finalAmount || finalAmount < 100 || finalAmount > 100000) {
                     throw new Error(`Invalid payment amount: ₹${finalAmount}`);
                 }
                 
-                // ✅ ALWAYS send INR amount to backend (PayPal handles conversion)
-const requestBody = {
-    planType: 'premium-12',
-    amount: finalAmount,  // This is ALWAYS INR (5700, 6900, or 11500)
-    planDuration: 12,
-    currency: 'INR',  // ✅ ALWAYS INR (PayPal converts automatically)
-    displayCurrency: selectedPlan.currency,  // ✅ NEW: What to show user
-    packageType: selectedPlan.package
-};
+                const requestBody = {
+                    planType: selectedPlan.package === 'single-test' ? 'single-test' : 'premium-12',
+                    amount: finalAmount,
+                    planDuration: 12,
+                    currency: 'INR',
+                    displayCurrency: selectedPlan.currency,
+                    packageType: selectedPlan.package === 'single-test' ? 'single-test' : selectedPlan.package
+                };
+                
+                if (selectedPlan.package === 'single-test' && selectedPlan.testId) {
+                    requestBody.testId = selectedPlan.testId;
+                }
                 
                 if (appliedCoupon) {
                     requestBody.couponCode = appliedCoupon.code;
@@ -900,16 +886,6 @@ const requestBody = {
                 const paymentData = await response.json();
                 
                 if (paymentData.success) {
-                    try {
-                        gtag('event', 'payu_redirect', {
-                            'event_category': 'payment',
-                            'event_label': 'redirecting_to_payu',
-                            'transaction_id': paymentData.txnid
-                        });
-                    } catch (error) {
-                        console.error('Tracking error:', error);
-                    }
-                    
                     fillPayUForm(paymentData.paymentData);
                     submitPayUForm(paymentData.paymentData.payu_url);
                 } else {
@@ -919,22 +895,12 @@ const requestBody = {
             } catch (error) {
                 console.error('PayU error:', error);
                 showError(error.message || 'Payment failed');
-                
-                try {
-                    gtag('event', 'payu_error', {
-                        'event_category': 'payment',
-                        'event_label': error.message
-                    });
-                } catch (trackError) {
-                    console.error('Tracking error:', trackError);
-                }
             } finally {
                 paymentBtn.disabled = false;
                 paymentBtn.innerHTML = originalText;
             }
         }
         
-        // Fill PayU form
         function fillPayUForm(paymentData) {
             document.getElementById('payu-key').value = paymentData.key;
             document.getElementById('payu-txnid').value = paymentData.txnid;
@@ -953,14 +919,12 @@ const requestBody = {
             document.getElementById('payu-udf5').value = paymentData.udf5 || '';
         }
         
-        // Submit PayU form
         function submitPayUForm(payuUrl) {
             const form = document.getElementById('payu-form');
             form.action = payuUrl;
             form.submit();
         }
         
-        // Utility functions
         function showError(message) {
             const errorDiv = document.getElementById('error-message');
             errorDiv.textContent = message;
