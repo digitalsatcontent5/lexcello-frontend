@@ -822,7 +822,8 @@
     
     // Redirect to login page (or verification-sent page if you have one)
     setTimeout(() => {
-        window.location.href = 'login.html';  // Changed from 'pricing.html'
+        window.location.href = 'login.html?registered=true';
+  // Changed from 'pricing.html'
     }, 2000);
 } else {
     showAlert(data.error || 'Registration failed', 'danger');
@@ -897,5 +898,6 @@
 </body>
 
 </html>
+
 
 
