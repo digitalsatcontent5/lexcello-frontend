@@ -421,6 +421,7 @@
             margin-top: 25px;
             display: flex;
             gap: 10px;
+            flex-wrap: wrap;
         }
         
         .btn-test-action {
@@ -431,6 +432,7 @@
             border: none;
             transition: all 0.3s ease;
             cursor: pointer;
+            min-width: 120px;
         }
         
         .btn-start {
@@ -468,6 +470,31 @@
 
         .btn-locked:hover {
             background: #cbd5e0;
+        }
+
+        /* Single Test Purchase Button */
+        .btn-buy-single {
+            background: linear-gradient(135deg, var(--accent-gold), #b7791f);
+            color: white;
+            font-weight: 700;
+        }
+
+        .btn-buy-single:hover {
+            background: linear-gradient(135deg, #b7791f, #975a16);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(214, 158, 46, 0.4);
+            color: white;
+        }
+
+        .btn-buy-single i {
+            margin-right: 5px;
+        }
+
+        /* Price tag on button */
+        .single-test-price {
+            font-size: 0.85rem;
+            opacity: 0.9;
+            margin-left: 5px;
         }
         
         /* Performance Chart */
@@ -756,6 +783,10 @@
             .test-actions {
                 flex-direction: column;
             }
+
+            .btn-test-action {
+                min-width: 100%;
+            }
         }
     </style>
 </head>
@@ -969,6 +1000,14 @@
         let userTestAttempts = [];
         let availableTests = {};
         let userSubscriptionInfo = null;
+        let userPurchasedTests = []; // Track individually purchased tests
+        
+        // Single test pricing (matches backend)
+        const SINGLE_TEST_PRICE = {
+            GBP: { symbol: '£', price: 18, actualCharge: 1900 },
+            USD: { symbol: '$', price: 23, actualCharge: 1900 },
+            INR: { symbol: '₹', price: 1900, actualCharge: 1900 }
+        };
         
         // Authentication check and initialization
         document.addEventListener('DOMContentLoaded', async function() {
@@ -992,48 +1031,48 @@
         }
 
         function getUserPackage(userData) {
-    if (!userData || !userData.subscriptionStatus) {
-        return 'free';
-    }
-    
-    // Priority 1: Check subscription_package field (NEW - from payments)
-    if (userData.subscriptionPackage) {
-        const pkg = userData.subscriptionPackage.toLowerCase();
-        
-        if (pkg === 'foundation' || pkg === 'tests-1-5') {
-            return 'foundation';
+            if (!userData || !userData.subscriptionStatus) {
+                return 'free';
+            }
+            
+            // Priority 1: Check subscription_package field (NEW - from payments)
+            if (userData.subscriptionPackage) {
+                const pkg = userData.subscriptionPackage.toLowerCase();
+                
+                if (pkg === 'foundation' || pkg === 'tests-1-5') {
+                    return 'foundation';
+                }
+                if (pkg === 'advanced' || pkg === 'tests-6-10') {
+                    return 'advanced';
+                }
+                if (pkg === 'complete' || pkg === 'premium-12') {
+                    return 'complete';
+                }
+            }
+            
+            // Priority 2: Check subscription_plan field (OLD - legacy)
+            if (userData.subscriptionPlan) {
+                const plan = userData.subscriptionPlan.toLowerCase();
+                
+                if (plan.includes('foundation') || plan.includes('1-5') || plan.includes('tests-1-5')) {
+                    return 'foundation';
+                }
+                if (plan.includes('advanced') || plan.includes('6-10') || plan.includes('tests-6-10')) {
+                    return 'advanced';
+                }
+                if (plan.includes('complete') || plan.includes('1-10') || plan.includes('premium-complete')) {
+                    return 'complete';
+                }
+            }
+            
+            // Priority 3: Legacy check - ONLY if no package specified
+            if ((userData.subscriptionStatus === 'premium' || userData.subscriptionStatus === 'active') 
+                && !userData.subscriptionPackage && !userData.subscriptionPlan) {
+                return 'complete'; // Legacy users without package = complete access
+            }
+            
+            return 'free';
         }
-        if (pkg === 'advanced' || pkg === 'tests-6-10') {
-            return 'advanced';
-        }
-        if (pkg === 'complete' || pkg === 'premium-12') {
-            return 'complete';
-        }
-    }
-    
-    // Priority 2: Check subscription_plan field (OLD - legacy)
-    if (userData.subscriptionPlan) {
-        const plan = userData.subscriptionPlan.toLowerCase();
-        
-        if (plan.includes('foundation') || plan.includes('1-5') || plan.includes('tests-1-5')) {
-            return 'foundation';
-        }
-        if (plan.includes('advanced') || plan.includes('6-10') || plan.includes('tests-6-10')) {
-            return 'advanced';
-        }
-        if (plan.includes('complete') || plan.includes('1-10') || plan.includes('premium-complete')) {
-            return 'complete';
-        }
-    }
-    
-    // Priority 3: Legacy check - ONLY if no package specified
-    if ((userData.subscriptionStatus === 'premium' || userData.subscriptionStatus === 'active') 
-        && !userData.subscriptionPackage && !userData.subscriptionPlan) {
-        return 'complete'; // Legacy users without package = complete access
-    }
-    
-    return 'free';
-}
 
         function getPackageDisplayName(packageType) {
             const names = {
@@ -1046,12 +1085,15 @@
             return names[packageType] || 'Free Access';
         }
 
-        function canAccessTest(testId, userPackage) {
-            // NO free tests in the main 10-test series
-            // The free 14-question test is on free-test.html
+        function canAccessTest(testId, userPackage, purchasedTests = []) {
+            // Check if test was individually purchased
+            if (purchasedTests && purchasedTests.includes(testId)) {
+                return true;
+            }
             
+            // NO free tests in the main 10-test series
             if (!userPackage || userPackage === 'free' || userPackage === 'inactive' || userPackage === 'expired') {
-                return false; // No access to paid tests
+                return false;
             }
             
             // Foundation package: Tests 1-5
@@ -1080,7 +1122,8 @@
                     isPaid: false, 
                     isDemo: true,
                     packageType: 'free',
-                    accessibleTests: [] // NO tests in main series for free users
+                    accessibleTests: [],
+                    purchasedTests: []
                 };
             }
 
@@ -1095,21 +1138,26 @@
                 
                 if (response.ok) {
                     const userData = await response.json();
-                    // ✅✅✅ ADD THESE LINES HERE - RIGHT AFTER userData IS RECEIVED ✅✅✅
-            console.log('=== USER DATA FROM API ===');
-            console.log('Full userData:', userData);
-            console.log('subscriptionStatus:', userData.subscriptionStatus);
-            console.log('subscriptionPackage:', userData.subscriptionPackage);
-            console.log('subscriptionPlan:', userData.subscriptionPlan);
-            console.log('==========================');
-            // ✅✅✅ END OF NEW LINES ✅✅✅
+                    
+                    console.log('=== USER DATA FROM API ===');
+                    console.log('Full userData:', userData);
+                    console.log('subscriptionStatus:', userData.subscriptionStatus);
+                    console.log('subscriptionPackage:', userData.subscriptionPackage);
+                    console.log('subscriptionPlan:', userData.subscriptionPlan);
+                    console.log('purchasedTests:', userData.purchasedTests);
+                    console.log('==========================');
+                    
                     const subscriptionStatus = userData.subscriptionStatus || 'inactive';
                     const packageType = getUserPackage(userData);
                     const isPaid = subscriptionStatus === 'premium' || subscriptionStatus === 'active';
-                    // ✅✅✅ ADD THESE TWO LINES HERE ✅✅✅
-            console.log('📦 Detected package type:', packageType);
-            console.log('💰 isPaid:', isPaid);
-            // ✅✅✅ END OF NEW LINES ✅✅✅
+                    
+                    // Get individually purchased tests
+                    userPurchasedTests = userData.purchasedTests || [];
+                    
+                    console.log('📦 Detected package type:', packageType);
+                    console.log('💰 isPaid:', isPaid);
+                    console.log('🎯 Purchased tests:', userPurchasedTests);
+                    
                     // Check if subscription has expired
                     let isExpired = false;
                     if (userData.subscriptionExpiresAt) {
@@ -1117,14 +1165,14 @@
                         isExpired = expirationDate < new Date();
                     }
                     
-                    // Determine accessible tests based on package
-                    let accessibleTests = []; // NO free tests - all require payment
+                    // Determine accessible tests based on package + individual purchases
+                    let accessibleTests = [...userPurchasedTests]; // Start with purchased tests
                     
                     if (isPaid && !isExpired) {
                         if (packageType === 'foundation') {
-                            accessibleTests = [1, 2, 3, 4, 5];
+                            accessibleTests = [...new Set([...accessibleTests, 1, 2, 3, 4, 5])];
                         } else if (packageType === 'advanced') {
-                            accessibleTests = [6, 7, 8, 9, 10];
+                            accessibleTests = [...new Set([...accessibleTests, 6, 7, 8, 9, 10])];
                         } else if (packageType === 'complete' || packageType === 'premium') {
                             accessibleTests = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
                         }
@@ -1139,14 +1187,16 @@
                         expiresAt: userData.subscriptionExpiresAt,
                         isExpired: isExpired,
                         isDemo: false,
-                        accessibleTests: accessibleTests
+                        accessibleTests: accessibleTests,
+                        purchasedTests: userPurchasedTests
                     };
                 } else {
                     return { 
                         isPaid: false, 
                         isDemo: false,
                         packageType: 'free',
-                        accessibleTests: []
+                        accessibleTests: [],
+                        purchasedTests: []
                     };
                 }
             } catch (error) {
@@ -1155,104 +1205,102 @@
                     isPaid: false, 
                     isDemo: false,
                     packageType: 'free',
-                    accessibleTests: []
+                    accessibleTests: [],
+                    purchasedTests: []
                 };
             }
         }
 
         function showFreeTestPromoIfNeeded() {
-    const userPackage = getUserPackage(currentUser);
-    
-    console.log('=== FREE TEST PROMO CHECK ===');
-    console.log('User package:', userPackage);
-    console.log('Should show promo:', !userPackage || userPackage === 'free' || userPackage === 'inactive');
-    
-    // Only show for free/non-paying users
-    if (!userPackage || userPackage === 'free' || userPackage === 'inactive') {
-        const promoContainer = document.getElementById('freeTestPromo');
-        
-        if (promoContainer) {
-            promoContainer.innerHTML = `
-                <div class="free-test-promo" style="position: relative; z-index: 5; margin: 20px 0;">
-                    <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
-                        <div style="flex: 1;">
-                            <h5 style="margin-bottom: 10px; color: white;">
-                                <i class="fas fa-gift me-2"></i>Try Our Free 14-Question Practice Test!
-                            </h5>
-                            <p class="mb-0" style="font-size: 1rem; color: rgba(255,255,255,0.95);">
-                                Score 40%+ to earn an exclusive scholarship discount (30-50% off) on our premium packages.
-                            </p>
+            const userPackage = getUserPackage(currentUser);
+            
+            console.log('=== FREE TEST PROMO CHECK ===');
+            console.log('User package:', userPackage);
+            console.log('Should show promo:', !userPackage || userPackage === 'free' || userPackage === 'inactive');
+            
+            // Only show for free/non-paying users
+            if (!userPackage || userPackage === 'free' || userPackage === 'inactive') {
+                const promoContainer = document.getElementById('freeTestPromo');
+                
+                if (promoContainer) {
+                    promoContainer.innerHTML = `
+                        <div class="free-test-promo" style="position: relative; z-index: 5; margin: 20px 0;">
+                            <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+                                <div style="flex: 1;">
+                                    <h5 style="margin-bottom: 10px; color: white;">
+                                        <i class="fas fa-gift me-2"></i>Try Our Free 14-Question Practice Test!
+                                    </h5>
+                                    <p class="mb-0" style="font-size: 1rem; color: rgba(255,255,255,0.95);">
+                                        Score 40%+ to earn an exclusive scholarship discount (30-50% off) on our premium packages.
+                                    </p>
+                                </div>
+                                <button 
+                                    onclick="navigateToFreeTest()" 
+                                    class="btn btn-light btn-lg" 
+                                    style="white-space: nowrap; font-weight: 700; padding: 15px 30px; border: none; cursor: pointer;">
+                                    <i class="fas fa-rocket me-2"></i>Start Free Test
+                                </button>
+                            </div>
                         </div>
-                        <button 
-    onclick="navigateToFreeTest()" 
-    class="btn btn-light btn-lg" 
-    style="white-space: nowrap; font-weight: 700; padding: 15px 30px; border: none; cursor: pointer;">
-    <i class="fas fa-rocket me-2"></i>Start Free Test
-</button>
-                    </div>
-                </div>
-            `;
-            
-            console.log('✅ Free test promo banner added to DOM');
-            
-            // Track promo shown
+                    `;
+                    
+                    console.log('✅ Free test promo banner added to DOM');
+                    
+                    try {
+                        gtag('event', 'free_test_promo_shown', {
+                            'event_category': 'dashboard',
+                            'event_label': 'promo_banner_displayed',
+                            'user_package': userPackage || 'none'
+                        });
+                    } catch (error) {
+                        console.error('GA tracking error:', error);
+                    }
+                } else {
+                    console.error('❌ freeTestPromo container NOT FOUND in DOM');
+                }
+            } else {
+                console.log('ℹ️ User has package:', userPackage, '- not showing free test promo');
+            }
+        }
+
+        function trackFreeTestClick(event) {
             try {
-                gtag('event', 'free_test_promo_shown', {
+                gtag('event', 'free_test_button_clicked', {
                     'event_category': 'dashboard',
-                    'event_label': 'promo_banner_displayed',
-                    'user_package': userPackage || 'none'
+                    'event_label': 'start_free_test_from_banner',
+                    'page_location': window.location.href
                 });
+                console.log('✓ Free test button clicked - navigating to free-test.html');
             } catch (error) {
                 console.error('GA tracking error:', error);
             }
-        } else {
-            console.error('❌ freeTestPromo container NOT FOUND in DOM');
         }
-    } else {
-        console.log('ℹ️ User has package:', userPackage, '- not showing free test promo');
-    }
-}
 
-// Track free test button clicks
-function trackFreeTestClick(event) {
-    try {
-        gtag('event', 'free_test_button_clicked', {
-            'event_category': 'dashboard',
-            'event_label': 'start_free_test_from_banner',
-            'page_location': window.location.href
-        });
-        console.log('✓ Free test button clicked - navigating to free-test.html');
-    } catch (error) {
-        console.error('GA tracking error:', error);
-    }
-    // Let the link navigate normally
-}
-
-async function checkAuthStatus() {
-    const token = localStorage.getItem('authToken');
-    if (token) {
-        try {
-            const response = await fetch(`${API_BASE_URL}/auth/profile`, {
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
+        async function checkAuthStatus() {
+            const token = localStorage.getItem('authToken');
+            if (token) {
+                try {
+                    const response = await fetch(`${API_BASE_URL}/auth/profile`, {
+                        method: 'GET',
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                    
+                    if (response.ok) {
+                        currentUser = await response.json();
+                        updateUserInfo();
+                    } else {
+                        localStorage.removeItem('authToken');
+                        currentUser = null;
+                    }
+                } catch (error) {
+                    console.error('Auth check failed:', error);
+                    currentUser = null;
                 }
-            });
-            
-            if (response.ok) {
-                currentUser = await response.json();
-                updateUserInfo();
-            } else {
-                localStorage.removeItem('authToken');
-                currentUser = null;
             }
-        } catch (error) {
-            console.error('Auth check failed:', error);
-            currentUser = null;
         }
-    }
-}
 
         function updateUserInfo() {
             if (currentUser) {
@@ -1396,13 +1444,16 @@ async function checkAuthStatus() {
             let testsHTML = '';
             
             const userPackage = getUserPackage(currentUser);
+            const purchasedTests = userPurchasedTests || [];
             
             for (let testId = 1; testId <= 10; testId++) {
                 const status = testStatuses[testId] || { hasContent: false, questionCount: 0, status: 'empty' };
                 const userAttempts = userTestAttempts.filter(attempt => attempt.test_id === testId);
                 const hasCompleted = userAttempts.length > 0;
                 
-                const canAccess = canAccessTest(testId, userPackage);
+                // Check access including individually purchased tests
+                const canAccess = canAccessTest(testId, userPackage, purchasedTests);
+                const isPurchasedIndividually = purchasedTests.includes(testId);
                 
                 let bestScore = 0;
                 if (hasCompleted) {
@@ -1446,6 +1497,9 @@ async function checkAuthStatus() {
                     } else if (hasCompleted) {
                         statusText = `Completed (${Math.round(bestScore)}%)`;
                         statusClass = 'status-completed';
+                    } else if (isPurchasedIndividually) {
+                        statusText = 'Purchased - Ready to Start';
+                        statusClass = 'status-available';
                     } else if (status.hasContent) {
                         statusText = 'Ready to Start';
                         statusClass = 'status-available';
@@ -1457,16 +1511,20 @@ async function checkAuthStatus() {
                     let actionButtons = '';
                     
                     if (!canAccess) {
+                        // Show both "Buy This Test" and package upgrade options
                         let upgradeText = '';
                         if (testId >= 1 && testId <= 5) {
-                            upgradeText = userPackage === 'advanced' ? 'Upgrade to Complete' : 'Get Foundation or Complete';
+                            upgradeText = userPackage === 'advanced' ? 'Upgrade to Complete' : 'Get Foundation Package';
                         } else {
-                            upgradeText = userPackage === 'foundation' ? 'Upgrade to Complete' : 'Get Advanced or Complete';
+                            upgradeText = userPackage === 'foundation' ? 'Upgrade to Complete' : 'Get Advanced Package';
                         }
                         
                         actionButtons = `
+                            <button class="btn btn-test-action btn-buy-single" onclick="buySingleTest(${testId})">
+                                <i class="fas fa-shopping-cart"></i>Buy This Test<span class="single-test-price">(£18)</span>
+                            </button>
                             <button class="btn btn-test-action btn-locked" onclick="upgradePrompt('${upgradeText}', ${testId})">
-                                <i class="fas fa-lock me-1"></i>${upgradeText}
+                                <i class="fas fa-box-open me-1"></i>${upgradeText}
                             </button>
                         `;
                     } else if (status.hasContent) {
@@ -1496,12 +1554,16 @@ async function checkAuthStatus() {
 
                     const progress = hasCompleted ? 100 : 0;
                     
+                    // Show purchase badge if individually purchased
+                    const purchaseBadge = isPurchasedIndividually && !hasCompleted ? 
+                        `<span class="badge bg-warning text-dark ms-2" style="font-size: 0.7rem;"><i class="fas fa-check me-1"></i>Purchased</span>` : '';
+                    
                     testsHTML += `
                         <div class="test-card ${cardClass}">
                             <div class="test-header">
                                 <div class="test-number ${hasCompleted ? 'completed' : canAccess ? '' : 'locked'}">${testId}</div>
                                 <div class="test-info">
-                                    <h4 class="test-title">Practice Test ${testId}</h4>
+                                    <h4 class="test-title">Practice Test ${testId}${purchaseBadge}</h4>
                                     <span class="test-status ${statusClass}">
                                         ${!canAccess ? '<i class="fas fa-lock me-1"></i>' : ''}
                                         ${statusText}
@@ -1550,6 +1612,42 @@ async function checkAuthStatus() {
             
             testsGrid.innerHTML = testsHTML;
             console.log(`Rendered tests with package-based access control`);
+        }
+
+        // ========== SINGLE TEST PURCHASE FUNCTION ==========
+        function buySingleTest(testId) {
+            console.log('🛒 Buy single test clicked:', testId);
+            
+            // Check if user is logged in
+            if (!currentUser) {
+                showNotification('Please sign in to purchase a test', 'info');
+                localStorage.setItem('pendingSingleTestPurchase', testId);
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            // Track the click
+            try {
+                gtag('event', 'single_test_purchase_clicked', {
+                    'event_category': 'payment',
+                    'event_label': `test_${testId}`,
+                    'value': 18
+                });
+            } catch (error) {
+                console.error('GA error:', error);
+            }
+            
+            // Store purchase details for payment page
+            localStorage.setItem('selectedPackage', 'single-test');
+            localStorage.setItem('selectedTestId', testId);
+            localStorage.setItem('selectedCurrency', 'GBP'); // Default to GBP
+            localStorage.setItem('selectedAmount', 1900); // INR amount
+            
+            // Clear any package-level coupon (single test might have different coupon rules)
+            localStorage.removeItem('appliedCoupon');
+            
+            // Navigate to payment page
+            window.location.href = 'payment.html';
         }
 
         function updateTestsAvailableCount(testStatuses) {
@@ -1635,14 +1733,21 @@ async function checkAuthStatus() {
             const userPackage = getUserPackage(currentUser);
             const packageDisplay = document.getElementById('userPackageDisplay');
             if (packageDisplay) {
-                packageDisplay.textContent = getPackageDisplayName(userPackage);
-                packageDisplay.className = 'detail-value ' + (userPackage !== 'free' ? 'text-success' : 'text-warning');
+                let displayText = getPackageDisplayName(userPackage);
+                
+                // Add purchased tests info if any
+                if (userPurchasedTests && userPurchasedTests.length > 0 && userPackage !== 'complete') {
+                    displayText += ` + ${userPurchasedTests.length} individual test${userPurchasedTests.length > 1 ? 's' : ''}`;
+                }
+                
+                packageDisplay.textContent = displayText;
+                packageDisplay.className = 'detail-value ' + (userPackage !== 'free' || userPurchasedTests.length > 0 ? 'text-success' : 'text-warning');
             }
 
             // Update account status
             const accountStatus = document.getElementById('accountStatus');
             if (accountStatus) {
-                if (userPackage !== 'free') {
+                if (userPackage !== 'free' || (userPurchasedTests && userPurchasedTests.length > 0)) {
                     accountStatus.textContent = 'Premium';
                     accountStatus.className = 'detail-value text-success';
                 } else {
@@ -1711,13 +1816,6 @@ async function checkAuthStatus() {
                 `;
                 return;
             }
-
-            // For multiple tests, create a simple chart
-            const width = 300;
-            const height = 200;
-            const padding = 50;
-            const maxScore = Math.max(...scores, 100);
-            const minScore = Math.max(0, Math.min(...scores) - 10);
 
             const firstScore = scores[0];
             const latestScore = scores[scores.length - 1];
@@ -1944,7 +2042,7 @@ async function checkAuthStatus() {
             }
             
             const userPackage = getUserPackage(currentUser);
-            const hasAccess = canAccessTest(testNumber, userPackage);
+            const hasAccess = canAccessTest(testNumber, userPackage, userPurchasedTests);
             
             if (!hasAccess) {
                 let requiredPackage = '';
@@ -1964,7 +2062,7 @@ async function checkAuthStatus() {
                 
                 showNotification(upgradeMessage, 'info');
                 
-                if (confirm(`Test ${testNumber} requires ${requiredPackage}. Would you like to view pricing?`)) {
+                if (confirm(`Test ${testNumber} requires ${requiredPackage}.\n\nWould you like to:\n• Buy just this test for £18\n• View all pricing options\n\nClick OK to view pricing.`)) {
                     try {
                         gtag('event', 'upgrade_from_test_click', {
                             'event_category': 'dashboard',
@@ -2024,7 +2122,7 @@ async function checkAuthStatus() {
         }
 
         function upgradePrompt(requiredPackage, testId) {
-            const message = `Test ${testId} requires ${requiredPackage}. Would you like to view our pricing options?`;
+            const message = `Test ${testId} requires ${requiredPackage}.\n\nYou can also buy just this test for £18.\n\nWould you like to view pricing options?`;
             
             if (confirm(message)) {
                 try {
@@ -2090,49 +2188,40 @@ async function checkAuthStatus() {
                 console.log('Auto-refresh failed:', error);
             }
         }, 300000);
+        
         // Navigate to free test with token backup
-function navigateToFreeTest() {
-    console.log('=== FREE TEST NAVIGATION ===');
-    
-    // Get token from localStorage
-    const token = localStorage.getItem('authToken');
-    
-    console.log('Token exists:', !!token);
-    console.log('Token preview:', token ? token.substring(0, 30) + '...' : 'MISSING');
-    
-    if (!token) {
-        alert('Authentication error. Please refresh and login again.');
-        window.location.href = 'login.html';
-        return;
-    }
-    
-    // Store token in BOTH localStorage AND sessionStorage
-    localStorage.setItem('authToken', token);
-    sessionStorage.setItem('authToken', token);
-    sessionStorage.setItem('authBackup', token);
-    
-    console.log('✅ Token stored in both storages');
-    console.log('✅ Navigating to free-test.html...');
-    
-    // Track navigation
-    try {
-        gtag('event', 'free_test_navigation', {
-            'event_category': 'dashboard',
-            'event_label': 'free_test_button_clicked'
-        });
-    } catch (error) {
-        console.error('GA tracking error:', error);
-    }
-    
-    // Navigate
-    window.location.href = '/free-test.html';
-}
+        function navigateToFreeTest() {
+            console.log('=== FREE TEST NAVIGATION ===');
+            
+            const token = localStorage.getItem('authToken');
+            
+            console.log('Token exists:', !!token);
+            console.log('Token preview:', token ? token.substring(0, 30) + '...' : 'MISSING');
+            
+            if (!token) {
+                alert('Authentication error. Please refresh and login again.');
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            localStorage.setItem('authToken', token);
+            sessionStorage.setItem('authToken', token);
+            sessionStorage.setItem('authBackup', token);
+            
+            console.log('✅ Token stored in both storages');
+            console.log('✅ Navigating to free-test.html...');
+            
+            try {
+                gtag('event', 'free_test_navigation', {
+                    'event_category': 'dashboard',
+                    'event_label': 'free_test_button_clicked'
+                });
+            } catch (error) {
+                console.error('GA tracking error:', error);
+            }
+            
+            window.location.href = '/free-test.html';
+        }
     </script>
 </body>
 </html>
-
-
-
-
-
-
