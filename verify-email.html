@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Email - Lexcello LNAT</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            width: 100%;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .logo {
+            font-size: 32px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 30px;
+        }
+
+        /* Loading State */
+        .loading-state {
+            display: block;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        /* Success State */
+        .success-state {
+            display: none;
+        }
+
+        .success-icon {
+            font-size: 80px;
+            color: #28a745;
+            margin-bottom: 20px;
+        }
+
+        .success-title {
+            font-size: 28px;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .success-message {
+            font-size: 16px;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        /* Error State */
+        .error-state {
+            display: none;
+        }
+
+        .error-icon {
+            font-size: 80px;
+            color: #dc3545;
+            margin-bottom: 20px;
+        }
+
+        .error-title {
+            font-size: 28px;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .error-message {
+            font-size: 16px;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            padding: 14px 32px;
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #f8f9fa;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn-secondary:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        /* Redirect Counter */
+        .redirect-info {
+            margin-top: 20px;
+            padding: 15px;
+            background: #e7f3ff;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #0066cc;
+        }
+
+        /* Responsive */
+        @media (max-width: 576px) {
+            .container {
+                padding: 30px 20px;
+            }
+
+            .success-icon,
+            .error-icon {
+                font-size: 60px;
+            }
+
+            .success-title,
+            .error-title {
+                font-size: 24px;
+            }
+
+            .btn {
+                display: block;
+                width: 100%;
+                margin: 10px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">Lexcello LNAT</div>
+
+        <!-- Loading State -->
+        <div class="loading-state" id="loadingState">
+            <div class="spinner"></div>
+            <p class="loading-text">Verifying your email...</p>
+            <p style="color: #999; font-size: 14px;">Please wait a moment</p>
+        </div>
+
+        <!-- Success State -->
+        <div class="success-state" id="successState">
+            <i class="fas fa-check-circle success-icon"></i>
+            <h1 class="success-title">Email Verified!</h1>
+            <p class="success-message">
+                Your email has been successfully verified. You can now access all features of your Lexcello account.
+            </p>
+            <a href="/login.html" class="btn btn-primary">
+                <i class="fas fa-sign-in-alt"></i> Go to Login
+            </a>
+            <div class="redirect-info" id="redirectInfo">
+                Redirecting to login in <strong><span id="countdown">5</span></strong> seconds...
+            </div>
+        </div>
+
+        <!-- Error State -->
+        <div class="error-state" id="errorState">
+            <i class="fas fa-exclamation-circle error-icon"></i>
+            <h1 class="error-title">Verification Failed</h1>
+            <p class="error-message" id="errorMessage">
+                The verification link is invalid or has expired. Please request a new verification email.
+            </p>
+            <a href="/login.html" class="btn btn-primary">
+                <i class="fas fa-sign-in-alt"></i> Go to Login
+            </a>
+            <a href="/register.html" class="btn btn-secondary">
+                <i class="fas fa-user-plus"></i> Create New Account
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // API Configuration
+        const API_BASE_URL = window.location.hostname === 'localhost' 
+            ? 'http://localhost:3000'
+            : 'https://lexcello-backend.onrender.com';
+
+        // Get token from URL
+        function getTokenFromURL() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('token');
+        }
+
+        // Show specific state
+        function showState(state) {
+            document.getElementById('loadingState').style.display = 'none';
+            document.getElementById('successState').style.display = 'none';
+            document.getElementById('errorState').style.display = 'none';
+            
+            if (state === 'loading') {
+                document.getElementById('loadingState').style.display = 'block';
+            } else if (state === 'success') {
+                document.getElementById('successState').style.display = 'block';
+            } else if (state === 'error') {
+                document.getElementById('errorState').style.display = 'block';
+            }
+        }
+
+        // Start countdown and redirect
+        function startRedirectCountdown() {
+            let countdown = 5;
+            const countdownElement = document.getElementById('countdown');
+            
+            const interval = setInterval(() => {
+                countdown--;
+                countdownElement.textContent = countdown;
+                
+                if (countdown <= 0) {
+                    clearInterval(interval);
+                    window.location.href = '/login.html';
+                }
+            }, 1000);
+        }
+
+        // Verify email with backend
+        async function verifyEmail(token) {
+            try {
+                console.log('🔍 Verifying email with token:', token.substring(0, 20) + '...');
+                
+                const response = await fetch(`${API_BASE_URL}/api/auth/verify-email`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ token })
+                });
+
+                const data = await response.json();
+                console.log('📧 Verification response:', data);
+
+                if (response.ok && data.success) {
+                    // Success!
+                    console.log('✅ Email verified successfully');
+                    showState('success');
+                    startRedirectCountdown();
+                } else {
+                    // Error
+                    console.error('❌ Verification failed:', data.error);
+                    const errorMsg = data.error || 'Verification failed. Please try again.';
+                    document.getElementById('errorMessage').textContent = errorMsg;
+                    
+                    // Show specific message for expired tokens
+                    if (data.expired) {
+                        document.getElementById('errorMessage').textContent = 
+                            'Your verification link has expired. Please log in and request a new verification email from your dashboard.';
+                    }
+                    
+                    showState('error');
+                }
+
+            } catch (error) {
+                console.error('❌ Network error during verification:', error);
+                document.getElementById('errorMessage').textContent = 
+                    'Network error. Please check your connection and try again.';
+                showState('error');
+            }
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            const token = getTokenFromURL();
+            
+            if (!token) {
+                console.error('❌ No token found in URL');
+                document.getElementById('errorMessage').textContent = 
+                    'No verification token found. Please click the link in your verification email.';
+                showState('error');
+                return;
+            }
+
+            // Start verification
+            console.log('🚀 Starting email verification...');
+            showState('loading');
+            verifyEmail(token);
+        });
+    </script>
+</body>
+</html>
