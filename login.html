@@ -1,38 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-6EV4Y6N8M5"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-6EV4Y6N8M5');
-</script>
-<link rel="icon" type="image/png" href="/favicon.png">
-<link rel="icon" type="image/x-icon" href="/favicon.ico">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Lexcello LNAT Practice</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    
+    <title>Login - Lexcello LNAT</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root {
-            --primary-color: #1a365d;
-            --secondary-color: #2b6cb0;
-            --accent-gold: #d69e2e;
-            --text-dark: #1a202c;
-            --text-light: #4a5568;
-            --bg-light: #f7fafc;
-            --success-color: #48bb78;
-            --warning-color: #ed8936;
-            --danger-color: #e53e3e;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -42,239 +24,261 @@
 
         .login-container {
             background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            overflow: hidden;
-            max-width: 900px;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 450px;
             width: 100%;
-            min-height: 600px;
-        }
-
-        .login-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            min-height: 600px;
-        }
-
-        .login-form-section {
-            padding: 60px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        .login-brand {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-
-        .brand-logo {
-            font-size: 2.5rem;
-            font-weight: 800;
-            color: var(--primary-color);
-            margin-bottom: 10px;
-        }
-
-        .brand-tagline {
-            color: var(--text-light);
-            font-size: 1rem;
-        }
-
-        .login-form {
-            width: 100%;
-        }
-
-        .form-title {
-            font-size: 1.8rem;
-            font-weight: 600;
-            color: var(--text-dark);
-            margin-bottom: 30px;
-            text-align: center;
-        }
-
-        .form-group {
-            margin-bottom: 25px;
-        }
-
-        .form-label {
-            font-weight: 600;
-            color: var(--text-dark);
-            margin-bottom: 8px;
-            display: block;
-        }
-
-        .form-control {
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
-            padding: 15px 20px;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-
-        .form-control:focus {
-            border-color: var(--secondary-color);
-            box-shadow: 0 0 0 3px rgba(43, 108, 176, 0.1);
-        }
-
-        .btn-login {
-            background: var(--secondary-color);
-            border: none;
-            border-radius: 12px;
-            padding: 15px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: white;
-            width: 100%;
-            transition: all 0.3s ease;
-            margin-bottom: 20px;
-        }
-
-        .btn-login:hover {
-            background: var(--primary-color);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-
-        .btn-login:disabled {
-            opacity: 0.6;
-            transform: none;
-            cursor: not-allowed;
-        }
-
-        .form-links {
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        .form-links a {
-            color: var(--secondary-color);
-            text-decoration: none;
-            font-weight: 500;
-        }
-
-        .form-links a:hover {
-            color: var(--primary-color);
-        }
-
-        .divider {
-            text-align: center;
-            margin: 30px 0;
-            position: relative;
-        }
-
-        .divider::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background: #e2e8f0;
-        }
-
-        .divider span {
-            background: white;
-            padding: 0 15px;
-            color: var(--text-light);
-            position: relative;
-        }
-
-        .guest-access {
-            text-align: center;
-        }
-
-        .btn-guest {
-            background: transparent;
-            border: 2px solid var(--secondary-color);
-            border-radius: 12px;
-            padding: 12px 30px;
-            color: var(--secondary-color);
-            text-decoration: none;
-            font-weight: 600;
-            display: inline-block;
-            transition: all 0.3s ease;
-        }
-
-        .btn-guest:hover {
-            background: var(--secondary-color);
-            color: white;
-        }
-
-        .login-hero {
-            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero-content {
-            text-align: center;
-            z-index: 2;
             padding: 40px;
         }
 
-        .hero-title {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 20px;
-        }
-
-        .hero-subtitle {
-            font-size: 1.2rem;
-            opacity: 0.9;
+        .logo {
+            text-align: center;
             margin-bottom: 30px;
         }
 
-        .hero-stats {
-            display: flex;
-            justify-content: space-around;
-            margin-top: 40px;
+        .logo h1 {
+            font-size: 32px;
+            color: #667eea;
+            margin-bottom: 10px;
         }
 
-        .stat-item {
-            text-align: center;
+        .logo p {
+            color: #666;
+            font-size: 16px;
         }
 
-        .stat-number {
-            font-size: 2rem;
-            font-weight: 700;
-            display: block;
-        }
-
-        .stat-label {
-            font-size: 0.9rem;
-            opacity: 0.8;
-        }
-
+        /* Alert Messages */
         .alert {
-            border-radius: 12px;
-            border: none;
+            padding: 15px;
+            border-radius: 8px;
             margin-bottom: 20px;
+            display: none;
+            align-items: flex-start;
+            gap: 10px;
         }
 
-        .alert-danger {
+        .alert i {
+            font-size: 20px;
+            margin-top: 2px;
+        }
+
+        .alert-content {
+            flex: 1;
+        }
+
+        .alert-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .alert-message {
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .alert-error {
             background: #fee;
-            color: #c53030;
+            border-left: 4px solid #dc3545;
+            color: #721c24;
+        }
+
+        .alert-error i {
+            color: #dc3545;
+        }
+
+        .alert-warning {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            color: #856404;
+        }
+
+        .alert-warning i {
+            color: #ffc107;
         }
 
         .alert-success {
-            background: #f0fff4;
-            color: #2f855a;
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            color: #155724;
         }
 
-        /* Loading spinner */
+        .alert-success i {
+            color: #28a745;
+        }
+
+        /* Verification Banner */
+        .verification-banner {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 25px;
+            display: none;
+        }
+
+        .verification-banner-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .verification-banner-header i {
+            font-size: 24px;
+            color: #ffc107;
+        }
+
+        .verification-banner-header h3 {
+            color: #856404;
+            font-size: 18px;
+            margin: 0;
+        }
+
+        .verification-banner-message {
+            color: #856404;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .verification-banner-email {
+            background: white;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            font-weight: 600;
+            color: #667eea;
+            text-align: center;
+        }
+
+        .btn-resend {
+            width: 100%;
+            padding: 12px;
+            background: #ffc107;
+            color: #000;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-resend:hover {
+            background: #e0a800;
+            transform: translateY(-2px);
+        }
+
+        .btn-resend:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+        .input-group i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #999;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 15px 12px 45px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #999;
+            font-size: 18px;
+        }
+
+        .forgot-password {
+            text-align: right;
+            margin-top: -10px;
+            margin-bottom: 20px;
+        }
+
+        .forgot-password a {
+            color: #667eea;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-login:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
         .spinner {
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top: 3px solid white;
+            border-radius: 50%;
             width: 20px;
             height: 20px;
-            border: 2px solid transparent;
-            border-top: 2px solid currentColor;
-            border-radius: 50%;
             animation: spin 1s linear infinite;
-            display: inline-block;
-            margin-right: 10px;
         }
 
         @keyframes spin {
@@ -282,253 +286,338 @@
             100% { transform: rotate(360deg); }
         }
 
+        .divider {
+            text-align: center;
+            margin: 25px 0;
+            color: #999;
+            position: relative;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 40%;
+            height: 1px;
+            background: #e0e0e0;
+        }
+
+        .divider::before { left: 0; }
+        .divider::after { right: 0; }
+
+        .register-link {
+            text-align: center;
+            margin-top: 20px;
+            color: #666;
+        }
+
+        .register-link a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+
         /* Responsive */
-        @media (max-width: 768px) {
-            .login-content {
-                grid-template-columns: 1fr;
+        @media (max-width: 576px) {
+            .login-container {
+                padding: 30px 20px;
             }
-            
-            .login-hero {
-                display: none;
-            }
-            
-            .login-form-section {
-                padding: 40px 30px;
-            }
-            
-            .hero-title {
-                font-size: 2rem;
+
+            .logo h1 {
+                font-size: 28px;
             }
         }
     </style>
 </head>
 <body>
     <div class="login-container">
-        <div class="login-content">
-            <div class="login-form-section">
-                <div class="login-brand">
-                    <div class="brand-logo">Lexcello</div>
-                    <div class="brand-tagline">Master the LNAT with confidence</div>
-                </div>
+        <div class="logo">
+            <h1>Lexcello LNAT</h1>
+            <p>Welcome back! Please login to continue.</p>
+        </div>
 
-                <form class="login-form" id="loginForm">
-                    <h2 class="form-title">Welcome Back</h2>
-                    
-                    <div id="alertContainer"></div>
+        <!-- Success Alert (for redirects from registration/verification) -->
+        <div class="alert alert-success" id="successAlert">
+            <i class="fas fa-check-circle"></i>
+            <div class="alert-content">
+                <div class="alert-title">Success!</div>
+                <div class="alert-message" id="successMessage"></div>
+            </div>
+        </div>
 
-                    <div class="form-group">
-                        <label class="form-label" for="email">Email Address</label>
-                        <input type="email" class="form-control" id="email" required>
-                    </div>
+        <!-- Error Alert -->
+        <div class="alert alert-error" id="errorAlert">
+            <i class="fas fa-exclamation-circle"></i>
+            <div class="alert-content">
+                <div class="alert-title">Login Failed</div>
+                <div class="alert-message" id="errorMessage"></div>
+            </div>
+        </div>
 
-                    <div class="form-group">
-    <label class="form-label" for="password">Password</label>
-    <input type="password" class="form-control" id="password" required>
-    <div style="text-align: right; margin-top: 8px;">
-        <a href="forgot-password.html" style="color: var(--secondary-color); text-decoration: none; font-size: 0.9rem; font-weight: 500;">
-            Forgot Password?
-        </a>
-    </div>
-</div>
+        <!-- Email Verification Required Banner -->
+        <div class="verification-banner" id="verificationBanner">
+            <div class="verification-banner-header">
+                <i class="fas fa-envelope"></i>
+                <h3>Email Verification Required</h3>
+            </div>
+            <div class="verification-banner-message">
+                Please verify your email address before logging in. We sent a verification link to:
+            </div>
+            <div class="verification-banner-email" id="unverifiedEmail"></div>
+            <div class="verification-banner-message">
+                Check your inbox (and spam folder) for the verification email. Click the link to activate your account.
+            </div>
+            <button class="btn-resend" id="resendBtn" onclick="resendVerification()">
+                <i class="fas fa-paper-plane"></i>
+                <span id="resendBtnText">Resend Verification Email</span>
+            </button>
+        </div>
 
-                    <button type="submit" class="btn btn-login" id="loginBtn">
-                        <span class="btn-text">Sign In</span>
-                    </button>
-
-                    <div class="form-links">
-                        <p>Don't have an account? <a href="register.html">Sign up here</a></p>
-                    </div>
-                </form>
-
-                <div class="divider">
-                    <span>or</span>
-                </div>
-
-                <div class="guest-access">
-                    <a href="free-test.html" class="btn-guest">
-                        <i class="fas fa-gift me-2"></i>Try Free Test
-                    </a>
+        <!-- Login Form -->
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <div class="input-group">
+                    <i class="fas fa-envelope"></i>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        name="email" 
+                        placeholder="Enter your email"
+                        required
+                    >
                 </div>
             </div>
 
-            <div class="login-hero">
-                <div class="hero-content">
-                    <h1 class="hero-title">Excel in LNAT</h1>
-                    <p class="hero-subtitle">Join thousands of students who have improved their LNAT scores with our comprehensive practice tests</p>
-                    
-                    <div class="hero-stats">
-                        <div class="stat-item">
-                            <span class="stat-number">10</span>
-                            <span class="stat-label">Practice Tests</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-number">420+</span>
-                            <span class="stat-label">Questions</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-number">95%</span>
-                            <span class="stat-label">Success Rate</span>
-                        </div>
-                    </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <div class="input-group">
+                    <i class="fas fa-lock"></i>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        name="password" 
+                        placeholder="Enter your password"
+                        required
+                    >
+                    <i class="fas fa-eye password-toggle" id="togglePassword"></i>
                 </div>
             </div>
+
+            <div class="forgot-password">
+                <a href="/forgot-password.html">Forgot Password?</a>
+            </div>
+
+            <button type="submit" class="btn-login" id="loginBtn">
+                <span id="loginBtnText">Login</span>
+            </button>
+        </form>
+
+        <div class="divider">OR</div>
+
+        <div class="register-link">
+            Don't have an account? <a href="/register.html">Sign Up</a>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    
     <script>
-        const API_BASE_URL = 'https://lexcello-backend.onrender.com';
+        // API Configuration
+        const API_BASE_URL = window.location.hostname === 'localhost' 
+            ? 'http://localhost:3000'
+            : 'https://lexcello-backend.onrender.com';
 
-        document.getElementById('loginForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
+        let unverifiedUserEmail = null;
+
+        // Check for success messages in URL (from registration/verification)
+        const urlParams = new URLSearchParams(window.location.search);
+        const successMsg = urlParams.get('success');
+        if (successMsg) {
+            showSuccess(decodeURIComponent(successMsg));
+            // Clean URL
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
+
+        // Password toggle
+        document.getElementById('togglePassword').addEventListener('click', function() {
+            const passwordInput = document.getElementById('password');
+            const type = passwordInput.type === 'password' ? 'text' : 'password';
+            passwordInput.type = type;
+            this.classList.toggle('fa-eye');
+            this.classList.toggle('fa-eye-slash');
+        });
+
+        // Show/Hide Alerts
+        function showError(message) {
+            const errorAlert = document.getElementById('errorAlert');
+            const errorMessage = document.getElementById('errorMessage');
+            errorMessage.textContent = message;
+            errorAlert.style.display = 'flex';
             
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            const loginBtn = document.getElementById('loginBtn');
-            const btnText = loginBtn.querySelector('.btn-text');
+            // Hide verification banner if showing error
+            document.getElementById('verificationBanner').style.display = 'none';
             
-            // Validation
-            if (!email || !password) {
-                showAlert('Please fill in all fields', 'danger');
+            setTimeout(() => {
+                errorAlert.style.display = 'none';
+            }, 8000);
+        }
+
+        function showSuccess(message) {
+            const successAlert = document.getElementById('successAlert');
+            const successMessage = document.getElementById('successMessage');
+            successMessage.textContent = message;
+            successAlert.style.display = 'flex';
+            
+            setTimeout(() => {
+                successAlert.style.display = 'none';
+            }, 5000);
+        }
+
+        function showVerificationBanner(email) {
+            unverifiedUserEmail = email;
+            document.getElementById('unverifiedEmail').textContent = email;
+            document.getElementById('verificationBanner').style.display = 'block';
+            document.getElementById('errorAlert').style.display = 'none';
+        }
+
+        function hideVerificationBanner() {
+            document.getElementById('verificationBanner').style.display = 'none';
+        }
+
+        // Resend Verification Email
+        async function resendVerification() {
+            if (!unverifiedUserEmail) {
+                showError('Unable to resend verification. Please try logging in again.');
                 return;
             }
 
-            // Update button state
-            loginBtn.disabled = true;
-            btnText.innerHTML = '<span class="spinner"></span>Signing In...';
+            const resendBtn = document.getElementById('resendBtn');
+            const resendBtnText = document.getElementById('resendBtnText');
+            
+            // Disable button
+            resendBtn.disabled = true;
+            resendBtnText.textContent = 'Sending...';
 
             try {
-                console.log('=== LOGIN ATTEMPT ===');
-                console.log('Email:', email);
+                // We need to login first to get a token, then call resend
+                // For now, we'll make a custom endpoint or handle this differently
                 
+                // Option: Create a public resend endpoint that takes email
+                const response = await fetch(`${API_BASE_URL}/api/auth/resend-verification-public`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email: unverifiedUserEmail })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    showSuccess('Verification email sent! Please check your inbox.');
+                    
+                    // Show countdown
+                    let countdown = 60;
+                    resendBtnText.textContent = `Resend in ${countdown}s`;
+                    
+                    const interval = setInterval(() => {
+                        countdown--;
+                        resendBtnText.textContent = `Resend in ${countdown}s`;
+                        
+                        if (countdown <= 0) {
+                            clearInterval(interval);
+                            resendBtnText.textContent = 'Resend Verification Email';
+                            resendBtn.disabled = false;
+                        }
+                    }, 1000);
+                    
+                } else {
+                    showError(data.error || 'Failed to resend verification email');
+                    resendBtn.disabled = false;
+                    resendBtnText.textContent = 'Resend Verification Email';
+                }
+
+            } catch (error) {
+                console.error('Resend verification error:', error);
+                showError('Network error. Please try again.');
+                resendBtn.disabled = false;
+                resendBtnText.textContent = 'Resend Verification Email';
+            }
+        }
+
+        // Login Form Submission
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+
+            if (!email || !password) {
+                showError('Please enter both email and password');
+                return;
+            }
+
+            const loginBtn = document.getElementById('loginBtn');
+            const loginBtnText = document.getElementById('loginBtnText');
+            
+            // Disable button and show loading
+            loginBtn.disabled = true;
+            loginBtnText.innerHTML = '<div class="spinner"></div> Logging in...';
+            
+            // Hide any existing alerts
+            document.getElementById('errorAlert').style.display = 'none';
+            document.getElementById('verificationBanner').style.display = 'none';
+
+            try {
                 const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json',
+                        'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({ email, password })
                 });
 
-                console.log('Response status:', response.status);
                 const data = await response.json();
-                console.log('Response data:', data);
 
                 if (response.ok) {
-                    console.log('=== LOGIN SUCCESS ===');
-                    console.log('Token received:', data.token ? data.token.substring(0, 30) + '...' : 'MISSING');
+                    // Login successful
+                    console.log('✅ Login successful');
                     
-                    // ✅ CRITICAL: Store token in BOTH storages
-                    localStorage.setItem('authToken', data.token);
-                    sessionStorage.setItem('authToken', data.token);
-                    localStorage.setItem('userData', JSON.stringify(data.user));
+                    // Store token and user data
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('user', JSON.stringify(data.user));
                     
-                    console.log('✅ Token saved to localStorage:', localStorage.getItem('authToken') ? 'YES' : 'NO');
-                    console.log('✅ Token saved to sessionStorage:', sessionStorage.getItem('authToken') ? 'YES' : 'NO');
+                    // Redirect to dashboard
+                    window.location.href = '/dashboard.html';
                     
-                    // Verify storage
-                    const storedToken = localStorage.getItem('authToken');
-                    if (!storedToken) {
-                        console.error('❌ CRITICAL: Token was NOT saved to localStorage!');
-                        showAlert('Storage error. Please try again or use a different browser.', 'danger');
-                        return;
-                    }
+                } else if (response.status === 403 && data.emailVerified === false) {
+                    // Email not verified
+                    console.log('⚠️ Email not verified');
+                    showVerificationBanner(data.userEmail || email);
                     
-                    console.log('✅ Verified token in storage:', storedToken.substring(0, 30) + '...');
+                    loginBtn.disabled = false;
+                    loginBtnText.textContent = 'Login';
                     
-                    showAlert('Login successful! Redirecting...', 'success');
-                    
-                    // Track login
-                    try {
-                        gtag('event', 'login', {
-                            'event_category': 'authentication',
-                            'event_label': 'successful_login'
-                        });
-                    } catch (error) {
-                        console.error('GA tracking error:', error);
-                    }
-                    
-                    // Always redirect to dashboard after login
-                    console.log('Redirecting to dashboard...');
-                    setTimeout(() => {
-                        window.location.href = 'dashboard.html';
-                    }, 1000);
                 } else {
-                    console.error('❌ Login failed:', data.error);
-                    showAlert(data.error || 'Login failed', 'danger');
+                    // Other login errors
+                    showError(data.error || data.message || 'Login failed');
                     
-                    // Track failed login
-                    try {
-                        gtag('event', 'login_failed', {
-                            'event_category': 'authentication',
-                            'event_label': data.error || 'unknown_error'
-                        });
-                    } catch (error) {
-                        console.error('GA tracking error:', error);
-                    }
+                    loginBtn.disabled = false;
+                    loginBtnText.textContent = 'Login';
                 }
+
             } catch (error) {
-                console.error('❌ Login error:', error);
-                showAlert('Network error. Please try again.', 'danger');
-            } finally {
-                // Reset button state
-                loginBtn.disabled = false;
-                btnText.innerHTML = 'Sign In';
-            }
-        });
-
-        function showAlert(message, type) {
-            const alertContainer = document.getElementById('alertContainer');
-            alertContainer.innerHTML = `
-                <div class="alert alert-${type}" role="alert">
-                    <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-triangle'} me-2"></i>
-                    ${message}
-                </div>
-            `;
-            
-            // Auto-hide success messages
-            if (type === 'success') {
-                setTimeout(() => {
-                    alertContainer.innerHTML = '';
-                }, 3000);
-            }
-        }
-
-        // Check if user is already logged in
-        window.addEventListener('DOMContentLoaded', function() {
-            const token = localStorage.getItem('authToken');
-            
-            if (token) {
-                console.log('Auth token found, verifying...');
+                console.error('Login error:', error);
+                showError('Network error. Please check your connection and try again.');
                 
-                // Verify token is still valid
-                fetch(`${API_BASE_URL}/api/auth/profile`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                })
-                .then(response => {
-                    if (response.ok) {
-                        console.log('Token valid, redirecting to dashboard');
-                        window.location.href = 'dashboard.html';
-                    } else {
-                        console.log('Token invalid, clearing auth data');
-                        localStorage.removeItem('authToken');
-                        localStorage.removeItem('userData');
-                        sessionStorage.removeItem('authToken');
-                    }
-                })
-                .catch((error) => {
-                    console.error('Token verification error:', error);
-                    localStorage.removeItem('authToken');
-                    localStorage.removeItem('userData');
-                    sessionStorage.removeItem('authToken');
-                });
-            } else {
-                console.log('No auth token found');
+                loginBtn.disabled = false;
+                loginBtnText.textContent = 'Login';
             }
         });
     </script>
 </body>
 </html>
-
