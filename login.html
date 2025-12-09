@@ -105,7 +105,15 @@
         .alert-success i {
             color: #28a745;
         }
+.alert-info {
+    background: #e6f7ff;
+    border-left: 4px solid #0066cc;
+    color: #004085;
+}
 
+.alert-info i {
+    color: #0066cc;
+}
         /* Verification Banner */
         .verification-banner {
             background: #fff3cd;
@@ -349,7 +357,14 @@
                 <div class="alert-message" id="successMessage"></div>
             </div>
         </div>
-
+<!-- Info Alert (for registration redirect) -->
+<div class="alert alert-info" id="infoAlert">
+    <i class="fas fa-info-circle"></i>
+    <div class="alert-content">
+        <div class="alert-title">Email Verification Required</div>
+        <div class="alert-message" id="infoMessage"></div>
+    </div>
+</div>
         <!-- Error Alert -->
         <div class="alert alert-error" id="errorAlert">
             <i class="fas fa-exclamation-circle"></i>
@@ -433,14 +448,20 @@
 
         let unverifiedUserEmail = null;
 
-        // Check for success messages in URL (from registration/verification)
-        const urlParams = new URLSearchParams(window.location.search);
-        const successMsg = urlParams.get('success');
-        if (successMsg) {
-            showSuccess(decodeURIComponent(successMsg));
-            // Clean URL
-            window.history.replaceState({}, document.title, window.location.pathname);
-        }
+        // Check for success/registration messages in URL
+const urlParams = new URLSearchParams(window.location.search);
+const successMsg = urlParams.get('success');
+const registered = urlParams.get('registered');
+
+if (successMsg) {
+    showSuccess(decodeURIComponent(successMsg));
+    window.history.replaceState({}, document.title, window.location.pathname);
+}
+
+if (registered === 'true') {
+    showInfo('Registration successful! Please check your email and click the verification link before logging in.');
+    window.history.replaceState({}, document.title, window.location.pathname);
+}
 
         // Password toggle
         document.getElementById('togglePassword').addEventListener('click', function() {
@@ -476,7 +497,16 @@
                 successAlert.style.display = 'none';
             }, 5000);
         }
-
+function showInfo(message) {
+    const infoAlert = document.getElementById('infoAlert');
+    const infoMessage = document.getElementById('infoMessage');
+    infoMessage.textContent = message;
+    infoAlert.style.display = 'flex';
+    
+    setTimeout(() => {
+        infoAlert.style.display = 'none';
+    }, 10000); // Show for 10 seconds
+}
         function showVerificationBanner(email) {
             unverifiedUserEmail = email;
             document.getElementById('unverifiedEmail').textContent = email;
@@ -621,3 +651,4 @@
     </script>
 </body>
 </html>
+
