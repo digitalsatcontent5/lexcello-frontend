@@ -203,13 +203,13 @@
             position: relative;
         }
 
-        .input-group i {
-            position: absolute;
-            left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #999;
-        }
+        .input-group i:first-child {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #999;
+}
 
         input {
             width: 100%;
@@ -651,5 +651,6 @@ localStorage.setItem('authToken', data.token);
     </script>
 </body>
 </html>
+
 
 
