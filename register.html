@@ -814,19 +814,19 @@
                 const data = await response.json();
 
                 if (response.ok) {
-                    // Store authentication data
-                    localStorage.setItem('authToken', data.token);
-                    localStorage.setItem('userData', JSON.stringify(data.user));
-                    
-                    showAlert('Account created successfully! Choose your plan to get started...', 'success');
-                    
-                    // Redirect to pricing page after registration
-                    setTimeout(() => {
-                        window.location.href = 'pricing.html';
-                    }, 1500);
-                } else {
-                    showAlert(data.error || 'Registration failed', 'danger');
-                }
+    // ❌ DON'T store token - user must verify email first
+    // localStorage.setItem('authToken', data.token);  // REMOVED
+    // localStorage.setItem('userData', JSON.stringify(data.user));  // REMOVED
+    
+    showAlert('Registration successful! Please check your email to verify your account before logging in.', 'success');
+    
+    // Redirect to login page (or verification-sent page if you have one)
+    setTimeout(() => {
+        window.location.href = 'login.html';  // Changed from 'pricing.html'
+    }, 2000);
+} else {
+    showAlert(data.error || 'Registration failed', 'danger');
+}
             } catch (error) {
                 console.error('Registration error:', error);
                 showAlert('Network error. Please try again.', 'danger');
@@ -897,4 +897,5 @@
 </body>
 
 </html>
+
 
