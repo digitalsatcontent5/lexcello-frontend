@@ -1747,8 +1747,10 @@
                 
                 // Update if it's the Product schema with aggregateRating
                 if (data['@type'] === 'Product' && data.aggregateRating) {
-                    data.aggregateRating.ratingValue = stats.averageRating;
-                    data.aggregateRating.reviewCount = stats.totalReviews.toString();
+    data.aggregateRating.ratingValue = stats.averageRating;
+    data.aggregateRating.bestRating = "10";
+    data.aggregateRating.worstRating = "1";
+    data.aggregateRating.reviewCount = stats.totalReviews.toString();
                     schema.textContent = JSON.stringify(data, null, 2);
                     console.log('✅ Schema markup updated with live data');
                 }
