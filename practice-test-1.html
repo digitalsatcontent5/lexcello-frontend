@@ -1051,7 +1051,13 @@
                 });
                 
                 console.log(`Loaded ${questions.length} questions:`, questions);
-                
+                // Apply extra time accommodation if user has it
+if (testMode === 'full' && currentUser && currentUser.extra_time_percent) {
+    const baseTime = 95 * 60; // 95 minutes in seconds
+    const extraMultiplier = 1 + (currentUser.extra_time_percent / 100);
+    timeLeft = Math.round(baseTime * extraMultiplier);
+    console.log(`Extra time applied: ${currentUser.extra_time_percent}% → ${timeLeft / 60} minutes`);
+}
                 initializeTest();
                 hideLoading();
                 
@@ -1414,3 +1420,4 @@
     </script>
 </body>
 </html>
+
