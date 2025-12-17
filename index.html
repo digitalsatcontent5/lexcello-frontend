@@ -7,6 +7,10 @@
     
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://lexcello-backend.onrender.com">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <link rel="dns-prefetch" href="https://lexcello-backend.onrender.com">
     <title>LNAT Practice Tests 2025 | Free Mock Exam + 9 Tests</title>
     <meta name="description" content="Master LNAT Section A with 10 practice tests. Test 1 free, then unlock 9 complete exams. Perfect prep for Oxford, Cambridge, LSE, UCL & Jindal Global Law.">
     <meta name="keywords" content="LNAT practice tests, LNAT mock exam, LNAT preparation, LNAT section A, Oxford law admission, Cambridge law admission, LSE law, LNAT 2025, free LNAT test">
@@ -611,9 +615,9 @@
     <div class="container">
         <a class="navbar-brand" href="index.html">Lexcello</a>
         
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-label="Toggle navigation menu" aria-controls="navbarNav" aria-expanded="false">
+    <span class="navbar-toggler-icon"></span>
+</button>
         
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav mx-auto">
@@ -648,9 +652,9 @@
             
             <!-- User menu (shown when logged in) -->
             <div class="user-menu" id="user-menu" style="display: none;">
-                <div class="user-avatar" onclick="toggleUserDropdown()" id="user-avatar">
-                    U
-                </div>
+                <div class="user-avatar" onclick="toggleUserDropdown()" id="user-avatar" role="button" tabindex="0" aria-label="User menu" aria-haspopup="true" aria-expanded="false" onkeypress="if(event.key==='Enter')toggleUserDropdown()">
+    U
+</div>
                 <div class="user-dropdown" id="user-dropdown">
                     <a href="dashboard.html">
                         <i class="fas fa-tachometer-alt me-2"></i>Dashboard
@@ -907,7 +911,8 @@
     </div>
 </footer>
     <!-- Notification container -->
-    <div id="notification" class="notification"></div>
+    <div id="notification" class="notification" role="alert" aria-live="polite"></div>
+
 
     <!-- Cookie Consent (handles banner + GA loading) -->
     <script src="cookie-consent.js"></script>
@@ -1237,9 +1242,11 @@ function startTestFromHomepage(testNumber) {
         }
         
         function toggleUserDropdown() {
-            const dropdown = document.getElementById('user-dropdown');
-            dropdown.classList.toggle('show');
-        }
+    const dropdown = document.getElementById('user-dropdown');
+    const avatar = document.getElementById('user-avatar');
+    const isOpen = dropdown.classList.toggle('show');
+    avatar.setAttribute('aria-expanded', isOpen);
+}
         
         async function signOut() {
             try {
@@ -1409,4 +1416,5 @@ async function subscribeNewsletter() {
     </script>
 </body>
 </html>
+
 
