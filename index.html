@@ -1,13 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-6EV4Y6N8M5"></script>
+    <!-- Google Analytics - Only loads after cookie consent -->
 <script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-6EV4Y6N8M5');
+  // Check for cookie consent before loading GA
+  if (localStorage.getItem('cookieConsent') === 'accepted') {
+    var script = document.createElement('script');
+    script.async = true;
+    script.src = 'https://www.googletagmanager.com/gtag/js?id=G-6EV4Y6N8M5';
+    document.head.appendChild(script);
+    
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-6EV4Y6N8M5');
+  }
 </script>
 <link rel="icon" type="image/png" href="/favicon.png">
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
@@ -516,6 +523,97 @@
                 margin-top: 1rem;
             }
         }
+        
+        /* Cookie Consent Banner */
+        .cookie-banner {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #1a202c;
+            color: white;
+            padding: 20px;
+            z-index: 10000;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
+            display: none;
+        }
+        
+        .cookie-banner.show {
+            display: block;
+        }
+        
+        .cookie-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .cookie-text {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .cookie-text p {
+            margin: 0;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+        
+        .cookie-text a {
+            color: var(--accent-gold);
+            text-decoration: underline;
+        }
+        
+        .cookie-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .cookie-btn {
+            padding: 10px 24px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s ease;
+        }
+        
+        .cookie-btn-accept {
+            background: var(--secondary-color);
+            color: white;
+        }
+        
+        .cookie-btn-accept:hover {
+            background: var(--primary-hover);
+        }
+        
+        .cookie-btn-decline {
+            background: transparent;
+            color: white;
+            border: 1px solid #4a5568;
+        }
+        
+        .cookie-btn-decline:hover {
+            background: #2d3748;
+        }
+        
+        @media (max-width: 576px) {
+            .cookie-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .cookie-buttons {
+                width: 100%;
+                justify-content: center;
+            }
+        }
     </style>
 </head>
 <body>
@@ -822,6 +920,19 @@
     <!-- Notification container -->
     <div id="notification" class="notification"></div>
 
+    <!-- Cookie Consent Banner -->
+    <div id="cookieBanner" class="cookie-banner">
+        <div class="cookie-content">
+            <div class="cookie-text">
+                <p>We use cookies to improve your experience and analyse site traffic. By clicking "Accept", you consent to our use of cookies. See our <a href="privacy-policy.html">Privacy Policy</a> for details.</p>
+            </div>
+            <div class="cookie-buttons">
+                <button class="cookie-btn cookie-btn-decline" onclick="handleCookieConsent('declined')">Decline</button>
+                <button class="cookie-btn cookie-btn-accept" onclick="handleCookieConsent('accepted')">Accept</button>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     
     <script>
@@ -836,6 +947,7 @@
             checkAuthStatus();
             loadTestsStatus();
             loadFeedbackStats();
+            checkCookieConsent();
             
             // Add click listener to close dropdown when clicking outside
             document.addEventListener('click', function(event) {
@@ -847,6 +959,33 @@
                 }
             });
         });
+        
+        // Cookie consent functions
+        function checkCookieConsent() {
+            const consent = localStorage.getItem('cookieConsent');
+            if (!consent) {
+                // Show banner if no consent recorded
+                document.getElementById('cookieBanner').classList.add('show');
+            }
+        }
+        
+        function handleCookieConsent(choice) {
+            localStorage.setItem('cookieConsent', choice);
+            document.getElementById('cookieBanner').classList.remove('show');
+            
+            if (choice === 'accepted') {
+                // Load Google Analytics
+                var script = document.createElement('script');
+                script.async = true;
+                script.src = 'https://www.googletagmanager.com/gtag/js?id=G-6EV4Y6N8M5';
+                document.head.appendChild(script);
+                
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', 'G-6EV4Y6N8M5');
+            }
+        }
         
         // Load live feedback stats
         async function loadFeedbackStats() {
