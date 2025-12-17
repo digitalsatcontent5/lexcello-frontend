@@ -4021,12 +4021,20 @@ const stars = rating > 0 ? `<span style="font-size: 0.5em;">${'⭐'.repeat(ratin
             ? '<span class="subscription-badge subscription-active">Would Subscribe</span>'
             : '<span class="subscription-badge subscription-inactive">Would Not Subscribe</span>';
         
-        // ✅ FIXED: Handle "why not" reason with ALL possible field names
-        const whyNotReason = item.why_not_subscribe || 
-                            item.whyNotSubscribe || 
-                            item.why_not || 
-                            item.whyNot || 
-                            '';
+        // Handle new feedback fields
+const primaryConsideration = item.primary_consideration || item.primaryConsideration || '';
+const budgetAmount = item.budget_amount || item.budgetAmount || null;
+const budgetCurrency = item.budget_currency || item.budgetCurrency || '';
+
+// Map consideration values to readable text
+const considerationLabels = {
+    'affordable-pricing': '💰 Affordable Pricing',
+    'more-features': '✨ More Features Needed',
+    'not-ready': '⏳ Not Ready Yet',
+    'using-other': '🔄 Using Other Resources',
+    'other': '📝 Other Reason'
+};
+const considerationText = considerationLabels[primaryConsideration] || primaryConsideration;
         
         // Handle LNAT date
         const lnatDate = item.lnat_date || item.lnatDate;
@@ -4068,12 +4076,18 @@ const stars = rating > 0 ? `<span style="font-size: 0.5em;">${'⭐'.repeat(ratin
                     </div>
                     <div style="text-align: right;">
                         ${subscriptionBadge}
-                        ${wouldSubscribe === 'no' && whyNotReason ? `
-                            <div style="margin-top: 8px; padding: 8px 12px; background: #fff3cd; border-left: 3px solid #ffc107; border-radius: 4px; font-size: 0.85em;">
-                                <strong style="color: #856404;">Reason for "No":</strong>
-                                <div style="color: #856404; margin-top: 4px;">"${whyNotReason}"</div>
-                            </div>
-                        ` : ''}
+                        ${wouldSubscribe === 'no' && primaryConsideration ? `
+    <div style="margin-top: 8px; padding: 10px 12px; background: #fff3cd; border-left: 3px solid #ffc107; border-radius: 4px; font-size: 0.85em;">
+        <strong style="color: #856404;">Primary Consideration:</strong>
+        <div style="color: #856404; margin-top: 4px;">${considerationText}</div>
+        ${budgetAmount ? `
+            <div style="margin-top: 8px; padding-top: 8px; border-top: 1px dashed #ffc107;">
+                <strong style="color: #856404;">Budget:</strong>
+                <span style="color: #856404; margin-left: 5px;">${budgetCurrency} ${budgetAmount.toLocaleString()}</span>
+            </div>
+        ` : ''}
+    </div>
+` : ''}
                     </div>
                 </div>
                 
@@ -4360,6 +4374,7 @@ document.addEventListener('DOMContentLoaded', () => {
 </div>
 </body>
 </html>
+
 
 
 
