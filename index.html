@@ -32,9 +32,11 @@
 <meta name="twitter:image" content="https://lexcello.com/og-image.png">
 
 <!-- Canonical URL -->
-<link rel="canonical" href="https://lexcello.com/"> 
+<link rel="canonical" href="https://lexcello.com/">
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
     <style>
         :root {
             --primary-color: #1a365d;
@@ -619,8 +621,8 @@
                             </div>
                             <div class="col-4">
                                 <div class="stat-item">
-                                    <span class="stat-number">95%</span>
-                                    <span class="stat-label">Success Rate</span>
+                                    <span class="stat-number" id="statRating">7.9/10</span>
+                                    <span class="stat-label">Student Rating</span>
                                 </div>
                             </div>
                         </div>
@@ -833,6 +835,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             checkAuthStatus();
             loadTestsStatus();
+            loadFeedbackStats();
             
             // Add click listener to close dropdown when clicking outside
             document.addEventListener('click', function(event) {
@@ -844,6 +847,25 @@
                 }
             });
         });
+        
+        // Load live feedback stats
+        async function loadFeedbackStats() {
+            try {
+                const response = await fetch('https://lexcello-backend.onrender.com/api/public/feedback-summary');
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.success && data.statistics) {
+                        const ratingEl = document.getElementById('statRating');
+                        if (ratingEl) {
+                            ratingEl.textContent = data.statistics.averageRating + '/10';
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading feedback stats:', error);
+                // Fallback already shows 7.9/10
+            }
+        }
         
         // Load test status dynamically
         async function loadTestsStatus() {
@@ -1256,16 +1278,3 @@ function startTestFromHomepage(testNumber) {
     </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
