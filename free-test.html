@@ -367,7 +367,7 @@
             display: block;
         }
 
-        .reason-option {
+        .consideration-option {
             display: flex;
             align-items: center;
             padding: 15px;
@@ -378,25 +378,92 @@
             transition: all 0.3s ease;
         }
 
-        .reason-option:hover {
+        .consideration-option:hover {
             border-color: var(--secondary-color);
             background: #f7fafc;
         }
 
-        .reason-option.selected {
+        .consideration-option.selected {
             border-color: var(--secondary-color);
             background: #e6f3ff;
         }
 
-        .reason-option input[type="radio"] {
+        .consideration-option input[type="radio"] {
             margin-right: 12px;
             transform: scale(1.2);
         }
 
-        .reason-option label {
+        .consideration-option label {
             cursor: pointer;
             flex: 1;
             font-weight: 500;
+        }
+
+        /* Budget Slider Styles */
+        .budget-slider-container {
+            background: #f7fafc;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 15px;
+        }
+
+        .budget-slider-container label {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .budget-display {
+            text-align: center;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--secondary-color);
+            margin: 15px 0;
+        }
+
+        .budget-slider {
+            width: 100%;
+            height: 8px;
+            border-radius: 4px;
+            background: #e2e8f0;
+            outline: none;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        .budget-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--secondary-color);
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+            transition: transform 0.2s;
+        }
+
+        .budget-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.1);
+        }
+
+        .budget-slider::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--secondary-color);
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        }
+
+        .budget-range-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+            font-size: 0.9rem;
+            color: #718096;
         }
 
         /* Scholarship Reveal in Feedback */
@@ -749,47 +816,65 @@
                                 </div>
                             </div>
 
-                            <!-- HIDDEN: Shown when "No" is selected - REASON OPTIONS -->
-                            <div id="reasonSection" style="display: none;" class="mb-4">
+                            <!-- SHOWN when "No" is selected - CONSIDERATION OPTIONS -->
+                            <div id="considerationSection" style="display: none;" class="mb-4">
                                 <label class="form-label fw-bold">
                                     <i class="fas fa-hand-point-right me-2 text-primary"></i>
-                                    What would help you decide? *
+                                    What matters most to you when choosing LNAT prep? *
                                 </label>
                                 
-                                <div class="reason-option" onclick="selectReason('lower-price')">
-                                    <input type="radio" name="notSubscribeReason" id="reason-lower-price" value="lower-price">
-                                    <label for="reason-lower-price">Lower price</label>
+                                <div class="consideration-option" onclick="selectConsideration('affordable-pricing')">
+                                    <input type="radio" name="primaryConsideration" id="consideration-affordable-pricing" value="affordable-pricing">
+                                    <label for="consideration-affordable-pricing">Affordable pricing</label>
                                 </div>
                                 
-                                <div class="reason-option" onclick="selectReason('more-time')">
-                                    <input type="radio" name="notSubscribeReason" id="reason-more-time" value="more-time">
-                                    <label for="reason-more-time">More time to decide</label>
+                                <div class="consideration-option" onclick="selectConsideration('question-quality')">
+                                    <input type="radio" name="primaryConsideration" id="consideration-question-quality" value="question-quality">
+                                    <label for="consideration-question-quality">Question quality & authenticity</label>
                                 </div>
                                 
-                                <div class="reason-option" onclick="selectReason('other-options')">
-                                    <input type="radio" name="notSubscribeReason" id="reason-other-options" value="other-options">
-                                    <label for="reason-other-options">Want to explore other options first</label>
+                                <div class="consideration-option" onclick="selectConsideration('practice-material')">
+                                    <input type="radio" name="primaryConsideration" id="consideration-practice-material" value="practice-material">
+                                    <label for="consideration-practice-material">Amount of practice material</label>
                                 </div>
                                 
-                                <div class="reason-option" onclick="selectReason('quality-concern')">
-                                    <input type="radio" name="notSubscribeReason" id="reason-quality-concern" value="quality-concern">
-                                    <label for="reason-quality-concern">Not sure about the quality</label>
-                                </div>
-                                
-                                <div class="reason-option" onclick="selectReason('other')">
-                                    <input type="radio" name="notSubscribeReason" id="reason-other" value="other">
-                                    <label for="reason-other">Other</label>
+                                <div class="consideration-option" onclick="selectConsideration('other')">
+                                    <input type="radio" name="primaryConsideration" id="consideration-other" value="other">
+                                    <label for="consideration-other">Other</label>
                                 </div>
                                 
                                 <!-- Other reason text field -->
-                                <div id="otherReasonField" style="display: none;" class="mt-3">
+                                <div id="otherConsiderationField" style="display: none;" class="mt-3">
                                     <textarea 
-                                        id="otherReasonText" 
+                                        id="otherConsiderationText" 
                                         class="form-control"
                                         placeholder="Please tell us more..."
                                         rows="2"
                                         maxlength="300"
                                     ></textarea>
+                                </div>
+
+                                <!-- Budget Slider - shown when "Affordable pricing" is selected -->
+                                <div id="budgetSliderSection" style="display: none;" class="budget-slider-container">
+                                    <label>What's your budget for subscribing to LNAT practice tests access?</label>
+                                    <div class="budget-display">
+                                        <span id="budgetCurrencySymbol">$</span><span id="budgetValue">50</span>
+                                    </div>
+                                    <input 
+                                        type="range" 
+                                        id="budgetSlider" 
+                                        class="budget-slider"
+                                        min="0" 
+                                        max="100" 
+                                        value="50"
+                                        step="5"
+                                    >
+                                    <div class="budget-range-labels">
+                                        <span id="budgetMin">$0</span>
+                                        <span id="budgetMax">$100</span>
+                                    </div>
+                                    <input type="hidden" id="budgetAmount">
+                                    <input type="hidden" id="budgetCurrency" value="USD">
                                 </div>
                             </div>
 
@@ -906,7 +991,7 @@
                         </form>
                     </div>
 
-                    <!-- STEP 2: Scholarship Reveal (when "Lower price" is selected) -->
+                    <!-- STEP 2: Scholarship Reveal (when "Affordable pricing" is selected) -->
                     <div id="feedbackStep2" class="negotiation-step">
                         <div id="scholarshipRevealContent">
                             <!-- Dynamically populated -->
@@ -914,43 +999,43 @@
                     </div>
 
                     <!-- STEP 3: Concerns Collection -->
-<div id="feedbackStep3" class="negotiation-step">
-    <div id="concernsContent">
-        <div class="text-center mb-4">
-            <div style="font-size: 3rem;">💬</div>
-            <h4 style="color: #1a365d; margin-top: 15px;">We'd Love to Hear From You</h4>
-            <p class="text-muted">Please share your concerns or thoughts with us:</p>
-        </div>
-        
-        <div class="mb-4">
-            <textarea 
-                id="userConcerns" 
-                class="form-control"
-                placeholder="Share your thoughts, questions, or concerns here..."
-                rows="4"
-                maxlength="500"
-                style="resize: none;"
-            ></textarea>
-            <small class="text-muted"><span id="concernCharCount">0</span>/500 characters</small>
-        </div>
-        
-        <div class="d-flex justify-content-center gap-3">
-            <button class="feedback-action-btn primary" onclick="submitConcerns()">
-                <i class="fas fa-paper-plane me-2"></i>Submit
-            </button>
-            <button class="feedback-action-btn secondary" onclick="skipToResults()">
-                Skip & View Results
-            </button>
-        </div>
-    </div>
-</div>
+                    <div id="feedbackStep3" class="negotiation-step">
+                        <div id="concernsContent">
+                            <div class="text-center mb-4">
+                                <div style="font-size: 3rem;">💬</div>
+                                <h4 style="color: #1a365d; margin-top: 15px;">We'd Love to Hear From You</h4>
+                                <p class="text-muted">Please share your concerns or thoughts with us:</p>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <textarea 
+                                    id="userConcerns" 
+                                    class="form-control"
+                                    placeholder="Share your thoughts, questions, or concerns here..."
+                                    rows="4"
+                                    maxlength="500"
+                                    style="resize: none;"
+                                ></textarea>
+                                <small class="text-muted"><span id="concernCharCount">0</span>/500 characters</small>
+                            </div>
+                            
+                            <div class="d-flex justify-content-center gap-3">
+                                <button class="feedback-action-btn primary" onclick="submitConcerns()">
+                                    <i class="fas fa-paper-plane me-2"></i>Submit
+                                </button>
+                                <button class="feedback-action-btn secondary" onclick="skipToResults()">
+                                    Skip & View Results
+                                </button>
+                            </div>
+                        </div>
+                    </div>
 
-<!-- STEP 4: Final Offer (after concerns submitted) -->
-<div id="feedbackStep4" class="negotiation-step">
-    <div id="finalOfferContent">
-        <!-- Dynamically populated -->
-    </div>
-</div>
+                    <!-- STEP 4: Final Offer (after concerns submitted) -->
+                    <div id="feedbackStep4" class="negotiation-step">
+                        <div id="finalOfferContent">
+                            <!-- Dynamically populated -->
+                        </div>
+                    </div>
 
                 </div>
             </div>
@@ -974,6 +1059,13 @@
         let testResultsData = null;
         let scholarshipData = null;
         let finalOfferCountdown = null;
+
+        // Budget slider currency configuration
+        const currencyConfig = {
+            USD: { symbol: '$', min: 0, max: 100 },
+            GBP: { symbol: '£', min: 0, max: 80 },
+            INR: { symbol: '₹', min: 0, max: 8000 }
+        };
         
         document.addEventListener('DOMContentLoaded', function() {
             console.log('Free test page loaded');
@@ -998,40 +1090,120 @@
                 document.getElementById('charCount').textContent = this.value.length;
             });
             
-            // Show/hide reason section when "No" is selected
+            // Show/hide consideration section when "No" is selected
             document.querySelectorAll('input[name="wouldSubscribe"]').forEach(radio => {
                 radio.addEventListener('change', function() {
-                    const reasonSection = document.getElementById('reasonSection');
+                    const considerationSection = document.getElementById('considerationSection');
                     if (this.value === 'no') {
-                        reasonSection.style.display = 'block';
+                        considerationSection.style.display = 'block';
                     } else {
-                        reasonSection.style.display = 'none';
+                        considerationSection.style.display = 'none';
+                        // Reset selections when switching back to Yes
+                        document.querySelectorAll('.consideration-option').forEach(opt => {
+                            opt.classList.remove('selected');
+                        });
+                        document.querySelectorAll('input[name="primaryConsideration"]').forEach(r => {
+                            r.checked = false;
+                        });
+                        document.getElementById('budgetSliderSection').style.display = 'none';
+                        document.getElementById('otherConsiderationField').style.display = 'none';
                     }
                 });
+            });
+
+            // Country selection - update budget slider currency
+            document.getElementById('country-select').addEventListener('change', function() {
+                updateBudgetSliderCurrency(this.value);
+            });
+
+            // Budget slider value update
+            document.getElementById('budgetSlider').addEventListener('input', function() {
+                updateBudgetDisplay(this.value);
             });
             
             // Form submission
             document.getElementById('feedbackForm').addEventListener('submit', handleFeedbackSubmit);
         }
-        
-        function selectReason(reason) {
+
+        function selectConsideration(consideration) {
             // Clear all selections
-            document.querySelectorAll('.reason-option').forEach(opt => {
+            document.querySelectorAll('.consideration-option').forEach(opt => {
                 opt.classList.remove('selected');
             });
             
             // Select the clicked option
-            const radioBtn = document.getElementById(`reason-${reason}`);
+            const radioBtn = document.getElementById(`consideration-${consideration}`);
             radioBtn.checked = true;
-            radioBtn.closest('.reason-option').classList.add('selected');
+            radioBtn.closest('.consideration-option').classList.add('selected');
             
             // Show/hide "Other" text field
-            const otherField = document.getElementById('otherReasonField');
-            if (reason === 'other') {
+            const otherField = document.getElementById('otherConsiderationField');
+            if (consideration === 'other') {
                 otherField.style.display = 'block';
             } else {
                 otherField.style.display = 'none';
             }
+
+            // Show/hide budget slider
+            const budgetSliderSection = document.getElementById('budgetSliderSection');
+            if (consideration === 'affordable-pricing') {
+                budgetSliderSection.style.display = 'block';
+                // Update currency based on selected country
+                const selectedCountry = document.getElementById('country-select').value;
+                updateBudgetSliderCurrency(selectedCountry);
+            } else {
+                budgetSliderSection.style.display = 'none';
+            }
+        }
+
+        function updateBudgetSliderCurrency(country) {
+            let currency = 'USD';
+            
+            if (country === 'United Kingdom') {
+                currency = 'GBP';
+            } else if (country === 'India' || country === 'Pakistan' || country === 'Bangladesh') {
+                currency = 'INR';
+            }
+            
+            const config = currencyConfig[currency];
+            const slider = document.getElementById('budgetSlider');
+            
+            // Update slider range
+            slider.min = config.min;
+            slider.max = config.max;
+            
+            // Set default value to middle
+            const middleValue = Math.round((config.max - config.min) / 2);
+            slider.value = middleValue;
+            
+            // Update step for INR (larger increments)
+            if (currency === 'INR') {
+                slider.step = 500;
+            } else {
+                slider.step = 5;
+            }
+            
+            // Update display
+            document.getElementById('budgetCurrencySymbol').textContent = config.symbol;
+            document.getElementById('budgetMin').textContent = config.symbol + config.min;
+            document.getElementById('budgetMax').textContent = config.symbol + config.max;
+            document.getElementById('budgetCurrency').value = currency;
+            
+            updateBudgetDisplay(middleValue);
+        }
+
+        function updateBudgetDisplay(value) {
+            const currency = document.getElementById('budgetCurrency').value;
+            const config = currencyConfig[currency];
+            
+            // Format the value
+            let displayValue = parseInt(value);
+            if (currency === 'INR') {
+                displayValue = displayValue.toLocaleString('en-IN');
+            }
+            
+            document.getElementById('budgetValue').textContent = displayValue;
+            document.getElementById('budgetAmount').value = value;
         }
         
         function selectContactMethod(method) {
@@ -1065,28 +1237,28 @@
                 return;
             }
             
-            // If "No" selected, check if they selected a reason
+            // If "No" selected, check if they selected a consideration
             if (wouldSubscribe === 'no') {
-                const selectedReason = document.querySelector('input[name="notSubscribeReason"]:checked')?.value;
+                const selectedConsideration = document.querySelector('input[name="primaryConsideration"]:checked')?.value;
                 
-                if (!selectedReason) {
-                    alert('⚠️ Please select what would help you decide.');
+                if (!selectedConsideration) {
+                    alert('⚠️ Please select what matters most to you when choosing LNAT prep.');
                     return;
                 }
                 
-                // If reason is "lower-price", go directly to final offer
-if (selectedReason === 'lower-price') {
-    await saveFeedbackData(wouldSubscribe, selectedReason);
-    showFinalOfferDirectly();
-    return;
-}
+                // If consideration is "affordable-pricing", go directly to final offer
+                if (selectedConsideration === 'affordable-pricing') {
+                    await saveFeedbackData(wouldSubscribe, selectedConsideration);
+                    showFinalOfferDirectly();
+                    return;
+                }
                 
-                // If reason is "other", check for text
-                if (selectedReason === 'other') {
-                    const otherText = document.getElementById('otherReasonText').value.trim();
+                // If consideration is "other", check for text
+                if (selectedConsideration === 'other') {
+                    const otherText = document.getElementById('otherConsiderationText').value.trim();
                     if (!otherText) {
-                        alert('⚠️ Please tell us more about your reason.');
-                        document.getElementById('otherReasonText').focus();
+                        alert('⚠️ Please tell us more about what matters to you.');
+                        document.getElementById('otherConsiderationText').focus();
                         return;
                     }
                 }
@@ -1126,20 +1298,28 @@ if (selectedReason === 'lower-price') {
             proceedAfterFeedback(testResultsData);
         }
         
-        async function saveFeedbackData(wouldSubscribe, reason) {
+        async function saveFeedbackData(wouldSubscribe, consideration) {
             const token = localStorage.getItem('authToken');
             const testAttemptId = sessionStorage.getItem('freeTestAttemptId');
             
-            const selectedReason = reason || document.querySelector('input[name="notSubscribeReason"]:checked')?.value;
-            const otherReasonText = document.getElementById('otherReasonText')?.value || '';
+            const selectedConsideration = consideration || document.querySelector('input[name="primaryConsideration"]:checked')?.value;
+            const otherConsiderationText = document.getElementById('otherConsiderationText')?.value || '';
             
-            let whyNotSubscribe = null;
-            if (wouldSubscribe === 'no' && selectedReason) {
-                if (selectedReason === 'other') {
-                    whyNotSubscribe = `Other: ${otherReasonText}`;
+            let primaryConsideration = null;
+            if (wouldSubscribe === 'no' && selectedConsideration) {
+                if (selectedConsideration === 'other') {
+                    primaryConsideration = `Other: ${otherConsiderationText}`;
                 } else {
-                    whyNotSubscribe = selectedReason;
+                    primaryConsideration = selectedConsideration;
                 }
+            }
+
+            // Get budget data if affordable-pricing was selected
+            let budgetAmount = null;
+            let budgetCurrency = null;
+            if (selectedConsideration === 'affordable-pricing') {
+                budgetAmount = document.getElementById('budgetAmount').value;
+                budgetCurrency = document.getElementById('budgetCurrency').value;
             }
             
             const feedbackPayload = {
@@ -1148,7 +1328,9 @@ if (selectedReason === 'lower-price') {
                 lnatDate: document.getElementById('lnatDate').value,
                 experienceRating: selectedRating,
                 wouldSubscribe: wouldSubscribe,
-                whyNotSubscribe: whyNotSubscribe,
+                primaryConsideration: primaryConsideration,
+                budgetAmount: budgetAmount ? parseInt(budgetAmount) : null,
+                budgetCurrency: budgetCurrency,
                 improvementSuggestions: document.getElementById('improvementSuggestions').value || null,
                 country: document.getElementById('country-select').value,
                 preferredContact: document.querySelector('input[name="contact-method"]:checked')?.value,
@@ -1234,13 +1416,13 @@ if (selectedReason === 'lower-price') {
                         <p class="fw-bold mb-3">Does this work for you?</p>
                         
                         <div class="d-flex justify-content-center gap-3 flex-wrap">
-    <button class="feedback-action-btn primary" onclick="acceptScholarshipOffer()">
-        <i class="fas fa-check me-2"></i>Yes, I'll subscribe!
-    </button>
-    <button class="feedback-action-btn secondary" onclick="showConcernsStep()">
-        <i class="fas fa-comment-alt me-2"></i>Tell Us What Would Help
-    </button>
-</div>
+                            <button class="feedback-action-btn primary" onclick="acceptScholarshipOffer()">
+                                <i class="fas fa-check me-2"></i>Yes, I'll subscribe!
+                            </button>
+                            <button class="feedback-action-btn secondary" onclick="showConcernsStep()">
+                                <i class="fas fa-comment-alt me-2"></i>Tell Us What Would Help
+                            </button>
+                        </div>
                     </div>
                 `;
             } else {
@@ -1258,13 +1440,13 @@ if (selectedReason === 'lower-price') {
                     </div>
                     
                     <div class="text-center mt-4">
-    <button class="feedback-action-btn primary" onclick="showConcernsStep()">
-        <i class="fas fa-comment-alt me-2"></i>Tell Us What Would Help
-    </button>
-    <button class="feedback-action-btn secondary" onclick="skipToResults()">
-        View My Results First
-    </button>
-</div>
+                        <button class="feedback-action-btn primary" onclick="showConcernsStep()">
+                            <i class="fas fa-comment-alt me-2"></i>Tell Us What Would Help
+                        </button>
+                        <button class="feedback-action-btn secondary" onclick="skipToResults()">
+                            View My Results First
+                        </button>
+                    </div>
                 `;
             }
             
@@ -1279,87 +1461,95 @@ if (selectedReason === 'lower-price') {
                 console.error('GA error:', error);
             }
         }
+
         // ============= DIRECT FINAL OFFER (Skip Steps 2 & 3) =============
-async function showFinalOfferDirectly() {
-    // Hide step 1, show step 4 directly
-    document.getElementById('feedbackStep1').classList.remove('active');
-    document.getElementById('feedbackStep4').classList.add('active');
-    
-    const content = document.getElementById('finalOfferContent');
-    
-    // Get current scholarship info
-    const percentage = testResultsData?.percentage || 0;
-    let currentDiscount = 0;
-    
-    if (percentage >= 70) {
-        currentDiscount = 50;
-        scholarshipData = { tier: 'Gold', discountPercentage: 50 };
-    } else if (percentage >= 40) {
-        currentDiscount = 30;
-        scholarshipData = { tier: 'Silver', discountPercentage: 30 };
-    } else {
-        scholarshipData = { tier: null, discountPercentage: 0 };
-    }
-    
-    // Show loading
-    content.innerHTML = `
-        <div class="text-center py-5">
-            <div class="spinner-border text-primary" role="status">
-                <span class="visually-hidden">Loading...</span>
-            </div>
-            <p class="mt-3">Generating your exclusive offer...</p>
-        </div>
-    `;
-    
-    try {
-        const token = localStorage.getItem('authToken');
-        
-        const response = await fetch(`${API_BASE_URL}/api/coupons/final-offer`, {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                testAttemptId: sessionStorage.getItem('freeTestAttemptId'),
-                currentScholarshipDiscount: currentDiscount
-            })
-        });
-        
-        if (!response.ok) {
-            throw new Error('Failed to generate offer');
+        async function showFinalOfferDirectly() {
+            // Hide step 1, show step 4 directly
+            document.getElementById('feedbackStep1').classList.remove('active');
+            document.getElementById('feedbackStep4').classList.add('active');
+            
+            const content = document.getElementById('finalOfferContent');
+            
+            // Get current scholarship info
+            const percentage = testResultsData?.percentage || 0;
+            let currentDiscount = 0;
+            
+            if (percentage >= 70) {
+                currentDiscount = 50;
+                scholarshipData = { tier: 'Gold', discountPercentage: 50 };
+            } else if (percentage >= 40) {
+                currentDiscount = 30;
+                scholarshipData = { tier: 'Silver', discountPercentage: 30 };
+            } else {
+                scholarshipData = { tier: null, discountPercentage: 0 };
+            }
+            
+            // Show loading
+            content.innerHTML = `
+                <div class="text-center py-5">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="mt-3">Generating your exclusive offer...</p>
+                </div>
+            `;
+            
+            try {
+                const token = localStorage.getItem('authToken');
+                
+                // Include budget info in the request
+                const budgetAmount = document.getElementById('budgetAmount').value;
+                const budgetCurrency = document.getElementById('budgetCurrency').value;
+                
+                const response = await fetch(`${API_BASE_URL}/api/coupons/final-offer`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        testAttemptId: sessionStorage.getItem('freeTestAttemptId'),
+                        currentScholarshipDiscount: currentDiscount,
+                        budgetAmount: budgetAmount ? parseInt(budgetAmount) : null,
+                        budgetCurrency: budgetCurrency
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to generate offer');
+                }
+                
+                const offerData = await response.json();
+                console.log('✅ Final offer created (direct):', offerData);
+                
+                displayFinalOffer(offerData);
+                
+                // Track this event
+                try {
+                    gtag('event', 'final_offer_direct', {
+                        'event_category': 'negotiation_flow',
+                        'event_label': 'affordable_pricing_direct_offer',
+                        'value': offerData.totalDiscount
+                    });
+                } catch (e) {}
+                
+            } catch (error) {
+                console.error('❌ Error creating final offer:', error);
+                
+                content.innerHTML = `
+                    <div class="text-center py-4">
+                        <div style="font-size: 3rem;">😕</div>
+                        <h4 style="color: #1a365d; margin-top: 15px;">Something went wrong</h4>
+                        <p class="text-muted">We couldn't generate your offer at this time.</p>
+                        <p>Please contact us at <a href="mailto:support@lexcello.com">support@lexcello.com</a> for a special discount.</p>
+                        <button class="feedback-action-btn secondary mt-3" onclick="skipToResults()">
+                            View My Results
+                        </button>
+                    </div>
+                `;
+            }
         }
-        
-        const offerData = await response.json();
-        console.log('✅ Final offer created (direct):', offerData);
-        
-        displayFinalOffer(offerData);
-        
-        // Track this event
-        try {
-            gtag('event', 'final_offer_direct', {
-                'event_category': 'negotiation_flow',
-                'event_label': 'lower_price_direct_offer',
-                'value': offerData.totalDiscount
-            });
-        } catch (e) {}
-        
-    } catch (error) {
-        console.error('❌ Error creating final offer:', error);
-        
-        content.innerHTML = `
-            <div class="text-center py-4">
-                <div style="font-size: 3rem;">😕</div>
-                <h4 style="color: #1a365d; margin-top: 15px;">Something went wrong</h4>
-                <p class="text-muted">We couldn't generate your offer at this time.</p>
-                <p>Please contact us at <a href="mailto:support@lexcello.com">support@lexcello.com</a> for a special discount.</p>
-                <button class="feedback-action-btn secondary mt-3" onclick="skipToResults()">
-                    View My Results
-                </button>
-            </div>
-        `;
-    }
-}
+
         function acceptScholarshipOffer() {
             console.log('🎓 User accepted scholarship offer');
             
@@ -1381,87 +1571,89 @@ async function showFinalOfferDirectly() {
                 window.location.href = 'pricing.html';
             }
         }
-        // ============= CONCERNS STEP (Step 3) =============
-function showConcernsStep() {
-    // Hide step 2, show step 3
-    document.getElementById('feedbackStep2').classList.remove('active');
-    document.getElementById('feedbackStep3').classList.add('active');
-    
-    // Add character counter for concerns textarea
-    const concernsTextarea = document.getElementById('userConcerns');
-    concernsTextarea.addEventListener('input', function() {
-        document.getElementById('concernCharCount').textContent = this.value.length;
-    });
-    
-    // Track this event
-    try {
-        gtag('event', 'concerns_step_shown', {
-            'event_category': 'negotiation_flow',
-            'event_label': 'user_chose_to_share_concerns'
-        });
-    } catch (error) {
-        console.error('GA error:', error);
-    }
-}
 
-async function submitConcerns() {
-    const concerns = document.getElementById('userConcerns').value.trim();
-    
-    if (!concerns) {
-        alert('Please share your concerns before submitting.');
-        return;
-    }
-    
-    // Save concerns to backend (append to existing feedback)
-    try {
-        const token = localStorage.getItem('authToken');
-        const testAttemptId = sessionStorage.getItem('freeTestAttemptId');
-        
-        await fetch(`${API_BASE_URL}/api/feedback`, {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                testId: 1,
-                testAttemptId: testAttemptId ? parseInt(testAttemptId) : null,
-                lnatDate: document.getElementById('lnatDate').value,
-                experienceRating: selectedRating,
-                wouldSubscribe: 'no',
-                whyNotSubscribe: 'concerns: ' + concerns,
-                improvementSuggestions: concerns,
-                country: document.getElementById('country-select').value,
-                preferredContact: document.querySelector('input[name="contact-method"]:checked')?.value,
-                phoneNumber: document.getElementById('contact-phone')?.checked ? 
-                    (document.getElementById('country-code').value + document.getElementById('phone-number').value.trim()) : null
-            })
-        });
-        
-        console.log('✅ Concerns saved successfully');
-    } catch (error) {
-        console.error('❌ Error saving concerns:', error);
-    }
-    
-    // Track this event
-    try {
-        gtag('event', 'concerns_submitted', {
-            'event_category': 'negotiation_flow',
-            'event_label': 'user_submitted_concerns',
-            'value': concerns.length
-        });
-    } catch (error) {
-        console.error('GA error:', error);
-    }
-    
-    // Show final offer
-    showFinalOfferAfterConcerns();
-}
-        // ============= FINAL OFFER (Step 3) =============
+        // ============= CONCERNS STEP (Step 3) =============
+        function showConcernsStep() {
+            // Hide step 2, show step 3
+            document.getElementById('feedbackStep2').classList.remove('active');
+            document.getElementById('feedbackStep3').classList.add('active');
+            
+            // Add character counter for concerns textarea
+            const concernsTextarea = document.getElementById('userConcerns');
+            concernsTextarea.addEventListener('input', function() {
+                document.getElementById('concernCharCount').textContent = this.value.length;
+            });
+            
+            // Track this event
+            try {
+                gtag('event', 'concerns_step_shown', {
+                    'event_category': 'negotiation_flow',
+                    'event_label': 'user_chose_to_share_concerns'
+                });
+            } catch (error) {
+                console.error('GA error:', error);
+            }
+        }
+
+        async function submitConcerns() {
+            const concerns = document.getElementById('userConcerns').value.trim();
+            
+            if (!concerns) {
+                alert('Please share your concerns before submitting.');
+                return;
+            }
+            
+            // Save concerns to backend (append to existing feedback)
+            try {
+                const token = localStorage.getItem('authToken');
+                const testAttemptId = sessionStorage.getItem('freeTestAttemptId');
+                
+                await fetch(`${API_BASE_URL}/api/feedback`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        testId: 1,
+                        testAttemptId: testAttemptId ? parseInt(testAttemptId) : null,
+                        lnatDate: document.getElementById('lnatDate').value,
+                        experienceRating: selectedRating,
+                        wouldSubscribe: 'no',
+                        primaryConsideration: 'concerns: ' + concerns,
+                        improvementSuggestions: concerns,
+                        country: document.getElementById('country-select').value,
+                        preferredContact: document.querySelector('input[name="contact-method"]:checked')?.value,
+                        phoneNumber: document.getElementById('contact-phone')?.checked ? 
+                            (document.getElementById('country-code').value + document.getElementById('phone-number').value.trim()) : null
+                    })
+                });
+                
+                console.log('✅ Concerns saved successfully');
+            } catch (error) {
+                console.error('❌ Error saving concerns:', error);
+            }
+            
+            // Track this event
+            try {
+                gtag('event', 'concerns_submitted', {
+                    'event_category': 'negotiation_flow',
+                    'event_label': 'user_submitted_concerns',
+                    'value': concerns.length
+                });
+            } catch (error) {
+                console.error('GA error:', error);
+            }
+            
+            // Show final offer
+            showFinalOfferAfterConcerns();
+        }
+
+        // ============= FINAL OFFER (Step 4) =============
         async function showFinalOfferAfterConcerns() {
-    // Hide step 3 (concerns), show step 4 (final offer)
-    document.getElementById('feedbackStep3').classList.remove('active');
-    document.getElementById('feedbackStep4').classList.add('active');
+            // Hide step 3 (concerns), show step 4 (final offer)
+            document.getElementById('feedbackStep3').classList.remove('active');
+            document.getElementById('feedbackStep4').classList.add('active');
             
             const content = document.getElementById('finalOfferContent');
             
@@ -1523,11 +1715,11 @@ async function submitConcerns() {
             const content = document.getElementById('finalOfferContent');
             
             content.innerHTML = `
-    <div class="text-center mb-4">
-        <div style="font-size: 4rem;">🎁</div>
-        <h3 style="color: #1a365d; margin-top: 15px;">Thank You for Sharing!</h3>
-        <p class="text-muted">As a token of our appreciation for your honest feedback, here's an exclusive offer just for you:</p>
-    </div>
+                <div class="text-center mb-4">
+                    <div style="font-size: 4rem;">🎁</div>
+                    <h3 style="color: #1a365d; margin-top: 15px;">Thank You for Sharing!</h3>
+                    <p class="text-muted">As a token of our appreciation for your honest feedback, here's an exclusive offer just for you:</p>
+                </div>
                 
                 <div class="final-offer-box">
                     <h4>Exclusive Limited-Time Discount</h4>
