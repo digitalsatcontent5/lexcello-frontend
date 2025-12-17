@@ -652,6 +652,27 @@
     height: 48px;
     margin-top: 10px;
 }
+
+/* Trust Section */
+.university-badge {
+    background: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    color: var(--primary-color);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    font-size: 0.95rem;
+}
+
+.trust-stat {
+    color: var(--text-light);
+    font-size: 0.95rem;
+}
+
+.trust-stat span {
+    font-weight: 700;
+    color: var(--text-dark);
+}
     </style>
 </head>
 <body>
@@ -848,6 +869,51 @@
                         </div>
                         <h3>Timed Practice</h3>
                         <p>Experience real test conditions with authentic timing constraints to build confidence and time management skills.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Trust Indicators Section -->
+    <section class="trust-section" style="padding: 50px 0; background: var(--bg-light);">
+        <div class="container">
+            <div class="text-center mb-4">
+                <p class="text-muted mb-3">Preparing students for admission to</p>
+                <div class="d-flex flex-wrap justify-content-center align-items-center gap-4">
+                    <div class="university-badge">
+                        <i class="fas fa-university me-2"></i>Oxford
+                    </div>
+                    <div class="university-badge">
+                        <i class="fas fa-university me-2"></i>Cambridge
+                    </div>
+                    <div class="university-badge">
+                        <i class="fas fa-university me-2"></i>LSE
+                    </div>
+                    <div class="university-badge">
+                        <i class="fas fa-university me-2"></i>UCL
+                    </div>
+                    <div class="university-badge">
+                        <i class="fas fa-university me-2"></i>Durham
+                    </div>
+                    <div class="university-badge">
+                        <i class="fas fa-university me-2"></i>King's College
+                    </div>
+                </div>
+            </div>
+            <div class="text-center mt-4">
+                <div class="d-flex justify-content-center gap-4 flex-wrap">
+                    <div class="trust-stat">
+                        <i class="fas fa-users text-primary me-2"></i>
+                        <span>100+</span> Students Practicing
+                    </div>
+                    <div class="trust-stat">
+                        <i class="fas fa-star text-warning me-2"></i>
+                        <span>7.9</span>/10 Average Rating
+                    </div>
+                    <div class="trust-stat">
+                        <i class="fas fa-check-circle text-success me-2"></i>
+                        420+ Practice Questions
                     </div>
                 </div>
             </div>
@@ -1473,6 +1539,7 @@ async function subscribeNewsletter() {
     </script>
 </body>
 </html>
+
 
 
 
