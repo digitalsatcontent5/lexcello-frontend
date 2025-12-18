@@ -673,6 +673,41 @@
     font-weight: 700;
     color: var(--text-dark);
 }
+        /* Focus Styles for Accessibility */
+.btn:focus,
+.btn:focus-visible {
+    outline: 3px solid var(--accent-gold);
+    outline-offset: 2px;
+    box-shadow: none;
+}
+
+.nav-link:focus,
+.nav-link:focus-visible {
+    outline: 2px solid var(--secondary-color);
+    outline-offset: 2px;
+    border-radius: 4px;
+}
+
+.user-avatar:focus,
+.user-avatar:focus-visible {
+    outline: 3px solid var(--accent-gold);
+    outline-offset: 2px;
+}
+
+.form-control:focus {
+    border-color: var(--secondary-color);
+    box-shadow: 0 0 0 3px rgba(43, 108, 176, 0.25);
+}
+
+/* Remove default outline but keep custom focus */
+*:focus {
+    outline: none;
+}
+
+*:focus-visible {
+    outline: 2px solid var(--secondary-color);
+    outline-offset: 2px;
+}
     </style>
 </head>
 <body>
@@ -711,8 +746,8 @@
                 </li>
             </ul>
             
-            <!-- Authentication buttons (shown when not logged in) -->
-            <div class="d-flex gap-2" id="auth-buttons">
+           <!-- Authentication buttons (shown when not logged in) -->
+            <div class="d-flex gap-2" id="auth-buttons" style="display: none;">
                 <button class="btn btn-outline-primary" onclick="signIn()">Sign In</button>
                 <button class="btn btn-primary" onclick="getStarted()">Get Started</button>
             </div>
@@ -736,6 +771,13 @@
                     <a href="#" onclick="signOut()">
                         <i class="fas fa-sign-out-alt me-2"></i>Sign Out
                     </a>
+                </div>
+            </div>
+            
+            <!-- Auth loading placeholder -->
+            <div id="auth-loading" class="d-flex align-items-center">
+                <div class="spinner-border spinner-border-sm text-secondary" role="status">
+                    <span class="visually-hidden">Loading...</span>
                 </div>
             </div>
         </div>
@@ -1343,26 +1385,28 @@ function startTestFromHomepage(testNumber) {
         }
         
         function updateUIForLoggedInUser(userData) {
-            currentUser = userData;
-            
-            // Hide auth buttons, show user menu
-            document.getElementById('auth-buttons').style.display = 'none';
-            document.getElementById('user-menu').style.display = 'block';
-            
-            // Update user avatar with first letter of name or email
-            const userAvatar = document.getElementById('user-avatar');
-            const firstLetter = (userData.name || userData.email || 'U').charAt(0).toUpperCase();
-            userAvatar.textContent = firstLetter;
-            userAvatar.title = userData.email || 'User';
-        }
+    currentUser = userData;
+    
+    // Hide loading, hide auth buttons, show user menu
+    document.getElementById('auth-loading').style.display = 'none';
+    document.getElementById('auth-buttons').style.display = 'none';
+    document.getElementById('user-menu').style.display = 'block';
+    
+    // Update user avatar with first letter of name or email
+    const userAvatar = document.getElementById('user-avatar');
+    const firstLetter = (userData.name || userData.email || 'U').charAt(0).toUpperCase();
+    userAvatar.textContent = firstLetter;
+    userAvatar.title = userData.email || 'User';
+}
         
         function updateUIForLoggedOutUser() {
-            currentUser = null;
-            
-            // Show auth buttons, hide user menu
-            document.getElementById('auth-buttons').style.display = 'flex';
-            document.getElementById('user-menu').style.display = 'none';
-        }
+    currentUser = null;
+    
+    // Hide loading, show auth buttons, hide user menu
+    document.getElementById('auth-loading').style.display = 'none';
+    document.getElementById('auth-buttons').style.display = 'flex';
+    document.getElementById('user-menu').style.display = 'none';
+}
         
         function toggleUserDropdown() {
     const dropdown = document.getElementById('user-dropdown');
@@ -1539,6 +1583,7 @@ async function subscribeNewsletter() {
     </script>
 </body>
 </html>
+
 
 
 
