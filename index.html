@@ -708,6 +708,235 @@
     outline: 2px solid var(--secondary-color);
     outline-offset: 2px;
 }
+        /* ============================================
+   STEP 1: ADD THIS CSS
+   
+   Location: Inside your <style> tag, just before </style>
+   ============================================ */
+
+/* World Map Section */
+.world-map-section {
+    padding: 40px 0;
+    background: white;
+    border-top: 1px solid #e2e8f0;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.world-map-container {
+    position: relative;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.world-map-title {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.world-map-title h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 5px;
+}
+
+.world-map-title p {
+    color: var(--text-light);
+    font-size: 0.95rem;
+}
+
+.world-map-stats {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.map-stat {
+    text-align: center;
+}
+
+.map-stat-number {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--secondary-color);
+    display: block;
+}
+
+.map-stat-label {
+    font-size: 0.85rem;
+    color: var(--text-light);
+}
+
+/* SVG Map Styles */
+.world-map-svg {
+    width: 100%;
+    height: auto;
+    max-height: 400px;
+}
+
+.world-map-svg path {
+    fill: #e2e8f0;
+    stroke: #fff;
+    stroke-width: 0.5;
+    transition: fill 0.3s ease, transform 0.2s ease;
+    cursor: default;
+}
+
+.world-map-svg path.has-users {
+    fill: var(--secondary-color);
+    cursor: pointer;
+}
+
+.world-map-svg path.has-users:hover {
+    fill: var(--accent-gold);
+    transform: scale(1.02);
+    transform-origin: center;
+}
+
+/* Tooltip */
+.map-tooltip {
+    position: absolute;
+    background: var(--primary-color);
+    color: white;
+    padding: 10px 15px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    z-index: 100;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    white-space: nowrap;
+}
+
+.map-tooltip.show {
+    opacity: 1;
+}
+
+.map-tooltip .tooltip-country {
+    font-weight: 700;
+    font-size: 1rem;
+    margin-bottom: 3px;
+}
+
+.map-tooltip .tooltip-count {
+    font-size: 0.85rem;
+    opacity: 0.9;
+}
+
+.map-tooltip::after {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 6px 6px 0 6px;
+    border-style: solid;
+    border-color: var(--primary-color) transparent transparent transparent;
+}
+
+/* Country Legend */
+.map-legend {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    color: var(--text-light);
+}
+
+.legend-color {
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+}
+
+.legend-color.active {
+    background: var(--secondary-color);
+}
+
+.legend-color.inactive {
+    background: #e2e8f0;
+}
+
+/* Loading state */
+.map-loading {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-light);
+}
+
+.map-loading .spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid #e2e8f0;
+    border-top-color: var(--secondary-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 15px;
+}
+
+/* Top Countries List */
+.top-countries {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+.top-country-badge {
+    background: var(--bg-light);
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    color: var(--text-dark);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.top-country-badge .country-flag {
+    font-size: 1.1rem;
+}
+
+.top-country-badge .country-count {
+    background: var(--secondary-color);
+    color: white;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .world-map-stats {
+        gap: 20px;
+    }
+    
+    .map-stat-number {
+        font-size: 1.5rem;
+    }
+    
+    .world-map-svg {
+        max-height: 250px;
+    }
+    
+    .map-legend {
+        gap: 15px;
+    }
+}
     </style>
 </head>
 <body>
@@ -917,50 +1146,123 @@
         </div>
     </section>
 
-    <!-- Trust Indicators Section -->
-    <section class="trust-section" style="padding: 50px 0; background: var(--bg-light);">
-        <div class="container">
-            <div class="text-center mb-4">
-                <p class="text-muted mb-3">Preparing students for admission to</p>
-                <div class="d-flex flex-wrap justify-content-center align-items-center gap-4">
-                    <div class="university-badge">
-                        <i class="fas fa-university me-2"></i>Oxford
-                    </div>
-                    <div class="university-badge">
-                        <i class="fas fa-university me-2"></i>Cambridge
-                    </div>
-                    <div class="university-badge">
-                        <i class="fas fa-university me-2"></i>LSE
-                    </div>
-                    <div class="university-badge">
-                        <i class="fas fa-university me-2"></i>UCL
-                    </div>
-                    <div class="university-badge">
-                        <i class="fas fa-university me-2"></i>Durham
-                    </div>
-                    <div class="university-badge">
-                        <i class="fas fa-university me-2"></i>King's College
-                    </div>
+    <!-- ============================================
+     STEP 2: REPLACE YOUR TRUST SECTION WITH THIS HTML
+     
+     DELETE the existing Trust Indicators Section that starts with:
+     <section class="trust-section" style="padding: 50px 0; background: var(--bg-light);">
+     
+     And ends just before:
+     <section class="tests-section" id="tests">
+     
+     Then paste this entire code in its place.
+     ============================================ -->
+
+<!-- Trust Indicators Section with World Map -->
+<section class="trust-section" style="padding: 50px 0; background: var(--bg-light);">
+    <div class="container">
+        <!-- University Badges -->
+        <div class="text-center mb-4">
+            <p class="text-muted mb-3">Preparing students for admission to</p>
+            <div class="d-flex flex-wrap justify-content-center align-items-center gap-4">
+                <div class="university-badge">
+                    <i class="fas fa-university me-2"></i>Oxford
                 </div>
-            </div>
-            <div class="text-center mt-4">
-                <div class="d-flex justify-content-center gap-4 flex-wrap">
-                    <div class="trust-stat">
-                        <i class="fas fa-users text-primary me-2"></i>
-                        <span>100+</span> Students Practicing
-                    </div>
-                    <div class="trust-stat">
-                        <i class="fas fa-star text-warning me-2"></i>
-                        <span>7.9</span>/10 Average Rating
-                    </div>
-                    <div class="trust-stat">
-                        <i class="fas fa-check-circle text-success me-2"></i>
-                        420+ Practice Questions
-                    </div>
+                <div class="university-badge">
+                    <i class="fas fa-university me-2"></i>Cambridge
+                </div>
+                <div class="university-badge">
+                    <i class="fas fa-university me-2"></i>LSE
+                </div>
+                <div class="university-badge">
+                    <i class="fas fa-university me-2"></i>UCL
+                </div>
+                <div class="university-badge">
+                    <i class="fas fa-university me-2"></i>Durham
+                </div>
+                <div class="university-badge">
+                    <i class="fas fa-university me-2"></i>King's College
                 </div>
             </div>
         </div>
-    </section>
+        
+        <!-- World Map Section -->
+        <div class="world-map-section mt-5">
+            <div class="world-map-container">
+                <div class="world-map-title">
+                    <h3><i class="fas fa-globe-americas me-2"></i>Our Global Community</h3>
+                    <p>Students from around the world trust Lexcello for their LNAT preparation</p>
+                </div>
+                
+                <!-- Stats - Populated dynamically -->
+                <div class="world-map-stats" id="map-stats">
+                    <div class="map-stat">
+                        <span class="map-stat-number" id="total-countries">--</span>
+                        <span class="map-stat-label">Countries</span>
+                    </div>
+                    <div class="map-stat">
+                        <span class="map-stat-number" id="total-users">--</span>
+                        <span class="map-stat-label">Students Worldwide</span>
+                    </div>
+                    <div class="map-stat">
+                        <span class="map-stat-number">6</span>
+                        <span class="map-stat-label">Continents</span>
+                    </div>
+                </div>
+                
+                <!-- Map Container -->
+                <div id="world-map-wrapper">
+                    <div class="map-loading" id="map-loading">
+                        <div class="spinner"></div>
+                        <p>Loading global presence...</p>
+                    </div>
+                    <!-- SVG Map will be inserted here by JavaScript -->
+                </div>
+                
+                <!-- Tooltip -->
+                <div class="map-tooltip" id="map-tooltip">
+                    <div class="tooltip-country"></div>
+                    <div class="tooltip-count"></div>
+                </div>
+                
+                <!-- Legend -->
+                <div class="map-legend">
+                    <div class="legend-item">
+                        <div class="legend-color active"></div>
+                        <span>Active student community</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color inactive"></div>
+                        <span>Coming soon</span>
+                    </div>
+                </div>
+                
+                <!-- Top Countries -->
+                <div class="top-countries" id="top-countries">
+                    <!-- Populated dynamically by JavaScript -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- Original Stats Row -->
+        <div class="text-center mt-4">
+            <div class="d-flex justify-content-center gap-4 flex-wrap">
+                <div class="trust-stat">
+                    <i class="fas fa-users text-primary me-2"></i>
+                    <span id="trust-students">100+</span> Students Practicing
+                </div>
+                <div class="trust-stat">
+                    <i class="fas fa-star text-warning me-2"></i>
+                    <span>7.9</span>/10 Average Rating
+                </div>
+                <div class="trust-stat">
+                    <i class="fas fa-check-circle text-success me-2"></i>
+                    420+ Practice Questions
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
     <!-- Practice Tests Section -->
     <section class="tests-section" id="tests">
@@ -1581,8 +1883,275 @@ async function subscribeNewsletter() {
     }
 }
     </script>
+    <!-- ============================================
+     STEP 3: ADD THIS JAVASCRIPT
+     
+     Location: Add this as a NEW <script> tag 
+     AFTER the existing </script> tag
+     and BEFORE </body>
+     
+     So it looks like:
+         </script>
+         
+         <script>
+         // World Map code here...
+         </script>
+     </body>
+     </html>
+     ============================================ -->
+
+<script>
+// ============================================
+// WORLD MAP DATA AND FUNCTIONALITY
+// ============================================
+
+const worldMapData = {
+    countries: {},
+    summary: null
+};
+
+// Country code to flag emoji mapping
+const countryFlags = {
+    'GB': '🇬🇧', 'IN': '🇮🇳', 'GR': '🇬🇷', 'FR': '🇫🇷', 'SG': '🇸🇬',
+    'US': '🇺🇸', 'CA': '🇨🇦', 'IT': '🇮🇹', 'TR': '🇹🇷', 'RO': '🇷🇴',
+    'AU': '🇦🇺', 'FI': '🇫🇮', 'AE': '🇦🇪', 'MY': '🇲🇾', 'KW': '🇰🇼',
+    'LB': '🇱🇧', 'CO': '🇨🇴', 'AR': '🇦🇷', 'LV': '🇱🇻', 'CH': '🇨🇭',
+    'AZ': '🇦🇿', 'JO': '🇯🇴', 'GE': '🇬🇪', 'BR': '🇧🇷', 'BE': '🇧🇪',
+    'IR': '🇮🇷', 'DZ': '🇩🇿', 'PK': '🇵🇰', 'IL': '🇮🇱', 'PH': '🇵🇭',
+    'SN': '🇸🇳', 'ZM': '🇿🇲', 'DE': '🇩🇪', 'MU': '🇲🇺', 'KH': '🇰🇭',
+    'AT': '🇦🇹', 'SE': '🇸🇪'
+};
+
+// Load world map data when page loads
+// This hooks into the existing DOMContentLoaded in your page
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', loadWorldMapData);
+} else {
+    loadWorldMapData();
+}
+
+// Fetch country data from API
+async function loadWorldMapData() {
+    try {
+        const response = await fetch('https://lexcello-backend.onrender.com/api/public/user-countries');
+        
+        if (!response.ok) {
+            throw new Error('Failed to fetch country data');
+        }
+        
+        const data = await response.json();
+        
+        if (data.success && data.data) {
+            // Store data
+            data.data.countries.forEach(country => {
+                worldMapData.countries[country.code] = {
+                    name: country.name,
+                    count: country.count
+                };
+            });
+            worldMapData.summary = data.data.summary;
+            
+            // Update UI
+            updateMapStats();
+            renderWorldMap();
+            renderTopCountries();
+        } else {
+            throw new Error('Invalid data format');
+        }
+        
+    } catch (error) {
+        console.error('Error loading world map data:', error);
+        showMapFallback();
+    }
+}
+
+// Update stats display
+function updateMapStats() {
+    if (worldMapData.summary) {
+        document.getElementById('total-countries').textContent = worldMapData.summary.totalCountries;
+        document.getElementById('total-users').textContent = worldMapData.summary.totalUsers + '+';
+        
+        // Also update the trust-students span if it exists
+        const trustStudents = document.getElementById('trust-students');
+        if (trustStudents) {
+            trustStudents.textContent = worldMapData.summary.totalUsers + '+';
+        }
+    }
+}
+
+// Render top countries badges
+function renderTopCountries() {
+    const container = document.getElementById('top-countries');
+    if (!container || !worldMapData.summary || !worldMapData.summary.topCountries) return;
+    
+    const html = worldMapData.summary.topCountries.map(country => {
+        const flag = countryFlags[country.code] || '🌍';
+        return `
+            <div class="top-country-badge">
+                <span class="country-flag">${flag}</span>
+                <span>${country.name}</span>
+                <span class="country-count">${country.count}</span>
+            </div>
+        `;
+    }).join('');
+    
+    container.innerHTML = html;
+}
+
+// Render the SVG world map
+function renderWorldMap() {
+    const wrapper = document.getElementById('world-map-wrapper');
+    const loading = document.getElementById('map-loading');
+    
+    if (!wrapper || !loading) return;
+    
+    // Hide loading
+    loading.style.display = 'none';
+    
+    // Create simplified world map SVG
+    const svgHTML = generateWorldMapSVG();
+    wrapper.insertAdjacentHTML('beforeend', svgHTML);
+    
+    // Add event listeners for hover
+    setupMapInteractions();
+}
+
+// Generate World Map SVG with country paths
+function generateWorldMapSVG() {
+    // Simplified world map paths for countries
+    const countryPaths = {
+        'GB': 'M465,135 L470,130 L475,135 L478,140 L475,148 L468,150 L463,145 L465,135 Z',
+        'IN': 'M620,200 L640,190 L655,200 L660,220 L650,245 L635,250 L615,235 L610,215 L620,200 Z',
+        'US': 'M120,150 L200,145 L220,160 L230,190 L200,200 L150,195 L110,180 L120,150 Z',
+        'CA': 'M100,90 L220,85 L240,110 L230,140 L200,145 L120,150 L90,130 L100,90 Z',
+        'AU': 'M720,320 L780,310 L800,330 L790,360 L750,370 L720,350 L720,320 Z',
+        'FR': 'M455,155 L475,150 L480,165 L470,180 L455,178 L450,165 L455,155 Z',
+        'DE': 'M480,140 L500,135 L505,155 L495,165 L480,165 L475,150 L480,140 Z',
+        'IT': 'M490,165 L500,160 L510,180 L505,200 L495,195 L490,175 L490,165 Z',
+        'GR': 'M515,180 L530,175 L535,190 L525,200 L515,195 L515,180 Z',
+        'TR': 'M535,170 L575,165 L580,180 L560,190 L535,185 L535,170 Z',
+        'AE': 'M590,220 L605,215 L610,225 L600,235 L590,230 L590,220 Z',
+        'SG': 'M695,260 L700,258 L702,262 L698,265 L695,262 L695,260 Z',
+        'BR': 'M280,280 L330,260 L350,290 L340,340 L300,350 L270,320 L280,280 Z',
+        'AR': 'M280,340 L300,350 L295,400 L275,420 L265,390 L270,350 L280,340 Z',
+        'PK': 'M600,190 L620,185 L625,200 L615,215 L600,210 L600,190 Z',
+        'MY': 'M680,255 L700,250 L705,260 L695,270 L680,265 L680,255 Z',
+        'FI': 'M520,95 L535,90 L540,115 L530,125 L520,120 L520,95 Z',
+        'RO': 'M515,155 L535,150 L540,165 L530,175 L515,170 L515,155 Z',
+        'CH': 'M475,160 L485,158 L488,168 L480,172 L475,168 L475,160 Z',
+        'AT': 'M490,155 L505,152 L508,162 L500,168 L490,165 L490,155 Z',
+        'BE': 'M465,148 L475,146 L477,155 L470,158 L465,155 L465,148 Z',
+        'LV': 'M520,125 L535,122 L538,132 L530,138 L520,135 L520,125 Z',
+        'CO': 'M240,250 L260,245 L270,260 L260,280 L245,275 L240,260 L240,250 Z',
+        'PH': 'M720,230 L735,225 L740,245 L730,255 L720,250 L720,230 Z',
+        'KW': 'M575,205 L585,202 L588,212 L580,218 L575,215 L575,205 Z',
+        'JO': 'M555,195 L565,192 L568,205 L560,210 L555,205 L555,195 Z',
+        'LB': 'M550,185 L558,182 L560,192 L555,196 L550,193 L550,185 Z',
+        'IL': 'M548,195 L555,193 L557,205 L552,210 L548,205 L548,195 Z',
+        'DZ': 'M450,200 L490,195 L495,230 L470,240 L450,235 L450,200 Z',
+        'SN': 'M410,245 L425,243 L428,252 L420,258 L410,255 L410,245 Z',
+        'ZM': 'M530,310 L555,305 L560,325 L545,335 L530,330 L530,310 Z',
+        'MU': 'M595,330 L600,328 L602,335 L598,338 L595,335 L595,330 Z',
+        'GE': 'M565,160 L580,157 L583,167 L575,172 L565,168 L565,160 Z',
+        'AZ': 'M580,160 L595,157 L598,170 L590,175 L580,170 L580,160 Z',
+        'KH': 'M695,240 L710,235 L715,250 L705,258 L695,253 L695,240 Z',
+        'IR': 'M575,185 L610,180 L615,210 L590,220 L575,210 L575,185 Z',
+        'SE': 'M495,90 L510,85 L515,120 L505,130 L495,125 L495,90 Z'
+    };
+    
+    // Generate paths with appropriate classes
+    let pathsHTML = '';
+    Object.entries(countryPaths).forEach(([code, path]) => {
+        const hasUsers = worldMapData.countries[code] !== undefined;
+        const className = hasUsers ? 'has-users' : '';
+        pathsHTML += `<path id="country-${code}" class="${className}" d="${path}" data-code="${code}"></path>`;
+    });
+    
+    // Background shape for visual context
+    const backgroundPath = `
+        <path class="map-background" d="M0,80 Q200,60 400,80 T800,80 L800,380 Q600,400 400,380 T0,380 Z" fill="#f0f4f8" stroke="none"></path>
+    `;
+    
+    return `
+        <svg class="world-map-svg" viewBox="0 0 850 450" preserveAspectRatio="xMidYMid meet">
+            ${backgroundPath}
+            <g class="countries">
+                ${pathsHTML}
+            </g>
+        </svg>
+    `;
+}
+
+// Setup hover interactions
+function setupMapInteractions() {
+    const tooltip = document.getElementById('map-tooltip');
+    const countryPaths = document.querySelectorAll('.world-map-svg path.has-users');
+    
+    if (!tooltip) return;
+    
+    countryPaths.forEach(path => {
+        path.addEventListener('mouseenter', function(e) {
+            const code = this.dataset.code;
+            const countryData = worldMapData.countries[code];
+            
+            if (countryData) {
+                const flag = countryFlags[code] || '';
+                tooltip.querySelector('.tooltip-country').textContent = `${flag} ${countryData.name}`;
+                tooltip.querySelector('.tooltip-count').textContent = `${countryData.count} student${countryData.count > 1 ? 's' : ''}`;
+                tooltip.classList.add('show');
+            }
+        });
+        
+        path.addEventListener('mousemove', function(e) {
+            const wrapper = document.getElementById('world-map-wrapper');
+            if (!wrapper) return;
+            
+            const rect = wrapper.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            tooltip.style.left = `${x}px`;
+            tooltip.style.top = `${y - 60}px`;
+        });
+        
+        path.addEventListener('mouseleave', function() {
+            tooltip.classList.remove('show');
+        });
+    });
+}
+
+// Fallback if API fails - shows country badges instead of map
+function showMapFallback() {
+    const wrapper = document.getElementById('world-map-wrapper');
+    if (!wrapper) return;
+    
+    wrapper.innerHTML = `
+        <div class="text-center py-4">
+            <div class="d-flex flex-wrap justify-content-center gap-3">
+                <span class="badge bg-primary p-2">🇬🇧 United Kingdom</span>
+                <span class="badge bg-primary p-2">🇮🇳 India</span>
+                <span class="badge bg-primary p-2">🇬🇷 Greece</span>
+                <span class="badge bg-primary p-2">🇫🇷 France</span>
+                <span class="badge bg-primary p-2">🇸🇬 Singapore</span>
+                <span class="badge bg-primary p-2">🇺🇸 United States</span>
+                <span class="badge bg-primary p-2">🇨🇦 Canada</span>
+                <span class="badge bg-primary p-2">🇦🇺 Australia</span>
+                <span class="badge bg-primary p-2">+ 28 more countries</span>
+            </div>
+        </div>
+    `;
+    
+    // Set fallback stats
+    const totalCountries = document.getElementById('total-countries');
+    const totalUsers = document.getElementById('total-users');
+    
+    if (totalCountries) totalCountries.textContent = '36';
+    if (totalUsers) totalUsers.textContent = '180+';
+}
+</script>
 </body>
 </html>
+
 
 
 
