@@ -1183,9 +1183,9 @@
                         <span class="map-stat-label">Countries</span>
                     </div>
                     <div class="map-stat">
-                        <span class="map-stat-number" id="total-users">--</span>
-                        <span class="map-stat-label">Students Worldwide</span>
-                    </div>
+    <span class="map-stat-number" id="total-questions">-</span>
+    <span class="map-stat-label">Questions Answered</span>
+</div>
                     <div class="map-stat">
                         <span class="map-stat-number">6</span>
                         <span class="map-stat-label">Continents</span>
@@ -1948,7 +1948,7 @@ async function loadWorldMapData() {
 function updateMapStats() {
     if (worldMapData.summary) {
         document.getElementById('total-countries').textContent = worldMapData.summary.totalCountries;
-        document.getElementById('total-users').textContent = worldMapData.summary.totalUsers + '+';
+        document.getElementById('total-questions').textContent = worldMapData.summary.totalQuestions.toLocaleString() + '+';
         
         const trustStudents = document.getElementById('trust-students');
         if (trustStudents) {
@@ -2092,6 +2092,7 @@ function showMapFallback() {
 </script>
 </body>
 </html>
+
 
 
 
