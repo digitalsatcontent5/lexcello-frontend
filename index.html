@@ -779,12 +779,29 @@
     height: 400px;
 }
 
-.jvectormap-tip {
-    background: var(--primary-color) !important;
-    border: none !important;
-    border-radius: 8px !important;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2) !important;
+/* Leaflet Map Customization */
+.leaflet-container {
+    background: #f7fafc;
+    border-radius: 12px;
+}
+
+.leaflet-popup-content-wrapper {
+    background: #1a365d;
+    color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.leaflet-popup-content {
+    margin: 10px 15px;
+}
+
+.leaflet-popup-tip {
+    background: #1a365d;
+}
+
+.leaflet-popup-close-button {
+    color: white !important;
 }
 
 .map-loading {
@@ -1852,7 +1869,8 @@ async function subscribeNewsletter() {
     
 <script>
 // ============================================
-// WORLD MAP WITH jVectorMap
+// WORLD MAP WITH LEAFLET.JS
+// Professional map with real country shapes
 // ============================================
 
 const worldMapData = {
@@ -1872,8 +1890,22 @@ const countryFlags = {
     'AT': '🇦🇹', 'SE': '🇸🇪'
 };
 
-// Load world map data when page loads
-$(document).ready(function() {
+// Country coordinates [latitude, longitude]
+const countryCoords = {
+    'GB': [54.0, -2.0], 'IN': [21.0, 78.0], 'GR': [39.0, 22.0], 'FR': [46.0, 2.0], 'SG': [1.3, 103.8],
+    'US': [38.0, -97.0], 'CA': [56.0, -106.0], 'IT': [42.0, 12.0], 'TR': [39.0, 35.0], 'RO': [46.0, 25.0],
+    'AU': [-25.0, 134.0], 'FI': [64.0, 26.0], 'AE': [24.0, 54.0], 'MY': [4.0, 102.0], 'KW': [29.5, 48.0],
+    'LB': [34.0, 36.0], 'CO': [4.0, -72.0], 'AR': [-34.0, -64.0], 'LV': [57.0, 25.0], 'CH': [47.0, 8.0],
+    'AZ': [40.0, 47.0], 'JO': [31.0, 36.0], 'GE': [42.0, 44.0], 'BR': [-10.0, -55.0], 'BE': [51.0, 4.0],
+    'IR': [32.0, 53.0], 'DZ': [28.0, 2.0], 'PK': [30.0, 69.0], 'IL': [31.0, 35.0], 'PH': [13.0, 122.0],
+    'SN': [14.0, -14.0], 'ZM': [-15.0, 28.0], 'DE': [51.0, 10.0], 'MU': [-20.0, 58.0], 'KH': [13.0, 105.0],
+    'AT': [47.0, 14.0], 'SE': [62.0, 15.0]
+};
+
+let leafletMap = null;
+
+// Initialize when DOM is ready
+document.addEventListener('DOMContentLoaded', function() {
     loadWorldMapData();
 });
 
@@ -1900,7 +1932,7 @@ async function loadWorldMapData() {
             
             // Update UI
             updateMapStats();
-            renderJVectorMap();
+            renderLeafletMap();
             renderTopCountries();
         } else {
             throw new Error('Invalid data format');
@@ -1918,7 +1950,6 @@ function updateMapStats() {
         document.getElementById('total-countries').textContent = worldMapData.summary.totalCountries;
         document.getElementById('total-users').textContent = worldMapData.summary.totalUsers + '+';
         
-        // Also update the trust-students span if it exists
         const trustStudents = document.getElementById('trust-students');
         if (trustStudents) {
             trustStudents.textContent = worldMapData.summary.totalUsers + '+';
@@ -1945,118 +1976,123 @@ function renderTopCountries() {
     container.innerHTML = html;
 }
 
-// Render jVectorMap
-function renderJVectorMap() {
+// Render Leaflet map
+function renderLeafletMap() {
     const loading = document.getElementById('map-loading');
     const mapContainer = document.getElementById('world-map');
     
     if (!mapContainer) return;
-    
-    // Hide loading
     if (loading) loading.style.display = 'none';
     
-    // Prepare data for jVectorMap
-    // jVectorMap needs values object with country codes as keys
-    const mapValues = {};
-    Object.keys(worldMapData.countries).forEach(code => {
-        mapValues[code] = worldMapData.countries[code].count;
+    // Initialize the map
+    leafletMap = L.map('world-map', {
+        center: [30, 10],
+        zoom: 2,
+        minZoom: 1,
+        maxZoom: 5,
+        scrollWheelZoom: false,
+        dragging: true,
+        zoomControl: true
     });
     
-    // Initialize jVectorMap
-    $('#world-map').vectorMap({
-map: 'world_mill',
-        backgroundColor: '#f7fafc',
-        zoomOnScroll: false,
-        panOnDrag: false,
-        zoomButtons: false,
-        
-        // Region (country) styling
-        regionStyle: {
-            initial: {
-                fill: '#e2e8f0',
-                'fill-opacity': 1,
-                stroke: '#fff',
-                'stroke-width': 0.5,
-                'stroke-opacity': 1
-            },
-            hover: {
-                'fill-opacity': 0.8,
-                cursor: 'pointer'
-            },
-            selected: {
-                fill: '#d69e2e'
-            }
-        },
-        
-        // Series for coloring countries with users
-        series: {
-            regions: [{
-                values: mapValues,
-                scale: ['#93c5fd', '#1a365d'],
-                normalizeFunction: 'polynomial',
-                min: 1,
-                max: Math.max(...Object.values(mapValues), 1)
-            }]
-        },
-        
-        // Custom tooltip
-        onRegionTipShow: function(e, el, code) {
-            const countryData = worldMapData.countries[code];
-            if (countryData) {
-                const flag = countryFlags[code] || '';
-                el.html(
-                    '<div style="padding: 8px 12px; font-family: inherit;">' +
-                    '<strong style="font-size: 14px;">' + flag + ' ' + countryData.name + '</strong><br>' +
-                    '<span style="color: #d69e2e; font-weight: 600;">' + countryData.count + ' student' + (countryData.count > 1 ? 's' : '') + '</span>' +
-                    '</div>'
-                );
-            } else {
-                // Don't show tooltip for countries without users
-                e.preventDefault();
-            }
-        },
-        
-        // Click handler (optional - for future use)
-        onRegionClick: function(e, code) {
-            const countryData = worldMapData.countries[code];
-            if (countryData) {
-                console.log('Clicked:', countryData.name, '-', countryData.count, 'students');
-            }
+    // Add map tiles (CartoDB Positron - clean, light style)
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; OpenStreetMap &copy; CARTO',
+        subdomains: 'abcd',
+        maxZoom: 19
+    }).addTo(leafletMap);
+    
+    // Get max count for scaling markers
+    const counts = Object.values(worldMapData.countries).map(c => c.count);
+    const maxCount = Math.max(...counts, 1);
+    
+    // Add markers for each country with users
+    Object.keys(worldMapData.countries).forEach(code => {
+        const coords = countryCoords[code];
+        if (coords) {
+            const country = worldMapData.countries[code];
+            const flag = countryFlags[code] || '🌍';
+            
+            // Calculate marker size based on count
+            const baseSize = 10;
+            const maxSize = 30;
+            const size = baseSize + (country.count / maxCount) * (maxSize - baseSize);
+            
+            // Create custom circle marker
+            const marker = L.circleMarker(coords, {
+                radius: size,
+                fillColor: '#2b6cb0',
+                color: '#1a365d',
+                weight: 2,
+                opacity: 1,
+                fillOpacity: 0.7
+            }).addTo(leafletMap);
+            
+            // Add popup with country info
+            marker.bindPopup(`
+                <div style="text-align: center; font-family: 'Segoe UI', sans-serif;">
+                    <strong style="font-size: 16px;">${flag} ${country.name}</strong><br>
+                    <span style="color: #d69e2e; font-weight: 600; font-size: 14px;">${country.count} student${country.count > 1 ? 's' : ''}</span>
+                </div>
+            `, {
+                className: 'custom-popup'
+            });
+            
+            // Hover effect
+            marker.on('mouseover', function() {
+                this.setStyle({
+                    fillColor: '#d69e2e',
+                    fillOpacity: 0.9
+                });
+                this.openPopup();
+            });
+            
+            marker.on('mouseout', function() {
+                this.setStyle({
+                    fillColor: '#2b6cb0',
+                    fillOpacity: 0.7
+                });
+                this.closePopup();
+            });
         }
     });
 }
 
 // Fallback if API fails
 function showMapFallback() {
-    const wrapper = document.getElementById('world-map-wrapper');
-    if (!wrapper) return;
+    const loading = document.getElementById('map-loading');
+    const mapContainer = document.getElementById('world-map');
     
-    wrapper.innerHTML = `
-        <div class="text-center py-4">
-            <div class="d-flex flex-wrap justify-content-center gap-3">
-                <span class="badge bg-primary p-2">🇬🇧 United Kingdom</span>
-                <span class="badge bg-primary p-2">🇮🇳 India</span>
-                <span class="badge bg-primary p-2">🇬🇷 Greece</span>
-                <span class="badge bg-primary p-2">🇫🇷 France</span>
-                <span class="badge bg-primary p-2">🇸🇬 Singapore</span>
-                <span class="badge bg-primary p-2">🇺🇸 United States</span>
-                <span class="badge bg-primary p-2">🇨🇦 Canada</span>
-                <span class="badge bg-primary p-2">🇦🇺 Australia</span>
-                <span class="badge bg-primary p-2">+ 28 more countries</span>
+    if (loading) loading.style.display = 'none';
+    
+    if (mapContainer) {
+        mapContainer.innerHTML = `
+            <div class="text-center py-5" style="background: #f7fafc; border-radius: 12px;">
+                <p class="text-muted mb-3">Students from around the world</p>
+                <div class="d-flex flex-wrap justify-content-center gap-2">
+                    <span class="badge bg-primary p-2">🇬🇧 United Kingdom</span>
+                    <span class="badge bg-primary p-2">🇮🇳 India</span>
+                    <span class="badge bg-primary p-2">🇬🇷 Greece</span>
+                    <span class="badge bg-primary p-2">🇫🇷 France</span>
+                    <span class="badge bg-primary p-2">🇸🇬 Singapore</span>
+                    <span class="badge bg-primary p-2">🇺🇸 United States</span>
+                    <span class="badge bg-primary p-2">🇨🇦 Canada</span>
+                    <span class="badge bg-primary p-2">🇦🇺 Australia</span>
+                    <span class="badge bg-primary p-2">+ 28 more countries</span>
+                </div>
             </div>
-        </div>
-    `;
+        `;
+    }
     
-    // Set fallback stats
     const totalCountries = document.getElementById('total-countries');
     const totalUsers = document.getElementById('total-users');
-    
     if (totalCountries) totalCountries.textContent = '36';
     if (totalUsers) totalUsers.textContent = '186+';
 }
 </script>
 </body>
 </html>
+
 
 
 
