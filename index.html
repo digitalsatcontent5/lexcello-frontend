@@ -986,11 +986,11 @@
             </div>
             
             <!-- Auth loading placeholder -->
-            <div id="auth-loading" class="d-flex align-items-center">
-                <div class="spinner-border spinner-border-sm text-secondary" role="status">
-                    <span class="visually-hidden">Loading...</span>
-                </div>
-            </div>
+<div id="auth-loading" class="d-flex align-items-center" style="display: none;">
+    <div class="spinner-border spinner-border-sm text-secondary" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+</div>
         </div>
     </div>
 </nav>
@@ -1641,9 +1641,11 @@ function startTestFromHomepage(testNumber) {
         
         // Authentication functions
         async function checkAuthStatus() {
-            const token = localStorage.getItem('authToken');
-            if (token) {
-                try {
+    const token = localStorage.getItem('authToken');
+    if (token) {
+        // Only show spinner when we need to verify a token
+        document.getElementById('auth-loading').style.display = 'flex';
+        try {
                     const response = await fetch(`${API_BASE_URL}/auth/profile`, {
                         method: 'GET',
                         headers: {
@@ -2092,6 +2094,7 @@ function showMapFallback() {
 </script>
 </body>
 </html>
+
 
 
 
