@@ -89,6 +89,64 @@
             border-color: var(--secondary-color);
             color: white;
         }
+
+        /* User menu styles */
+        .user-menu {
+            position: relative;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--secondary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .user-avatar:hover {
+            background: var(--primary-hover);
+        }
+        
+        .user-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            padding: 10px 0;
+            min-width: 200px;
+            z-index: 1000;
+            display: none;
+        }
+        
+        .user-dropdown.show {
+            display: block;
+        }
+        
+        .user-dropdown a {
+            display: block;
+            padding: 10px 20px;
+            color: var(--text-dark);
+            text-decoration: none;
+            transition: background 0.3s ease;
+        }
+        
+        .user-dropdown a:hover {
+            background: var(--bg-light);
+        }
+        
+        .user-dropdown .divider {
+            height: 1px;
+            background: #e2e8f0;
+            margin: 5px 0;
+        }
         
         /* Page Header */
         .page-header {
@@ -387,9 +445,32 @@
                     </li>
                 </ul>
                 
-                <div class="d-flex gap-2">
+                <!-- Authentication buttons (shown when not logged in) -->
+                <div class="d-none gap-2" id="auth-buttons">
                     <button class="btn btn-outline-primary" onclick="signIn()">Sign In</button>
                     <button class="btn btn-primary" onclick="getStarted()">Get Started</button>
+                </div>
+                
+                <!-- User menu (shown when logged in) -->
+                <div class="user-menu d-none" id="user-menu">
+                    <div class="user-avatar" onclick="toggleUserDropdown()" id="user-avatar">
+                        U
+                    </div>
+                    <div class="user-dropdown" id="user-dropdown">
+                        <a href="dashboard.html">
+                            <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                        </a>
+                        <a href="profile.html">
+                            <i class="fas fa-user me-2"></i>Profile
+                        </a>
+                        <a href="test-history.html">
+                            <i class="fas fa-history me-2"></i>Test History
+                        </a>
+                        <div class="divider"></div>
+                        <a href="#" onclick="signOut()">
+                            <i class="fas fa-sign-out-alt me-2"></i>Sign Out
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -616,6 +697,105 @@
     
     <script>
     const API_BASE = 'https://lexcello-backend.onrender.com';
+    const API_BASE_URL = 'https://lexcello-backend.onrender.com/api';
+    
+    // State management
+    let currentUser = null;
+
+    // Initialize the app
+    document.addEventListener('DOMContentLoaded', function() {
+        checkAuthStatus();
+        loadArticles();
+        
+        // Add click listener to close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const userMenu = document.getElementById('user-menu');
+            const dropdown = document.getElementById('user-dropdown');
+            
+            if (userMenu && !userMenu.contains(event.target)) {
+                dropdown.classList.remove('show');
+            }
+        });
+    });
+
+    // Authentication functions
+    async function checkAuthStatus() {
+        const token = localStorage.getItem('authToken');
+        if (token) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/auth/profile`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                if (response.ok) {
+                    const userData = await response.json();
+                    updateUIForLoggedInUser(userData);
+                } else {
+                    localStorage.removeItem('authToken');
+                    updateUIForLoggedOutUser();
+                }
+            } catch (error) {
+                console.error('Error checking auth status:', error);
+                updateUIForLoggedOutUser();
+            }
+        } else {
+            updateUIForLoggedOutUser();
+        }
+    }
+    
+    function updateUIForLoggedInUser(userData) {
+        currentUser = userData;
+        
+        // Use classList to toggle Bootstrap classes
+        document.getElementById('auth-buttons').classList.add('d-none');
+        document.getElementById('auth-buttons').classList.remove('d-flex');
+        document.getElementById('user-menu').classList.remove('d-none');
+        document.getElementById('user-menu').classList.add('d-block');
+        
+        const userAvatar = document.getElementById('user-avatar');
+        const firstLetter = (userData.name || userData.email || 'U').charAt(0).toUpperCase();
+        userAvatar.textContent = firstLetter;
+        userAvatar.title = userData.email || 'User';
+    }
+    
+    function updateUIForLoggedOutUser() {
+        currentUser = null;
+        
+        // Use classList to toggle Bootstrap classes
+        document.getElementById('auth-buttons').classList.remove('d-none');
+        document.getElementById('auth-buttons').classList.add('d-flex');
+        document.getElementById('user-menu').classList.add('d-none');
+        document.getElementById('user-menu').classList.remove('d-block');
+    }
+    
+    function toggleUserDropdown() {
+        const dropdown = document.getElementById('user-dropdown');
+        dropdown.classList.toggle('show');
+    }
+    
+    async function signOut() {
+        try {
+            const token = localStorage.getItem('authToken');
+            if (token) {
+                await fetch(`${API_BASE_URL}/auth/logout`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+            }
+        } catch (error) {
+            console.error('Error during logout:', error);
+        } finally {
+            localStorage.removeItem('authToken');
+            updateUIForLoggedOutUser();
+        }
+    }
 
     // Function to load articles dynamically
     async function loadArticles() {
@@ -754,25 +934,24 @@
         return text.replace(/[&<>"']/g, m => map[m]);
     }
 
-    // Navigation functions (keeping the existing ones)
+    // Navigation functions
     function signIn() {
         window.location.href = 'login.html';
     }
     
     function getStarted() {
-        window.location.href = 'register.html';
+        if (currentUser) {
+            window.location.href = 'dashboard.html';
+        } else {
+            window.location.href = 'register.html';
+        }
     }
     
     function startPracticeTest() {
         window.location.href = 'index.html#tests';
     }
-
-    // Load articles when page loads
-    document.addEventListener('DOMContentLoaded', function() {
-        loadArticles();
-    });
 </script>
-                <script src="cookie-consent.js"></script>
+<script src="cookie-consent.js"></script>
 
 </body>
 </html>
