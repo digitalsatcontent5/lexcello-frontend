@@ -628,12 +628,12 @@
                     </li>
                 </ul>
                 
-                <div class="d-flex gap-2" id="auth-buttons">
+<div class="d-none gap-2" id="auth-buttons">
                     <button class="btn btn-outline-primary" onclick="window.location.href='login.html'">Sign In</button>
                     <button class="btn btn-primary" onclick="window.location.href='register.html'">Get Started</button>
                 </div>
                 
-                <div class="user-menu" id="user-menu" style="display: none;">
+<div class="user-menu d-none" id="user-menu">
                     <div class="user-avatar" onclick="toggleUserDropdown()" id="user-avatar">U</div>
                     <div class="user-dropdown" id="user-dropdown">
                         <a href="dashboard.html"><i class="fas fa-tachometer-alt me-2"></i>Dashboard</a>
@@ -1131,19 +1131,23 @@
         }
         
         function updateUIForLoggedInUser(userData) {
-            console.log('✅ User logged in:', userData.email);
-            document.getElementById('auth-buttons').style.display = 'none';
-            document.getElementById('user-menu').style.display = 'block';
-            
-            const avatar = document.getElementById('user-avatar');
-            avatar.textContent = (userData.name || userData.email || 'U').charAt(0).toUpperCase();
-        }
+    console.log('✅ User logged in:', userData.email);
+    document.getElementById('auth-buttons').classList.add('d-none');
+    document.getElementById('auth-buttons').classList.remove('d-flex');
+    document.getElementById('user-menu').classList.remove('d-none');
+    document.getElementById('user-menu').classList.add('d-block');
+    
+    const avatar = document.getElementById('user-avatar');
+    avatar.textContent = (userData.name || userData.email || 'U').charAt(0).toUpperCase();
+}
         
         function updateUIForLoggedOutUser() {
-            console.log('ℹ️ User not logged in');
-            document.getElementById('auth-buttons').style.display = 'flex';
-            document.getElementById('user-menu').style.display = 'none';
-        }
+    console.log('ℹ️ User not logged in');
+    document.getElementById('auth-buttons').classList.remove('d-none');
+    document.getElementById('auth-buttons').classList.add('d-flex');
+    document.getElementById('user-menu').classList.add('d-none');
+    document.getElementById('user-menu').classList.remove('d-block');
+}
         
         function toggleUserDropdown() {
             document.getElementById('user-dropdown').classList.toggle('show');
@@ -1829,3 +1833,4 @@ function showFinalOfferWelcome(finalOffer) {
         <script src="cookie-consent.js"></script>
 </body>
 </html>
+
