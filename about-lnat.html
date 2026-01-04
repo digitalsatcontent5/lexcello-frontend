@@ -511,13 +511,13 @@
                 </ul>
                 
                 <!-- Authentication buttons (shown when not logged in) -->
-                <div class="d-flex gap-2" id="auth-buttons">
+                <div class="d-none gap-2" id="auth-buttons">
                     <button class="btn btn-outline-primary" onclick="signIn()">Sign In</button>
                     <button class="btn btn-primary" onclick="getStarted()">Get Started</button>
                 </div>
                 
                 <!-- User menu (shown when logged in) -->
-                <div class="user-menu" id="user-menu" style="display: none;">
+                <div class="user-menu d-none" id="user-menu">
                     <div class="user-avatar" onclick="toggleUserDropdown()" id="user-avatar">
                         U
                     </div>
@@ -844,8 +844,11 @@
         function updateUIForLoggedInUser(userData) {
             currentUser = userData;
             
-            document.getElementById('auth-buttons').style.display = 'none';
-            document.getElementById('user-menu').style.display = 'block';
+            // Use classList to toggle Bootstrap classes
+            document.getElementById('auth-buttons').classList.add('d-none');
+            document.getElementById('auth-buttons').classList.remove('d-flex');
+            document.getElementById('user-menu').classList.remove('d-none');
+            document.getElementById('user-menu').classList.add('d-block');
             
             const userAvatar = document.getElementById('user-avatar');
             const firstLetter = (userData.name || userData.email || 'U').charAt(0).toUpperCase();
@@ -856,8 +859,11 @@
         function updateUIForLoggedOutUser() {
             currentUser = null;
             
-            document.getElementById('auth-buttons').style.display = 'flex';
-            document.getElementById('user-menu').style.display = 'none';
+            // Use classList to toggle Bootstrap classes
+            document.getElementById('auth-buttons').classList.remove('d-none');
+            document.getElementById('auth-buttons').classList.add('d-flex');
+            document.getElementById('user-menu').classList.add('d-none');
+            document.getElementById('user-menu').classList.remove('d-block');
         }
         
         function toggleUserDropdown() {
@@ -911,11 +917,7 @@
             }
         }
     </script>
-            <script src="cookie-consent.js"></script>
+    <script src="cookie-consent.js"></script>
 
 </body>
 </html>
-
-
-
-
