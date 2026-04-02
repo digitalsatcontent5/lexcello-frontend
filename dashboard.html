@@ -859,11 +859,22 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-8">
+                <!-- Free Diagnostic Test Section -->
+                <div class="content-section">
+                    <div class="section-header">
+                        <h2 class="section-title">
+                            <i class="fas fa-gift me-2"></i>Free Diagnostic Test
+                        </h2>
+                    </div>
+                    
+                    <div id="freeTestContainer"></div>
+                </div>
+
                 <!-- Practice Tests Section -->
                 <div class="content-section">
                     <div class="section-header">
                         <h2 class="section-title">
-                            <i class="fas fa-clipboard-list me-2"></i>Your Practice Tests
+                            <i class="fas fa-clipboard-list me-2"></i>Premium Practice Tests
                         </h2>
                         <div class="section-actions">
                             <a href="#" class="btn btn-outline-primary btn-section-action" onclick="showAllTests()">
@@ -1000,16 +1011,14 @@
         let userTestAttempts = [];
         let availableTests = {};
         let userSubscriptionInfo = null;
-        let userPurchasedTests = []; // Track individually purchased tests
+        let userPurchasedTests = [];
         
-        // Single test pricing (matches backend)
         const SINGLE_TEST_PRICE = {
             GBP: { symbol: '£', price: 18, actualCharge: 1900 },
             USD: { symbol: '$', price: 23, actualCharge: 1900 },
             INR: { symbol: '₹', price: 1900, actualCharge: 1900 }
         };
         
-        // Authentication check and initialization
         document.addEventListener('DOMContentLoaded', async function() {
             await initializeDashboard();
         });
@@ -1020,6 +1029,7 @@
                 userSubscriptionInfo = await checkUserSubscriptionStatus();
                 await loadUserData();
                 await loadTests();
+                renderFreeDiagnosticTest(); // ← NEW: Render free test separately
                 updateProgressStats();
                 updateRecentActivity();
                 generateAchievements();
@@ -1030,12 +1040,132 @@
             }
         }
 
+        // ========== NEW FUNCTION: Render Free Diagnostic Test ==========
+        function renderFreeDiagnosticTest() {
+            const freeTestContainer = document.getElementById('freeTestContainer');
+            
+            // Find free test attempts (14 questions only)
+            const freeTestAttempts = userTestAttempts.filter(attempt => 
+                attempt.total_questions === 14
+            );
+            
+            const hasCompleted = freeTestAttempts.length > 0;
+            
+            let bestScore = 0;
+            if (hasCompleted) {
+                bestScore = Math.max(...freeTestAttempts.map(attempt => {
+                    let score = attempt.score;
+                    if (score === undefined || score === null || isNaN(score)) {
+                        if (attempt.correct_answers !== undefined && attempt.total_questions > 0) {
+                            score = Math.round((attempt.correct_answers / attempt.total_questions) * 100);
+                        } else {
+                            score = 0;
+                        }
+                    }
+                    return Number(score) || 0;
+                }));
+            }
+            
+            const latestAttempt = hasCompleted ? freeTestAttempts[freeTestAttempts.length - 1] : null;
+            
+            let cardHTML = `
+                <div class="tests-grid">
+                    <div class="test-card ${hasCompleted ? 'completed' : 'available'}">
+                        <div class="test-header">
+                            <div class="test-number ${hasCompleted ? 'completed' : ''}">
+                                <i class="fas fa-gift"></i>
+                            </div>
+                            <div class="test-info">
+                                <h4 class="test-title">Free 14-Question Diagnostic Test</h4>
+                                <span class="test-status ${hasCompleted ? 'status-completed' : 'status-available'}">
+                                    ${hasCompleted ? `Completed (${Math.round(bestScore)}%)` : 'Ready to Start - Free for All'}
+                                </span>
+                            </div>
+                            ${hasCompleted ? `
+                                <div class="test-score-display">
+                                    <div class="test-score">${Math.round(bestScore)}%</div>
+                                    <div class="test-score-label">Best Score</div>
+                                    <div class="test-attempts">${freeTestAttempts.length} attempt${freeTestAttempts.length > 1 ? 's' : ''}</div>
+                                </div>
+                            ` : ''}
+                        </div>
+                        <div class="test-details">
+                            <div class="test-detail">
+                                <span class="detail-label">Questions:</span>
+                                <span class="detail-value">14 questions</span>
+                            </div>
+                            <div class="test-detail">
+                                <span class="detail-label">Time Limit:</span>
+                                <span class="detail-value">~20 minutes</span>
+                            </div>
+                            <div class="test-detail">
+                                <span class="detail-label">Scholarship Opportunity:</span>
+                                <span class="detail-value text-success">
+                                    <i class="fas fa-star"></i> Score 40%+ for 30-50% discount
+                                </span>
+                            </div>
+                            ${hasCompleted && latestAttempt ? `
+                                <div class="test-detail">
+                                    <span class="detail-label">Last Completed:</span>
+                                    <span class="detail-value">${formatDate(latestAttempt.completed_at)}</span>
+                                </div>
+                            ` : ''}
+                        </div>
+                        <div class="progress-bar-mini">
+                            <div class="progress-fill-mini" style="width: ${hasCompleted ? 100 : 0}%"></div>
+                        </div>
+                        <div class="test-actions">
+                            ${hasCompleted ? `
+                                <button class="btn btn-test-action btn-review" onclick="viewFreeTestResults()">
+                                    <i class="fas fa-chart-line me-1"></i>Review Results
+                                </button>
+                                <button class="btn btn-test-action btn-retake" onclick="navigateToFreeTest()">
+                                    <i class="fas fa-redo me-1"></i>Retake
+                                </button>
+                            ` : `
+                                <button class="btn btn-test-action btn-start" onclick="navigateToFreeTest()">
+                                    <i class="fas fa-play me-1"></i>Start Free Test
+                                </button>
+                            `}
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            freeTestContainer.innerHTML = cardHTML;
+        }
+
+        // ========== NEW FUNCTION: View Free Test Results ==========
+        async function viewFreeTestResults() {
+            try {
+                const token = localStorage.getItem('authToken');
+                if (!token) {
+                    showNotification('Please sign in to view results', 'error');
+                    return;
+                }
+
+                // Find the free test attempt (14 questions)
+                const freeTestAttempt = userTestAttempts.find(attempt => 
+                    attempt.total_questions === 14
+                );
+
+                if (freeTestAttempt) {
+                    sessionStorage.setItem('freeTestResults', JSON.stringify(freeTestAttempt));
+                    window.location.href = 'free-test-results.html';
+                } else {
+                    showNotification('No free test results found', 'error');
+                }
+            } catch (error) {
+                console.error('Error loading free test results:', error);
+                showNotification('Failed to load results', 'error');
+            }
+        }
+
         function getUserPackage(userData) {
             if (!userData || !userData.subscriptionStatus) {
                 return 'free';
             }
             
-            // Priority 1: Check subscription_package field (NEW - from payments)
             if (userData.subscriptionPackage) {
                 const pkg = userData.subscriptionPackage.toLowerCase();
                 
@@ -1050,7 +1180,6 @@
                 }
             }
             
-            // Priority 2: Check subscription_plan field (OLD - legacy)
             if (userData.subscriptionPlan) {
                 const plan = userData.subscriptionPlan.toLowerCase();
                 
@@ -1065,10 +1194,9 @@
                 }
             }
             
-            // Priority 3: Legacy check - ONLY if no package specified
             if ((userData.subscriptionStatus === 'premium' || userData.subscriptionStatus === 'active') 
                 && !userData.subscriptionPackage && !userData.subscriptionPlan) {
-                return 'complete'; // Legacy users without package = complete access
+                return 'complete';
             }
             
             return 'free';
@@ -1086,27 +1214,22 @@
         }
 
         function canAccessTest(testId, userPackage, purchasedTests = []) {
-            // Check if test was individually purchased
             if (purchasedTests && purchasedTests.includes(testId)) {
                 return true;
             }
             
-            // NO free tests in the main 10-test series
             if (!userPackage || userPackage === 'free' || userPackage === 'inactive' || userPackage === 'expired') {
                 return false;
             }
             
-            // Foundation package: Tests 1-5
             if (userPackage === 'foundation' || userPackage === 'tests-1-5') {
                 return testId >= 1 && testId <= 5;
             }
             
-            // Advanced package: Tests 6-10
             if (userPackage === 'advanced' || userPackage === 'tests-6-10') {
                 return testId >= 6 && testId <= 10;
             }
             
-            // Complete package OR legacy premium: All tests 1-10
             if (userPackage === 'complete' || userPackage === 'premium' || userPackage === 'premium-12') {
                 return testId >= 1 && testId <= 10;
             }
@@ -1139,34 +1262,19 @@
                 if (response.ok) {
                     const userData = await response.json();
                     
-                    console.log('=== USER DATA FROM API ===');
-                    console.log('Full userData:', userData);
-                    console.log('subscriptionStatus:', userData.subscriptionStatus);
-                    console.log('subscriptionPackage:', userData.subscriptionPackage);
-                    console.log('subscriptionPlan:', userData.subscriptionPlan);
-                    console.log('purchasedTests:', userData.purchasedTests);
-                    console.log('==========================');
-                    
                     const subscriptionStatus = userData.subscriptionStatus || 'inactive';
                     const packageType = getUserPackage(userData);
                     const isPaid = subscriptionStatus === 'premium' || subscriptionStatus === 'active';
                     
-                    // Get individually purchased tests
                     userPurchasedTests = userData.purchasedTests || [];
                     
-                    console.log('📦 Detected package type:', packageType);
-                    console.log('💰 isPaid:', isPaid);
-                    console.log('🎯 Purchased tests:', userPurchasedTests);
-                    
-                    // Check if subscription has expired
                     let isExpired = false;
                     if (userData.subscriptionExpiresAt) {
                         const expirationDate = new Date(userData.subscriptionExpiresAt);
                         isExpired = expirationDate < new Date();
                     }
                     
-                    // Determine accessible tests based on package + individual purchases
-                    let accessibleTests = [...userPurchasedTests]; // Start with purchased tests
+                    let accessibleTests = [...userPurchasedTests];
                     
                     if (isPaid && !isExpired) {
                         if (packageType === 'foundation') {
@@ -1214,11 +1322,6 @@
         function showFreeTestPromoIfNeeded() {
             const userPackage = getUserPackage(currentUser);
             
-            console.log('=== FREE TEST PROMO CHECK ===');
-            console.log('User package:', userPackage);
-            console.log('Should show promo:', !userPackage || userPackage === 'free' || userPackage === 'inactive');
-            
-            // Only show for free/non-paying users
             if (!userPackage || userPackage === 'free' || userPackage === 'inactive') {
                 const promoContainer = document.getElementById('freeTestPromo');
                 
@@ -1244,8 +1347,6 @@
                         </div>
                     `;
                     
-                    console.log('✅ Free test promo banner added to DOM');
-                    
                     try {
                         gtag('event', 'free_test_promo_shown', {
                             'event_category': 'dashboard',
@@ -1255,24 +1356,7 @@
                     } catch (error) {
                         console.error('GA tracking error:', error);
                     }
-                } else {
-                    console.error('❌ freeTestPromo container NOT FOUND in DOM');
                 }
-            } else {
-                console.log('ℹ️ User has package:', userPackage, '- not showing free test promo');
-            }
-        }
-
-        function trackFreeTestClick(event) {
-            try {
-                gtag('event', 'free_test_button_clicked', {
-                    'event_category': 'dashboard',
-                    'event_label': 'start_free_test_from_banner',
-                    'page_location': window.location.href
-                });
-                console.log('✓ Free test button clicked - navigating to free-test.html');
-            } catch (error) {
-                console.error('GA tracking error:', error);
             }
         }
 
@@ -1448,10 +1532,14 @@
             
             for (let testId = 1; testId <= 10; testId++) {
                 const status = testStatuses[testId] || { hasContent: false, questionCount: 0, status: 'empty' };
-                const userAttempts = userTestAttempts.filter(attempt => attempt.test_id === testId);
+                
+                // ← MODIFIED: Only include attempts with 42 questions (premium tests)
+                const userAttempts = userTestAttempts.filter(attempt => 
+                    attempt.test_id === testId && attempt.total_questions !== 14
+                );
+                
                 const hasCompleted = userAttempts.length > 0;
                 
-                // Check access including individually purchased tests
                 const canAccess = canAccessTest(testId, userPackage, purchasedTests);
                 const isPurchasedIndividually = purchasedTests.includes(testId);
                 
@@ -1511,7 +1599,6 @@
                     let actionButtons = '';
                     
                     if (!canAccess) {
-                        // Show both "Buy This Test" and package upgrade options
                         let upgradeText = '';
                         if (testId >= 1 && testId <= 5) {
                             upgradeText = userPackage === 'advanced' ? 'Upgrade to Complete' : 'Get Foundation Package';
@@ -1554,7 +1641,6 @@
 
                     const progress = hasCompleted ? 100 : 0;
                     
-                    // Show purchase badge if individually purchased
                     const purchaseBadge = isPurchasedIndividually && !hasCompleted ? 
                         `<span class="badge bg-warning text-dark ms-2" style="font-size: 0.7rem;"><i class="fas fa-check me-1"></i>Purchased</span>` : '';
                     
@@ -1614,11 +1700,9 @@
             console.log(`Rendered tests with package-based access control`);
         }
 
-        // ========== SINGLE TEST PURCHASE FUNCTION ==========
         function buySingleTest(testId) {
             console.log('🛒 Buy single test clicked:', testId);
             
-            // Check if user is logged in
             if (!currentUser) {
                 showNotification('Please sign in to purchase a test', 'info');
                 localStorage.setItem('pendingSingleTestPurchase', testId);
@@ -1626,7 +1710,6 @@
                 return;
             }
             
-            // Track the click
             try {
                 gtag('event', 'single_test_purchase_clicked', {
                     'event_category': 'payment',
@@ -1637,16 +1720,13 @@
                 console.error('GA error:', error);
             }
             
-            // Store purchase details for payment page
             localStorage.setItem('selectedPackage', 'single-test');
             localStorage.setItem('selectedTestId', testId);
-            localStorage.setItem('selectedCurrency', 'GBP'); // Default to GBP
-            localStorage.setItem('selectedAmount', 1900); // INR amount
+            localStorage.setItem('selectedCurrency', 'GBP');
+            localStorage.setItem('selectedAmount', 1900);
             
-            // Clear any package-level coupon (single test might have different coupon rules)
             localStorage.removeItem('appliedCoupon');
             
-            // Navigate to payment page
             window.location.href = 'payment.html';
         }
 
@@ -1729,13 +1809,11 @@
             const nextTestId = Math.max(1, uniqueTests + 1);
             document.getElementById('nextGoal').textContent = nextTestId <= 10 ? `Test ${nextTestId}` : 'Complete!';
 
-            // Update package display
             const userPackage = getUserPackage(currentUser);
             const packageDisplay = document.getElementById('userPackageDisplay');
             if (packageDisplay) {
                 let displayText = getPackageDisplayName(userPackage);
                 
-                // Add purchased tests info if any
                 if (userPurchasedTests && userPurchasedTests.length > 0 && userPackage !== 'complete') {
                     displayText += ` + ${userPurchasedTests.length} individual test${userPurchasedTests.length > 1 ? 's' : ''}`;
                 }
@@ -1744,7 +1822,6 @@
                 packageDisplay.className = 'detail-value ' + (userPackage !== 'free' || userPurchasedTests.length > 0 ? 'text-success' : 'text-warning');
             }
 
-            // Update account status
             const accountStatus = document.getElementById('accountStatus');
             if (accountStatus) {
                 if (userPackage !== 'free' || (userPurchasedTests && userPurchasedTests.length > 0)) {
@@ -1876,13 +1953,16 @@
                 
                 const isGreatScore = score >= 85;
                 
+                // Determine if this is free test or premium test
+                const testName = attempt.total_questions === 14 ? 'Free Diagnostic Test' : `Practice Test ${attempt.test_id}`;
+                
                 activityHTML += `
                     <div class="activity-item">
                         <div class="activity-icon ${isGreatScore ? 'activity-improvement' : 'activity-completed'}">
                             <i class="fas fa-${isGreatScore ? 'star' : 'check'}"></i>
                         </div>
                         <div class="activity-info">
-                            <div class="activity-title">Completed Practice Test ${attempt.test_id}</div>
+                            <div class="activity-title">Completed ${testName}</div>
                             <div class="activity-time">${formatDate(attempt.completed_at)}</div>
                         </div>
                         <div class="activity-score">${Math.round(score)}%</div>
@@ -2033,7 +2113,6 @@
             }
         }
         
-        // Navigation functions
         function startTest(testNumber) {
             if (!currentUser) {
                 showNotification('Please sign in to access practice tests', 'info');
@@ -2189,7 +2268,6 @@
             }
         }, 300000);
         
-        // Navigate to free test with token backup
         function navigateToFreeTest() {
             console.log('=== FREE TEST NAVIGATION ===');
             
