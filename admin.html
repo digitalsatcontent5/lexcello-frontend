@@ -1002,6 +1002,10 @@
             <span class="nav-item-icon">📤</span>
             <span class="nav-item-text">Import Questions</span>
         </a>
+        <a class="nav-item" onclick="showTab('featured-tests')" data-tab="featured-tests">
+            <span class="nav-item-icon">⭐</span>
+            <span class="nav-item-text">Featured Tests</span>
+        </a>
         <a class="nav-item" onclick="showTab('article-management')" data-tab="article-management">
             <span class="nav-item-icon">📄</span>
             <span class="nav-item-text">Articles</span>
@@ -1659,6 +1663,112 @@
                         <p style="padding: 20px; text-align: center; color: #666;">Click "Refresh Teachers" to load teacher accounts</p>
                     </div>
                 </div>
+                <!-- Featured Tests Tab -->
+<div id="featured-tests" class="tab-content">
+    <h2>Featured Tests Management</h2>
+
+    <div style="display: flex; gap: 10px; margin-bottom: 25px; border-bottom: 2px solid #eee; padding-bottom: 10px;">
+        <button class="btn btn-primary" id="ft-tab-create" onclick="showFeaturedSubTab('create')">Create Test Entry</button>
+        <button class="btn btn-secondary" id="ft-tab-import" onclick="showFeaturedSubTab('import')">Import Questions</button>
+        <button class="btn btn-secondary" id="ft-tab-manage" onclick="showFeaturedSubTab('manage')">Manage Questions</button>
+    </div>
+
+    <!-- CREATE FEATURED TEST -->
+    <div id="ft-create" class="featured-sub-tab">
+        <div style="background: #e3f2fd; border-left: 4px solid #2196f3; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+            <h4 style="color: #1976d2; margin-bottom: 8px;">Create a new Featured Test entry</h4>
+            <p>Tests 11, 12, 13 entries have already been created (IDs 1, 2, 3). Use this form only for new featured tests.</p>
+        </div>
+
+        <div id="existing-featured-tests" style="margin-bottom: 25px;">
+            <h4>Existing Featured Tests:</h4>
+            <div id="featured-tests-list" style="margin-top: 10px;">
+                <button class="btn btn-primary btn-sm" onclick="loadFeaturedTestsList()">Load Existing Tests</button>
+            </div>
+        </div>
+
+        <form id="create-featured-test-form" onsubmit="submitCreateFeaturedTest(event)">
+            <div class="form-group">
+                <label for="ft-title">Title:</label>
+                <input type="text" id="ft-title" required placeholder="e.g., Featured Test 14">
+            </div>
+            <div class="form-group">
+                <label for="ft-description">Description:</label>
+                <input type="text" id="ft-description" placeholder="e.g., Four-option format matching the latest official LNAT standard.">
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="ft-difficulty">Difficulty:</label>
+                    <select id="ft-difficulty">
+                        <option value="Medium">Medium</option>
+                        <option value="Advanced" selected>Advanced</option>
+                        <option value="Expert">Expert</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="ft-number">Test Number:</label>
+                    <input type="number" id="ft-number" required placeholder="e.g., 14" min="11">
+                </div>
+            </div>
+            <button type="submit" class="btn btn-success">Create Featured Test</button>
+        </form>
+    </div>
+
+    <!-- IMPORT FEATURED QUESTIONS -->
+    <div id="ft-import" class="featured-sub-tab" style="display:none;">
+        <div style="background: #e3f2fd; border-left: 4px solid #2196f3; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+            <h4 style="color: #1976d2; margin-bottom: 10px;">📋 Excel Format for Featured Questions:</h4>
+            <p><strong>Columns (exact order):</strong></p>
+            <code style="background:#fff; padding:5px; border-radius:4px; font-size:12px; display:block; margin:10px 0; word-break:break-all;">
+                test_id | passage_title | passage_text | question_text | option_1 | option_2 | option_3 | option_4 | option_5 | correct_answer | explanation
+            </code>
+            <ul style="margin: 10px 0 0 20px;">
+                <li>Row 1 must be the exact column headers above</li>
+                <li><strong>test_id</strong> should be 11, 12, or 13 (maps to DB IDs 1, 2, 3)</li>
+                <li>correct_answer should be 1–4 (option_5 can be blank)</li>
+                <li>Upload <strong>lexcello_tests_11_12_13.xlsx</strong> directly — no changes needed</li>
+            </ul>
+        </div>
+
+        <div class="file-upload" id="ft-file-upload">
+            <p><strong>Drop Excel file here or click to browse</strong></p>
+            <p>Supported: .xlsx, .xls</p>
+            <input type="file" id="ft-file-input" accept=".xlsx,.xls" style="display:none;">
+        </div>
+
+        <div id="ft-import-preview" style="display:none; margin-top:20px;">
+            <h3>Import Preview</h3>
+            <div id="ft-file-info" style="background:#f8f9fa; padding:15px; border-radius:8px; margin-bottom:15px;"></div>
+            <div id="ft-import-data"></div>
+            <div style="margin-top:20px;">
+                <button class="btn btn-success" onclick="processFeaturedImport()">Import All Questions</button>
+                <button class="btn btn-secondary" onclick="cancelFeaturedImport()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MANAGE FEATURED QUESTIONS -->
+    <div id="ft-manage" class="featured-sub-tab" style="display:none;">
+        <div class="form-group">
+            <label for="ft-test-filter">Select Featured Test:</label>
+            <select id="ft-test-filter" onchange="loadFeaturedQuestions()">
+                <option value="">Select a test...</option>
+                <option value="1">Featured Test 11 (DB id=1)</option>
+                <option value="2">Featured Test 12 (DB id=2)</option>
+                <option value="3">Featured Test 13 (DB id=3)</option>
+            </select>
+        </div>
+
+        <div class="bulk-actions">
+            <h4>⚠️ Danger Zone</h4>
+            <button onclick="deleteAllFeaturedQuestions()" class="btn btn-danger btn-sm">Delete All Questions for Selected Test</button>
+        </div>
+
+        <div id="featured-questions-list" class="question-list">
+            <p style="padding:20px; text-align:center; color:#666;">Select a featured test to view questions...</p>
+        </div>
+    </div>
+</div>
                 <!-- Student Progress Tab -->
 <div id="student-progress" class="tab-content">
     <h2>Student Progress & Analytics</h2>
@@ -4201,6 +4311,294 @@ function exportFeedback() {
     a.click();
     
     showMessage(`✅ Exported ${filteredFeedback.length} feedback responses`, 'success');
+}
+        // ===== FEATURED TESTS ADMIN FUNCTIONS =====
+
+let ftImportData = null;
+
+const FEATURED_TEST_MAP = { 11: 1, 12: 2, 13: 3 };
+const FEATURED_DB_MAP = { 1: 11, 2: 12, 3: 13 };
+
+function showFeaturedSubTab(tabName) {
+    document.querySelectorAll('.featured-sub-tab').forEach(t => t.style.display = 'none');
+    document.getElementById('ft-' + tabName).style.display = 'block';
+    ['create', 'import', 'manage'].forEach(name => {
+        const btn = document.getElementById('ft-tab-' + name);
+        if (btn) btn.className = name === tabName ? 'btn btn-primary' : 'btn btn-secondary';
+    });
+}
+
+async function loadFeaturedTestsList() {
+    try {
+        const token = localStorage.getItem('authToken');
+        const response = await fetch(`${API_BASE}/api/featured-tests`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const data = await response.json();
+        const container = document.getElementById('featured-tests-list');
+        if (data.tests && data.tests.length > 0) {
+            container.innerHTML = data.tests.map(t => `
+                <div style="background:#f8f9fa; padding:12px; border-radius:8px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;">
+                    <div>
+                        <strong>Test ${t.test_number}</strong> — ${t.title}
+                        <span style="margin-left:10px; font-size:0.85em; color:#666;">DB id=${t.id} | ${t.difficulty} | ${t.status}</span>
+                    </div>
+                </div>
+            `).join('');
+        } else {
+            container.innerHTML = '<p style="color:#666;">No featured tests found.</p>';
+        }
+    } catch (error) {
+        showMessage('Error loading featured tests: ' + error.message, 'error');
+    }
+}
+
+async function submitCreateFeaturedTest(event) {
+    event.preventDefault();
+    if (!requireAuth()) return;
+    const payload = {
+        title: document.getElementById('ft-title').value.trim(),
+        description: document.getElementById('ft-description').value.trim(),
+        difficulty: document.getElementById('ft-difficulty').value,
+        testNumber: parseInt(document.getElementById('ft-number').value)
+    };
+    try {
+        const response = await fetch(`${API_BASE}/api/admin/featured-tests`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+        const result = await response.json();
+        if (response.ok) {
+            showMessage(`Featured Test created! DB id=${result.test.id}`, 'success');
+            document.getElementById('create-featured-test-form').reset();
+            loadFeaturedTestsList();
+        } else {
+            showMessage('Error: ' + result.error, 'error');
+        }
+    } catch (error) {
+        showMessage('Network error: ' + error.message, 'error');
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const ftUpload = document.getElementById('ft-file-upload');
+    const ftInput = document.getElementById('ft-file-input');
+    if (ftUpload && ftInput) {
+        ftUpload.addEventListener('click', () => ftInput.click());
+        ftUpload.addEventListener('dragover', (e) => { e.preventDefault(); ftUpload.classList.add('dragover'); });
+        ftUpload.addEventListener('dragleave', () => ftUpload.classList.remove('dragover'));
+        ftUpload.addEventListener('drop', (e) => {
+            e.preventDefault();
+            ftUpload.classList.remove('dragover');
+            if (e.dataTransfer.files.length > 0) handleFeaturedFileUpload(e.dataTransfer.files[0]);
+        });
+        ftInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) handleFeaturedFileUpload(e.target.files[0]);
+        });
+    }
+});
+
+async function handleFeaturedFileUpload(file) {
+    if (!requireAuth()) return;
+    if (!file.name.match(/\.(xlsx|xls)$/)) {
+        showMessage('Please select a valid Excel file (.xlsx or .xls)', 'error');
+        return;
+    }
+    showMessage('Reading Excel file...', 'success');
+    document.getElementById('ft-import-preview').style.display = 'none';
+    ftImportData = null;
+    try {
+        const data = await file.arrayBuffer();
+        if (!window.XLSX) {
+            const script = document.createElement('script');
+            script.src = 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
+            document.head.appendChild(script);
+            await new Promise((resolve, reject) => {
+                script.onload = resolve;
+                script.onerror = () => reject(new Error('Failed to load Excel library'));
+                setTimeout(() => reject(new Error('Timeout loading library')), 10000);
+            });
+        }
+        const workbook = window.XLSX.read(data, { type: 'array' });
+        const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+        const jsonData = window.XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+        if (jsonData.length < 2) { showMessage('Excel file appears empty', 'error'); return; }
+        parseFeaturedExcelData(jsonData, file.name);
+    } catch (error) {
+        showMessage('Error reading file: ' + error.message, 'error');
+    }
+}
+
+function parseFeaturedExcelData(jsonData, fileName) {
+    const headers = jsonData[0];
+    const dataRows = jsonData.slice(1);
+    const expectedHeaders = ['test_id', 'passage_title', 'passage_text', 'question_text', 'option_1', 'option_2', 'option_3', 'option_4', 'option_5', 'correct_answer', 'explanation'];
+    for (let i = 0; i < expectedHeaders.length; i++) {
+        const actual = headers[i]?.toString().toLowerCase().trim();
+        if (actual !== expectedHeaders[i].toLowerCase()) {
+            showMessage(`Column ${i+1} should be "${expectedHeaders[i]}" but found "${headers[i] || 'empty'}"`, 'error');
+            return;
+        }
+    }
+    const parsedQuestions = [];
+    const errors = [];
+    dataRows.forEach((row, index) => {
+        const rowNumber = index + 2;
+        if (!row.length || row.every(cell => !cell && cell !== 0)) return;
+        const testIdRaw = parseInt(row[0]);
+        const dbTestId = FEATURED_TEST_MAP[testIdRaw] || testIdRaw;
+        const question = {
+            testNumber: testIdRaw,
+            testId: dbTestId,
+            passageTitle: row[1]?.toString().trim() || '',
+            passageText: row[2]?.toString().trim() || '',
+            questionText: row[3]?.toString().trim() || '',
+            options: [row[4]?.toString().trim() || '', row[5]?.toString().trim() || '', row[6]?.toString().trim() || '', row[7]?.toString().trim() || ''],
+            correctAnswer: parseInt(row[9]),
+            explanation: row[10]?.toString().trim() || '',
+            questionOrder: index + 1
+        };
+        if (!FEATURED_TEST_MAP[testIdRaw] && ![1, 2, 3].includes(testIdRaw)) { errors.push(`Row ${rowNumber}: test_id ${testIdRaw} not recognised (use 11, 12, or 13)`); return; }
+        if (!question.passageTitle) { errors.push(`Row ${rowNumber}: Missing passage_title`); return; }
+        if (!question.passageText) { errors.push(`Row ${rowNumber}: Missing passage_text`); return; }
+        if (!question.questionText) { errors.push(`Row ${rowNumber}: Missing question_text`); return; }
+        if (question.options.slice(0, 4).some(o => !o)) { errors.push(`Row ${rowNumber}: Options A-D must all be filled`); return; }
+        if (!question.correctAnswer || ![1,2,3,4].includes(question.correctAnswer)) { errors.push(`Row ${rowNumber}: correct_answer must be 1–4`); return; }
+        if (!question.explanation) { errors.push(`Row ${rowNumber}: Missing explanation`); return; }
+        parsedQuestions.push(question);
+    });
+    ftImportData = parsedQuestions;
+    displayFeaturedImportPreview(parsedQuestions, errors, fileName);
+}
+
+function displayFeaturedImportPreview(questions, errors, fileName) {
+    document.getElementById('ft-import-preview').style.display = 'block';
+    const byTest = {};
+    questions.forEach(q => { byTest[q.testNumber] = (byTest[q.testNumber] || 0) + 1; });
+    const testSummary = Object.entries(byTest).map(([t, c]) => `Test ${t}: ${c} questions`).join(' | ');
+    document.getElementById('ft-file-info').innerHTML = `
+        <strong>File:</strong> ${fileName}<br>
+        <strong>Valid Questions:</strong> ${questions.length} (${testSummary})<br>
+        <strong>Errors:</strong> ${errors.length}
+        ${errors.length > 0 ? '<br><strong style="color:#e74c3c;">⚠️ Fix errors before importing</strong>' : ''}
+    `;
+    const previewDiv = document.getElementById('ft-import-data');
+    if (errors.length > 0) {
+        previewDiv.innerHTML = `<div style="background:#ffebee; padding:15px; border-radius:8px;"><h4 style="color:#c62828;">❌ Errors Found:</h4><ul style="margin:0; padding-left:20px;">${errors.map(e => `<li style="color:#c62828;">${e}</li>`).join('')}</ul></div>`;
+        return;
+    }
+    let tableHtml = '<div class="preview-table"><table><tr><th>Test</th><th>Passage Title</th><th>Question (Preview)</th><th>Correct</th></tr>';
+    questions.slice(0, 10).forEach(q => {
+        tableHtml += `<tr><td>Test ${q.testNumber} → DB id=${q.testId}</td><td>${q.passageTitle}</td><td>${q.questionText.substring(0, 80)}...</td><td>${['A','B','C','D'][q.correctAnswer - 1]}</td></tr>`;
+    });
+    if (questions.length > 10) tableHtml += `<tr><td colspan="4" style="text-align:center; font-style:italic; color:#666;">...and ${questions.length - 10} more</td></tr>`;
+    tableHtml += '</table></div>';
+    previewDiv.innerHTML = tableHtml;
+}
+
+async function processFeaturedImport() {
+    if (!requireAuth()) return;
+    if (!ftImportData || ftImportData.length === 0) { showMessage('No valid questions to import', 'error'); return; }
+    showMessage(`Importing ${ftImportData.length} questions...`, 'success');
+    const byTestId = {};
+    ftImportData.forEach(q => { if (!byTestId[q.testId]) byTestId[q.testId] = []; byTestId[q.testId].push(q); });
+    try {
+        let totalImported = 0;
+        for (const [testId, questions] of Object.entries(byTestId)) {
+            const payload = {
+                testId: parseInt(testId),
+                questions: questions.map(q => ({
+                    passageTitle: q.passageTitle,
+                    passageText: q.passageText,
+                    questionText: q.questionText,
+                    options: q.options.map((text, i) => ({ label: ['A','B','C','D'][i], text: text })),
+                    correctAnswer: q.correctAnswer,
+                    explanation: q.explanation,
+                    questionOrder: q.questionOrder
+                }))
+            };
+            const response = await fetch(`${API_BASE}/api/admin/featured-tests/add-questions`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            const result = await response.json();
+            if (response.ok) {
+                totalImported += questions.length;
+                showMessage(`Imported ${questions.length} questions for Featured Test ${FEATURED_DB_MAP[testId] || testId}`, 'success');
+            } else {
+                throw new Error(`Test DB id ${testId}: ${result.error}`);
+            }
+        }
+        showMessage(`✅ Successfully imported all ${totalImported} featured questions!`, 'success');
+        cancelFeaturedImport();
+    } catch (error) {
+        showMessage('Import failed: ' + error.message, 'error');
+    }
+}
+
+function cancelFeaturedImport() {
+    document.getElementById('ft-import-preview').style.display = 'none';
+    document.getElementById('ft-file-input').value = '';
+    ftImportData = null;
+}
+
+async function loadFeaturedQuestions() {
+    const testId = document.getElementById('ft-test-filter').value;
+    const listContainer = document.getElementById('featured-questions-list');
+    if (!testId) { listContainer.innerHTML = '<p style="padding:20px; text-align:center; color:#666;">Select a featured test.</p>'; return; }
+    listContainer.innerHTML = '<p style="padding:20px; text-align:center; color:#666;">Loading...</p>';
+    try {
+        const token = localStorage.getItem('authToken');
+        const response = await fetch(`${API_BASE}/api/featured-tests/${testId}/questions`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const data = await response.json();
+        if (data.questions && data.questions.length > 0) {
+            listContainer.innerHTML = data.questions.map((q, i) => `
+                <div class="question-item">
+                    <div class="question-info">
+                        <div class="question-preview">Q${i+1}: ${q.question_text.substring(0, 100)}...</div>
+                        <div class="question-meta">Passage: ${q.passage_title || 'N/A'} | Correct: ${['A','B','C','D'][q.correct_answer - 1]} | ID: ${q.id}</div>
+                    </div>
+                    <button onclick="deleteFeaturedQuestion(${q.id})" class="btn btn-danger btn-sm">Delete</button>
+                </div>
+            `).join('');
+        } else {
+            listContainer.innerHTML = '<p style="padding:20px; text-align:center; color:#666;">No questions found for this featured test.</p>';
+        }
+    } catch (error) {
+        listContainer.innerHTML = `<p style="padding:20px; text-align:center; color:#e74c3c;">Error: ${error.message}</p>`;
+    }
+}
+
+async function deleteFeaturedQuestion(questionId) {
+    if (!requireAuth()) return;
+    if (!confirm('Delete this featured question? This cannot be undone.')) return;
+    try {
+        const response = await fetch(`${API_BASE}/api/admin/featured-questions/${questionId}`, { method: 'DELETE' });
+        const result = await response.json();
+        if (response.ok) { showMessage('Question deleted!', 'success'); loadFeaturedQuestions(); }
+        else showMessage('Error: ' + result.error, 'error');
+    } catch (error) {
+        showMessage('Network error: ' + error.message, 'error');
+    }
+}
+
+async function deleteAllFeaturedQuestions() {
+    if (!requireAuth()) return;
+    const testId = document.getElementById('ft-test-filter').value;
+    if (!testId) { showMessage('Select a featured test first', 'error'); return; }
+    if (!confirm(`Delete ALL questions for Featured Test ${FEATURED_DB_MAP[parseInt(testId)] || testId}? Cannot be undone.`)) return;
+    try {
+        const response = await fetch(`${API_BASE}/api/admin/featured-tests/${testId}/questions`, { method: 'DELETE' });
+        const result = await response.json();
+        if (response.ok) { showMessage(result.message || 'All questions deleted!', 'success'); loadFeaturedQuestions(); }
+        else showMessage('Error: ' + result.error, 'error');
+    } catch (error) {
+        showMessage('Network error: ' + error.message, 'error');
+    }
 }
     // Initialize sidebar on page load
 document.addEventListener('DOMContentLoaded', () => {
