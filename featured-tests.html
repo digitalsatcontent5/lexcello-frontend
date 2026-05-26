@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-6EV4Y6N8M5"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-6EV4Y6N8M5');
+    </script>
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Featured Tests - Lexcello LNAT Practice</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #1a365d;
+            --secondary-color: #2b6cb0;
+            --accent-gold: #d69e2e;
+            --text-dark: #1a202c;
+            --text-light: #4a5568;
+            --bg-light: #f7fafc;
+            --success-color: #48bb78;
+            --warning-color: #ed8936;
+            --danger-color: #e53e3e;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background: var(--bg-light);
+            padding-top: 80px;
+        }
+
+        /* Navbar */
+        .navbar {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 1rem 0;
+        }
+
+        .navbar-brand {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--primary-color) !important;
+            letter-spacing: -1px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-avatar {
+            width: 40px; height: 40px;
+            background: var(--accent-gold);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        .user-name { font-weight: 600; color: var(--text-dark); }
+
+        /* Page Header */
+        .page-header {
+            background: linear-gradient(135deg, #7b5000, var(--accent-gold));
+            color: white;
+            padding: 60px 0 40px;
+            margin-bottom: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0,0) rotate(0deg); }
+            50% { transform: translate(-10px,-10px) rotate(5deg); }
+        }
+
+        .page-header-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .page-header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .page-header p {
+            font-size: 1.15rem;
+            opacity: 0.9;
+            max-width: 600px;
+        }
+
+        .featured-pill {
+            display: inline-block;
+            background: rgba(255,255,255,0.25);
+            padding: 6px 18px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        /* Info Banner */
+        .info-banner {
+            background: white;
+            border-left: 5px solid var(--accent-gold);
+            border-radius: 12px;
+            padding: 20px 25px;
+            margin-bottom: 35px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.06);
+        }
+
+        .info-banner p { margin: 0; color: var(--text-dark); font-size: 1rem; }
+        .info-banner strong { color: var(--primary-color); }
+
+        /* Tests Grid */
+        .tests-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            gap: 25px;
+            margin-bottom: 50px;
+        }
+
+        /* Test Card */
+        .test-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            border-left: 5px solid var(--accent-gold);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .test-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-gold), #b7791f);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .test-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        }
+
+        .test-card:hover::before { transform: scaleX(1); }
+
+        .test-card.completed { border-left-color: var(--success-color); }
+        .test-card.coming-soon { border-left-color: #e2e8f0; opacity: 0.75; }
+
+        .card-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .test-number-badge {
+            width: 50px; height: 50px;
+            background: linear-gradient(135deg, var(--accent-gold), #b7791f);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .test-number-badge.completed {
+            background: linear-gradient(135deg, var(--success-color), #38a169);
+        }
+
+        .test-number-badge.locked {
+            background: #cbd5e0;
+        }
+
+        .test-meta { flex: 1; margin-left: 15px; }
+
+        .test-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin: 0 0 8px 0;
+        }
+
+        .test-status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 12px;
+            border-radius: 12px;
+            font-size: 0.82rem;
+            font-weight: 600;
+        }
+
+        .badge-available {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .badge-completed {
+            background: #c6f6d5;
+            color: #22543d;
+        }
+
+        .badge-coming-soon {
+            background: #e2e8f0;
+            color: #718096;
+        }
+
+        .score-display {
+            text-align: right;
+        }
+
+        .score-number {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--success-color);
+            line-height: 1;
+        }
+
+        .score-sub {
+            font-size: 0.75rem;
+            color: var(--text-light);
+        }
+
+        /* Details */
+        .test-details { margin: 20px 0; }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            font-size: 0.9rem;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .detail-row:last-child { border-bottom: none; }
+        .detail-label { color: var(--text-light); }
+        .detail-value { font-weight: 600; color: var(--text-dark); }
+
+        /* Progress bar */
+        .progress-mini {
+            height: 6px;
+            background: #e2e8f0;
+            border-radius: 3px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+
+        .progress-mini-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-gold), #b7791f);
+            border-radius: 3px;
+            transition: width 0.8s ease;
+        }
+
+        .progress-mini-fill.completed {
+            background: linear-gradient(90deg, var(--success-color), #38a169);
+        }
+
+        /* Action buttons */
+        .card-actions {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-card {
+            flex: 1;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+            text-align: center;
+        }
+
+        .btn-start {
+            background: linear-gradient(135deg, var(--accent-gold), #b7791f);
+            color: white;
+        }
+
+        .btn-start:hover { background: linear-gradient(135deg, #b7791f, #975a16); transform: translateY(-1px); }
+
+        .btn-review {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .btn-review:hover { background: #38a169; }
+
+        .btn-retake {
+            background: var(--warning-color);
+            color: white;
+        }
+
+        .btn-retake:hover { background: #dd6b20; }
+
+        .btn-coming-soon {
+            background: #e2e8f0;
+            color: #718096;
+            cursor: not-allowed;
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+
+        .empty-icon {
+            font-size: 3rem;
+            color: var(--accent-gold);
+            margin-bottom: 20px;
+        }
+
+        /* Loading */
+        .loading-state {
+            text-align: center;
+            padding: 60px;
+        }
+
+        /* Back link */
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 500;
+            margin-bottom: 25px;
+            transition: color 0.3s ease;
+        }
+
+        .back-link:hover { color: var(--primary-color); }
+
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 20px; right: 20px;
+            padding: 15px 20px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            z-index: 9999;
+            opacity: 0;
+            transform: translateX(300px);
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        }
+
+        .notification.show { opacity: 1; transform: translateX(0); }
+        .notification.success { background: #28a745; }
+        .notification.error { background: #dc3545; }
+        .notification.info { background: #17a2b8; }
+
+        /* Footer */
+        .footer {
+            background: white;
+            padding: 30px 0;
+            border-top: 1px solid #e2e8f0;
+            text-align: center;
+        }
+
+        .footer a { color: var(--text-light); text-decoration: none; margin: 0 10px; }
+        .footer a:hover { color: var(--primary-color); }
+
+        @media (max-width: 768px) {
+            .tests-grid { grid-template-columns: 1fr; }
+            .page-header h1 { font-size: 2rem; }
+            .card-actions { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">Lexcello</a>
+            <div class="user-info ms-auto">
+                <div class="user-avatar" id="userAvatar">U</div>
+                <span class="user-name" id="userName">Student</span>
+                <div class="dropdown">
+                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                        <i class="fas fa-cog"></i>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="dashboard.html"><i class="fas fa-tachometer-alt me-2"></i>Dashboard</a></li>
+                        <li><a class="dropdown-item" href="profile.html"><i class="fas fa-user me-2"></i>Profile</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#" onclick="signOut()"><i class="fas fa-sign-out-alt me-2"></i>Sign Out</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <div class="page-header-content">
+                <div class="featured-pill">
+                    <i class="fas fa-star me-2"></i>EXCLUSIVE ACCESS
+                </div>
+                <h1><i class="fas fa-star me-2"></i>Featured Practice Tests</h1>
+                <p>Premium 4-option tests designed with authentic LNAT format. Available exclusively for subscribers.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="container">
+
+        <a href="dashboard.html" class="back-link">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </a>
+
+        <!-- Info Banner -->
+        <div class="info-banner">
+            <p>
+                <i class="fas fa-info-circle me-2" style="color: var(--accent-gold);"></i>
+                <strong>Featured Tests</strong> are a new series with <strong>4 answer choices per question</strong> — matching the latest official LNAT format exactly. Each test contains 42 questions and runs for 95 minutes.
+            </p>
+        </div>
+
+        <!-- Tests Container -->
+        <div id="testsContainer" class="loading-state">
+            <div class="spinner-border text-warning" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <div class="mt-3 text-muted">Loading featured tests...</div>
+        </div>
+
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <a href="dashboard.html">Dashboard</a>
+        <a href="lnat-practice-tests.html">Practice Tests</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="contact.html">Contact</a>
+        <p class="mt-3 mb-0 text-muted">&copy; 2025 Lexcello. All rights reserved.</p>
+    </footer>
+
+    <div id="notification" class="notification"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        const API_BASE_URL = 'https://lexcello-backend.onrender.com';
+        let currentUser = null;
+        let userTestAttempts = [];
+
+        // Featured test metadata (shown even if DB returns empty)
+        const FEATURED_TEST_META = {
+            11: { title: 'Featured Test 11', description: 'Four-option format matching the latest official LNAT standard.', difficulty: 'Advanced' },
+            12: { title: 'Featured Test 12', description: 'Complex argumentative passages with refined answer choices.', difficulty: 'Advanced' },
+            13: { title: 'Featured Test 13', description: 'Challenging reasoning passages for top-score preparation.', difficulty: 'Expert' }
+        };
+
+        document.addEventListener('DOMContentLoaded', async function () {
+            await checkAuth();
+            await loadUserAttempts();
+            await loadFeaturedTests();
+        });
+
+        async function checkAuth() {
+            const token = localStorage.getItem('authToken');
+            if (!token) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/auth/profile`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (!response.ok) {
+                    localStorage.removeItem('authToken');
+                    window.location.href = 'login.html';
+                    return;
+                }
+
+                currentUser = await response.json();
+
+                // Require premium
+                if (currentUser.subscriptionStatus !== 'premium' && currentUser.subscriptionStatus !== 'active') {
+                    window.location.href = 'pricing.html';
+                    return;
+                }
+
+                const name = currentUser.firstName || currentUser.name || currentUser.email.split('@')[0];
+                document.getElementById('userName').textContent = name;
+                document.getElementById('userAvatar').textContent = name.charAt(0).toUpperCase();
+
+            } catch (error) {
+                console.error('Auth error:', error);
+                window.location.href = 'login.html';
+            }
+        }
+
+        async function loadUserAttempts() {
+            try {
+                const token = localStorage.getItem('authToken');
+                const response = await fetch(`${API_BASE_URL}/api/user/test-history`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    userTestAttempts = data.history || [];
+                }
+            } catch (error) {
+                console.log('Could not load test history');
+            }
+        }
+
+        async function loadFeaturedTests() {
+            try {
+                const token = localStorage.getItem('authToken');
+                const response = await fetch(`${API_BASE_URL}/api/featured-tests`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (!response.ok) throw new Error('Failed to load featured tests');
+
+                const data = await response.json();
+                renderTests(data.tests || []);
+
+            } catch (error) {
+                console.error('Error loading featured tests:', error);
+                renderTests([]);
+            }
+        }
+
+        function renderTests(dbTests) {
+            const container = document.getElementById('testsContainer');
+
+            // Merge DB tests with our metadata for tests 11, 12, 13
+            const testIds = [11, 12, 13];
+            const dbTestMap = {};
+            dbTests.forEach(t => { dbTestMap[t.test_number] = t; });
+
+            let html = '<div class="tests-grid">';
+
+            testIds.forEach(testNum => {
+                const dbTest = dbTestMap[testNum];
+                const meta = FEATURED_TEST_META[testNum];
+                const hasContent = !!dbTest;
+                const testId = dbTest ? dbTest.id : null;
+
+                // Find attempts for this featured test
+                // Featured attempts are stored separately — check sessionStorage for now
+                // In future this can be wired to a featured-specific history endpoint
+                const attempts = getFeaturedAttempts(testNum);
+                const hasCompleted = attempts.length > 0;
+                const bestScore = hasCompleted
+                    ? Math.max(...attempts.map(a => a.percentage || 0))
+                    : 0;
+
+                const cardClass = hasCompleted ? 'completed' : (!hasContent ? 'coming-soon' : '');
+
+                let statusBadge = '';
+                if (!hasContent) {
+                    statusBadge = `<span class="test-status-badge badge-coming-soon"><i class="fas fa-clock me-1"></i>Coming Soon</span>`;
+                } else if (hasCompleted) {
+                    statusBadge = `<span class="test-status-badge badge-completed"><i class="fas fa-check-circle me-1"></i>Completed (${Math.round(bestScore)}%)</span>`;
+                } else {
+                    statusBadge = `<span class="test-status-badge badge-available"><i class="fas fa-star me-1"></i>Ready to Start</span>`;
+                }
+
+                let actionButtons = '';
+                if (!hasContent) {
+                    actionButtons = `<button class="btn-card btn-coming-soon" disabled><i class="fas fa-clock me-2"></i>Coming Soon</button>`;
+                } else if (hasCompleted) {
+                    actionButtons = `
+                        <button class="btn-card btn-review" onclick="viewResults(${testNum})">
+                            <i class="fas fa-chart-line me-1"></i>Review
+                        </button>
+                        <button class="btn-card btn-retake" onclick="startTest(${testId}, ${testNum})">
+                            <i class="fas fa-redo me-1"></i>Retake
+                        </button>
+                    `;
+                } else {
+                    actionButtons = `
+                        <button class="btn-card btn-start" onclick="startTest(${testId}, ${testNum})">
+                            <i class="fas fa-play me-2"></i>Start Test
+                        </button>
+                    `;
+                }
+
+                html += `
+                    <div class="test-card ${cardClass}">
+                        <div class="card-header-row">
+                            <div class="test-number-badge ${hasCompleted ? 'completed' : (!hasContent ? 'locked' : '')}">
+                                ${testNum}
+                            </div>
+                            <div class="test-meta">
+                                <h4 class="test-title">${meta.title}</h4>
+                                ${statusBadge}
+                            </div>
+                            ${hasCompleted ? `
+                                <div class="score-display">
+                                    <div class="score-number">${Math.round(bestScore)}%</div>
+                                    <div class="score-sub">Best Score</div>
+                                </div>
+                            ` : ''}
+                        </div>
+
+                        <p style="color: var(--text-light); font-size: 0.95rem; margin: 0 0 15px 0;">${meta.description}</p>
+
+                        <div class="test-details">
+                            <div class="detail-row">
+                                <span class="detail-label">Questions:</span>
+                                <span class="detail-value">42 questions</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Time Limit:</span>
+                                <span class="detail-value">95 minutes</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Format:</span>
+                                <span class="detail-value">4 options (A/B/C/D)</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Difficulty:</span>
+                                <span class="detail-value">${meta.difficulty}</span>
+                            </div>
+                            ${hasCompleted ? `
+                                <div class="detail-row">
+                                    <span class="detail-label">Attempts:</span>
+                                    <span class="detail-value">${attempts.length}</span>
+                                </div>
+                            ` : ''}
+                        </div>
+
+                        <div class="progress-mini">
+                            <div class="progress-mini-fill ${hasCompleted ? 'completed' : ''}"
+                                 style="width: ${hasCompleted ? 100 : 0}%"></div>
+                        </div>
+
+                        <div class="card-actions">${actionButtons}</div>
+                    </div>
+                `;
+            });
+
+            html += '</div>';
+            container.innerHTML = html;
+            container.className = '';
+        }
+
+        function getFeaturedAttempts(testNum) {
+            // Check sessionStorage for any recent results
+            try {
+                const recent = sessionStorage.getItem('featuredTestResults');
+                if (recent) {
+                    const parsed = JSON.parse(recent);
+                    if (parsed.testId === testNum) {
+                        return [{ percentage: parsed.percentage || 0 }];
+                    }
+                }
+            } catch (e) {}
+            return [];
+        }
+
+        function startTest(testId, testNum) {
+            if (!testId) {
+                showNotification('This test is not yet available', 'info');
+                return;
+            }
+
+            if (confirm(`Ready to start Featured Test ${testNum}?\n\nThis test must be completed in one session — 42 questions in 95 minutes.`)) {
+                try {
+                    gtag('event', 'featured_test_started', {
+                        'event_category': 'featured_tests',
+                        'event_label': `featured_test_${testNum}`,
+                        'value': testNum
+                    });
+                } catch (e) {}
+
+                window.location.href = `featured-test.html?test=${testId}`;
+            }
+        }
+
+        function viewResults(testNum) {
+            const recent = sessionStorage.getItem('featuredTestResults');
+            if (recent) {
+                window.location.href = `featured-test-results.html?test=${testNum}`;
+            } else {
+                showNotification('No recent results found. Please retake the test.', 'info');
+            }
+        }
+
+        function signOut() {
+            if (confirm('Are you sure you want to sign out?')) {
+                localStorage.removeItem('authToken');
+                sessionStorage.clear();
+                window.location.href = 'index.html';
+            }
+        }
+
+        function showNotification(message, type = 'info') {
+            const n = document.getElementById('notification');
+            n.textContent = message;
+            n.className = `notification ${type}`;
+            n.classList.add('show');
+            setTimeout(() => n.classList.remove('show'), 3000);
+        }
+    </script>
+</body>
+</html>
