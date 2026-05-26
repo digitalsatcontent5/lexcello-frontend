@@ -869,7 +869,35 @@
                     
                     <div id="freeTestContainer"></div>
                 </div>
-
+<!-- Featured Tests Section -->
+<div class="content-section" id="featuredTestsSection" style="display:none;">
+    <div class="section-header">
+        <h2 class="section-title">
+            <i class="fas fa-star me-2" style="color:#d69e2e;"></i>Featured Tests
+            <span style="background:linear-gradient(135deg,#d69e2e,#b7791f);color:white;font-size:0.7rem;padding:3px 10px;border-radius:12px;font-weight:700;margin-left:10px;vertical-align:middle;">NEW</span>
+        </h2>
+        <div class="section-actions">
+            <a href="featured-tests.html" class="btn btn-outline-warning btn-section-action">
+                <i class="fas fa-star me-1"></i>View All Featured Tests
+            </a>
+        </div>
+    </div>
+    <div style="background:linear-gradient(135deg,#fffbeb,#fef3c7);border:2px solid #d69e2e;border-radius:12px;padding:25px;">
+        <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+            <div>
+                <h5 style="color:#92400e;margin-bottom:8px;">
+                    <i class="fas fa-star me-2"></i>Featured Tests 11, 12 &amp; 13 — Now Available!
+                </h5>
+                <p style="color:#78350f;margin:0;font-size:0.95rem;">
+                    New 4-option format matching the latest official LNAT standard. 42 questions · 95 minutes · Detailed explanations.
+                </p>
+            </div>
+            <a href="featured-tests.html" class="btn" style="background:linear-gradient(135deg,#d69e2e,#b7791f);color:white;font-weight:700;padding:12px 25px;border-radius:8px;white-space:nowrap;">
+                <i class="fas fa-play me-2"></i>Start Featured Tests
+            </a>
+        </div>
+    </div>
+</div>
                 <!-- Practice Tests Section -->
                 <div class="content-section">
                     <div class="section-header">
@@ -1034,6 +1062,7 @@
                 updateRecentActivity();
                 generateAchievements();
                 showFreeTestPromoIfNeeded();
+                showFeaturedTestsSection();
             } catch (error) {
                 console.error('Dashboard initialization error:', error);
                 showLoadingError();
@@ -2267,7 +2296,13 @@
                 console.log('Auto-refresh failed:', error);
             }
         }, 300000);
-        
+        function showFeaturedTestsSection() {
+    const userPackage = getUserPackage(currentUser);
+    if (userPackage && userPackage !== 'free') {
+        const section = document.getElementById('featuredTestsSection');
+        if (section) section.style.display = 'block';
+    }
+}
         function navigateToFreeTest() {
             console.log('=== FREE TEST NAVIGATION ===');
             
