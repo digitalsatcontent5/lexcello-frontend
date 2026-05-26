@@ -1564,16 +1564,14 @@
             const testsWithContent = Object.values(testStatuses).filter(s => s.hasContent).length;
             const totalQuestions = Object.values(testStatuses).reduce((sum, test) => sum + test.questionCount, 0);
             
-            const statNumbers = document.querySelectorAll('.stat-number');
-            if (statNumbers[0]) statNumbers[0].textContent = testsWithContent || '10';
-            if (statNumbers[1]) statNumbers[1].textContent = totalQuestions > 0 ? `${totalQuestions}+` : '400+';
-            
-            const statLabels = document.querySelectorAll('.stat-label');
-            if (statLabels[0] && testsWithContent === 1) {
-                statLabels[0].textContent = 'Practice Test';
-            } else if (statLabels[0]) {
-                statLabels[0].textContent = 'Practice Tests';
-            }
+            // Add 3 featured tests and 126 featured questions to the counts
+            const totalTestCount = testsWithContent + 3;
+            const totalQuestionCount = totalQuestions + 126;
+
+            const heroTestCount = document.getElementById('hero-test-count');
+            const heroQuestionCount = document.getElementById('hero-question-count');
+            if (heroTestCount) heroTestCount.textContent = totalTestCount || '13';
+            if (heroQuestionCount) heroQuestionCount.textContent = totalQuestionCount > 0 ? `${totalQuestionCount}+` : '540+';
         }
         
         // Start test from homepage
