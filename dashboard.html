@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-6EV4Y6N8M5"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -11,2414 +10,1666 @@
 </script>
 <link rel="icon" type="image/png" href="/favicon.png">
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Lexcello LNAT Practice</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    
-    <style>
-        :root {
-            --primary-color: #1a365d;
-            --primary-hover: #2d4a66;
-            --secondary-color: #2b6cb0;
-            --accent-gold: #d69e2e;
-            --text-dark: #1a202c;
-            --text-light: #4a5568;
-            --bg-light: #f7fafc;
-            --success-color: #48bb78;
-            --warning-color: #ed8936;
-            --danger-color: #e53e3e;
-        }
-        
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            color: var(--text-dark);
-            background: var(--bg-light);
-            padding-top: 80px;
-        }
-        
-        /* Navigation */
-        .navbar {
-            background: white;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            padding: 1rem 0;
-        }
-        
-        .navbar-brand {
-            font-size: 2rem;
-            font-weight: 800;
-            color: var(--primary-color) !important;
-            letter-spacing: -1px;
-        }
-        
-        .nav-link {
-            font-weight: 500;
-            color: var(--text-dark) !important;
-            margin: 0 0.5rem;
-        }
-        
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-        
-        .user-avatar {
-            width: 40px;
-            height: 40px;
-            background: var(--secondary-color);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: 600;
-        }
-        
-        .user-name {
-            font-weight: 600;
-            color: var(--text-dark);
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard — Lexcello LNAT Practice</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
 
-        .user-info .dropdown-toggle {
-            cursor: pointer;
-        }
-        
-        /* Dashboard Header */
-        .dashboard-header {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: white;
-            padding: 60px 0 40px;
-            margin-bottom: 40px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .dashboard-header::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-            animation: float 6s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translate(0, 0) rotate(0deg); }
-            50% { transform: translate(-10px, -10px) rotate(5deg); }
-        }
-        
-        .welcome-text {
-            position: relative;
-            z-index: 2;
-        }
-
-        .welcome-text h1 {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 15px;
-        }
-        
-        .welcome-text p {
-            font-size: 1.2rem;
-            opacity: 0.9;
-        }
-        
-        .progress-summary {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 12px;
-    margin-top: 20px;
-    position: relative;
-    z-index: 2;
-}
-        
-        .progress-card {
-    background: rgba(255,255,255,0.15);
-    backdrop-filter: blur(10px);
-    padding: 14px 16px;
-    border-radius: 10px;
-    text-align: center;
-    border: 1px solid rgba(255,255,255,0.2);
-    transition: all 0.3s ease;
+<style>
+:root {
+  --navy:        #0f2340;
+  --navy-mid:    #1a3a5c;
+  --navy-soft:   #2b5080;
+  --ink:         #1a202c;
+  --ink-mid:     #4a5568;
+  --ink-light:   #718096;
+  --surface:     #f7f9fc;
+  --surface-alt: #eef2f7;
+  --white:       #ffffff;
+  --gold:        #c8913a;
+  --gold-light:  #f5e6cc;
+  --gold-text:   #7a520a;
+  --green:       #2d7d52;
+  --green-light: #d4f0e2;
+  --green-text:  #1a5236;
+  --blue-light:  #dceefb;
+  --blue-text:   #1a4f7a;
+  --red-light:   #fde8e8;
+  --red-text:    #8b1a1a;
+  --border:      #e2e8f0;
+  --border-soft: #edf2f7;
+  --radius-sm:   6px;
+  --radius-md:   10px;
+  --radius-lg:   14px;
+  --shadow-xs:   0 1px 3px rgba(15,35,64,.06);
+  --shadow-sm:   0 2px 8px rgba(15,35,64,.08);
+  --shadow-md:   0 4px 16px rgba(15,35,64,.10);
 }
 
-        .progress-card:hover {
-            background: rgba(255,255,255,0.25);
-            transform: translateY(-3px);
-        }
-        
-        .progress-number {
-    font-size: 1.8rem;
-    font-weight: 800;
-    display: block;
-    color: var(--accent-gold);
-    margin-bottom: 3px;
-}
-        
-        .progress-label {
-            font-size: 0.9rem;
-            opacity: 0.9;
-        }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-        .progress-trend {
-            font-size: 0.8rem;
-            margin-top: 5px;
-            opacity: 0.8;
-        }
-
-        .trend-up {
-            color: #90EE90;
-        }
-
-        .trend-down {
-            color: #FFB6C1;
-        }
-
-        /* Free Test Promo Banner */
-        .free-test-promo {
-            background: linear-gradient(135deg, #48bb78, #38a169);
-            color: white;
-            border: none;
-            border-radius: 15px;
-            padding: 25px;
-            margin: 20px 0;
-            box-shadow: 0 10px 30px rgba(72, 187, 120, 0.3);
-        }
-
-        .free-test-promo h5 {
-            margin-bottom: 10px;
-            font-weight: 700;
-        }
-
-        .free-test-promo .btn-light {
-            background: white;
-            color: var(--success-color);
-            font-weight: 700;
-            border: none;
-            padding: 12px 30px;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-        }
-
-        .free-test-promo .btn-light:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-        
-        /* Content Sections */
-        .content-section {
-            margin-bottom: 40px;
-        }
-        
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-        }
-
-        .section-title {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: var(--primary-color);
-            margin: 0;
-        }
-
-        .section-actions {
-            display: flex;
-            gap: 10px;
-        }
-
-        .btn-section-action {
-            padding: 8px 16px;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            text-decoration: none;
-            transition: all 0.3s ease;
-        }
-        
-        /* Horizontal Test Cards */
-/* Test Cards — Grid Layout */
-.tests-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+body {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--ink);
+  background: var(--surface);
+  padding-top: 64px;
 }
 
-.test-card {
-    display: grid;
-    grid-template-columns: 42px 2fr 1fr 2fr auto;
-    align-items: center;
-    background: white;
-    border-radius: 10px;
-    border-left: 4px solid transparent;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-    padding: 10px 16px;
-    transition: box-shadow 0.3s ease;
+/* ── Navbar ── */
+.navbar {
+  background: var(--white);
+  border-bottom: 1px solid var(--border-soft);
+  padding: .75rem 0;
+  box-shadow: var(--shadow-xs);
 }
 
-.test-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.12); }
-.test-card.completed { border-left-color: var(--success-color); }
-.test-card.available { border-left-color: var(--secondary-color); }
-.test-card.locked { border-left-color: #e2e8f0; opacity: 0.85; background: var(--bg-light); }
-
-.test-card-col {
-    padding: 0 12px;
-    display: flex;
-    align-items: center;
-    gap: 0;
+.navbar-brand {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.6rem;
+  color: var(--navy) !important;
+  letter-spacing: -.5px;
 }
 
-.test-card-col-inner {
-    width: 100%;
+.nav-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--blue-light);
+  color: var(--blue-text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 13px;
 }
 
-.test-card-divider {
-    width: 1px;
-    height: 34px;
-    background: #e2e8f0;
-    flex-shrink: 0;
-    margin-right: 12px;
+.nav-username {
+  font-weight: 500;
+  font-size: 13px;
+  color: var(--ink);
 }
 
-.test-number {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    background: var(--secondary-color);
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    font-size: 0.9rem;
-    flex-shrink: 0;
+.btn-nav-menu {
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 5px 9px;
+  color: var(--ink-mid);
+  cursor: pointer;
+  font-size: 13px;
+  transition: background .15s;
 }
-.test-number.completed { background: var(--success-color); }
-.test-number.locked { background: #cbd5e0; }
+.btn-nav-menu:hover { background: var(--surface-alt); }
 
-.test-title {
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: var(--primary-color);
-    margin: 0 0 3px 0;
+/* ── Page Header ── */
+.page-header {
+  background: var(--white);
+  border-bottom: 1px solid var(--border-soft);
+  padding: 28px 0 24px;
+  margin-bottom: 28px;
 }
 
-.test-status {
-    font-size: 0.72rem;
-    padding: 2px 8px;
-    border-radius: 10px;
-    font-weight: 600;
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-}
-.status-completed { background: #c6f6d5; color: #22543d; }
-.status-available { background: #bee3f8; color: #2b6cb0; }
-.status-locked { background: #fed7d7; color: #c53030; }
-
-.test-score {
-    font-size: 1.4rem;
-    font-weight: 800;
-    color: var(--success-color);
-    text-align: center;
-    line-height: 1.1;
-}
-.test-score-label { font-size: 0.68rem; color: var(--text-light); text-align: center; }
-.test-attempts { font-size: 0.68rem; color: var(--text-light); text-align: center; }
-
-.test-detail {
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.78rem;
-    margin: 2px 0;
-}
-.detail-label { color: var(--text-light); }
-.detail-value { font-weight: 600; color: var(--text-dark); }
-
-.test-actions {
-    display: flex;
-    gap: 6px;
-    justify-content: flex-end;
+.page-header h1 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.75rem;
+  font-weight: 400;
+  color: var(--navy);
+  margin-bottom: 4px;
 }
 
-.btn-test-action {
-    padding: 7px 14px;
-    border-radius: 7px;
-    font-weight: 600;
-    border: none;
-    cursor: pointer;
-    font-size: 0.8rem;
-    white-space: nowrap;
-    transition: all 0.2s ease;
+.page-header p {
+  font-size: 13px;
+  color: var(--ink-mid);
 }
 
-.btn-start { background: var(--secondary-color); color: white; }
-.btn-start:hover { background: var(--primary-hover); }
-.btn-review { background: var(--success-color); color: white; }
-.btn-review:hover { background: #38a169; }
-.btn-retake { background: var(--warning-color); color: white; }
-.btn-retake:hover { background: #dd6b20; }
-.btn-locked { background: #e2e8f0; color: #718096; cursor: pointer; }
-.btn-locked:hover { background: #cbd5e0; }
-.btn-buy-single {
-    background: linear-gradient(135deg, var(--accent-gold), #b7791f);
-    color: white; font-weight: 700;
+/* ── Stats Row ── */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-top: 20px;
 }
-.btn-buy-single:hover { background: linear-gradient(135deg, #b7791f, #975a16); color: white; }
-.single-test-price { font-size: 0.8rem; opacity: 0.9; margin-left: 4px; }
 
-.progress-bar-mini { display: none; }
+.stat-card {
+  background: var(--surface-alt);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  border: 1px solid var(--border-soft);
+}
+
+.stat-val {
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--navy);
+  line-height: 1.2;
+  margin-bottom: 2px;
+}
+
+.stat-lbl {
+  font-size: 11px;
+  color: var(--ink-light);
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+
+.stat-trend {
+  font-size: 11px;
+  color: var(--green);
+  margin-top: 4px;
+}
+
+.stat-trend.down { color: var(--red-text); }
+.stat-trend.neutral { color: var(--ink-light); }
+
+/* ── Free Banner ── */
+.free-banner {
+  background: var(--green-light);
+  border: 1px solid #a8dfc5;
+  border-radius: var(--radius-lg);
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.free-banner-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--green-text);
+  margin-bottom: 2px;
+}
+
+.free-banner-sub {
+  font-size: 12px;
+  color: var(--green);
+}
+
+/* ── Section Headers ── */
+.sec-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.sec-title {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .07em;
+  color: var(--ink-light);
+}
+
+.sec-badge {
+  font-size: 10px;
+  font-weight: 600;
+  background: var(--gold-light);
+  color: var(--gold-text);
+  padding: 2px 8px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+
+/* ── Test Table ── */
+.test-table {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-xs);
+  margin-bottom: 24px;
+}
+
+.test-table-head {
+  display: grid;
+  grid-template-columns: 44px 1fr 90px 120px 180px;
+  align-items: center;
+  padding: 8px 16px;
+  background: var(--surface-alt);
+  border-bottom: 1px solid var(--border-soft);
+  gap: 0;
+}
+
+.th {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--ink-light);
+}
+
+.th.center { text-align: center; }
+.th.right  { text-align: right; }
+
+.test-row {
+  display: grid;
+  grid-template-columns: 44px 1fr 90px 120px 180px;
+  align-items: center;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border-soft);
+  gap: 0;
+  transition: background .12s;
+}
+
+.test-row:last-child { border-bottom: none; }
+.test-row:hover { background: var(--surface); }
+.test-row.faded { opacity: .65; }
+
+/* left accent bar */
+.test-row.is-done   { border-left: 3px solid var(--green); }
+.test-row.is-avail  { border-left: 3px solid var(--navy-soft); }
+.test-row.is-locked { border-left: 3px solid var(--border); }
+.test-row.is-gold   { border-left: 3px solid var(--gold); }
+
+.num-circle {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.nc-done   { background: var(--green-light);  color: var(--green-text); }
+.nc-avail  { background: var(--blue-light);   color: var(--blue-text); }
+.nc-lock   { background: var(--surface-alt);  color: var(--ink-light); }
+.nc-gold   { background: var(--gold-light);   color: var(--gold-text); }
+
+.test-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink);
+  padding-left: 12px;
+  line-height: 1.3;
+}
+
+.test-sub {
+  font-size: 11px;
+  color: var(--ink-light);
+  padding-left: 12px;
+  margin-top: 1px;
+}
+
+.col-score {
+  text-align: center;
+}
+
+.score-val {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--green);
+}
+
+.score-attempts {
+  font-size: 10px;
+  color: var(--ink-light);
+  margin-top: 1px;
+}
+
+.score-na {
+  font-size: 18px;
+  color: var(--border);
+  text-align: center;
+}
+
+.pill {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+
+.pill-done   { background: var(--green-light);  color: var(--green-text); }
+.pill-avail  { background: var(--blue-light);   color: var(--blue-text); }
+.pill-lock   { background: var(--surface-alt);  color: var(--ink-light);  border: 1px solid var(--border); }
+.pill-gold   { background: var(--gold-light);   color: var(--gold-text); }
+.pill-coming { background: var(--surface-alt);  color: var(--ink-light); }
+
+.actions-cell {
+  display: flex;
+  gap: 5px;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+
+/* ── Buttons ── */
+.btn-action {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: opacity .15s, transform .1s;
+  line-height: 1.4;
+}
+
+.btn-action:hover  { opacity: .85; }
+.btn-action:active { transform: scale(.97); }
+
+.btn-start  { background: var(--navy-mid);     color: var(--white); }
+.btn-review { background: var(--green-light);  color: var(--green-text);  border-color: #a8dfc5; }
+.btn-retake { background: #fff3e0;             color: #7a4a00;            border-color: #f5c97a; }
+.btn-buy    { background: var(--gold-light);   color: var(--gold-text);   border-color: #e8c47a; }
+.btn-upgrade{ background: var(--surface-alt);  color: var(--ink-mid);     border-color: var(--border); }
+.btn-locked { background: var(--surface-alt);  color: var(--ink-light);   border-color: var(--border); cursor: default; }
+.btn-gold   { background: var(--gold);         color: var(--white); }
+.btn-success-solid { background: var(--green); color: var(--white); }
+
+/* ── Bottom Panels ── */
+.bottom-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-bottom: 40px;
+}
+
+.panel {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  box-shadow: var(--shadow-xs);
+}
+
+.panel-title {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--ink-light);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Activity */
+.activity-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.activity-item:last-child { border-bottom: none; }
+
+.act-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  flex-shrink: 0;
+}
+
+.act-done  { background: var(--green-light); color: var(--green-text); }
+.act-star  { background: var(--gold-light);  color: var(--gold-text); }
+.act-join  { background: var(--blue-light);  color: var(--blue-text); }
+
+.act-info { flex: 1; min-width: 0; }
+.act-name { font-size: 12px; font-weight: 500; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.act-time { font-size: 11px; color: var(--ink-light); }
+.act-score{ font-size: 13px; font-weight: 600; color: var(--green); margin-left: 4px; }
+
+/* Achievements */
+.ach-row { display: flex; flex-wrap: wrap; gap: 5px; }
+
+.ach-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 3px 9px;
+  border-radius: 20px;
+}
+
+.ach-gold  { background: var(--gold-light);  color: var(--gold-text); }
+.ach-green { background: var(--green-light); color: var(--green-text); }
+.ach-blue  { background: var(--blue-light);  color: var(--blue-text); }
+.ach-gray  { background: var(--surface-alt); color: var(--ink-light); }
+
+/* Mini Stats */
+.mini-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 7px;
+  margin-bottom: 12px;
+}
+
+.mini-stat {
+  background: var(--surface-alt);
+  border-radius: var(--radius-sm);
+  padding: 9px 10px;
+  text-align: center;
+}
+
+.mini-val { font-size: 15px; font-weight: 600; color: var(--navy); }
+.mini-lbl { font-size: 10px; color: var(--ink-light); margin-top: 1px; }
+
+.meta-pair {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+  padding: 5px 0;
+  border-top: 1px solid var(--border-soft);
+}
+
+.meta-lbl { color: var(--ink-light); }
+.meta-val { font-weight: 500; color: var(--ink); }
+.meta-val.green { color: var(--green); }
+.meta-val.gold  { color: var(--gold-text); }
+
+/* Performance panel */
+.chart-area {
+  background: var(--surface-alt);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  text-align: center;
+  margin-top: 8px;
+}
+
+.chart-big-num {
+  font-family: 'DM Serif Display', serif;
+  font-size: 2.2rem;
+  color: var(--navy);
+  line-height: 1;
+}
+
+.chart-sub { font-size: 11px; color: var(--ink-light); margin-top: 4px; }
+
+/* Performance insight box */
+.insight-box {
+  border-left: 3px solid var(--green);
+  background: var(--green-light);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  padding: 8px 12px;
+  margin-top: 10px;
+  font-size: 11px;
+  color: var(--green-text);
+}
+
+/* ── Notification ── */
+.notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 12px 18px;
+  border-radius: var(--radius-md);
+  color: white;
+  font-weight: 600;
+  font-size: 13px;
+  z-index: 9999;
+  opacity: 0;
+  transform: translateY(-8px);
+  transition: all .25s ease;
+  box-shadow: var(--shadow-md);
+  pointer-events: none;
+}
+
+.notification.show { opacity: 1; transform: translateY(0); }
+.notification.success { background: var(--green); }
+.notification.error   { background: #c53030; }
+.notification.info    { background: var(--navy-mid); }
+
+/* ── Footer ── */
+.footer {
+  background: var(--white);
+  border-top: 1px solid var(--border-soft);
+  padding: 28px 0;
+  margin-top: 8px;
+}
+
+.footer-links a {
+  font-size: 12px;
+  color: var(--ink-light);
+  text-decoration: none;
+  margin: 0 10px;
+  transition: color .15s;
+}
+
+.footer-links a:hover { color: var(--navy); }
+.footer-copy { font-size: 11px; color: var(--ink-light); margin-top: 8px; }
+
+/* ── Responsive ── */
+@media (max-width: 992px) {
+  .bottom-grid { grid-template-columns: 1fr 1fr; }
+  .stats-row   { grid-template-columns: repeat(2, 1fr); }
+}
 
 @media (max-width: 768px) {
-    .test-card {
-        grid-template-columns: 1fr;
-        gap: 10px;
-        padding: 14px;
-    }
-    .test-card-divider { display: none; }
-    .test-actions { justify-content: flex-start; }
-    .btn-test-action { flex: 1; }
+  .test-table-head { display: none; }
+
+  .test-row {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    padding: 14px 16px;
+  }
+
+  .test-row > .col-score,
+  .test-row > .col-status { display: none; }
+
+  .test-name, .test-sub { padding-left: 0; }
+
+  .num-circle { display: none; }
+
+  .actions-cell { justify-content: flex-start; }
+
+  .bottom-grid { grid-template-columns: 1fr; }
+  .stats-row   { grid-template-columns: 1fr 1fr; }
 }
-        
-        .btn-start {
-            background: var(--secondary-color);
-            color: white;
-        }
-        
-        .btn-start:hover {
-            background: var(--primary-hover);
-        }
-        
-        .btn-review {
-            background: var(--success-color);
-            color: white;
-        }
-        
-        .btn-review:hover {
-            background: #38a169;
-        }
 
-        .btn-retake {
-            background: var(--warning-color);
-            color: white;
-        }
+/* ── Loading state ── */
+.loading-rows {
+  padding: 24px;
+  text-align: center;
+  color: var(--ink-light);
+  font-size: 13px;
+}
 
-        .btn-retake:hover {
-            background: #dd6b20;
-        }
-        
-        .btn-locked {
-            background: #e2e8f0;
-            color: #718096;
-            cursor: pointer;
-        }
+.spinner {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--border);
+  border-top-color: var(--navy-mid);
+  border-radius: 50%;
+  animation: spin .7s linear infinite;
+  margin-right: 8px;
+  vertical-align: middle;
+}
 
-        .btn-locked:hover {
-            background: #cbd5e0;
-        }
+@keyframes spin { to { transform: rotate(360deg); } }
 
-        /* Single Test Purchase Button */
-        .btn-buy-single {
-            background: linear-gradient(135deg, var(--accent-gold), #b7791f);
-            color: white;
-            font-weight: 700;
-        }
+/* ── Fade-in ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
 
-        .btn-buy-single:hover {
-            background: linear-gradient(135deg, #b7791f, #975a16);
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(214, 158, 46, 0.4);
-            color: white;
-        }
-
-        .btn-buy-single i {
-            margin-right: 5px;
-        }
-
-        /* Price tag on button */
-        .single-test-price {
-            font-size: 0.85rem;
-            opacity: 0.9;
-            margin-left: 5px;
-        }
-        
-        /* Performance Chart */
-        .performance-card {
-            background: white;
-            border-radius: 15px;
-            padding: 30px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-        }
-        
-        .chart-container {
-            height: 300px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--bg-light);
-            border-radius: 10px;
-            margin: 20px 0;
-            position: relative;
-        }
-        
-        .chart-placeholder {
-            text-align: center;
-            color: var(--text-light);
-        }
-
-        .performance-chart-real {
-            width: 100%;
-            height: 100%;
-            padding: 20px;
-        }
-
-        .chart-line {
-            stroke: var(--secondary-color);
-            stroke-width: 3;
-            fill: none;
-        }
-
-        .chart-area {
-            fill: url(#gradient);
-            opacity: 0.3;
-        }
-
-        .chart-point {
-            fill: var(--secondary-color);
-            stroke: white;
-            stroke-width: 2;
-            r: 5;
-            cursor: pointer;
-        }
-
-        .chart-point:hover {
-            r: 7;
-            fill: var(--primary-color);
-        }
-
-        .chart-grid {
-            stroke: #e2e8f0;
-            stroke-width: 1;
-        }
-
-        .chart-label {
-            font-size: 12px;
-            fill: var(--text-light);
-        }
-
-        /* Achievement Badges */
-        .achievements-container {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin: 15px 0;
-        }
-
-        .achievement-badge {
-            background: var(--success-color);
-            color: white;
-            padding: 8px 12px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .achievement-badge.gold {
-            background: var(--accent-gold);
-            color: var(--primary-color);
-        }
-
-        .achievement-badge.silver {
-            background: #a0aec0;
-            color: white;
-        }
-        
-        /* Recent Activity */
-        .activity-item {
-            display: flex;
-            align-items: center;
-            padding: 18px;
-            background: white;
-            border-radius: 12px;
-            margin-bottom: 15px;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
-            transition: all 0.3s ease;
-            border-left: 4px solid transparent;
-        }
-
-        .activity-item:hover {
-            transform: translateX(5px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-        
-        .activity-icon {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 15px;
-            font-size: 1.2rem;
-        }
-        
-        .activity-completed {
-            background: var(--success-color);
-            color: white;
-        }
-        
-        .activity-started {
-            background: var(--secondary-color);
-            color: white;
-        }
-
-        .activity-improvement {
-            background: var(--accent-gold);
-            color: var(--primary-color);
-        }
-        
-        .activity-info {
-            flex: 1;
-        }
-        
-        .activity-title {
-            font-weight: 600;
-            color: var(--text-dark);
-            margin: 0 0 5px 0;
-        }
-        
-        .activity-time {
-            font-size: 0.9rem;
-            color: var(--text-light);
-        }
-
-        .activity-score {
-            font-weight: 700;
-            color: var(--success-color);
-            margin-left: 15px;
-            font-size: 1.1rem;
-        }
-
-        /* Study Statistics */
-        .stats-mini-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            margin: 20px 0;
-        }
-
-        .stat-mini-card {
-            background: var(--bg-light);
-            padding: 15px;
-            border-radius: 10px;
-            text-align: center;
-            border: 2px solid transparent;
-            transition: all 0.3s ease;
-        }
-
-        .stat-mini-card:hover {
-            border-color: var(--secondary-color);
-            background: white;
-        }
-
-        .stat-mini-value {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--primary-color);
-            margin-bottom: 5px;
-        }
-
-        .stat-mini-label {
-            font-size: 0.8rem;
-            color: var(--text-light);
-            font-weight: 500;
-        }
-        
-        /* Loading States */
-        .loading {
-            text-align: center;
-            padding: 40px;
-            color: var(--text-light);
-        }
-        
-        .spinner-border {
-            width: 3rem;
-            height: 3rem;
-        }
-        
-        /* Footer */
-        .footer {
-            background: white;
-            padding: 40px 0 20px;
-            margin-top: 60px;
-            border-top: 1px solid #e2e8f0;
-        }
-        
-        .footer-links a {
-            color: var(--text-light);
-            text-decoration: none;
-            margin-right: 20px;
-        }
-        
-        .footer-links a:hover {
-            color: var(--primary-color);
-        }
-
-        /* Notification styles */
-        .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 15px 20px;
-            border-radius: 8px;
-            color: white;
-            font-weight: 600;
-            z-index: 9999;
-            opacity: 0;
-            transform: translateX(300px);
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
-        }
-        
-        .notification.show {
-            opacity: 1;
-            transform: translateX(0);
-        }
-        
-        .notification.success {
-            background: #28a745;
-        }
-        
-        .notification.error {
-            background: #dc3545;
-        }
-        
-        .notification.info {
-            background: #17a2b8;
-        }
-        
-        /* Responsive */
-        @media (max-width: 768px) {
-            .welcome-text h1 {
-                font-size: 2rem;
-            }
-            
-            .progress-summary {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 15px;
-            }
-            
-            .tests-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .section-header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 15px;
-            }
-
-            .stats-mini-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .test-actions {
-                flex-direction: column;
-            }
-
-            .btn-test-action {
-                min-width: 100%;
-            }
-        }
-    </style>
+.fade-up { animation: fadeUp .3s ease both; }
+</style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg fixed-top">
-        <div class="container">
-            <a class="navbar-brand" href="index.html">Lexcello</a>
-            
-            <div class="user-info">
-                <div class="user-avatar" id="userAvatar">U</div>
-                <span class="user-name" id="userName">Student</span>
-                <div class="dropdown">
-                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                        <i class="fas fa-cog"></i>
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="profile.html"><i class="fas fa-user me-2"></i>Profile</a></li>
-                        <li><a class="dropdown-item" href="settings.html"><i class="fas fa-cog me-2"></i>Settings</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="#" onclick="signOut()"><i class="fas fa-sign-out-alt me-2"></i>Sign Out</a></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </nav>
 
-    <!-- Dashboard Header -->
-    <section class="dashboard-header">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-6">
-                    <div class="welcome-text">
-                        <h1 id="welcomeMessage">Welcome back!</h1>
-                        <p id="welcomeSubtext">Continue your LNAT preparation journey. You're making great progress toward your law school goals.</p>
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                    <div class="progress-summary">
-                        <div class="progress-card">
-                            <span class="progress-number" id="testsCompleted">0</span>
-                            <div class="progress-label">Tests Completed</div>
-                            <div class="progress-trend" id="testsCompletedTrend"></div>
-                        </div>
-                        <div class="progress-card">
-                            <span class="progress-number" id="averageScore">0%</span>
-                            <div class="progress-label">Average Score</div>
-                            <div class="progress-trend" id="averageScoreTrend"></div>
-                        </div>
-                        <div class="progress-card">
-                            <span class="progress-number" id="bestScore">0%</span>
-                            <div class="progress-label">Best Score</div>
-                            <div class="progress-trend" id="bestScoreTrend"></div>
-                        </div>
-                        <div class="progress-card">
-                            <span class="progress-number" id="studyStreak">0</span>
-                            <div class="progress-label">Day Streak</div>
-                            <div class="progress-trend" id="studyStreakTrend"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Free Test Promo Banner (will be shown for free users) -->
-            <div id="freeTestPromo"></div>
-        </div>
-    </section>
-
-    <!-- Main Dashboard Content -->
-    <div class="container">
-        <div class="row">
-    <div class="col-lg-12">
-                <!-- Free Diagnostic Test Section -->
-                <div class="content-section">
-                    <div class="section-header">
-                        <h2 class="section-title">
-                            <i class="fas fa-gift me-2"></i>Free Diagnostic Test
-                        </h2>
-                    </div>
-                    
-                    <div id="freeTestContainer"></div>
-                </div>
-<!-- Featured Tests Section -->
-<div class="content-section" id="featuredTestsSection" style="display:none;">
-    <div class="section-header">
-        <h2 class="section-title">
-            <i class="fas fa-star me-2" style="color:#d69e2e;"></i>Featured Tests
-            <span style="background:linear-gradient(135deg,#d69e2e,#b7791f);color:white;font-size:0.7rem;padding:3px 10px;border-radius:12px;font-weight:700;margin-left:10px;vertical-align:middle;">NEW</span>
-        </h2>
-        
+<!-- ── Navbar ── -->
+<nav class="navbar fixed-top">
+  <div class="container d-flex align-items-center justify-content-between">
+    <a class="navbar-brand" href="index.html">Lexcello</a>
+    <div class="d-flex align-items-center gap-3">
+      <div class="nav-avatar" id="userAvatar">U</div>
+      <span class="nav-username" id="userName">Student</span>
+      <div class="dropdown">
+        <button class="btn-nav-menu dropdown-toggle" data-bs-toggle="dropdown">
+          <i class="fas fa-cog"></i>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end">
+          <li><a class="dropdown-item" href="profile.html"><i class="fas fa-user me-2"></i>Profile</a></li>
+          <li><a class="dropdown-item" href="settings.html"><i class="fas fa-cog me-2"></i>Settings</a></li>
+          <li><hr class="dropdown-divider"></li>
+          <li><a class="dropdown-item" href="#" onclick="signOut()"><i class="fas fa-sign-out-alt me-2"></i>Sign Out</a></li>
+        </ul>
+      </div>
     </div>
+  </div>
+</nav>
 
-    <!-- Featured Tests Cards -->
-    <div id="featuredTestsContainer" class="tests-grid">
-        <div class="loading text-center p-4">
-            <div class="spinner-border text-warning" role="status"></div>
-            <div class="mt-2">Loading featured tests...</div>
+<!-- ── Page Header ── -->
+<div class="page-header">
+  <div class="container">
+    <div class="row align-items-end">
+      <div class="col-lg-5">
+        <h1 id="welcomeMessage">Welcome back!</h1>
+        <p id="welcomeSubtext">Continue your LNAT preparation — you're making great progress toward your law school goals.</p>
+      </div>
+      <div class="col-lg-7">
+        <div class="stats-row">
+          <div class="stat-card">
+            <div class="stat-val" id="testsCompleted">0</div>
+            <div class="stat-lbl">Tests completed</div>
+            <div class="stat-trend" id="testsCompletedTrend"></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-val" id="averageScore">0%</div>
+            <div class="stat-lbl">Average score</div>
+            <div class="stat-trend" id="averageScoreTrend"></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-val" id="bestScore">0%</div>
+            <div class="stat-lbl">Best score</div>
+            <div class="stat-trend" id="bestScoreTrend"></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-val" id="studyStreak">0</div>
+            <div class="stat-lbl">Day streak</div>
+            <div class="stat-trend" id="studyStreakTrend"></div>
+          </div>
         </div>
+      </div>
     </div>
+    <div id="freeTestPromo"></div>
+  </div>
 </div>
-                <!-- Practice Tests Section -->
-                <div class="content-section">
-                    <div class="section-header">
-                        <h2 class="section-title">
-                            <i class="fas fa-clipboard-list me-2"></i>Premium Practice Tests
-                        </h2>
-                        
-                    </div>
-                    
-                    <div id="testsContainer" class="loading">
-                        <div class="spinner-border text-primary" role="status">
-                            <span class="visually-hidden">Loading tests...</span>
-                        </div>
-                        <div class="mt-3">Loading your tests...</div>
-                    </div>
-                </div>
-           </div>
+
+<!-- ── Main Content ── -->
+<div class="container fade-up">
+
+  <!-- Free Diagnostic Test -->
+  <div class="sec-header" style="margin-top: 4px;">
+    <i class="fas fa-gift" style="color: var(--green); font-size: 13px;"></i>
+    <span class="sec-title">Free Diagnostic Test</span>
+  </div>
+  <div id="freeTestContainer"></div>
+
+  <!-- Featured Tests -->
+  <div id="featuredTestsSection" style="display:none;">
+    <div class="sec-header">
+      <i class="fas fa-star" style="color: var(--gold); font-size: 13px;"></i>
+      <span class="sec-title">Featured Tests</span>
+      <span class="sec-badge">New</span>
+    </div>
+    <div class="test-table" id="featuredTestsContainer">
+      <div class="loading-rows"><span class="spinner"></span>Loading featured tests…</div>
+    </div>
+  </div>
+
+  <!-- Premium Practice Tests -->
+  <div class="sec-header">
+    <i class="fas fa-clipboard-list" style="color: var(--navy-soft); font-size: 13px;"></i>
+    <span class="sec-title">Premium Practice Tests</span>
+  </div>
+  <div id="testsContainer">
+    <div class="test-table">
+      <div class="loading-rows"><span class="spinner"></span>Loading your tests…</div>
+    </div>
+  </div>
+
+  <!-- Bottom Panels -->
+  <div class="bottom-grid">
+
+    <!-- Performance -->
+    <div class="panel">
+      <div class="panel-title"><i class="fas fa-chart-line"></i> Performance</div>
+      <div id="performanceChartContainer">
+        <div class="chart-area">
+          <div style="font-size: 12px; color: var(--ink-light);">Complete a test to see your progress</div>
         </div>
-
-        <!-- Bottom Stats Row -->
-        <div class="row mt-4">
-            <div class="col-lg-3">
-                <!-- Performance Chart -->
-                <div class="content-section">
-                    <div class="performance-card">
-                        <h3 class="section-title">
-                            <i class="fas fa-chart-line me-2"></i>Performance Trend
-                        </h3>
-                        <div class="chart-container" id="performanceChartContainer">
-                            <div class="chart-placeholder" id="performanceChart">
-                                <i class="fas fa-chart-area fa-3x text-secondary mb-3"></i>
-                                <div class="h5">Score Progress</div>
-                                <div class="text-muted" id="progressText">Complete your first test to see progress</div>
-                                <div class="mt-3" id="improvementBadge"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-3">
-                <!-- Achievements -->
-                <div class="content-section">
-                    <div class="performance-card">
-                        <h4><i class="fas fa-trophy me-2"></i>Achievements</h4>
-                        <div class="achievements-container" id="achievementsContainer">
-                            <div class="achievement-badge">
-                                <i class="fas fa-star"></i>
-                                Welcome!
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-3">
-                <!-- Recent Activity -->
-                <div class="content-section">
-                    <h3 class="section-title">
-                        <i class="fas fa-history me-2"></i>Recent Activity
-                    </h3>
-                    <div id="recentActivity">
-                        <div class="activity-item">
-                            <div class="activity-icon activity-started">
-                                <i class="fas fa-user-plus"></i>
-                            </div>
-                            <div class="activity-info">
-                                <div class="activity-title">Joined Lexcello</div>
-                                <div class="activity-time" id="joinDate">Welcome to your LNAT prep!</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-3">
-                <!-- Quick Stats -->
-                <div class="content-section">
-                    <div class="performance-card">
-                        <h4><i class="fas fa-chart-bar me-2"></i>Quick Stats</h4>
-                        <div class="stats-mini-grid">
-                            <div class="stat-mini-card">
-                                <div class="stat-mini-value" id="totalTime">0h</div>
-                                <div class="stat-mini-label">Study Time</div>
-                            </div>
-                            <div class="stat-mini-card">
-                                <div class="stat-mini-value" id="accuracy">0%</div>
-                                <div class="stat-mini-label">Accuracy</div>
-                            </div>
-                            <div class="stat-mini-card">
-                                <div class="stat-mini-value" id="improvement">+0%</div>
-                                <div class="stat-mini-label">Improvement</div>
-                            </div>
-                            <div class="stat-mini-card">
-                                <div class="stat-mini-value" id="nextGoal">Test 1</div>
-                                <div class="stat-mini-label">Next Goal</div>
-                            </div>
-                        </div>
-                        <div class="test-detail">
-                            <span class="detail-label">Your Package:</span>
-                            <span class="detail-value" id="userPackageDisplay">Loading...</span>
-                        </div>
-                        <div class="test-detail">
-                            <span class="detail-label">Account Status:</span>
-                            <span class="detail-value text-success" id="accountStatus">Active</span>
-                        </div>
-                        <div class="test-detail">
-                            <span class="detail-label">Tests Available:</span>
-                            <span class="detail-value" id="testsAvailable">Loading...</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+      </div>
     </div>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="text-center">
-                <div class="footer-links mb-3">
-                    <a href="index.html">Home</a>
-                    <a href="about-lnat.html">About LNAT</a>
-                    <a href="pricing.html">Pricing</a>
-                    <a href="contact.html">Contact</a>
-                    <a href="privacy-policy.html">Privacy Policy</a>
-                    <a href="terms-of-service.html">Terms of Service</a>
-                </div>
-                <p class="text-muted">&copy; 2025 Lexcello. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
-
-    <!-- Notification container -->
-    <div id="notification" class="notification"></div>
-    
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    
-    <script>
-        // Configuration
-        const API_BASE_URL = 'https://lexcello-backend.onrender.com/api';
-        let currentUser = null;
-        let userTestAttempts = [];
-        let availableTests = {};
-        let userSubscriptionInfo = null;
-        let userPurchasedTests = [];
-        
-        const SINGLE_TEST_PRICE = {
-            GBP: { symbol: '£', price: 18, actualCharge: 1900 },
-            USD: { symbol: '$', price: 23, actualCharge: 1900 },
-            INR: { symbol: '₹', price: 1900, actualCharge: 1900 }
-        };
-        
-        document.addEventListener('DOMContentLoaded', async function() {
-            await initializeDashboard();
-        });
-
-        async function initializeDashboard() {
-            try {
-                await checkAuthStatus();
-                userSubscriptionInfo = await checkUserSubscriptionStatus();
-                await loadUserData();
-                await loadTests();
-                renderFreeDiagnosticTest(); // ← NEW: Render free test separately
-                updateProgressStats();
-                updateRecentActivity();
-                generateAchievements();
-                showFreeTestPromoIfNeeded();
-                showFeaturedTestsSection();
-            } catch (error) {
-                console.error('Dashboard initialization error:', error);
-                showLoadingError();
-            }
-        }
-
-        // ========== NEW FUNCTION: Render Free Diagnostic Test ==========
-        function renderFreeDiagnosticTest() {
-            const freeTestContainer = document.getElementById('freeTestContainer');
-            
-            // Find free test attempts (14 questions only)
-            const freeTestAttempts = userTestAttempts.filter(attempt => 
-                attempt.total_questions === 14
-            );
-            
-            const hasCompleted = freeTestAttempts.length > 0;
-            
-            let bestScore = 0;
-            if (hasCompleted) {
-                bestScore = Math.max(...freeTestAttempts.map(attempt => {
-                    let score = attempt.score;
-                    if (score === undefined || score === null || isNaN(score)) {
-                        if (attempt.correct_answers !== undefined && attempt.total_questions > 0) {
-                            score = Math.round((attempt.correct_answers / attempt.total_questions) * 100);
-                        } else {
-                            score = 0;
-                        }
-                    }
-                    return Number(score) || 0;
-                }));
-            }
-            
-            const latestAttempt = hasCompleted ? freeTestAttempts[freeTestAttempts.length - 1] : null;
-            
-            let cardHTML = `
-<div class="tests-grid">
-    <div class="test-card ${hasCompleted ? 'completed' : 'available'}">
-        <div class="test-number ${hasCompleted ? 'completed' : ''}" style="background:${hasCompleted ? 'var(--success-color)' : 'var(--secondary-color)'};">
-            <i class="fas fa-gift"></i>
-        </div>
-
-        <div class="test-card-col">
-            <div class="test-card-divider"></div>
-            <div class="test-card-col-inner">
-                <h4 class="test-title">Free 14-Question Diagnostic Test</h4>
-
-            </div>
-        </div>
-
-        <div class="test-card-col">
-            <div class="test-card-divider"></div>
-            <div class="test-card-col-inner" style="text-align:center;">
-                ${hasCompleted ? `
-                    <div class="test-score" style="color:#d69e2e;">${bestScore}%</div>
-<div class="test-score-label">Best in ${freeTestAttempts.length} attempt${freeTestAttempts.length > 1 ? 's' : ''}</div>
-
-                ` : '<div style="color:#a0aec0;">—</div>'}
-            </div>
-        </div>
-
-        
-        <div class="test-card-col">
-            <div class="test-card-divider"></div>
-            <div class="test-card-col-inner">
-                <div class="test-detail">
-                    <span class="detail-label">Scholarship:</span>
-                    <span class="detail-value text-success"><i class="fas fa-star"></i> Score 40%+ for discount</span>
-                </div>
-                <div class="test-detail">
-                    <span class="detail-label">Last Completed:</span>
-                    <span class="detail-value">${hasCompleted && latestAttempt ? formatDate(latestAttempt.completed_at) : '—'}</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="test-actions">
-            ${hasCompleted ? `
-                <button class="btn btn-test-action btn-review" onclick="viewFreeTestResults()">
-                    <i class="fas fa-chart-line me-1"></i>Review Results
-                </button>
-                <button class="btn btn-test-action btn-retake" onclick="navigateToFreeTest()">
-                    <i class="fas fa-redo me-1"></i>Retake
-                </button>
-            ` : `
-                <button class="btn btn-test-action btn-start" onclick="navigateToFreeTest()">
-                    <i class="fas fa-play me-1"></i>Start Free Test
-                </button>
-            `}
-        </div>
-    </div>
-</div>`;
-            
-            freeTestContainer.innerHTML = cardHTML;
-        }
-
-        // ========== NEW FUNCTION: View Free Test Results ==========
-        async function viewFreeTestResults() {
-            try {
-                const token = localStorage.getItem('authToken');
-                if (!token) {
-                    showNotification('Please sign in to view results', 'error');
-                    return;
-                }
-
-                // Find the free test attempt (14 questions)
-                const freeTestAttempt = userTestAttempts.find(attempt => 
-                    attempt.total_questions === 14
-                );
-
-                if (freeTestAttempt) {
-                    sessionStorage.setItem('freeTestResults', JSON.stringify(freeTestAttempt));
-                    window.location.href = 'free-test-results.html';
-                } else {
-                    showNotification('No free test results found', 'error');
-                }
-            } catch (error) {
-                console.error('Error loading free test results:', error);
-                showNotification('Failed to load results', 'error');
-            }
-        }
-
-        function getUserPackage(userData) {
-            if (!userData || !userData.subscriptionStatus) {
-                return 'free';
-            }
-            
-            if (userData.subscriptionPackage) {
-                const pkg = userData.subscriptionPackage.toLowerCase();
-                
-                if (pkg === 'foundation' || pkg === 'tests-1-5') {
-                    return 'foundation';
-                }
-                if (pkg === 'advanced' || pkg === 'tests-6-10') {
-                    return 'advanced';
-                }
-                if (pkg === 'complete' || pkg === 'premium-12') {
-                    return 'complete';
-                }
-            }
-            
-            if (userData.subscriptionPlan) {
-                const plan = userData.subscriptionPlan.toLowerCase();
-                
-                if (plan.includes('foundation') || plan.includes('1-5') || plan.includes('tests-1-5')) {
-                    return 'foundation';
-                }
-                if (plan.includes('advanced') || plan.includes('6-10') || plan.includes('tests-6-10')) {
-                    return 'advanced';
-                }
-                if (plan.includes('complete') || plan.includes('1-10') || plan.includes('premium-complete')) {
-                    return 'complete';
-                }
-            }
-            
-            if ((userData.subscriptionStatus === 'premium' || userData.subscriptionStatus === 'active') 
-                && !userData.subscriptionPackage && !userData.subscriptionPlan) {
-                return 'complete';
-            }
-            
-            return 'free';
-        }
-
-        function getPackageDisplayName(packageType) {
-            const names = {
-                'foundation': 'Foundation (Tests 1-5)',
-                'advanced': 'Advanced (Tests 6-10)',
-                'complete': 'Complete Series (All Tests)',
-                'premium': 'Premium (All Tests)',
-                'free': 'Free (14-Question Test Only)'
-            };
-            return names[packageType] || 'Free Access';
-        }
-
-        function canAccessTest(testId, userPackage, purchasedTests = []) {
-            if (purchasedTests && purchasedTests.includes(testId)) {
-                return true;
-            }
-            
-            if (!userPackage || userPackage === 'free' || userPackage === 'inactive' || userPackage === 'expired') {
-                return false;
-            }
-            
-            if (userPackage === 'foundation' || userPackage === 'tests-1-5') {
-                return testId >= 1 && testId <= 5;
-            }
-            
-            if (userPackage === 'advanced' || userPackage === 'tests-6-10') {
-                return testId >= 6 && testId <= 10;
-            }
-            
-            if (userPackage === 'complete' || userPackage === 'premium' || userPackage === 'premium-12') {
-                return testId >= 1 && testId <= 10;
-            }
-            
-            return false;
-        }
-
-        async function checkUserSubscriptionStatus() {
-            const token = localStorage.getItem('authToken');
-            
-            if (!token || !currentUser) {
-                return { 
-                    isPaid: false, 
-                    isDemo: true,
-                    packageType: 'free',
-                    accessibleTests: [],
-                    purchasedTests: []
-                };
-            }
-
-            try {
-                const response = await fetch(`${API_BASE_URL}/auth/profile`, {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
-                    }
-                });
-                
-                if (response.ok) {
-                    const userData = await response.json();
-                    
-                    const subscriptionStatus = userData.subscriptionStatus || 'inactive';
-                    const packageType = getUserPackage(userData);
-                    const isPaid = subscriptionStatus === 'premium' || subscriptionStatus === 'active';
-                    
-                    userPurchasedTests = userData.purchasedTests || [];
-                    
-                    let isExpired = false;
-                    if (userData.subscriptionExpiresAt) {
-                        const expirationDate = new Date(userData.subscriptionExpiresAt);
-                        isExpired = expirationDate < new Date();
-                    }
-                    
-                    let accessibleTests = [...userPurchasedTests];
-                    
-                    if (isPaid && !isExpired) {
-                        if (packageType === 'foundation') {
-                            accessibleTests = [...new Set([...accessibleTests, 1, 2, 3, 4, 5])];
-                        } else if (packageType === 'advanced') {
-                            accessibleTests = [...new Set([...accessibleTests, 6, 7, 8, 9, 10])];
-                        } else if (packageType === 'complete' || packageType === 'premium') {
-                            accessibleTests = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-                        }
-                    }
-                    
-                    return {
-                        isPaid: isPaid && !isExpired,
-                        subscriptionStatus: subscriptionStatus,
-                        subscriptionType: packageType,
-                        packageType: packageType,
-                        packageName: getPackageDisplayName(packageType),
-                        expiresAt: userData.subscriptionExpiresAt,
-                        isExpired: isExpired,
-                        isDemo: false,
-                        accessibleTests: accessibleTests,
-                        purchasedTests: userPurchasedTests
-                    };
-                } else {
-                    return { 
-                        isPaid: false, 
-                        isDemo: false,
-                        packageType: 'free',
-                        accessibleTests: [],
-                        purchasedTests: []
-                    };
-                }
-            } catch (error) {
-                console.error('Subscription check failed:', error);
-                return { 
-                    isPaid: false, 
-                    isDemo: false,
-                    packageType: 'free',
-                    accessibleTests: [],
-                    purchasedTests: []
-                };
-            }
-        }
-
-        function showFreeTestPromoIfNeeded() {
-            const userPackage = getUserPackage(currentUser);
-            
-            if (!userPackage || userPackage === 'free' || userPackage === 'inactive') {
-                const promoContainer = document.getElementById('freeTestPromo');
-                
-                if (promoContainer) {
-                    promoContainer.innerHTML = `
-                        <div class="free-test-promo" style="position: relative; z-index: 5; margin: 20px 0;">
-                            <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
-                                <div style="flex: 1;">
-                                    <h5 style="margin-bottom: 10px; color: white;">
-                                        <i class="fas fa-gift me-2"></i>Try Our Free 14-Question Practice Test!
-                                    </h5>
-                                    <p class="mb-0" style="font-size: 1rem; color: rgba(255,255,255,0.95);">
-                                        Score 40%+ to earn an exclusive scholarship discount (30-50% off) on our premium packages.
-                                    </p>
-                                </div>
-                                <button 
-                                    onclick="navigateToFreeTest()" 
-                                    class="btn btn-light btn-lg" 
-                                    style="white-space: nowrap; font-weight: 700; padding: 15px 30px; border: none; cursor: pointer;">
-                                    <i class="fas fa-rocket me-2"></i>Start Free Test
-                                </button>
-                            </div>
-                        </div>
-                    `;
-                    
-                    try {
-                        gtag('event', 'free_test_promo_shown', {
-                            'event_category': 'dashboard',
-                            'event_label': 'promo_banner_displayed',
-                            'user_package': userPackage || 'none'
-                        });
-                    } catch (error) {
-                        console.error('GA tracking error:', error);
-                    }
-                }
-            }
-        }
-
-        async function checkAuthStatus() {
-            const token = localStorage.getItem('authToken');
-            if (token) {
-                try {
-                    const response = await fetch(`${API_BASE_URL}/auth/profile`, {
-                        method: 'GET',
-                        headers: {
-                            'Authorization': `Bearer ${token}`,
-                            'Content-Type': 'application/json'
-                        }
-                    });
-                    
-                    if (response.ok) {
-                        currentUser = await response.json();
-                        updateUserInfo();
-                    } else {
-                        localStorage.removeItem('authToken');
-                        currentUser = null;
-                    }
-                } catch (error) {
-                    console.error('Auth check failed:', error);
-                    currentUser = null;
-                }
-            }
-        }
-
-        function updateUserInfo() {
-            if (currentUser) {
-                const userName = currentUser.name || currentUser.firstName || currentUser.email || 'Student';
-                const firstName = userName.split(' ')[0] || userName.split('@')[0] || 'Student';
-                
-                document.getElementById('userName').textContent = firstName;
-                document.getElementById('userAvatar').textContent = firstName.charAt(0).toUpperCase();
-                document.getElementById('welcomeMessage').textContent = `Welcome back, ${firstName}!`;
-            }
-        }
-        
-        async function loadUserData() {
-            try {
-                userTestAttempts = [];
-                
-                if (currentUser) {
-                    try {
-                        const token = localStorage.getItem('authToken');
-                        const response = await fetch(`${API_BASE_URL}/user/test-history`, {
-                            headers: {
-                                'Authorization': `Bearer ${token}`,
-                                'Content-Type': 'application/json'
-                            }
-                        });
-                        
-                        if (response.ok) {
-                            const data = await response.json();
-                            userTestAttempts = (data.history || []).map(attempt => ({
-                                test_id: attempt.testId,
-                                score: attempt.percentage,
-                                correct_answers: attempt.score,
-                                total_questions: attempt.totalQuestions,
-                                time_spent: attempt.timeSpent,
-                                completed_at: attempt.submittedAt,
-                                user_answers: {},
-                                flagged_questions: []
-                            }));
-                            console.log('Loaded user test attempts:', userTestAttempts);
-                        }
-                    } catch (error) {
-                        console.log('Could not fetch user test attempts');
-                    }
-                }
-
-                const recentResults = sessionStorage.getItem('testResults');
-                if (recentResults) {
-                    try {
-                        const result = JSON.parse(recentResults);
-                        if (result && result.score !== undefined) {
-                            const existingAttempt = userTestAttempts.find(a => 
-                                a.test_id === (result.test_id || 1) && 
-                                Math.abs(new Date(a.completed_at) - new Date()) < 60000
-                            );
-                            
-                            if (!existingAttempt) {
-                                userTestAttempts.push({
-                                    test_id: result.test_id || 1,
-                                    score: result.score || Math.round((result.correct_answers / result.total_questions) * 100),
-                                    time_spent: result.time_spent || 0,
-                                    correct_answers: result.correct_answers || 0,
-                                    total_questions: result.total_questions || 42,
-                                    completed_at: new Date().toISOString()
-                                });
-                            }
-                        }
-                    } catch (error) {
-                        console.log('Could not parse recent test results');
-                    }
-                }
-                
-            } catch (error) {
-                console.error('Error loading user data:', error);
-            }
-        }
-        
-        async function loadTests() {
-            try {
-                console.log('Loading tests...');
-                const testStatuses = await checkTestContent();
-                availableTests = testStatuses;
-                renderTestsWithUserProgress(testStatuses);
-                updateTestsAvailableCount(testStatuses);
-                
-            } catch (error) {
-                console.error('Error loading tests:', error);
-                renderTestsFallback();
-            }
-        }
-        
-        async function checkTestContent() {
-            const testStatuses = {};
-            
-            for (let testId = 1; testId <= 10; testId++) {
-                try {
-                    const response = await fetch(`${API_BASE_URL}/tests/${testId}/status`);
-                    
-                    if (response.ok) {
-                        const data = await response.json();
-                        let questionCount = 0;
-                        
-                        if (data.questionCount !== undefined) {
-                            questionCount = data.questionCount;
-                        } else if (Array.isArray(data)) {
-                            questionCount = data.length;
-                        } else if (data.questions && Array.isArray(data.questions)) {
-                            questionCount = data.questions.length;
-                        } else if (data.count !== undefined) {
-                            questionCount = data.count;
-                        }
-                        
-                        testStatuses[testId] = {
-                            hasContent: questionCount > 0,
-                            questionCount: questionCount,
-                            status: questionCount > 0 ? 'available' : 'empty'
-                        };
-                    } else {
-                        testStatuses[testId] = {
-                            hasContent: false,
-                            questionCount: 0,
-                            status: 'empty'
-                        };
-                    }
-                } catch (error) {
-                    testStatuses[testId] = {
-                        hasContent: false,
-                        questionCount: 0,
-                        status: 'error'
-                    };
-                }
-            }
-            
-            return testStatuses;
-        }
-        
-        function renderTestsWithUserProgress(testStatuses) {
-            const container = document.getElementById('testsContainer');
-            container.innerHTML = '<div class="tests-grid"></div>';
-            const testsGrid = container.querySelector('.tests-grid');
-            
-            let testsHTML = '';
-            
-            const userPackage = getUserPackage(currentUser);
-            const purchasedTests = userPurchasedTests || [];
-            
-            for (let testId = 1; testId <= 10; testId++) {
-                const status = testStatuses[testId] || { hasContent: false, questionCount: 0, status: 'empty' };
-                
-                // ← MODIFIED: Only include attempts with 42 questions (premium tests)
-                const userAttempts = userTestAttempts.filter(attempt => 
-                    attempt.test_id === testId && attempt.total_questions !== 14
-                );
-                
-                const hasCompleted = userAttempts.length > 0;
-                
-                const canAccess = canAccessTest(testId, userPackage, purchasedTests);
-                const isPurchasedIndividually = purchasedTests.includes(testId);
-                
-                let bestScore = 0;
-                if (hasCompleted) {
-                    bestScore = Math.max(...userAttempts.map(attempt => {
-                        let score = attempt.score;
-                        
-                        if (score === undefined || score === null || isNaN(score)) {
-                            if (attempt.correct_answers !== undefined && attempt.total_questions > 0) {
-                                score = Math.round((attempt.correct_answers / attempt.total_questions) * 100);
-                            } else {
-                                score = 0;
-                            }
-                        } else {
-                            if (typeof score === 'string') {
-                                score = score.replace('%', '');
-                                score = parseFloat(score);
-                            } else {
-                                score = Number(score);
-                            }
-                        }
-                        
-                        return isNaN(score) ? 0 : score;
-                    }));
-                }
-                
-                const latestAttempt = hasCompleted ? userAttempts[userAttempts.length - 1] : null;
-                
-                if (status.hasContent || testId <= 10) {
-                    const cardClass = hasCompleted ? 'completed' : (canAccess && status.hasContent ? 'available' : 'locked');
-                    
-                    let statusText = '';
-                    let statusClass = '';
-                    
-                    if (!canAccess) {
-                        if (testId >= 1 && testId <= 5) {
-                            statusText = 'Requires Foundation or Complete';
-                        } else if (testId >= 6 && testId <= 10) {
-                            statusText = 'Requires Advanced or Complete';
-                        }
-                        statusClass = 'status-locked';
-                    } else if (hasCompleted) {
-                        statusText = `Completed (${Math.round(bestScore)}%)`;
-                        statusClass = 'status-completed';
-                    } else if (isPurchasedIndividually) {
-                        statusText = 'Purchased - Ready to Start';
-                        statusClass = 'status-available';
-                    } else if (status.hasContent) {
-                        statusText = 'Ready to Start';
-                        statusClass = 'status-available';
-                    } else {
-                        statusText = 'Coming Soon';
-                        statusClass = 'status-locked';
-                    }
-                    
-                    let actionButtons = '';
-                    
-                    if (!canAccess) {
-                        let upgradeText = '';
-                        if (testId >= 1 && testId <= 5) {
-                            upgradeText = userPackage === 'advanced' ? 'Upgrade to Complete' : 'Get Foundation Package';
-                        } else {
-                            upgradeText = userPackage === 'foundation' ? 'Upgrade to Complete' : 'Get Advanced Package';
-                        }
-                        
-                        actionButtons = `
-                            <button class="btn btn-test-action btn-buy-single" onclick="buySingleTest(${testId})">
-                                <i class="fas fa-shopping-cart"></i>Buy This Test<span class="single-test-price">(£18)</span>
-                            </button>
-                            <button class="btn btn-test-action btn-locked" onclick="upgradePrompt('${upgradeText}', ${testId})">
-                                <i class="fas fa-box-open me-1"></i>${upgradeText}
-                            </button>
-                        `;
-                    } else if (status.hasContent) {
-                        if (hasCompleted) {
-                            actionButtons = `
-                                <button class="btn btn-test-action btn-review" onclick="viewTestResults(${testId})">
-                                    <i class="fas fa-chart-line me-1"></i>Review
-                                </button>
-                                <button class="btn btn-test-action btn-retake" onclick="startTest(${testId})">
-                                    <i class="fas fa-redo me-1"></i>Retake
-                                </button>
-                            `;
-                        } else {
-                            actionButtons = `
-                                <button class="btn btn-test-action btn-start" onclick="startTest(${testId})">
-                                    <i class="fas fa-play me-1"></i>Start Test
-                                </button>
-                            `;
-                        }
-                    } else {
-                        actionButtons = `
-                            <button class="btn btn-test-action btn-locked" disabled>
-                                <i class="fas fa-clock me-1"></i>Coming Soon
-                            </button>
-                        `;
-                    }
-
-                    const progress = hasCompleted ? 100 : 0;
-                    
-                    const purchaseBadge = isPurchasedIndividually && !hasCompleted ? 
-                        `<span class="badge bg-warning text-dark ms-2" style="font-size: 0.7rem;"><i class="fas fa-check me-1"></i>Purchased</span>` : '';
-                    
-                    testsHTML += `
-<div class="test-card ${cardClass}">
-    <div class="test-number ${hasCompleted ? 'completed' : canAccess ? '' : 'locked'}">${testId}</div>
-
-    <div class="test-card-col">
-        <div class="test-card-divider"></div>
-        <div class="test-card-col-inner">
-            <h4 class="test-title">Practice Test ${testId}${purchaseBadge}</h4>
-            
-        </div>
+    <!-- Achievements -->
+    <div class="panel">
+      <div class="panel-title"><i class="fas fa-trophy"></i> Achievements</div>
+      <div class="ach-row" id="achievementsContainer">
+        <span class="ach-badge ach-blue"><i class="fas fa-star" style="font-size:9px;"></i> Welcome!</span>
+      </div>
     </div>
 
-    <div class="test-card-col">
-        <div class="test-card-divider"></div>
-        <div class="test-card-col-inner" style="text-align:center;">
-            ${hasCompleted ? `
-                <div class="test-score">${Math.round(bestScore)}%</div>
-                <div class="test-score-label">Best in ${userAttempts.length} attempt${userAttempts.length > 1 ? 's' : ''}</div>
-            ` : '<div style="color:#a0aec0;">—</div>'}
+    <!-- Recent Activity -->
+    <div class="panel">
+      <div class="panel-title"><i class="fas fa-history"></i> Recent Activity</div>
+      <div id="recentActivity">
+        <div class="activity-item">
+          <div class="act-icon act-join"><i class="fas fa-user-plus" style="font-size:10px;"></i></div>
+          <div class="act-info">
+            <div class="act-name">Joined Lexcello</div>
+            <div class="act-time" id="joinDate">Welcome to your LNAT prep!</div>
+          </div>
         </div>
+      </div>
     </div>
 
-    
-
-    <div class="test-card-col">
-        <div class="test-card-divider"></div>
-        <div class="test-card-col-inner">
-            <div class="test-detail">
-                <span class="detail-label">Access:</span>
-                <span class="detail-value ${canAccess ? 'text-success' : 'text-danger'}">
-                    ${canAccess ? '<i class="fas fa-check-circle"></i> Available' : '<i class="fas fa-lock"></i> Locked'}
-                </span>
-            </div>
-            <div class="test-detail">
-                <span class="detail-label">${hasCompleted && latestAttempt ? 'Last:' : canAccess ? 'Status:' : 'Required:'}</span>
-                <span class="detail-value">
-                    ${hasCompleted && latestAttempt ? formatDate(latestAttempt.completed_at) : canAccess ? 'Ready' : (testId <= 5 ? 'Foundation' : 'Advanced')}
-                </span>
-            </div>
-        </div>
+    <!-- Quick Stats -->
+    <div class="panel">
+      <div class="panel-title"><i class="fas fa-chart-bar"></i> Quick Stats</div>
+      <div class="mini-stats">
+        <div class="mini-stat"><div class="mini-val" id="totalTime">0h</div><div class="mini-lbl">Study time</div></div>
+        <div class="mini-stat"><div class="mini-val" id="accuracy">0%</div><div class="mini-lbl">Accuracy</div></div>
+        <div class="mini-stat"><div class="mini-val" id="improvement">+0%</div><div class="mini-lbl">Improvement</div></div>
+        <div class="mini-stat"><div class="mini-val" id="nextGoal">Test 1</div><div class="mini-lbl">Next goal</div></div>
+      </div>
+      <div class="meta-pair">
+        <span class="meta-lbl">Package</span>
+        <span class="meta-val" id="userPackageDisplay">Loading…</span>
+      </div>
+      <div class="meta-pair">
+        <span class="meta-lbl">Account</span>
+        <span class="meta-val green" id="accountStatus">Active</span>
+      </div>
+      <div class="meta-pair">
+        <span class="meta-lbl">Tests available</span>
+        <span class="meta-val" id="testsAvailable">—</span>
+      </div>
     </div>
 
-    <div class="test-actions">
-        ${actionButtons}
-    </div>
+  </div>
 </div>
-`;
-                }
-            }
-            
-            testsGrid.innerHTML = testsHTML;
-            console.log(`Rendered tests with package-based access control`);
-        }
 
-        function buySingleTest(testId) {
-            console.log('🛒 Buy single test clicked:', testId);
-            
-            if (!currentUser) {
-                showNotification('Please sign in to purchase a test', 'info');
-                localStorage.setItem('pendingSingleTestPurchase', testId);
-                window.location.href = 'login.html';
-                return;
-            }
-            
-            try {
-                gtag('event', 'single_test_purchase_clicked', {
-                    'event_category': 'payment',
-                    'event_label': `test_${testId}`,
-                    'value': 18
-                });
-            } catch (error) {
-                console.error('GA error:', error);
-            }
-            
-            localStorage.setItem('selectedPackage', 'single-test');
-            localStorage.setItem('selectedTestId', testId);
-            localStorage.setItem('selectedCurrency', 'GBP');
-            localStorage.setItem('selectedAmount', 1900);
-            
-            localStorage.removeItem('appliedCoupon');
-            
-            window.location.href = 'payment.html';
-        }
+<!-- ── Footer ── -->
+<footer class="footer">
+  <div class="container text-center">
+    <div class="footer-links mb-2">
+      <a href="index.html">Home</a>
+      <a href="about-lnat.html">About LNAT</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="contact.html">Contact</a>
+      <a href="privacy-policy.html">Privacy Policy</a>
+      <a href="terms-of-service.html">Terms of Service</a>
+    </div>
+    <div class="footer-copy">&copy; 2025 Lexcello. All rights reserved.</div>
+  </div>
+</footer>
 
-        function updateTestsAvailableCount(testStatuses) {
-            const userPackage = getUserPackage(currentUser);
-            const accessibleTests = userSubscriptionInfo?.accessibleTests || [];
-            const availableWithContent = accessibleTests.filter(testId => testStatuses[testId]?.hasContent).length;
-            
-            document.getElementById('testsAvailable').textContent = availableWithContent;
-        }
-        
-        function renderTestsFallback() {
-            const container = document.getElementById('testsContainer');
-            container.innerHTML = `
-                <div class="alert alert-warning mb-4">
-                    <i class="fas fa-exclamation-triangle me-2"></i>
-                    <strong>Connection Issue:</strong> Unable to load tests. Please refresh the page.
-                </div>
-            `;
-        }
-        
-        function updateProgressStats() {
-            const completedTests = userTestAttempts.length;
-            const uniqueTests = [...new Set(userTestAttempts.map(a => a.test_id))].length;
-            
-            const validScores = userTestAttempts
-                .map(attempt => {
-                    let score = attempt.score;
-                    
-                    if (score === undefined || score === null || isNaN(score)) {
-                        if (attempt.correct_answers !== undefined && attempt.total_questions > 0) {
-                            score = Math.round((attempt.correct_answers / attempt.total_questions) * 100);
-                        } else {
-                            score = 0;
-                        }
-                    } else {
-                        if (typeof score === 'string') {
-                            score = score.replace('%', '');
-                            score = parseFloat(score);
-                        } else {
-                            score = Number(score);
-                        }
-                    }
-                    return isNaN(score) ? 0 : score;
-                })
-                .filter(score => score > 0);
-            
-            const totalScore = validScores.reduce((sum, score) => sum + score, 0);
-            const averageScore = validScores.length > 0 ? Math.round(totalScore / validScores.length) : 0;
-            const bestScore = validScores.length > 0 ? Math.max(...validScores) : 0;
-            
-            let improvement = 0;
-            if (validScores.length >= 2) {
-                const firstScore = validScores[0];
-                const latestScore = validScores[validScores.length - 1];
-                if (firstScore > 0) {
-                    improvement = Math.round(((latestScore - firstScore) / firstScore) * 100);
-                }
-            }
+<div id="notification" class="notification"></div>
 
-            const studyStreak = Math.min(uniqueTests * 2, 14);
-            
-            animateNumber('testsCompleted', uniqueTests);
-            animateNumber('averageScore', averageScore, '%');
-            animateNumber('bestScore', bestScore, '%');
-            animateNumber('studyStreak', studyStreak);
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-            updateTrend('testsCompletedTrend', uniqueTests > 0 ? 'up' : '', uniqueTests > 0 ? `+${uniqueTests} this week` : '');
-            updateTrend('averageScoreTrend', improvement > 0 ? 'up' : improvement < 0 ? 'down' : '', improvement !== 0 ? `${improvement > 0 ? '+' : ''}${improvement}%` : '');
-            updateTrend('bestScoreTrend', bestScore > averageScore ? 'up' : '', bestScore > 0 ? `${bestScore - averageScore > 0 ? '+' : ''}${bestScore - averageScore}% above avg` : '');
-            updateTrend('studyStreakTrend', studyStreak > 0 ? 'up' : '', studyStreak > 0 ? 'Keep it up!' : '');
-            
-            const totalTime = userTestAttempts.reduce((sum, attempt) => sum + (attempt.time_spent || 0), 0);
-            const accuracy = completedTests > 0 ? Math.round((userTestAttempts.reduce((sum, attempt) => sum + (attempt.correct_answers || 0), 0) / userTestAttempts.reduce((sum, attempt) => sum + (attempt.total_questions || 42), 0)) * 100) : 0;
-            
-            document.getElementById('totalTime').textContent = `${Math.round(totalTime / 3600)}h`;
-            document.getElementById('accuracy').textContent = `${accuracy}%`;
-            document.getElementById('improvement').textContent = improvement > 0 ? `+${improvement}%` : improvement < 0 ? `${improvement}%` : '0%';
-            
-            const nextTestId = Math.max(1, uniqueTests + 1);
-            document.getElementById('nextGoal').textContent = nextTestId <= 10 ? `Test ${nextTestId}` : 'Complete!';
+<script>
+/* ─────────────────────────────────────────────
+   Configuration & State
+───────────────────────────────────────────── */
+const API_BASE_URL = 'https://lexcello-backend.onrender.com/api';
+let currentUser        = null;
+let userTestAttempts   = [];
+let availableTests     = {};
+let userSubscriptionInfo = null;
+let userPurchasedTests = [];
 
-            const userPackage = getUserPackage(currentUser);
-            const packageDisplay = document.getElementById('userPackageDisplay');
-            if (packageDisplay) {
-                let displayText = getPackageDisplayName(userPackage);
-                
-                if (userPurchasedTests && userPurchasedTests.length > 0 && userPackage !== 'complete') {
-                    displayText += ` + ${userPurchasedTests.length} individual test${userPurchasedTests.length > 1 ? 's' : ''}`;
-                }
-                
-                packageDisplay.textContent = displayText;
-                packageDisplay.className = 'detail-value ' + (userPackage !== 'free' || userPurchasedTests.length > 0 ? 'text-success' : 'text-warning');
-            }
+const SINGLE_TEST_PRICE = {
+  GBP: { symbol: '£', price: 18, actualCharge: 1900 },
+  USD: { symbol: '$', price: 23, actualCharge: 1900 },
+  INR: { symbol: '₹', price: 1900, actualCharge: 1900 }
+};
 
-            const accountStatus = document.getElementById('accountStatus');
-            if (accountStatus) {
-                if (userPackage !== 'free' || (userPurchasedTests && userPurchasedTests.length > 0)) {
-                    accountStatus.textContent = 'Premium';
-                    accountStatus.className = 'detail-value text-success';
-                } else {
-                    accountStatus.textContent = 'Free';
-                    accountStatus.className = 'detail-value text-warning';
-                }
-            }
+/* ─────────────────────────────────────────────
+   Init
+───────────────────────────────────────────── */
+document.addEventListener('DOMContentLoaded', async () => {
+  await initializeDashboard();
+});
 
-            updatePerformanceChart();
-        }
-
-        function updateTrend(elementId, direction, text) {
-            const element = document.getElementById(elementId);
-            element.className = `progress-trend trend-${direction}`;
-            element.textContent = text;
-        }
-
-        function updatePerformanceChart() {
-            if (userTestAttempts.length === 0) {
-                return;
-            }
-
-            const container = document.getElementById('performanceChartContainer');
-            
-            const testScores = {};
-            userTestAttempts.forEach(attempt => {
-                let score = attempt.score;
-                
-                if (score === undefined || score === null || isNaN(score)) {
-                    if (attempt.correct_answers !== undefined && attempt.total_questions > 0) {
-                        score = Math.round((attempt.correct_answers / attempt.total_questions) * 100);
-                    } else {
-                        score = 0;
-                    }
-                } else {
-                    if (typeof score === 'string') {
-                        score = score.replace('%', '');
-                        score = parseFloat(score);
-                    } else {
-                        score = Number(score);
-                    }
-                }
-                
-                if (isNaN(score)) score = 0;
-                
-                if (!testScores[attempt.test_id] || testScores[attempt.test_id] < score) {
-                    testScores[attempt.test_id] = score;
-                }
-            });
-
-            const scores = Object.values(testScores);
-            const testNumbers = Object.keys(testScores).sort((a, b) => a - b);
-
-            if (scores.length < 2) {
-                container.innerHTML = `
-                    <div class="chart-placeholder">
-                        <div style="background: linear-gradient(135deg, var(--success-color), #38a169); width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; color: white; font-size: 1.5rem; font-weight: 700;">
-                            ${Math.round(scores[0])}%
-                        </div>
-                        <div class="h5 text-success">${Math.round(scores[0])}%</div>
-                        <div class="text-muted">Your Score on Test ${testNumbers[0]}</div>
-                        <div class="mt-3">
-                            <span class="badge bg-success">Great start!</span>
-                        </div>
-                    </div>
-                `;
-                return;
-            }
-
-            const firstScore = scores[0];
-            const latestScore = scores[scores.length - 1];
-            const bestScore = Math.max(...scores);
-            const averageScore = Math.round(scores.reduce((a, b) => a + b) / scores.length);
-            const improvement = Math.round(((bestScore - firstScore) / firstScore) * 100);
-
-            container.innerHTML = `
-                <div style="padding: 15px;">
-                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 15px;">
-                        <div style="background: var(--bg-light); padding: 12px; border-radius: 8px; text-align: center;">
-                            <div style="font-size: 1.3rem; font-weight: 700; color: var(--primary-color);">${averageScore}%</div>
-                            <div style="font-size: 0.8rem; color: var(--text-light);">Average Score</div>
-                        </div>
-                        <div style="background: var(--bg-light); padding: 12px; border-radius: 8px; text-align: center;">
-                            <div style="font-size: 1.3rem; font-weight: 700; color: var(--success-color);">${Math.round(bestScore)}%</div>
-                            <div style="font-size: 0.8rem; color: var(--text-light);">Best Score</div>
-                        </div>
-                    </div>
-                    
-                    <div style="background: linear-gradient(135deg, #e6f3ff, #f0f8ff); border-left: 4px solid ${improvement > 0 ? 'var(--success-color)' : 'var(--warning-color)'}; padding: 12px; border-radius: 8px;">
-                        <div style="font-weight: 600; color: var(--text-dark); margin-bottom: 3px;">
-                            ${improvement > 0 ? '📈 Improving Trend' : '📊 Keep Practicing'}
-                        </div>
-                        <div style="font-size: 0.85rem; color: var(--text-light);">
-                            ${improvement > 0 ? `+${improvement}% improvement from first to best score` : 'You\'re building consistency across tests'}
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-        
-        function updateRecentActivity() {
-            const activityContainer = document.getElementById('recentActivity');
-            let activityHTML = '';
-
-            const sortedAttempts = [...userTestAttempts].sort((a, b) => new Date(b.completed_at) - new Date(a.completed_at));
-
-            sortedAttempts.slice(0, 5).forEach(attempt => {
-                let score = attempt.score;
-                
-                if (score === undefined || score === null || isNaN(score)) {
-                    if (attempt.correct_answers !== undefined && attempt.total_questions > 0) {
-                        score = Math.round((attempt.correct_answers / attempt.total_questions) * 100);
-                    } else {
-                        score = 0;
-                    }
-                } else {
-                    if (typeof score === 'string') {
-                        score = score.replace('%', '');
-                        score = parseFloat(score);
-                    } else {
-                        score = Number(score);
-                    }
-                }
-                
-                if (isNaN(score)) score = 0;
-                
-                const isGreatScore = score >= 85;
-                
-                // Determine if this is free test or premium test
-                const testName = attempt.total_questions === 14 ? 'Free Diagnostic Test' : `Practice Test ${attempt.test_id}`;
-                
-                activityHTML += `
-                    <div class="activity-item">
-                        <div class="activity-icon ${isGreatScore ? 'activity-improvement' : 'activity-completed'}">
-                            <i class="fas fa-${isGreatScore ? 'star' : 'check'}"></i>
-                        </div>
-                        <div class="activity-info">
-                            <div class="activity-title">Completed ${testName}</div>
-                            <div class="activity-time">${formatDate(attempt.completed_at)}</div>
-                        </div>
-                        <div class="activity-score">${Math.round(score)}%</div>
-                    </div>
-                `;
-            });
-
-            if (activityHTML === '') {
-                activityHTML = `
-                    <div class="activity-item">
-                        <div class="activity-icon activity-started">
-                            <i class="fas fa-user-plus"></i>
-                        </div>
-                        <div class="activity-info">
-                            <div class="activity-title">Joined Lexcello</div>
-                            <div class="activity-time">Welcome to your LNAT prep!</div>
-                        </div>
-                    </div>
-                `;
-            }
-
-            activityContainer.innerHTML = activityHTML;
-        }
-
-        function generateAchievements() {
-            const achievementsContainer = document.getElementById('achievementsContainer');
-            const completedTests = [...new Set(userTestAttempts.map(a => a.test_id))].length;
-            
-            let bestScore = 0;
-            if (userTestAttempts.length > 0) {
-                const validScores = userTestAttempts.map(a => {
-                    let score = a.score;
-                    if (typeof score === 'string') score = parseFloat(score.replace('%', ''));
-                    return Number(score) || 0;
-                });
-                bestScore = Math.max(...validScores);
-            }
-            
-            const totalAttempts = userTestAttempts.length;
-            
-            let achievementsHTML = `
-                <div class="achievement-badge">
-                    <i class="fas fa-star"></i>
-                    Welcome!
-                </div>
-            `;
-
-            if (completedTests >= 1) {
-                achievementsHTML += `
-                    <div class="achievement-badge">
-                        <i class="fas fa-play"></i>
-                        First Test
-                    </div>
-                `;
-            }
-
-            if (completedTests >= 3) {
-                achievementsHTML += `
-                    <div class="achievement-badge gold">
-                        <i class="fas fa-medal"></i>
-                        3 Tests Done
-                    </div>
-                `;
-            }
-
-            if (completedTests >= 5) {
-                achievementsHTML += `
-                    <div class="achievement-badge gold">
-                        <i class="fas fa-trophy"></i>
-                        Halfway There
-                    </div>
-                `;
-            }
-
-            if (bestScore >= 70) {
-                achievementsHTML += `
-                    <div class="achievement-badge">
-                        <i class="fas fa-thumbs-up"></i>
-                        70%+ Score
-                    </div>
-                `;
-            }
-
-            if (bestScore >= 85) {
-                achievementsHTML += `
-                    <div class="achievement-badge gold">
-                        <i class="fas fa-star"></i>
-                        85%+ Score
-                    </div>
-                `;
-            }
-
-            if (totalAttempts >= 5) {
-                achievementsHTML += `
-                    <div class="achievement-badge silver">
-                        <i class="fas fa-dumbbell"></i>
-                        Dedicated
-                    </div>
-                `;
-            }
-
-            achievementsContainer.innerHTML = achievementsHTML;
-        }
-        
-        function animateNumber(elementId, target, suffix = '') {
-            const element = document.getElementById(elementId);
-            let current = 0;
-            const increment = Math.max(1, Math.floor(target / 30));
-            
-            const timer = setInterval(() => {
-                current += increment;
-                if (current >= target) {
-                    element.textContent = target + suffix;
-                    clearInterval(timer);
-                } else {
-                    element.textContent = current + suffix;
-                }
-            }, 50);
-        }
-
-        function formatDate(dateString) {
-            if (!dateString) return 'Recently';
-            
-            try {
-                const date = new Date(dateString);
-                
-                if (isNaN(date.getTime())) {
-                    return 'Recently';
-                }
-                
-                const now = new Date();
-                const diffTime = Math.abs(now - date);
-                const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-                
-                if (diffDays === 0) return 'Today';
-                if (diffDays === 1) return 'Yesterday';
-                if (diffDays <= 7) return `${diffDays} days ago`;
-                if (diffDays <= 30) return `${Math.floor(diffDays / 7)} weeks ago`;
-                
-                return date.toLocaleDateString('en-US', { 
-                    month: 'short', 
-                    day: 'numeric',
-                    year: date.getFullYear() !== now.getFullYear() ? 'numeric' : undefined
-                });
-            } catch (error) {
-                console.error('Date formatting error:', error);
-                return 'Recently';
-            }
-        }
-        
-        function startTest(testNumber) {
-            if (!currentUser) {
-                showNotification('Please sign in to access practice tests', 'info');
-                window.location.href = 'login.html';
-                return;
-            }
-            
-            const userPackage = getUserPackage(currentUser);
-            const hasAccess = canAccessTest(testNumber, userPackage, userPurchasedTests);
-            
-            if (!hasAccess) {
-                let requiredPackage = '';
-                let upgradeMessage = '';
-                
-                if (testNumber >= 1 && testNumber <= 5) {
-                    requiredPackage = 'Foundation or Complete Package';
-                    upgradeMessage = userPackage === 'advanced' 
-                        ? 'Upgrade to Complete Package to access Tests 1-5' 
-                        : 'Purchase Foundation or Complete Package to access Tests 1-5';
-                } else if (testNumber >= 6 && testNumber <= 10) {
-                    requiredPackage = 'Advanced or Complete Package';
-                    upgradeMessage = userPackage === 'foundation' 
-                        ? 'Upgrade to Complete Package to access Tests 6-10' 
-                        : 'Purchase Advanced or Complete Package to access Tests 6-10';
-                }
-                
-                showNotification(upgradeMessage, 'info');
-                
-                if (confirm(`Test ${testNumber} requires ${requiredPackage}.\n\nWould you like to:\n• Buy just this test for £18\n• View all pricing options\n\nClick OK to view pricing.`)) {
-                    try {
-                        gtag('event', 'upgrade_from_test_click', {
-                            'event_category': 'dashboard',
-                            'event_label': `test_${testNumber}`,
-                            'current_package': userPackage || 'none'
-                        });
-                    } catch (error) {
-                        console.error('GA error:', error);
-                    }
-                    
-                    window.location.href = 'pricing.html';
-                }
-                return;
-            }
-            
-            if (confirm(`Ready to start Practice Test ${testNumber}? This test must be completed in one session and will take approximately 95 minutes.`)) {
-                try {
-                    gtag('event', 'test_started', {
-                        'event_category': 'dashboard',
-                        'event_label': `test_${testNumber}`,
-                        'value': testNumber
-                    });
-                } catch (error) {
-                    console.error('GA error:', error);
-                }
-                
-                window.location.href = `practice-test-1.html?test=${testNumber}`;
-            }
-        }
-
-        async function viewTestResults(testNumber) {
-            try {
-                const token = localStorage.getItem('authToken');
-                if (!token) {
-                    showNotification('Please sign in to view results', 'error');
-                    return;
-                }
-
-                const response = await fetch(`${API_BASE_URL}/user/test-attempts/${testNumber}`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
-                    }
-                });
-
-                if (response.ok) {
-                    const attemptData = await response.json();
-                    sessionStorage.setItem('sectionAResults', JSON.stringify(attemptData));
-                    window.location.href = `test-results.html?test=${testNumber}`;
-                } else {
-                    showNotification('Could not load test results', 'error');
-                }
-            } catch (error) {
-                console.error('Error loading test results:', error);
-                showNotification('Failed to load test results', 'error');
-            }
-        }
-
-        function upgradePrompt(requiredPackage, testId) {
-            const message = `Test ${testId} requires ${requiredPackage}.\n\nYou can also buy just this test for £18.\n\nWould you like to view pricing options?`;
-            
-            if (confirm(message)) {
-                try {
-                    gtag('event', 'upgrade_prompt_clicked', {
-                        'event_category': 'dashboard',
-                        'event_label': `test_${testId}_${requiredPackage}`,
-                        'value': testId
-                    });
-                } catch (error) {
-                    console.error('GA error:', error);
-                }
-                
-                window.location.href = 'pricing.html';
-            }
-        }
-
-        function showAllTests() {
-            document.querySelector('.tests-grid').scrollIntoView({ behavior: 'smooth' });
-        }
-        
-        function signOut() {
-            if (confirm('Are you sure you want to sign out?')) {
-                localStorage.removeItem('authToken');
-                sessionStorage.clear();
-                window.location.href = 'index.html';
-            }
-        }
-
-        function showLoadingError() {
-            const container = document.getElementById('testsContainer');
-            container.innerHTML = `
-                <div class="alert alert-danger">
-                    <i class="fas fa-exclamation-triangle me-2"></i>
-                    <strong>Loading Error:</strong> Unable to connect to the server. Please check your connection and try again.
-                    <button class="btn btn-outline-danger btn-sm ms-3" onclick="initializeDashboard()">
-                        <i class="fas fa-refresh me-1"></i>Retry
-                    </button>
-                </div>
-            `;
-        }
-        
-        function showNotification(message, type = 'info') {
-            const notification = document.getElementById('notification');
-            notification.textContent = message;
-            notification.className = `notification ${type}`;
-            notification.classList.add('show');
-            
-            setTimeout(() => {
-                notification.classList.remove('show');
-            }, 3000);
-        }
-
-        window.addEventListener('unhandledrejection', function(event) {
-            console.error('Unhandled promise rejection:', event.reason);
-        });
-
-        setInterval(async () => {
-            try {
-                await loadUserData();
-                updateProgressStats();
-                updateRecentActivity();
-            } catch (error) {
-                console.log('Auto-refresh failed:', error);
-            }
-        }, 300000);
-        function showFeaturedTestsSection() {
-    const userPackage = getUserPackage(currentUser);
-    if (userPackage && userPackage !== 'free') {
-        const section = document.getElementById('featuredTestsSection');
-        if (section) section.style.display = 'block';
-        loadFeaturedTestsHistory();
-    }
+async function initializeDashboard() {
+  try {
+    await checkAuthStatus();
+    userSubscriptionInfo = await checkUserSubscriptionStatus();
+    await loadUserData();
+    await loadTests();
+    renderFreeDiagnosticTest();
+    updateProgressStats();
+    updateRecentActivity();
+    generateAchievements();
+    showFreeTestPromoIfNeeded();
+    showFeaturedTestsSection();
+  } catch (err) {
+    console.error('Dashboard init error:', err);
+    showLoadingError();
+  }
 }
-        function navigateToFreeTest() {
-            console.log('=== FREE TEST NAVIGATION ===');
-            
-            const token = localStorage.getItem('authToken');
-            
-            console.log('Token exists:', !!token);
-            console.log('Token preview:', token ? token.substring(0, 30) + '...' : 'MISSING');
-            
-            if (!token) {
-                alert('Authentication error. Please refresh and login again.');
-                window.location.href = 'login.html';
-                return;
-            }
-            
-            localStorage.setItem('authToken', token);
-            sessionStorage.setItem('authToken', token);
-            sessionStorage.setItem('authBackup', token);
-            
-            console.log('✅ Token stored in both storages');
-            console.log('✅ Navigating to free-test.html...');
-            
-            try {
-                gtag('event', 'free_test_navigation', {
-                    'event_category': 'dashboard',
-                    'event_label': 'free_test_button_clicked'
-                });
-            } catch (error) {
-                console.error('GA tracking error:', error);
-            }
-            
-            window.location.href = '/free-test.html';
+
+/* ─────────────────────────────────────────────
+   Auth
+───────────────────────────────────────────── */
+async function checkAuthStatus() {
+  const token = localStorage.getItem('authToken');
+  if (!token) return;
+  try {
+    const res = await fetch(`${API_BASE_URL}/auth/profile`, {
+      headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }
+    });
+    if (res.ok) {
+      currentUser = await res.json();
+      updateUserInfo();
+    } else {
+      localStorage.removeItem('authToken');
+      currentUser = null;
+    }
+  } catch (err) {
+    console.error('Auth check failed:', err);
+    currentUser = null;
+  }
+}
+
+function updateUserInfo() {
+  if (!currentUser) return;
+  const name      = currentUser.name || currentUser.firstName || currentUser.email || 'Student';
+  const firstName = name.split(' ')[0] || name.split('@')[0] || 'Student';
+  document.getElementById('userName').textContent      = firstName;
+  document.getElementById('userAvatar').textContent    = firstName.charAt(0).toUpperCase();
+  document.getElementById('welcomeMessage').textContent = `Welcome back, ${firstName}!`;
+}
+
+/* ─────────────────────────────────────────────
+   Subscription helpers
+───────────────────────────────────────────── */
+function getUserPackage(userData) {
+  if (!userData || !userData.subscriptionStatus) return 'free';
+  if (userData.subscriptionPackage) {
+    const p = userData.subscriptionPackage.toLowerCase();
+    if (p === 'foundation' || p === 'tests-1-5')  return 'foundation';
+    if (p === 'advanced'   || p === 'tests-6-10') return 'advanced';
+    if (p === 'complete'   || p === 'premium-12') return 'complete';
+  }
+  if (userData.subscriptionPlan) {
+    const p = userData.subscriptionPlan.toLowerCase();
+    if (p.includes('foundation') || p.includes('1-5') || p.includes('tests-1-5')) return 'foundation';
+    if (p.includes('advanced')   || p.includes('6-10'))                           return 'advanced';
+    if (p.includes('complete')   || p.includes('1-10') || p.includes('premium-complete')) return 'complete';
+  }
+  if ((userData.subscriptionStatus === 'premium' || userData.subscriptionStatus === 'active')
+      && !userData.subscriptionPackage && !userData.subscriptionPlan) return 'complete';
+  return 'free';
+}
+
+function getPackageDisplayName(pkg) {
+  return {
+    foundation: 'Foundation (1–5)',
+    advanced:   'Advanced (6–10)',
+    complete:   'Complete (all tests)',
+    premium:    'Premium (all tests)',
+    free:       'Free access'
+  }[pkg] || 'Free access';
+}
+
+function canAccessTest(testId, userPackage, purchasedTests = []) {
+  if (purchasedTests.includes(testId)) return true;
+  if (!userPackage || ['free','inactive','expired'].includes(userPackage)) return false;
+  if (userPackage === 'foundation' || userPackage === 'tests-1-5') return testId >= 1 && testId <= 5;
+  if (userPackage === 'advanced'   || userPackage === 'tests-6-10') return testId >= 6 && testId <= 10;
+  if (['complete','premium','premium-12'].includes(userPackage)) return testId >= 1 && testId <= 10;
+  return false;
+}
+
+async function checkUserSubscriptionStatus() {
+  const token = localStorage.getItem('authToken');
+  if (!token || !currentUser) return { isPaid: false, isDemo: true, packageType: 'free', accessibleTests: [], purchasedTests: [] };
+  try {
+    const res = await fetch(`${API_BASE_URL}/auth/profile`, {
+      headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }
+    });
+    if (!res.ok) return { isPaid: false, isDemo: false, packageType: 'free', accessibleTests: [], purchasedTests: [] };
+
+    const userData   = await res.json();
+    const status     = userData.subscriptionStatus || 'inactive';
+    const packageType = getUserPackage(userData);
+    const isPaid     = status === 'premium' || status === 'active';
+    userPurchasedTests = userData.purchasedTests || [];
+
+    let isExpired = false;
+    if (userData.subscriptionExpiresAt) {
+      isExpired = new Date(userData.subscriptionExpiresAt) < new Date();
+    }
+
+    let accessible = [...userPurchasedTests];
+    if (isPaid && !isExpired) {
+      if (packageType === 'foundation') accessible = [...new Set([...accessible, 1,2,3,4,5])];
+      else if (packageType === 'advanced') accessible = [...new Set([...accessible, 6,7,8,9,10])];
+      else if (['complete','premium'].includes(packageType)) accessible = [1,2,3,4,5,6,7,8,9,10];
+    }
+
+    return {
+      isPaid: isPaid && !isExpired, subscriptionStatus: status,
+      packageType, packageName: getPackageDisplayName(packageType),
+      expiresAt: userData.subscriptionExpiresAt, isExpired, isDemo: false,
+      accessibleTests: accessible, purchasedTests: userPurchasedTests
+    };
+  } catch (err) {
+    console.error('Subscription check failed:', err);
+    return { isPaid: false, isDemo: false, packageType: 'free', accessibleTests: [], purchasedTests: [] };
+  }
+}
+
+/* ─────────────────────────────────────────────
+   Free promo banner (header)
+───────────────────────────────────────────── */
+function showFreeTestPromoIfNeeded() {
+  const pkg = getUserPackage(currentUser);
+  if (pkg && pkg !== 'free' && pkg !== 'inactive') return;
+
+  const el = document.getElementById('freeTestPromo');
+  if (!el) return;
+  el.innerHTML = `
+    <div class="free-banner" style="margin-top:16px;">
+      <div>
+        <div class="free-banner-title"><i class="fas fa-gift me-1"></i>Try our free 14-question practice test!</div>
+        <div class="free-banner-sub">Score 40%+ to unlock an exclusive 30–50% scholarship discount on premium packages.</div>
+      </div>
+      <button class="btn-action btn-success-solid" onclick="navigateToFreeTest()">
+        <i class="fas fa-rocket me-1"></i>Start free test
+      </button>
+    </div>
+  `;
+  try {
+    gtag('event', 'free_test_promo_shown', { event_category: 'dashboard', event_label: 'promo_banner_displayed', user_package: pkg || 'none' });
+  } catch(e){}
+}
+
+/* ─────────────────────────────────────────────
+   Free Diagnostic Test card
+───────────────────────────────────────────── */
+function renderFreeDiagnosticTest() {
+  const container = document.getElementById('freeTestContainer');
+  const freeAttempts = userTestAttempts.filter(a => a.total_questions === 14);
+  const hasCompleted = freeAttempts.length > 0;
+
+  let bestScore = 0;
+  if (hasCompleted) {
+    bestScore = Math.max(...freeAttempts.map(a => {
+      let s = a.score;
+      if (s == null || isNaN(s)) s = a.correct_answers && a.total_questions ? Math.round(a.correct_answers / a.total_questions * 100) : 0;
+      return Number(s) || 0;
+    }));
+  }
+  const latest = hasCompleted ? freeAttempts[freeAttempts.length - 1] : null;
+
+  container.innerHTML = `
+<div class="test-table" style="margin-bottom:20px;">
+  <div class="test-table-head">
+    <div></div>
+    <div class="th" style="padding-left:12px;">Test</div>
+    <div class="th center">Score</div>
+    <div class="th">Details</div>
+    <div class="th right">Actions</div>
+  </div>
+  <div class="test-row ${hasCompleted ? 'is-done' : 'is-avail'}">
+    <div class="num-circle ${hasCompleted ? 'nc-done' : 'nc-avail'}">
+      <i class="fas fa-gift" style="font-size:10px;"></i>
+    </div>
+    <div>
+      <div class="test-name">Free 14-question diagnostic</div>
+      <div class="test-sub">Score 40%+ for scholarship discount</div>
+    </div>
+    <div class="col-score">
+      ${hasCompleted
+        ? `<div class="score-val">${bestScore}%</div>
+           <div class="score-attempts">${freeAttempts.length} attempt${freeAttempts.length > 1 ? 's' : ''}</div>`
+        : `<div class="score-na">—</div>`
+      }
+    </div>
+    <div>
+      ${hasCompleted
+        ? `<span class="pill pill-done">Completed</span>
+           <div style="font-size:11px;color:var(--ink-light);margin-top:4px;">Last: ${formatDate(latest?.completed_at)}</div>`
+        : `<span class="pill pill-avail">Free &amp; ready</span>`
+      }
+    </div>
+    <div class="actions-cell">
+      ${hasCompleted
+        ? `<button class="btn-action btn-review" onclick="viewFreeTestResults()"><i class="fas fa-chart-line me-1"></i>Review</button>
+           <button class="btn-action btn-retake" onclick="navigateToFreeTest()"><i class="fas fa-redo me-1"></i>Retake</button>`
+        : `<button class="btn-action btn-start" onclick="navigateToFreeTest()"><i class="fas fa-play me-1"></i>Start free test</button>`
+      }
+    </div>
+  </div>
+</div>`;
+}
+
+async function viewFreeTestResults() {
+  const token = localStorage.getItem('authToken');
+  if (!token) { showNotification('Please sign in to view results', 'error'); return; }
+  const attempt = userTestAttempts.find(a => a.total_questions === 14);
+  if (attempt) {
+    sessionStorage.setItem('freeTestResults', JSON.stringify(attempt));
+    window.location.href = 'free-test-results.html';
+  } else {
+    showNotification('No free test results found', 'error');
+  }
+}
+
+/* ─────────────────────────────────────────────
+   Load user data
+───────────────────────────────────────────── */
+async function loadUserData() {
+  userTestAttempts = [];
+  if (currentUser) {
+    try {
+      const token = localStorage.getItem('authToken');
+      const res = await fetch(`${API_BASE_URL}/user/test-history`, {
+        headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }
+      });
+      if (res.ok) {
+        const data = await res.json();
+        userTestAttempts = (data.history || []).map(a => ({
+          test_id: a.testId,
+          score: a.percentage,
+          correct_answers: a.score,
+          total_questions: a.totalQuestions,
+          time_spent: a.timeSpent,
+          completed_at: a.submittedAt,
+          user_answers: {},
+          flagged_questions: []
+        }));
+      }
+    } catch(e) { console.log('Could not fetch test attempts'); }
+  }
+
+  const recent = sessionStorage.getItem('testResults');
+  if (recent) {
+    try {
+      const r = JSON.parse(recent);
+      if (r && r.score !== undefined) {
+        const exists = userTestAttempts.find(a =>
+          a.test_id === (r.test_id || 1) && Math.abs(new Date(a.completed_at) - new Date()) < 60000
+        );
+        if (!exists) {
+          userTestAttempts.push({
+            test_id: r.test_id || 1,
+            score: r.score || Math.round((r.correct_answers / r.total_questions) * 100),
+            time_spent: r.time_spent || 0,
+            correct_answers: r.correct_answers || 0,
+            total_questions: r.total_questions || 42,
+            completed_at: new Date().toISOString()
+          });
         }
-        // ========== FEATURED TESTS HISTORY ==========
+      }
+    } catch(e){}
+  }
+}
+
+/* ─────────────────────────────────────────────
+   Load & render premium tests
+───────────────────────────────────────────── */
+async function loadTests() {
+  try {
+    const statuses = await checkTestContent();
+    availableTests = statuses;
+    renderTestsWithUserProgress(statuses);
+    updateTestsAvailableCount(statuses);
+  } catch(err) {
+    console.error('Error loading tests:', err);
+    renderTestsFallback();
+  }
+}
+
+async function checkTestContent() {
+  const out = {};
+  for (let id = 1; id <= 10; id++) {
+    try {
+      const res = await fetch(`${API_BASE_URL}/tests/${id}/status`);
+      if (res.ok) {
+        const data = await res.json();
+        let count = data.questionCount ?? (Array.isArray(data) ? data.length : (data.questions ? data.questions.length : (data.count ?? 0)));
+        out[id] = { hasContent: count > 0, questionCount: count, status: count > 0 ? 'available' : 'empty' };
+      } else {
+        out[id] = { hasContent: false, questionCount: 0, status: 'empty' };
+      }
+    } catch(e) {
+      out[id] = { hasContent: false, questionCount: 0, status: 'error' };
+    }
+  }
+  return out;
+}
+
+function renderTestsWithUserProgress(statuses) {
+  const container = document.getElementById('testsContainer');
+  const userPackage = getUserPackage(currentUser);
+  const purchased   = userPurchasedTests || [];
+
+  // Separate locked groups for collapsing
+  const rows = [];
+
+  for (let id = 1; id <= 10; id++) {
+    const status       = statuses[id] || { hasContent: false, questionCount: 0 };
+    const attempts     = userTestAttempts.filter(a => a.test_id === id && a.total_questions !== 14);
+    const hasCompleted = attempts.length > 0;
+    const canAccess    = canAccessTest(id, userPackage, purchased);
+    const isBought     = purchased.includes(id);
+
+    let bestScore = 0;
+    if (hasCompleted) {
+      bestScore = Math.max(...attempts.map(a => {
+        let s = a.score;
+        if (s == null || isNaN(s)) s = a.correct_answers && a.total_questions ? Math.round(a.correct_answers / a.total_questions * 100) : 0;
+        if (typeof s === 'string') s = parseFloat(s.replace('%',''));
+        return isNaN(Number(s)) ? 0 : Number(s);
+      }));
+    }
+    const latest = hasCompleted ? attempts[attempts.length - 1] : null;
+
+    rows.push({ id, status, attempts, hasCompleted, canAccess, isBought, bestScore, latest, userPackage, purchased });
+  }
+
+  // Build table HTML
+  let html = `
+<div class="test-table">
+  <div class="test-table-head">
+    <div></div>
+    <div class="th" style="padding-left:12px;">Test</div>
+    <div class="th center">Best score</div>
+    <div class="th">Status</div>
+    <div class="th right">Actions</div>
+  </div>`;
+
+  rows.forEach(r => {
+    const { id, status, attempts, hasCompleted, canAccess, isBought, bestScore, latest, userPackage } = r;
+
+    const cardClass = hasCompleted ? 'is-done' : canAccess && status.hasContent ? 'is-avail' : 'is-locked';
+    const ncClass   = hasCompleted ? 'nc-done' : canAccess ? 'nc-avail' : 'nc-lock';
+
+    let pillHTML = '', subText = '', actionHTML = '';
+
+    if (!canAccess) {
+      const req = id <= 5 ? 'Foundation or Complete' : 'Advanced or Complete';
+      pillHTML  = `<span class="pill pill-lock"><i class="fas fa-lock" style="font-size:9px;"></i> Locked</span>`;
+      subText   = `Requires ${req}`;
+      actionHTML = `
+        <button class="btn-action btn-buy" onclick="buySingleTest(${id})">
+          <i class="fas fa-shopping-cart me-1"></i>Buy · £18
+        </button>
+        <button class="btn-action btn-upgrade" onclick="upgradePrompt('${req}', ${id})">
+          Upgrade
+        </button>`;
+    } else if (!status.hasContent) {
+      pillHTML   = `<span class="pill pill-coming">Coming soon</span>`;
+      subText    = '—';
+      actionHTML = `<button class="btn-action btn-locked" disabled>Coming soon</button>`;
+    } else if (hasCompleted) {
+      pillHTML   = `<span class="pill pill-done">Completed</span>`;
+      subText    = `Last: ${formatDate(latest?.completed_at)}`;
+      actionHTML = `
+        <button class="btn-action btn-review" onclick="viewTestResults(${id})">
+          <i class="fas fa-chart-line me-1"></i>Review
+        </button>
+        <button class="btn-action btn-retake" onclick="startTest(${id})">
+          <i class="fas fa-redo me-1"></i>Retake
+        </button>`;
+    } else {
+      pillHTML   = `<span class="pill pill-avail">${isBought ? 'Purchased' : 'Ready'}</span>`;
+      subText    = isBought ? 'Purchased individually' : 'Included in your package';
+      actionHTML = `<button class="btn-action btn-start" onclick="startTest(${id})">
+          <i class="fas fa-play me-1"></i>Start test
+        </button>`;
+    }
+
+    html += `
+  <div class="test-row ${cardClass}${!canAccess ? ' faded' : ''}">
+    <div class="num-circle ${ncClass}">${id}</div>
+    <div>
+      <div class="test-name">Practice test ${id}${isBought && !hasCompleted ? ' <span class="pill pill-gold" style="font-size:9px;">Purchased</span>' : ''}</div>
+      <div class="test-sub">${subText}</div>
+    </div>
+    <div class="col-score">
+      ${hasCompleted
+        ? `<div class="score-val">${Math.round(bestScore)}%</div>
+           <div class="score-attempts">${attempts.length} attempt${attempts.length > 1 ? 's' : ''}</div>`
+        : `<div class="score-na">—</div>`
+      }
+    </div>
+    <div>${pillHTML}</div>
+    <div class="actions-cell">${actionHTML}</div>
+  </div>`;
+  });
+
+  html += `</div>`;
+  container.innerHTML = html;
+}
+
+function updateTestsAvailableCount(statuses) {
+  const accessible = userSubscriptionInfo?.accessibleTests || [];
+  const count = accessible.filter(id => statuses[id]?.hasContent).length;
+  document.getElementById('testsAvailable').textContent = count || '—';
+}
+
+function renderTestsFallback() {
+  document.getElementById('testsContainer').innerHTML = `
+    <div class="test-table">
+      <div class="loading-rows" style="color:var(--red-text);">
+        <i class="fas fa-exclamation-triangle me-2"></i>
+        Unable to load tests. <a href="#" onclick="initializeDashboard()" style="color:var(--navy-mid);">Retry</a>
+      </div>
+    </div>`;
+}
+
+/* ─────────────────────────────────────────────
+   Buy / Upgrade
+───────────────────────────────────────────── */
+function buySingleTest(testId) {
+  if (!currentUser) {
+    showNotification('Please sign in to purchase a test', 'info');
+    localStorage.setItem('pendingSingleTestPurchase', testId);
+    window.location.href = 'login.html';
+    return;
+  }
+  try { gtag('event', 'single_test_purchase_clicked', { event_category: 'payment', event_label: `test_${testId}`, value: 18 }); } catch(e){}
+  localStorage.setItem('selectedPackage', 'single-test');
+  localStorage.setItem('selectedTestId', testId);
+  localStorage.setItem('selectedCurrency', 'GBP');
+  localStorage.setItem('selectedAmount', 1900);
+  localStorage.removeItem('appliedCoupon');
+  window.location.href = 'payment.html';
+}
+
+function upgradePrompt(requiredPackage, testId) {
+  if (confirm(`Test ${testId} requires ${requiredPackage}.\n\nYou can also buy just this test for £18.\n\nView all pricing options?`)) {
+    try { gtag('event', 'upgrade_prompt_clicked', { event_category: 'dashboard', event_label: `test_${testId}` }); } catch(e){}
+    window.location.href = 'pricing.html';
+  }
+}
+
+/* ─────────────────────────────────────────────
+   Start / View test
+───────────────────────────────────────────── */
+function startTest(testNumber) {
+  if (!currentUser) {
+    showNotification('Please sign in to access practice tests', 'info');
+    window.location.href = 'login.html';
+    return;
+  }
+  const pkg = getUserPackage(currentUser);
+  if (!canAccessTest(testNumber, pkg, userPurchasedTests)) {
+    const req = testNumber <= 5 ? 'Foundation or Complete Package' : 'Advanced or Complete Package';
+    showNotification(`Test ${testNumber} requires ${req}`, 'info');
+    if (confirm(`Test ${testNumber} requires ${req}.\n\nWould you like to view pricing options?`)) {
+      window.location.href = 'pricing.html';
+    }
+    return;
+  }
+  if (confirm(`Start Practice Test ${testNumber}? This must be completed in one session (~95 minutes).`)) {
+    try { gtag('event', 'test_started', { event_category: 'dashboard', event_label: `test_${testNumber}`, value: testNumber }); } catch(e){}
+    window.location.href = `practice-test-1.html?test=${testNumber}`;
+  }
+}
+
+async function viewTestResults(testNumber) {
+  const token = localStorage.getItem('authToken');
+  if (!token) { showNotification('Please sign in to view results', 'error'); return; }
+  try {
+    const res = await fetch(`${API_BASE_URL}/user/test-attempts/${testNumber}`, {
+      headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }
+    });
+    if (res.ok) {
+      sessionStorage.setItem('sectionAResults', JSON.stringify(await res.json()));
+      window.location.href = `test-results.html?test=${testNumber}`;
+    } else {
+      showNotification('Could not load test results', 'error');
+    }
+  } catch(e) {
+    showNotification('Failed to load test results', 'error');
+  }
+}
+
+/* ─────────────────────────────────────────────
+   Progress stats
+───────────────────────────────────────────── */
+function updateProgressStats() {
+  const unique = [...new Set(userTestAttempts.map(a => a.test_id))].length;
+
+  const parseScore = a => {
+    let s = a.score;
+    if (s == null || isNaN(s)) s = a.correct_answers && a.total_questions ? Math.round(a.correct_answers / a.total_questions * 100) : 0;
+    if (typeof s === 'string') s = parseFloat(s.replace('%',''));
+    return isNaN(Number(s)) ? 0 : Number(s);
+  };
+
+  const scores  = userTestAttempts.map(parseScore).filter(s => s > 0);
+  const avg     = scores.length ? Math.round(scores.reduce((a,b) => a+b, 0) / scores.length) : 0;
+  const best    = scores.length ? Math.max(...scores) : 0;
+  const streak  = Math.min(unique * 2, 14);
+
+  let improvement = 0;
+  if (scores.length >= 2) {
+    const first = scores[0], last = scores[scores.length - 1];
+    if (first > 0) improvement = Math.round((last - first) / first * 100);
+  }
+
+  animateNumber('testsCompleted', unique);
+  animateNumber('averageScore', avg, '%');
+  animateNumber('bestScore', best, '%');
+  animateNumber('studyStreak', streak);
+
+  setTrend('testsCompletedTrend', unique > 0 ? 'up' : 'neutral', unique > 0 ? `+${unique} this week` : '');
+  setTrend('averageScoreTrend', improvement > 0 ? 'up' : improvement < 0 ? 'down' : 'neutral', improvement !== 0 ? `${improvement > 0 ? '+' : ''}${improvement}%` : '');
+  setTrend('bestScoreTrend', 'neutral', best > avg ? `+${best - avg}% above avg` : '');
+  setTrend('studyStreakTrend', streak > 0 ? 'up' : 'neutral', streak > 0 ? 'Keep it up!' : '');
+
+  const totalTime = userTestAttempts.reduce((s, a) => s + (a.time_spent || 0), 0);
+  const totalRight= userTestAttempts.reduce((s, a) => s + (a.correct_answers || 0), 0);
+  const totalQ    = userTestAttempts.reduce((s, a) => s + (a.total_questions || 42), 0);
+  const accuracy  = totalQ > 0 ? Math.round(totalRight / totalQ * 100) : 0;
+
+  document.getElementById('totalTime').textContent  = `${Math.round(totalTime / 3600)}h`;
+  document.getElementById('accuracy').textContent   = `${accuracy}%`;
+  document.getElementById('improvement').textContent = improvement > 0 ? `+${improvement}%` : improvement < 0 ? `${improvement}%` : '0%';
+  document.getElementById('nextGoal').textContent   = unique < 10 ? `Test ${unique + 1}` : 'Complete!';
+
+  const pkg = getUserPackage(currentUser);
+  const pkgEl = document.getElementById('userPackageDisplay');
+  if (pkgEl) {
+    let txt = getPackageDisplayName(pkg);
+    if (userPurchasedTests.length > 0 && pkg !== 'complete') txt += ` +${userPurchasedTests.length} individual`;
+    pkgEl.textContent  = txt;
+    pkgEl.className    = 'meta-val ' + (pkg !== 'free' || userPurchasedTests.length > 0 ? 'green' : '');
+  }
+
+  const statusEl = document.getElementById('accountStatus');
+  if (statusEl) {
+    const isPremium = pkg !== 'free' || userPurchasedTests.length > 0;
+    statusEl.textContent = isPremium ? 'Premium' : 'Free';
+    statusEl.className   = 'meta-val ' + (isPremium ? 'green' : '');
+  }
+
+  updatePerformancePanel(scores, avg, best, improvement);
+}
+
+function setTrend(id, dir, text) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.className   = 'stat-trend' + (dir === 'down' ? ' down' : dir === 'neutral' ? ' neutral' : '');
+  el.textContent = text;
+}
+
+/* ─────────────────────────────────────────────
+   Performance Panel
+───────────────────────────────────────────── */
+function updatePerformancePanel(scores, avg, best, improvement) {
+  const container = document.getElementById('performanceChartContainer');
+  if (!scores.length) return;
+
+  if (scores.length === 1) {
+    container.innerHTML = `
+      <div class="chart-area" style="text-align:center;">
+        <div class="chart-big-num">${Math.round(scores[0])}%</div>
+        <div class="chart-sub">Your score on test ${userTestAttempts[0]?.test_id || 1}</div>
+      </div>`;
+    return;
+  }
+
+  container.innerHTML = `
+    <div class="chart-area" style="text-align:left;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
+        <div>
+          <div style="font-size:11px;color:var(--ink-light);margin-bottom:2px;">Average</div>
+          <div style="font-size:18px;font-weight:600;color:var(--navy);">${avg}%</div>
+        </div>
+        <div>
+          <div style="font-size:11px;color:var(--ink-light);margin-bottom:2px;">Best</div>
+          <div style="font-size:18px;font-weight:600;color:var(--green);">${Math.round(best)}%</div>
+        </div>
+      </div>
+    </div>
+    <div class="insight-box">
+      ${improvement > 0
+        ? `<i class="fas fa-arrow-up me-1"></i>+${improvement}% improvement from first to best`
+        : `<i class="fas fa-dumbbell me-1"></i>Building consistency across tests`
+      }
+    </div>`;
+}
+
+/* ─────────────────────────────────────────────
+   Recent Activity
+───────────────────────────────────────────── */
+function updateRecentActivity() {
+  const container = document.getElementById('recentActivity');
+  const sorted    = [...userTestAttempts].sort((a,b) => new Date(b.completed_at) - new Date(a.completed_at));
+
+  if (!sorted.length) {
+    container.innerHTML = `
+      <div class="activity-item">
+        <div class="act-icon act-join"><i class="fas fa-user-plus" style="font-size:10px;"></i></div>
+        <div class="act-info"><div class="act-name">Joined Lexcello</div><div class="act-time">Welcome to your LNAT prep!</div></div>
+      </div>`;
+    return;
+  }
+
+  const parseScore = a => {
+    let s = a.score;
+    if (s == null || isNaN(s)) s = a.correct_answers && a.total_questions ? Math.round(a.correct_answers / a.total_questions * 100) : 0;
+    if (typeof s === 'string') s = parseFloat(s.replace('%',''));
+    return isNaN(Number(s)) ? 0 : Number(s);
+  };
+
+  container.innerHTML = sorted.slice(0, 5).map(a => {
+    const score    = parseScore(a);
+    const isStar   = score >= 85;
+    const testName = a.total_questions === 14 ? 'Free diagnostic test' : `Practice test ${a.test_id}`;
+    return `
+      <div class="activity-item">
+        <div class="act-icon ${isStar ? 'act-star' : 'act-done'}">
+          <i class="fas fa-${isStar ? 'star' : 'check'}" style="font-size:10px;"></i>
+        </div>
+        <div class="act-info">
+          <div class="act-name">${testName}</div>
+          <div class="act-time">${formatDate(a.completed_at)}</div>
+        </div>
+        <div class="act-score">${Math.round(score)}%</div>
+      </div>`;
+  }).join('');
+}
+
+/* ─────────────────────────────────────────────
+   Achievements
+───────────────────────────────────────────── */
+function generateAchievements() {
+  const el       = document.getElementById('achievementsContainer');
+  const unique   = [...new Set(userTestAttempts.map(a => a.test_id))].length;
+  const total    = userTestAttempts.length;
+  const scores   = userTestAttempts.map(a => {
+    let s = a.score;
+    if (typeof s === 'string') s = parseFloat(s.replace('%',''));
+    return Number(s) || 0;
+  });
+  const best = scores.length ? Math.max(...scores) : 0;
+
+  const badges = [{ cls:'ach-blue', icon:'star',     label:'Welcome!' }];
+  if (unique >= 1) badges.push({ cls:'ach-green', icon:'play',     label:'First test' });
+  if (unique >= 3) badges.push({ cls:'ach-gold',  icon:'medal',    label:'3 tests done' });
+  if (unique >= 5) badges.push({ cls:'ach-gold',  icon:'trophy',   label:'Halfway there' });
+  if (best >= 70)  badges.push({ cls:'ach-green', icon:'thumbs-up',label:'70%+ score' });
+  if (best >= 85)  badges.push({ cls:'ach-gold',  icon:'star',     label:'85%+ score' });
+  if (total >= 5)  badges.push({ cls:'ach-gray',  icon:'dumbbell', label:'Dedicated' });
+
+  el.innerHTML = badges.map(b =>
+    `<span class="ach-badge ${b.cls}"><i class="fas fa-${b.icon}" style="font-size:9px;"></i> ${b.label}</span>`
+  ).join('');
+}
+
+/* ─────────────────────────────────────────────
+   Featured Tests
+───────────────────────────────────────────── */
 let featuredAttempts = [];
 
+function showFeaturedTestsSection() {
+  const pkg = getUserPackage(currentUser);
+  if (!pkg || pkg === 'free') return;
+  const section = document.getElementById('featuredTestsSection');
+  if (section) section.style.display = '';
+  loadFeaturedTestsHistory();
+}
+
 async function loadFeaturedTestsHistory() {
-    const token = localStorage.getItem('authToken');
-    if (!token) return;
-
-    try {
-        const response = await fetch(`${API_BASE_URL}/featured-tests/my-attempts`, {
-            headers: { 'Authorization': `Bearer ${token}` }
-        });
-
-        if (response.ok) {
-            const data = await response.json();
-            featuredAttempts = data.attempts || [];
-        }
-    } catch (error) {
-        console.error('Error loading featured test history:', error);
+  const token = localStorage.getItem('authToken');
+  if (!token) return;
+  try {
+    const res = await fetch(`${API_BASE_URL}/featured-tests/my-attempts`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    if (res.ok) {
+      const data = await res.json();
+      featuredAttempts = data.attempts || [];
     }
-
-    renderFeaturedTestsSection();
+  } catch(e) { console.error('Featured tests history error:', e); }
+  renderFeaturedTestsSection();
 }
 
 function renderFeaturedTestsSection() {
-    const container = document.getElementById('featuredTestsContainer');
-    if (!container) return;
+  const container = document.getElementById('featuredTestsContainer');
+  if (!container) return;
 
-    const featuredTestDefs = [
-        { dbId: 1, testNumber: 11 },
-        { dbId: 2, testNumber: 12 },
-        { dbId: 3, testNumber: 13 }
-    ];
+  const defs = [{ dbId:1, num:11 }, { dbId:2, num:12 }, { dbId:3, num:13 }];
 
-    let html = '';
+  let html = `
+<div class="test-table-head">
+  <div></div>
+  <div class="th" style="padding-left:12px;">Test</div>
+  <div class="th center">Best score</div>
+  <div class="th">Format</div>
+  <div class="th right">Actions</div>
+</div>`;
 
-    featuredTestDefs.forEach(({ dbId, testNumber }) => {
-        const attempts = featuredAttempts.filter(a => a.test_id === dbId);
-        const hasCompleted = attempts.length > 0;
-        const bestScore = hasCompleted
-            ? Math.max(...attempts.map(a => Math.round((a.score / a.total_questions) * 100)))
-            : 0;
-        const latestAttempt = hasCompleted ? attempts[0] : null;
+  defs.forEach(({ dbId, num }) => {
+    const attempts     = featuredAttempts.filter(a => a.test_id === dbId);
+    const hasCompleted = attempts.length > 0;
+    const bestScore    = hasCompleted ? Math.max(...attempts.map(a => Math.round(a.score / a.total_questions * 100))) : 0;
+    const latest       = hasCompleted ? attempts[0] : null;
 
-        html += `
-<div class="test-card ${hasCompleted ? 'completed' : 'available'}" style="border-left-color:#d69e2e;">
-    <div class="test-number ${hasCompleted ? 'completed' : ''}"
-         style="background:${hasCompleted ? '#48bb78' : '#d69e2e'};">
-        ${testNumber}
-    </div>
+    html += `
+<div class="test-row ${hasCompleted ? 'is-done' : 'is-gold'}">
+  <div class="num-circle ${hasCompleted ? 'nc-done' : 'nc-gold'}">${num}</div>
+  <div>
+    <div class="test-name">Featured test ${num}</div>
+    <div class="test-sub">${hasCompleted ? `Last: ${formatDate(latest?.submitted_at)}` : 'Latest LNAT format'}</div>
+  </div>
+  <div class="col-score">
+    ${hasCompleted
+      ? `<div class="score-val">${bestScore}%</div>
+         <div class="score-attempts">${attempts.length} attempt${attempts.length > 1 ? 's' : ''}</div>`
+      : `<div class="score-na">—</div>`
+    }
+  </div>
+  <div><span class="pill pill-gold">4-option</span></div>
+  <div class="actions-cell">
+    ${hasCompleted
+      ? `<button class="btn-action btn-review" onclick="viewFeaturedTestResults(${latest.id}, ${num})">
+           <i class="fas fa-chart-line me-1"></i>Review
+         </button>
+         <button class="btn-action btn-retake" onclick="window.location.href='featured-test.html?test=${num}'">
+           <i class="fas fa-redo me-1"></i>Retake
+         </button>`
+      : `<button class="btn-action btn-gold" onclick="window.location.href='featured-test.html?test=${num}'">
+           <i class="fas fa-play me-1"></i>Start test
+         </button>`
+    }
+  </div>
+</div>`;
+  });
 
-    <div class="test-card-col">
-        <div class="test-card-divider"></div>
-        <div class="test-card-col-inner">
-            <h4 class="test-title">Featured Test ${testNumber}                
-            </h4>
-
-        </div>
-    </div>
-
-    <div class="test-card-col">
-        <div class="test-card-divider"></div>
-        <div class="test-card-col-inner" style="text-align:center;">
-            ${hasCompleted ? `
-                <div class="test-score" style="color:#d69e2e;">${bestScore}%</div>
-                <div class="test-score-label">Best in ${attempts.length} attempt${attempts.length > 1 ? 's' : ''}</div>
-            ` : '<div style="color:#a0aec0;">—</div>'}
-        </div>
-    </div>
-
-    
-
-    <div class="test-card-col">
-        <div class="test-card-divider"></div>
-        <div class="test-card-col-inner">
-            <div class="test-detail">
-                <span class="detail-label">Format:</span>
-                <span class="detail-value">4-option (latest LNAT)</span>
-            </div>
-            <div class="test-detail">
-                <span class="detail-label">Last Completed:</span>
-                <span class="detail-value">${hasCompleted && latestAttempt ? formatDate(latestAttempt.submitted_at) : '—'}</span>
-            </div>
-        </div>
-    </div>
-
-    <div class="test-actions">
-        ${hasCompleted ? `
-            <button class="btn btn-test-action btn-review"
-                    onclick="viewFeaturedTestResults(${latestAttempt.id}, ${testNumber})">
-                <i class="fas fa-chart-line me-1"></i>Review Results
-            </button>
-            <button class="btn btn-test-action btn-retake"
-                    onclick="window.location.href='featured-test.html?test=${testNumber}'">
-                <i class="fas fa-redo me-1"></i>Retake
-            </button>
-        ` : `
-            <button class="btn btn-test-action btn-start"
-                    style="background:linear-gradient(135deg,#d69e2e,#b7791f);"
-                    onclick="window.location.href='featured-test.html?test=${testNumber}'">
-                <i class="fas fa-play me-1"></i>Start Test
-            </button>
-        `}
-    </div>
-</div>
-`;
-    });
-
-    container.innerHTML = html;
+  container.innerHTML = html;
 }
 
 async function viewFeaturedTestResults(attemptId, testNumber) {
-    const token = localStorage.getItem('authToken');
-    if (!token) { showNotification('Please sign in', 'error'); return; }
-
-    showNotification('Loading results...', 'info');
-
-    try {
-        const response = await fetch(`${API_BASE_URL}/featured-tests/attempts/${attemptId}`, {
-            headers: { 'Authorization': `Bearer ${token}` }
-        });
-
-        if (response.ok) {
-            const data = await response.json();
-            const attempt = data.attempt;
-
-            // Format data to match what featured-test-results.html expects
-            const resultsData = {
-                testId: testNumber,
-                score: attempt.score,
-                totalQuestions: attempt.total_questions,
-                percentage: Math.round((attempt.score / attempt.total_questions) * 100),
-                timeSpent: attempt.time_taken || 0,
-                flaggedQuestions: attempt.flagged_questions || [],
-                results: attempt.results
-            };
-
-            sessionStorage.setItem('featuredTestResults', JSON.stringify(resultsData));
-            window.location.href = `featured-test-results.html?test=${testNumber}`;
-        } else {
-            showNotification('Could not load results', 'error');
-        }
-    } catch (error) {
-        console.error('Error:', error);
-        showNotification('Failed to load results', 'error');
+  const token = localStorage.getItem('authToken');
+  if (!token) { showNotification('Please sign in', 'error'); return; }
+  showNotification('Loading results…', 'info');
+  try {
+    const res = await fetch(`${API_BASE_URL}/featured-tests/attempts/${attemptId}`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    if (res.ok) {
+      const { attempt } = await res.json();
+      sessionStorage.setItem('featuredTestResults', JSON.stringify({
+        testId: testNumber,
+        score: attempt.score,
+        totalQuestions: attempt.total_questions,
+        percentage: Math.round(attempt.score / attempt.total_questions * 100),
+        timeSpent: attempt.time_taken || 0,
+        flaggedQuestions: attempt.flagged_questions || [],
+        results: attempt.results
+      }));
+      window.location.href = `featured-test-results.html?test=${testNumber}`;
+    } else {
+      showNotification('Could not load results', 'error');
     }
+  } catch(e) { showNotification('Failed to load results', 'error'); }
 }
-    </script>
+
+/* ─────────────────────────────────────────────
+   Free test navigation
+───────────────────────────────────────────── */
+function navigateToFreeTest() {
+  const token = localStorage.getItem('authToken');
+  if (!token) {
+    alert('Authentication error. Please refresh and log in again.');
+    window.location.href = 'login.html';
+    return;
+  }
+  localStorage.setItem('authToken', token);
+  sessionStorage.setItem('authToken', token);
+  sessionStorage.setItem('authBackup', token);
+  try { gtag('event', 'free_test_navigation', { event_category: 'dashboard', event_label: 'free_test_button_clicked' }); } catch(e){}
+  window.location.href = '/free-test.html';
+}
+
+/* ─────────────────────────────────────────────
+   Utilities
+───────────────────────────────────────────── */
+function animateNumber(id, target, suffix = '') {
+  const el = document.getElementById(id);
+  if (!el) return;
+  let cur = 0;
+  const inc = Math.max(1, Math.floor(target / 30));
+  const t = setInterval(() => {
+    cur += inc;
+    if (cur >= target) { el.textContent = target + suffix; clearInterval(t); }
+    else               { el.textContent = cur + suffix; }
+  }, 50);
+}
+
+function formatDate(dateString) {
+  if (!dateString) return 'Recently';
+  try {
+    const d    = new Date(dateString);
+    if (isNaN(d.getTime())) return 'Recently';
+    const now  = new Date();
+    const days = Math.floor(Math.abs(now - d) / 86400000);
+    if (days === 0) return 'Today';
+    if (days === 1) return 'Yesterday';
+    if (days <= 7)  return `${days} days ago`;
+    if (days <= 30) return `${Math.floor(days/7)} weeks ago`;
+    return d.toLocaleDateString('en-GB', { day:'numeric', month:'short', year: d.getFullYear() !== now.getFullYear() ? 'numeric' : undefined });
+  } catch(e) { return 'Recently'; }
+}
+
+function showNotification(msg, type = 'info') {
+  const el = document.getElementById('notification');
+  el.textContent = msg;
+  el.className   = `notification ${type} show`;
+  setTimeout(() => el.classList.remove('show'), 3000);
+}
+
+function showLoadingError() {
+  document.getElementById('testsContainer').innerHTML = `
+    <div class="test-table">
+      <div class="loading-rows" style="color:var(--red-text);">
+        <i class="fas fa-exclamation-triangle me-2"></i>
+        Connection error — unable to load tests.
+        <button class="btn-action btn-upgrade ms-2" onclick="initializeDashboard()">
+          <i class="fas fa-sync me-1"></i>Retry
+        </button>
+      </div>
+    </div>`;
+}
+
+function signOut() {
+  if (confirm('Sign out of Lexcello?')) {
+    localStorage.removeItem('authToken');
+    sessionStorage.clear();
+    window.location.href = 'index.html';
+  }
+}
+
+// Auto-refresh every 5 minutes
+setInterval(async () => {
+  try { await loadUserData(); updateProgressStats(); updateRecentActivity(); }
+  catch(e) { console.log('Auto-refresh failed:', e); }
+}, 300000);
+</script>
 </body>
 </html>
