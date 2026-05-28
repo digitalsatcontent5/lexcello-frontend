@@ -1061,9 +1061,9 @@
             <div class="test-card-divider"></div>
             <div class="test-card-col-inner" style="text-align:center;">
                 ${hasCompleted ? `
-                    <div class="test-score">${Math.round(bestScore)}%</div>
-                    <div class="test-score-label">Best Score</div>
-                    <div class="test-attempts">${freeTestAttempts.length} attempt${freeTestAttempts.length > 1 ? 's' : ''}</div>
+                    <div class="test-score" style="color:#d69e2e;">${bestScore}%</div>
+<div class="test-score-label">Best in ${freeTestAttempts.length} attempt${freeTestAttempts.length > 1 ? 's' : ''}</div>
+
                 ` : '<div style="color:#a0aec0;">—</div>'}
             </div>
         </div>
@@ -1629,8 +1629,7 @@
         <div class="test-card-col-inner" style="text-align:center;">
             ${hasCompleted ? `
                 <div class="test-score">${Math.round(bestScore)}%</div>
-                <div class="test-score-label">Best Score</div>
-                <div class="test-attempts">${userAttempts.length} attempt${userAttempts.length > 1 ? 's' : ''}</div>
+                <div class="test-score-label">Best in ${userAttempts.length} attempt${userAttempts.length > 1 ? 's' : ''}</div>
             ` : '<div style="color:#a0aec0;">—</div>'}
         </div>
     </div>
@@ -2338,8 +2337,7 @@ function renderFeaturedTestsSection() {
         <div class="test-card-col-inner" style="text-align:center;">
             ${hasCompleted ? `
                 <div class="test-score" style="color:#d69e2e;">${bestScore}%</div>
-                <div class="test-score-label">Best Score</div>
-                <div class="test-attempts">${attempts.length} attempt${attempts.length > 1 ? 's' : ''}</div>
+                <div class="test-score-label">Best in ${attempts.length} attempt${attempts.length > 1 ? 's' : ''}</div>
             ` : '<div style="color:#a0aec0;">—</div>'}
         </div>
     </div>
