@@ -554,6 +554,7 @@ body {
 @media (max-width: 992px) {
   .bottom-grid { grid-template-columns: 1fr 1fr; }
   .stats-row   { grid-template-columns: repeat(2, 1fr); }
+  #testsContainer > div { grid-template-columns: 1fr !important; }
 }
 
 @media (max-width: 768px) {
@@ -1118,108 +1119,105 @@ async function checkTestContent() {
   return out;
 }
 
+function buildTestRow(id, statuses, userPackage, purchased) {
+  const status       = statuses[id] || { hasContent: false, questionCount: 0 };
+  const attempts     = userTestAttempts.filter(a => a.test_id === id && a.total_questions !== 14);
+  const hasCompleted = attempts.length > 0;
+  const canAccess    = canAccessTest(id, userPackage, purchased);
+  const isBought     = purchased.includes(id);
+
+  let bestScore = 0;
+  if (hasCompleted) {
+    bestScore = Math.max(...attempts.map(a => {
+      let s = a.score;
+      if (s == null || isNaN(s)) s = a.correct_answers && a.total_questions ? Math.round(a.correct_answers / a.total_questions * 100) : 0;
+      if (typeof s === 'string') s = parseFloat(s.replace('%',''));
+      return isNaN(Number(s)) ? 0 : Number(s);
+    }));
+  }
+  const latest = hasCompleted ? attempts[attempts.length - 1] : null;
+
+  const cardClass = hasCompleted ? 'is-done' : canAccess && status.hasContent ? 'is-avail' : 'is-locked';
+  const ncClass   = hasCompleted ? 'nc-done' : canAccess ? 'nc-avail' : 'nc-lock';
+
+  let pillHTML = '', subText = '', actionHTML = '';
+
+  if (!canAccess) {
+    const req = id <= 5 ? 'Foundation or Complete' : 'Advanced or Complete';
+    pillHTML   = `<span class="pill pill-lock"><i class="fas fa-lock" style="font-size:9px;"></i> Locked</span>`;
+    subText    = `Requires ${req}`;
+    actionHTML = `
+      <button class="btn-action btn-buy" onclick="buySingleTest(${id})">
+        <i class="fas fa-shopping-cart me-1"></i>Buy · £18
+      </button>
+      <button class="btn-action btn-upgrade" onclick="upgradePrompt('${req}', ${id})">
+        Upgrade
+      </button>`;
+  } else if (!status.hasContent) {
+    pillHTML   = `<span class="pill pill-coming">Coming soon</span>`;
+    subText    = '—';
+    actionHTML = `<button class="btn-action btn-locked" disabled>Coming soon</button>`;
+  } else if (hasCompleted) {
+    pillHTML   = `<span class="pill pill-done">Completed</span>`;
+    subText    = `Last: ${formatDate(latest?.completed_at)}`;
+    actionHTML = `
+      <button class="btn-action btn-review" onclick="viewTestResults(${id})">
+        <i class="fas fa-chart-line me-1"></i>Review
+      </button>
+      <button class="btn-action btn-retake" onclick="startTest(${id})">
+        <i class="fas fa-redo me-1"></i>Retake
+      </button>`;
+  } else {
+    pillHTML   = `<span class="pill pill-avail">${isBought ? 'Purchased' : 'Ready'}</span>`;
+    subText    = isBought ? 'Purchased individually' : 'Included in your package';
+    actionHTML = `<button class="btn-action btn-start" onclick="startTest(${id})">
+        <i class="fas fa-play me-1"></i>Start test
+      </button>`;
+  }
+
+  return `
+<div class="test-row ${cardClass}${!canAccess ? ' faded' : ''}">
+  <div class="num-circle ${ncClass}">${id}</div>
+  <div>
+    <div class="test-name">Practice test ${id}${isBought && !hasCompleted ? ' <span class="pill pill-gold" style="font-size:9px;">Purchased</span>' : ''}</div>
+    <div class="test-sub">${subText}</div>
+  </div>
+  <div class="col-score">
+    ${hasCompleted
+      ? `<div class="score-val">${Math.round(bestScore)}%</div>
+         <div class="score-attempts">${attempts.length} attempt${attempts.length > 1 ? 's' : ''}</div>`
+      : `<div class="score-na">—</div>`
+    }
+  </div>
+  <div>${pillHTML}</div>
+  <div class="actions-cell">${actionHTML}</div>
+</div>`;
+}
+
 function renderTestsWithUserProgress(statuses) {
-  const container = document.getElementById('testsContainer');
+  const container   = document.getElementById('testsContainer');
   const userPackage = getUserPackage(currentUser);
   const purchased   = userPurchasedTests || [];
 
-  // Separate locked groups for collapsing
-  const rows = [];
+  const tableHead = `
+    <div class="test-table-head">
+      <div></div>
+      <div class="th" style="padding-left:12px;">Test</div>
+      <div class="th center">Best score</div>
+      <div class="th">Status</div>
+      <div class="th right">Actions</div>
+    </div>`;
 
-  for (let id = 1; id <= 10; id++) {
-    const status       = statuses[id] || { hasContent: false, questionCount: 0 };
-    const attempts     = userTestAttempts.filter(a => a.test_id === id && a.total_questions !== 14);
-    const hasCompleted = attempts.length > 0;
-    const canAccess    = canAccessTest(id, userPackage, purchased);
-    const isBought     = purchased.includes(id);
+  let leftRows  = '';
+  let rightRows = '';
+  for (let id = 1;  id <= 5;  id++) leftRows  += buildTestRow(id, statuses, userPackage, purchased);
+  for (let id = 6;  id <= 10; id++) rightRows += buildTestRow(id, statuses, userPackage, purchased);
 
-    let bestScore = 0;
-    if (hasCompleted) {
-      bestScore = Math.max(...attempts.map(a => {
-        let s = a.score;
-        if (s == null || isNaN(s)) s = a.correct_answers && a.total_questions ? Math.round(a.correct_answers / a.total_questions * 100) : 0;
-        if (typeof s === 'string') s = parseFloat(s.replace('%',''));
-        return isNaN(Number(s)) ? 0 : Number(s);
-      }));
-    }
-    const latest = hasCompleted ? attempts[attempts.length - 1] : null;
-
-    rows.push({ id, status, attempts, hasCompleted, canAccess, isBought, bestScore, latest, userPackage, purchased });
-  }
-
-  // Build table HTML
-  let html = `
-<div class="test-table">
-  <div class="test-table-head">
-    <div></div>
-    <div class="th" style="padding-left:12px;">Test</div>
-    <div class="th center">Best score</div>
-    <div class="th">Status</div>
-    <div class="th right">Actions</div>
-  </div>`;
-
-  rows.forEach(r => {
-    const { id, status, attempts, hasCompleted, canAccess, isBought, bestScore, latest, userPackage } = r;
-
-    const cardClass = hasCompleted ? 'is-done' : canAccess && status.hasContent ? 'is-avail' : 'is-locked';
-    const ncClass   = hasCompleted ? 'nc-done' : canAccess ? 'nc-avail' : 'nc-lock';
-
-    let pillHTML = '', subText = '', actionHTML = '';
-
-    if (!canAccess) {
-      const req = id <= 5 ? 'Foundation or Complete' : 'Advanced or Complete';
-      pillHTML  = `<span class="pill pill-lock"><i class="fas fa-lock" style="font-size:9px;"></i> Locked</span>`;
-      subText   = `Requires ${req}`;
-      actionHTML = `
-        <button class="btn-action btn-buy" onclick="buySingleTest(${id})">
-          <i class="fas fa-shopping-cart me-1"></i>Buy · £18
-        </button>
-        <button class="btn-action btn-upgrade" onclick="upgradePrompt('${req}', ${id})">
-          Upgrade
-        </button>`;
-    } else if (!status.hasContent) {
-      pillHTML   = `<span class="pill pill-coming">Coming soon</span>`;
-      subText    = '—';
-      actionHTML = `<button class="btn-action btn-locked" disabled>Coming soon</button>`;
-    } else if (hasCompleted) {
-      pillHTML   = `<span class="pill pill-done">Completed</span>`;
-      subText    = `Last: ${formatDate(latest?.completed_at)}`;
-      actionHTML = `
-        <button class="btn-action btn-review" onclick="viewTestResults(${id})">
-          <i class="fas fa-chart-line me-1"></i>Review
-        </button>
-        <button class="btn-action btn-retake" onclick="startTest(${id})">
-          <i class="fas fa-redo me-1"></i>Retake
-        </button>`;
-    } else {
-      pillHTML   = `<span class="pill pill-avail">${isBought ? 'Purchased' : 'Ready'}</span>`;
-      subText    = isBought ? 'Purchased individually' : 'Included in your package';
-      actionHTML = `<button class="btn-action btn-start" onclick="startTest(${id})">
-          <i class="fas fa-play me-1"></i>Start test
-        </button>`;
-    }
-
-    html += `
-  <div class="test-row ${cardClass}${!canAccess ? ' faded' : ''}">
-    <div class="num-circle ${ncClass}">${id}</div>
-    <div>
-      <div class="test-name">Practice test ${id}${isBought && !hasCompleted ? ' <span class="pill pill-gold" style="font-size:9px;">Purchased</span>' : ''}</div>
-      <div class="test-sub">${subText}</div>
-    </div>
-    <div class="col-score">
-      ${hasCompleted
-        ? `<div class="score-val">${Math.round(bestScore)}%</div>
-           <div class="score-attempts">${attempts.length} attempt${attempts.length > 1 ? 's' : ''}</div>`
-        : `<div class="score-na">—</div>`
-      }
-    </div>
-    <div>${pillHTML}</div>
-    <div class="actions-cell">${actionHTML}</div>
-  </div>`;
-  });
-
-  html += `</div>`;
-  container.innerHTML = html;
+  container.innerHTML = `
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+  <div class="test-table">${tableHead}${leftRows}</div>
+  <div class="test-table">${tableHead}${rightRows}</div>
+</div>`;
 }
 
 function updateTestsAvailableCount(statuses) {
