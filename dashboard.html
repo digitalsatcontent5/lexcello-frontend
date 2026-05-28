@@ -305,6 +305,10 @@ body {
   text-align: center;
 }
 
+.col-status {
+  text-align: center;
+}
+
 .score-val {
   font-size: 15px;
   font-weight: 600;
@@ -1017,7 +1021,7 @@ function renderFreeDiagnosticTest() {
     <div></div>
     <div class="th" style="padding-left:12px;">Test</div>
     <div class="th center">Score</div>
-    <div class="th">Status</div>
+    <div class="th center">Status</div>
     <div class="th actions-th">Actions</div>
   </div>
   <div class="test-row ${hasCompleted ? 'is-done' : 'is-avail'}">
@@ -1035,7 +1039,7 @@ function renderFreeDiagnosticTest() {
         : `<div class="score-na">—</div>`
       }
     </div>
-    <div>
+    <div class="col-status">
       ${hasCompleted
         ? `<span class="pill pill-done">Completed</span>
            <div style="font-size:11px;color:var(--ink-light);margin-top:4px;">Last: ${formatDate(latest?.completed_at)}</div>`
@@ -1219,7 +1223,7 @@ function buildTestRow(id, statuses, userPackage, purchased) {
       : `<div class="score-na">—</div>`
     }
   </div>
-  <div>${pillHTML}</div>
+  <div class="col-status">${pillHTML}</div>
   <div class="actions-cell">${actionHTML}</div>
 </div>`;
 }
@@ -1234,7 +1238,7 @@ function renderTestsWithUserProgress(statuses) {
       <div></div>
       <div class="th" style="padding-left:12px;">Test</div>
       <div class="th center">Best score</div>
-      <div class="th">Status</div>
+      <div class="th center">Status</div>
       <div class="th actions-th">Actions</div>
     </div>`;
 
@@ -1504,7 +1508,7 @@ ${[11,12,13].map(n => `
     <div class="test-sub">Latest LNAT format · 4-option</div>
   </div>
   <div class="col-score"><div class="score-na">—</div></div>
-  <div><span class="pill pill-lock"><i class="fas fa-lock" style="font-size:9px;"></i> Premium</span></div>
+  <div class="col-status"><span class="pill pill-lock"><i class="fas fa-lock" style="font-size:9px;"></i> Premium</span></div>
   <div class="actions-cell">
     <button class="btn-action btn-upgrade" onclick="window.location.href='pricing.html'">Upgrade to access</button>
   </div>
@@ -1565,7 +1569,7 @@ function renderFeaturedTestsSection() {
       : `<div class="score-na">—</div>`
     }
   </div>
-  <div><span class="pill pill-gold">4-option</span></div>
+  <div class="col-status"><span class="pill pill-gold">4-option</span></div>
   <div class="actions-cell">
     ${hasCompleted
       ? `<button class="btn-action btn-review" onclick="viewFeaturedTestResults(${latest.id}, ${num})">
