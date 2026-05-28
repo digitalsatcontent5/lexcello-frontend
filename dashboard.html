@@ -342,7 +342,7 @@
 }
 
 .test-details {
-    flex: 0 0 120px;
+    flex: 0 0 130px;
 }
 
 .test-detail {
@@ -356,7 +356,7 @@
 .detail-value { font-weight: 600; color: var(--text-dark); }
 
 .test-meta {
-    flex: 1;
+    flex: 0 0 180px;
     min-width: 0;
 }
 
@@ -1056,68 +1056,72 @@
             const latestAttempt = hasCompleted ? freeTestAttempts[freeTestAttempts.length - 1] : null;
             
             let cardHTML = `
-                <div class="tests-grid">
-                    <div class="test-card ${hasCompleted ? 'completed' : 'available'}">
-                        <div class="test-header">
-                            <div class="test-number ${hasCompleted ? 'completed' : ''}">
-                                <i class="fas fa-gift"></i>
-                            </div>
-                            <div class="test-info">
-                                <h4 class="test-title">Free 14-Question Diagnostic Test</h4>
-                                <span class="test-status ${hasCompleted ? 'status-completed' : 'status-available'}">
-                                    ${hasCompleted ? `Completed (${Math.round(bestScore)}%)` : 'Ready to Start - Free for All'}
-                                </span>
-                            </div>
-                            ${hasCompleted ? `
-                                <div class="test-score-display">
-                                    <div class="test-score">${Math.round(bestScore)}%</div>
-                                    <div class="test-score-label">Best Score</div>
-                                    <div class="test-attempts">${freeTestAttempts.length} attempt${freeTestAttempts.length > 1 ? 's' : ''}</div>
-                                </div>
-                            ` : ''}
-                        </div>
-                        <div class="test-details">
-                            <div class="test-detail">
-                                <span class="detail-label">Questions:</span>
-                                <span class="detail-value">14 questions</span>
-                            </div>
-                            <div class="test-detail">
-                                <span class="detail-label">Time Limit:</span>
-                                <span class="detail-value">~20 minutes</span>
-                            </div>
-                            <div class="test-detail">
-                                <span class="detail-label">Scholarship Opportunity:</span>
-                                <span class="detail-value text-success">
-                                    <i class="fas fa-star"></i> Score 40%+ for 30-50% discount
-                                </span>
-                            </div>
-                            ${hasCompleted && latestAttempt ? `
-                                <div class="test-detail">
-                                    <span class="detail-label">Last Completed:</span>
-                                    <span class="detail-value">${formatDate(latestAttempt.completed_at)}</span>
-                                </div>
-                            ` : ''}
-                        </div>
-                        <div class="progress-bar-mini">
-                            <div class="progress-fill-mini" style="width: ${hasCompleted ? 100 : 0}%"></div>
-                        </div>
-                        <div class="test-actions">
-                            ${hasCompleted ? `
-                                <button class="btn btn-test-action btn-review" onclick="viewFreeTestResults()">
-                                    <i class="fas fa-chart-line me-1"></i>Review Results
-                                </button>
-                                <button class="btn btn-test-action btn-retake" onclick="navigateToFreeTest()">
-                                    <i class="fas fa-redo me-1"></i>Retake
-                                </button>
-                            ` : `
-                                <button class="btn btn-test-action btn-start" onclick="navigateToFreeTest()">
-                                    <i class="fas fa-play me-1"></i>Start Free Test
-                                </button>
-                            `}
-                        </div>
-                    </div>
+    <div class="tests-grid">
+        <div class="test-card ${hasCompleted ? 'completed' : 'available'}">
+            <div class="test-number ${hasCompleted ? 'completed' : ''}" style="background: ${hasCompleted ? 'var(--success-color)' : 'var(--secondary-color)'};">
+                <i class="fas fa-gift"></i>
+            </div>
+
+            <div class="test-identity">
+                <h4 class="test-title">Free 14-Question Diagnostic Test</h4>
+                <span class="test-status ${hasCompleted ? 'status-completed' : 'status-available'}">
+                    ${hasCompleted ? `Completed (${Math.round(bestScore)}%)` : 'Free for All'}
+                </span>
+            </div>
+
+            <div class="test-card-divider"></div>
+
+            <div class="test-score-display">
+                ${hasCompleted ? `
+                    <div class="test-score">${Math.round(bestScore)}%</div>
+                    <div class="test-score-label">Best Score</div>
+                    <div class="test-attempts">${freeTestAttempts.length} attempt${freeTestAttempts.length > 1 ? 's' : ''}</div>
+                ` : '<div style="color:#a0aec0; font-size:0.85rem;">—</div>'}
+            </div>
+
+            <div class="test-card-divider"></div>
+
+            <div class="test-details">
+                <div class="test-detail">
+                    <span class="detail-label">Questions:</span>
+                    <span class="detail-value">14</span>
                 </div>
-            `;
+                <div class="test-detail">
+                    <span class="detail-label">Time Limit:</span>
+                    <span class="detail-value">~20 min</span>
+                </div>
+            </div>
+
+            <div class="test-card-divider"></div>
+
+            <div class="test-meta">
+                <div class="test-detail">
+                    <span class="detail-label">Scholarship:</span>
+                    <span class="detail-value text-success"><i class="fas fa-star"></i> Score 40%+ for discount</span>
+                </div>
+                <div class="test-detail">
+                    <span class="detail-label">Last Completed:</span>
+                    <span class="detail-value">${hasCompleted && latestAttempt ? formatDate(latestAttempt.completed_at) : '—'}</span>
+                </div>
+            </div>
+
+            <div class="test-actions">
+                ${hasCompleted ? `
+                    <button class="btn btn-test-action btn-review" onclick="viewFreeTestResults()">
+                        <i class="fas fa-chart-line me-1"></i>Review Results
+                    </button>
+                    <button class="btn btn-test-action btn-retake" onclick="navigateToFreeTest()">
+                        <i class="fas fa-redo me-1"></i>Retake
+                    </button>
+                ` : `
+                    <button class="btn btn-test-action btn-start" onclick="navigateToFreeTest()">
+                        <i class="fas fa-play me-1"></i>Start Free Test
+                    </button>
+                `}
+            </div>
+        </div>
+    </div>
+`;
             
             freeTestContainer.innerHTML = cardHTML;
         }
@@ -1669,12 +1673,18 @@
         <div class="test-card-divider"></div>
 
         <div class="test-meta">
-            <div class="test-detail">
-                <span class="detail-label">Access:</span>
-                <span class="detail-value ${canAccess ? 'text-success' : 'text-danger'}">
-                    ${canAccess ? '<i class="fas fa-check-circle"></i> Available' : '<i class="fas fa-lock"></i> Locked'}
-                </span>
-            </div>
+            <div class="test-detail" style="display:flex; justify-content:space-between; align-items:center; white-space:nowrap;">
+    <span class="detail-label">Access:&nbsp;</span>
+    <span class="detail-value ${canAccess ? 'text-success' : 'text-danger'}" style="white-space:nowrap;">
+        ${canAccess ? '<i class="fas fa-check-circle"></i> Available' : '<i class="fas fa-lock"></i> Locked'}
+    </span>
+</div>
+<div class="test-detail" style="display:flex; justify-content:space-between; align-items:center; white-space:nowrap;">
+    <span class="detail-label">${hasCompleted && latestAttempt ? 'Last:&nbsp;' : canAccess ? 'Status:&nbsp;' : 'Required:&nbsp;'}</span>
+    <span class="detail-value" style="white-space:nowrap;">
+        ${hasCompleted && latestAttempt ? formatDate(latestAttempt.completed_at) : canAccess ? 'Ready' : (testId <= 5 ? 'Foundation' : 'Advanced')}
+    </span>
+</div>
             <div class="test-detail">
                 <span class="detail-label">${hasCompleted && latestAttempt ? 'Last Completed:' : canAccess ? 'Status:' : 'Required:'}</span>
                 <span class="detail-value">
@@ -2346,73 +2356,78 @@ function renderFeaturedTestsSection() {
         const latestAttempt = hasCompleted ? attempts[0] : null;
 
         html += `
-            <div class="test-card ${hasCompleted ? 'completed' : 'available'}"
-                 style="border-left-color: #d69e2e;">
-                <div class="test-header">
-                    <div class="test-number ${hasCompleted ? 'completed' : ''}"
-                         style="background: ${hasCompleted ? '#48bb78' : '#d69e2e'};">
-                        ${testNumber}
-                    </div>
-                    <div class="test-info">
-                        <h4 class="test-title">Featured Test ${testNumber}
-                            <span style="background:linear-gradient(135deg,#d69e2e,#b7791f);color:white;font-size:0.65rem;padding:2px 8px;border-radius:10px;font-weight:700;margin-left:8px;">⭐ FEATURED</span>
-                        </h4>
-                        <span class="test-status ${hasCompleted ? 'status-completed' : 'status-available'}">
-                            ${hasCompleted ? `Completed (${bestScore}%)` : 'Ready to Start'}
-                        </span>
-                    </div>
-                    ${hasCompleted ? `
-                        <div class="test-score-display">
-                            <div class="test-score" style="color:#d69e2e;">${bestScore}%</div>
-                            <div class="test-score-label">Best Score</div>
-                            <div class="test-attempts">${attempts.length} attempt${attempts.length > 1 ? 's' : ''}</div>
-                        </div>
-                    ` : ''}
-                </div>
-                <div class="test-details">
-                    <div class="test-detail">
-                        <span class="detail-label">Questions:</span>
-                        <span class="detail-value">42 questions</span>
-                    </div>
-                    <div class="test-detail">
-                        <span class="detail-label">Format:</span>
-                        <span class="detail-value">4-option (latest LNAT format)</span>
-                    </div>
-                    <div class="test-detail">
-                        <span class="detail-label">Time Limit:</span>
-                        <span class="detail-value">95 minutes</span>
-                    </div>
-                    ${hasCompleted && latestAttempt ? `
-                        <div class="test-detail">
-                            <span class="detail-label">Last Completed:</span>
-                            <span class="detail-value">${formatDate(latestAttempt.submitted_at)}</span>
-                        </div>
-                    ` : ''}
-                </div>
-                <div class="progress-bar-mini">
-                    <div class="progress-fill-mini"
-                         style="width:${hasCompleted ? 100 : 0}%; background:linear-gradient(90deg,#d69e2e,#b7791f);"></div>
-                </div>
-                <div class="test-actions">
-                    ${hasCompleted ? `
-                        <button class="btn btn-test-action btn-review"
-                                onclick="viewFeaturedTestResults(${latestAttempt.id}, ${testNumber})">
-                            <i class="fas fa-chart-line me-1"></i>Review Results
-                        </button>
-                        <button class="btn btn-test-action btn-retake"
-                                onclick="window.location.href='featured-test.html?test=${testNumber}'">
-                            <i class="fas fa-redo me-1"></i>Retake
-                        </button>
-                    ` : `
-                        <button class="btn btn-test-action btn-start"
-                                style="background:linear-gradient(135deg,#d69e2e,#b7791f);"
-                                onclick="window.location.href='featured-test.html?test=${testNumber}'">
-                            <i class="fas fa-play me-1"></i>Start Test
-                        </button>
-                    `}
-                </div>
+    <div class="test-card ${hasCompleted ? 'completed' : 'available'}"
+         style="border-left-color: #d69e2e;">
+        <div class="test-number ${hasCompleted ? 'completed' : ''}"
+             style="background: ${hasCompleted ? '#48bb78' : '#d69e2e'};">
+            ${testNumber}
+        </div>
+
+        <div class="test-identity">
+            <h4 class="test-title">Featured Test ${testNumber}
+                <span style="background:linear-gradient(135deg,#d69e2e,#b7791f);color:white;font-size:0.65rem;padding:2px 7px;border-radius:10px;font-weight:700;margin-left:6px;">⭐ FEATURED</span>
+            </h4>
+            <span class="test-status ${hasCompleted ? 'status-completed' : 'status-available'}">
+                ${hasCompleted ? `Completed (${bestScore}%)` : 'Ready to Start'}
+            </span>
+        </div>
+
+        <div class="test-card-divider"></div>
+
+        <div class="test-score-display">
+            ${hasCompleted ? `
+                <div class="test-score" style="color:#d69e2e;">${bestScore}%</div>
+                <div class="test-score-label">Best Score</div>
+                <div class="test-attempts">${attempts.length} attempt${attempts.length > 1 ? 's' : ''}</div>
+            ` : '<div style="color:#a0aec0; font-size:0.85rem;">—</div>'}
+        </div>
+
+        <div class="test-card-divider"></div>
+
+        <div class="test-details">
+            <div class="test-detail">
+                <span class="detail-label">Questions:</span>
+                <span class="detail-value">42</span>
             </div>
-        `;
+            <div class="test-detail">
+                <span class="detail-label">Time Limit:</span>
+                <span class="detail-value">95 min</span>
+            </div>
+        </div>
+
+        <div class="test-card-divider"></div>
+
+        <div class="test-meta">
+            <div class="test-detail">
+                <span class="detail-label">Format:</span>
+                <span class="detail-value">4-option (latest LNAT)</span>
+            </div>
+            <div class="test-detail">
+                <span class="detail-label">Last Completed:</span>
+                <span class="detail-value">${hasCompleted && latestAttempt ? formatDate(latestAttempt.submitted_at) : '—'}</span>
+            </div>
+        </div>
+
+        <div class="test-actions">
+            ${hasCompleted ? `
+                <button class="btn btn-test-action btn-review"
+                        onclick="viewFeaturedTestResults(${latestAttempt.id}, ${testNumber})">
+                    <i class="fas fa-chart-line me-1"></i>Review Results
+                </button>
+                <button class="btn btn-test-action btn-retake"
+                        onclick="window.location.href='featured-test.html?test=${testNumber}'">
+                    <i class="fas fa-redo me-1"></i>Retake
+                </button>
+            ` : `
+                <button class="btn btn-test-action btn-start"
+                        style="background:linear-gradient(135deg,#d69e2e,#b7791f);"
+                        onclick="window.location.href='featured-test.html?test=${testNumber}'">
+                    <i class="fas fa-play me-1"></i>Start Test
+                </button>
+            `}
+        </div>
+    </div>
+`;
     });
 
     container.innerHTML = html;
