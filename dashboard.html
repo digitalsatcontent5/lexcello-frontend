@@ -713,8 +713,21 @@ body {
   <!-- Two-column main layout -->
   <div class="main-cols">
 
-    <!-- ── LEFT COLUMN ── -->
+    <!-- ── LEFT COLUMN: Premium Practice Tests ── -->
     <div class="left-col">
+      <div class="sec-header">
+        <i class="fas fa-clipboard-list" style="color:var(--navy-soft);font-size:13px;"></i>
+        <span class="sec-title">Premium Practice Tests</span>
+      </div>
+      <div id="testsContainer">
+        <div class="test-table">
+          <div class="loading-rows"><span class="spinner"></span>Loading your tests…</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── RIGHT COLUMN: Free Diagnostic, Featured, Quick Stats ── -->
+    <div class="right-col">
 
       <!-- Free Diagnostic -->
       <div class="sec-header">
@@ -737,7 +750,7 @@ body {
         </div>
       </div>
 
-      <!-- Achievements + Quick Stats combined -->
+      <!-- Quick Stats -->
       <div style="margin-top:20px;">
         <div class="panel">
           <div class="panel-title"><i class="fas fa-chart-bar"></i> Quick Stats</div>
@@ -766,19 +779,6 @@ body {
         </div>
       </div>
 
-    </div>
-
-    <!-- ── RIGHT COLUMN ── -->
-    <div class="right-col">
-      <div class="sec-header">
-        <i class="fas fa-clipboard-list" style="color:var(--navy-soft);font-size:13px;"></i>
-        <span class="sec-title">Premium Practice Tests</span>
-      </div>
-      <div id="testsContainer">
-        <div class="test-table">
-          <div class="loading-rows"><span class="spinner"></span>Loading your tests…</div>
-        </div>
-      </div>
     </div>
 
   </div>
