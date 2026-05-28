@@ -373,7 +373,7 @@ body {
 /* ── Bottom Panels ── */
 .bottom-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: 1fr 1fr 1fr 1fr;
   gap: 14px;
   margin-bottom: 40px;
 }
@@ -399,6 +399,12 @@ body {
 }
 
 /* Activity */
+.activity-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 12px;
+}
+
 .activity-item {
   display: flex;
   align-items: center;
@@ -552,10 +558,17 @@ body {
 
 /* ── Responsive ── */
 @media (max-width: 992px) {
-  .bottom-grid { grid-template-columns: 1fr 1fr; }
-  .stats-row   { grid-template-columns: repeat(2, 1fr); }
+  .stats-row { grid-template-columns: repeat(2, 1fr); }
   #testsContainer > div,
   #topTestsRow { grid-template-columns: 1fr !important; }
+  .bottom-grid { grid-template-columns: 1fr 1fr !important; }
+  .bottom-grid .panel[style*="span 2"] { grid-column: span 2; }
+  .activity-list { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 576px) {
+  .bottom-grid { grid-template-columns: 1fr !important; }
+  .bottom-grid .panel[style*="span 2"] { grid-column: span 1; }
 }
 
 @media (max-width: 768px) {
@@ -714,29 +727,29 @@ body {
     </div>
   </div>
 
-  <!-- Bottom Panels -->
+  <!-- Bottom Panels: 3 columns — [Perf+Ach] [Recent Activity (wider)] [Quick Stats] -->
   <div class="bottom-grid">
 
-    <!-- Performance -->
-    <div class="panel">
-      <div class="panel-title"><i class="fas fa-chart-line"></i> Performance</div>
-      <div id="performanceChartContainer">
-        <div class="chart-area">
-          <div style="font-size: 12px; color: var(--ink-light);">Complete a test to see your progress</div>
+    <!-- Col 1: Performance + Achievements stacked -->
+    <div style="display:flex;flex-direction:column;gap:14px;">
+      <div class="panel">
+        <div class="panel-title"><i class="fas fa-chart-line"></i> Performance</div>
+        <div id="performanceChartContainer">
+          <div class="chart-area">
+            <div style="font-size:12px;color:var(--ink-light);">Complete a test to see your progress</div>
+          </div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-title"><i class="fas fa-trophy"></i> Achievements</div>
+        <div class="ach-row" id="achievementsContainer">
+          <span class="ach-badge ach-blue"><i class="fas fa-star" style="font-size:9px;"></i> Welcome!</span>
         </div>
       </div>
     </div>
 
-    <!-- Achievements -->
-    <div class="panel">
-      <div class="panel-title"><i class="fas fa-trophy"></i> Achievements</div>
-      <div class="ach-row" id="achievementsContainer">
-        <span class="ach-badge ach-blue"><i class="fas fa-star" style="font-size:9px;"></i> Welcome!</span>
-      </div>
-    </div>
-
-    <!-- Recent Activity -->
-    <div class="panel">
+    <!-- Col 2: Recent Activity (spans 2 cols via grid) -->
+    <div class="panel" style="grid-column: span 2;">
       <div class="panel-title"><i class="fas fa-history"></i> Recent Activity</div>
       <div id="recentActivity">
         <div class="activity-item">
@@ -749,7 +762,7 @@ body {
       </div>
     </div>
 
-    <!-- Quick Stats -->
+    <!-- Col 4: Quick Stats -->
     <div class="panel">
       <div class="panel-title"><i class="fas fa-chart-bar"></i> Quick Stats</div>
       <div class="mini-stats">
@@ -1430,9 +1443,11 @@ function updateRecentActivity() {
 
   if (!sorted.length) {
     container.innerHTML = `
-      <div class="activity-item">
-        <div class="act-icon act-join"><i class="fas fa-user-plus" style="font-size:10px;"></i></div>
-        <div class="act-info"><div class="act-name">Joined Lexcello</div><div class="act-time">Welcome to your LNAT prep!</div></div>
+      <div class="activity-list">
+        <div class="activity-item">
+          <div class="act-icon act-join"><i class="fas fa-user-plus" style="font-size:10px;"></i></div>
+          <div class="act-info"><div class="act-name">Joined Lexcello</div><div class="act-time">Welcome to your LNAT prep!</div></div>
+        </div>
       </div>`;
     return;
   }
@@ -1444,7 +1459,7 @@ function updateRecentActivity() {
     return isNaN(Number(s)) ? 0 : Number(s);
   };
 
-  container.innerHTML = sorted.slice(0, 5).map(a => {
+  const items = sorted.slice(0, 6).map(a => {
     const score    = parseScore(a);
     const isStar   = score >= 85;
     const testName = a.total_questions === 14 ? 'Free diagnostic test' : `Practice test ${a.test_id}`;
@@ -1460,6 +1475,8 @@ function updateRecentActivity() {
         <div class="act-score">${Math.round(score)}%</div>
       </div>`;
   }).join('');
+
+  container.innerHTML = `<div class="activity-list">${items}</div>`;
 }
 
 /* ─────────────────────────────────────────────
