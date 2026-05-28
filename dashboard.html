@@ -1053,9 +1053,7 @@
             <div class="test-card-divider"></div>
             <div class="test-card-col-inner">
                 <h4 class="test-title">Free 14-Question Diagnostic Test</h4>
-                <span class="test-status ${hasCompleted ? 'status-completed' : 'status-available'}">
-                    ${hasCompleted ? `Completed (${Math.round(bestScore)}%)` : 'Free for All'}
-                </span>
+
             </div>
         </div>
 
@@ -1622,9 +1620,7 @@
         <div class="test-card-divider"></div>
         <div class="test-card-col-inner">
             <h4 class="test-title">Practice Test ${testId}${purchaseBadge}</h4>
-            <span class="test-status ${statusClass}">
-                ${!canAccess ? '<i class="fas fa-lock me-1"></i>' : ''}${statusText}
-            </span>
+            
         </div>
     </div>
 
@@ -2333,9 +2329,7 @@ function renderFeaturedTestsSection() {
         <div class="test-card-col-inner">
             <h4 class="test-title">Featured Test ${testNumber}                
             </h4>
-            <span class="test-status ${hasCompleted ? 'status-completed' : 'status-available'}">
-                ${hasCompleted ? `Completed (${bestScore}%)` : 'Ready to Start'}
-            </span>
+
         </div>
     </div>
 
