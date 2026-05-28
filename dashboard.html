@@ -845,9 +845,22 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 async function initializeDashboard() {
   try {
+    // Render cached data instantly if available
+    const cached = localStorage.getItem('lexcello_test_statuses');
+    if (cached) {
+      try {
+        const { statuses, ts } = JSON.parse(cached);
+        if (Date.now() - ts < 3600000) { // 1 hour TTL
+          renderTestsWithUserProgress(statuses);
+        }
+      } catch(e) {}
+    }
+
     await checkAuthStatus();
-    userSubscriptionInfo = await checkUserSubscriptionStatus();
-    await loadUserData();
+    [userSubscriptionInfo] = await Promise.all([
+      checkUserSubscriptionStatus(),
+      loadUserData()
+    ]);
     await loadTests();
     renderFreeDiagnosticTest();
     updateProgressStats();
@@ -1126,6 +1139,8 @@ async function loadTests() {
   try {
     const statuses = await checkTestContent();
     availableTests = statuses;
+    // Cache for next visit
+    localStorage.setItem('lexcello_test_statuses', JSON.stringify({ statuses, ts: Date.now() }));
     renderTestsWithUserProgress(statuses);
     updateTestsAvailableCount(statuses);
   } catch(err) {
@@ -1135,22 +1150,21 @@ async function loadTests() {
 }
 
 async function checkTestContent() {
-  const out = {};
-  for (let id = 1; id <= 10; id++) {
+  const ids = [1,2,3,4,5,6,7,8,9,10];
+
+  const results = await Promise.all(ids.map(async id => {
     try {
       const res = await fetch(`${API_BASE_URL}/tests/${id}/status`);
       if (res.ok) {
         const data = await res.json();
-        let count = data.questionCount ?? (Array.isArray(data) ? data.length : (data.questions ? data.questions.length : (data.count ?? 0)));
-        out[id] = { hasContent: count > 0, questionCount: count, status: count > 0 ? 'available' : 'empty' };
-      } else {
-        out[id] = { hasContent: false, questionCount: 0, status: 'empty' };
+        const count = data.questionCount ?? (Array.isArray(data) ? data.length : (data.questions ? data.questions.length : (data.count ?? 0)));
+        return [id, { hasContent: count > 0, questionCount: count, status: count > 0 ? 'available' : 'empty' }];
       }
-    } catch(e) {
-      out[id] = { hasContent: false, questionCount: 0, status: 'error' };
-    }
-  }
-  return out;
+    } catch(e) {}
+    return [id, { hasContent: false, questionCount: 0, status: 'error' }];
+  }));
+
+  return Object.fromEntries(results);
 }
 
 function buildTestRow(id, statuses, userPackage, purchased) {
