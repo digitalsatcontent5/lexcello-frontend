@@ -399,12 +399,6 @@ body {
 }
 
 /* Activity */
-.activity-list {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0 12px;
-}
-
 .activity-item {
   display: flex;
   align-items: center;
@@ -563,7 +557,6 @@ body {
   #topTestsRow { grid-template-columns: 1fr !important; }
   .bottom-grid { grid-template-columns: 1fr 1fr !important; }
   .bottom-grid .panel[style*="span 2"] { grid-column: span 2; }
-  .activity-list { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 576px) {
@@ -1443,11 +1436,9 @@ function updateRecentActivity() {
 
   if (!sorted.length) {
     container.innerHTML = `
-      <div class="activity-list">
-        <div class="activity-item">
-          <div class="act-icon act-join"><i class="fas fa-user-plus" style="font-size:10px;"></i></div>
-          <div class="act-info"><div class="act-name">Joined Lexcello</div><div class="act-time">Welcome to your LNAT prep!</div></div>
-        </div>
+      <div class="activity-item">
+        <div class="act-icon act-join"><i class="fas fa-user-plus" style="font-size:10px;"></i></div>
+        <div class="act-info"><div class="act-name">Joined Lexcello</div><div class="act-time">Welcome to your LNAT prep!</div></div>
       </div>`;
     return;
   }
@@ -1476,7 +1467,7 @@ function updateRecentActivity() {
       </div>`;
   }).join('');
 
-  container.innerHTML = `<div class="activity-list">${items}</div>`;
+  container.innerHTML = items;
 }
 
 /* ─────────────────────────────────────────────
