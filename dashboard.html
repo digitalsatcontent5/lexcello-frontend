@@ -1559,7 +1559,10 @@ function renderFeaturedTestsSection() {
 </div>`;
   });
 
-  container.innerHTML = html;
+  container.innerHTML = html + `
+<div style="padding:10px 16px;border-top:1px solid var(--border-soft);font-size:12px;color:var(--ink-light);text-align:center;">
+  <i class="fas fa-clock me-1"></i> Featured test 14 &amp; Featured test 15 coming soon
+</div>`;
 }
 
 async function viewFeaturedTestResults(attemptId, testNumber) {
