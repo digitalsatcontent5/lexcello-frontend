@@ -554,7 +554,8 @@ body {
 @media (max-width: 992px) {
   .bottom-grid { grid-template-columns: 1fr 1fr; }
   .stats-row   { grid-template-columns: repeat(2, 1fr); }
-  #testsContainer > div { grid-template-columns: 1fr !important; }
+  #testsContainer > div,
+  #topTestsRow { grid-template-columns: 1fr !important; }
 }
 
 @media (max-width: 768px) {
@@ -674,23 +675,32 @@ body {
 <!-- ── Main Content ── -->
 <div class="container fade-up">
 
-  <!-- Free Diagnostic Test -->
-  <div class="sec-header" style="margin-top: 4px;">
-    <i class="fas fa-gift" style="color: var(--green); font-size: 13px;"></i>
-    <span class="sec-title">Free Diagnostic Test</span>
-  </div>
-  <div id="freeTestContainer"></div>
+  <!-- Free Diagnostic + Featured Tests (side by side) -->
+  <div id="topTestsRow" style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:4px;">
 
-  <!-- Featured Tests -->
-  <div id="featuredTestsSection" style="display:none;">
-    <div class="sec-header">
-      <i class="fas fa-star" style="color: var(--gold); font-size: 13px;"></i>
-      <span class="sec-title">Featured Tests</span>
-      <span class="sec-badge">New</span>
+    <!-- Left: Free Diagnostic -->
+    <div>
+      <div class="sec-header">
+        <i class="fas fa-gift" style="color:var(--green);font-size:13px;"></i>
+        <span class="sec-title">Free Diagnostic Test</span>
+      </div>
+      <div id="freeTestContainer">
+        <div class="test-table"><div class="loading-rows"><span class="spinner"></span>Loading…</div></div>
+      </div>
     </div>
-    <div class="test-table" id="featuredTestsContainer">
-      <div class="loading-rows"><span class="spinner"></span>Loading featured tests…</div>
+
+    <!-- Right: Featured Tests -->
+    <div id="featuredTestsSection" style="display:none;">
+      <div class="sec-header">
+        <i class="fas fa-star" style="color:var(--gold);font-size:13px;"></i>
+        <span class="sec-title">Featured Tests</span>
+        <span class="sec-badge">New</span>
+      </div>
+      <div class="test-table" id="featuredTestsContainer">
+        <div class="loading-rows"><span class="spinner"></span>Loading featured tests…</div>
+      </div>
     </div>
+
   </div>
 
   <!-- Premium Practice Tests -->
@@ -982,12 +992,12 @@ function renderFreeDiagnosticTest() {
   const latest = hasCompleted ? freeAttempts[freeAttempts.length - 1] : null;
 
   container.innerHTML = `
-<div class="test-table" style="margin-bottom:20px;">
+<div class="test-table">
   <div class="test-table-head">
     <div></div>
     <div class="th" style="padding-left:12px;">Test</div>
     <div class="th center">Score</div>
-    <div class="th">Details</div>
+    <div class="th">Status</div>
     <div class="th right">Actions</div>
   </div>
   <div class="test-row ${hasCompleted ? 'is-done' : 'is-avail'}">
@@ -1485,10 +1495,39 @@ function generateAchievements() {
 let featuredAttempts = [];
 
 function showFeaturedTestsSection() {
-  const pkg = getUserPackage(currentUser);
-  if (!pkg || pkg === 'free') return;
+  const pkg     = getUserPackage(currentUser);
   const section = document.getElementById('featuredTestsSection');
-  if (section) section.style.display = '';
+  if (!section) return;
+
+  // Always show the right column so the two-column layout is balanced
+  section.style.display = '';
+
+  if (!pkg || pkg === 'free') {
+    // Show a locked placeholder for free users
+    document.getElementById('featuredTestsContainer').innerHTML = `
+<div class="test-table-head">
+  <div></div>
+  <div class="th" style="padding-left:12px;">Test</div>
+  <div class="th center">Best score</div>
+  <div class="th">Format</div>
+  <div class="th right">Actions</div>
+</div>
+${[11,12,13].map(n => `
+<div class="test-row is-locked faded">
+  <div class="num-circle nc-lock">${n}</div>
+  <div>
+    <div class="test-name">Featured test ${n}</div>
+    <div class="test-sub">Latest LNAT format · 4-option</div>
+  </div>
+  <div class="col-score"><div class="score-na">—</div></div>
+  <div><span class="pill pill-lock"><i class="fas fa-lock" style="font-size:9px;"></i> Premium</span></div>
+  <div class="actions-cell">
+    <button class="btn-action btn-upgrade" onclick="window.location.href='pricing.html'">Upgrade to access</button>
+  </div>
+</div>`).join('')}`;
+    return;
+  }
+
   loadFeaturedTestsHistory();
 }
 
