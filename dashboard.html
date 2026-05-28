@@ -107,23 +107,22 @@ body {
 
 /* ── Page Header ── */
 .page-header {
-  background: var(--white);
-  border-bottom: 1px solid var(--border-soft);
-  padding: 28px 0 24px;
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-soft) 100%);
+  padding: 36px 0 30px;
   margin-bottom: 28px;
 }
 
 .page-header h1 {
   font-family: 'DM Serif Display', serif;
-  font-size: 1.75rem;
+  font-size: 1.9rem;
   font-weight: 400;
-  color: var(--navy);
-  margin-bottom: 4px;
+  color: #ffffff;
+  margin-bottom: 6px;
 }
 
 .page-header p {
   font-size: 13px;
-  color: var(--ink-mid);
+  color: rgba(255,255,255,.75);
 }
 
 /* ── Stats Row ── */
@@ -135,35 +134,36 @@ body {
 }
 
 .stat-card {
-  background: var(--surface-alt);
+  background: rgba(255,255,255,.12);
   border-radius: var(--radius-md);
   padding: 14px 16px;
-  border: 1px solid var(--border-soft);
+  border: 1px solid rgba(255,255,255,.18);
+  backdrop-filter: blur(4px);
 }
 
 .stat-val {
   font-size: 22px;
   font-weight: 600;
-  color: var(--navy);
+  color: #ffffff;
   line-height: 1.2;
   margin-bottom: 2px;
 }
 
 .stat-lbl {
   font-size: 11px;
-  color: var(--ink-light);
+  color: rgba(255,255,255,.65);
   text-transform: uppercase;
   letter-spacing: .04em;
 }
 
 .stat-trend {
   font-size: 11px;
-  color: var(--green);
+  color: #86efb8;
   margin-top: 4px;
 }
 
-.stat-trend.down { color: var(--red-text); }
-.stat-trend.neutral { color: var(--ink-light); }
+.stat-trend.down    { color: #fca5a5; }
+.stat-trend.neutral { color: rgba(255,255,255,.5); }
 
 /* ── Free Banner ── */
 .free-banner {
@@ -947,12 +947,12 @@ function showFreeTestPromoIfNeeded() {
   const el = document.getElementById('freeTestPromo');
   if (!el) return;
   el.innerHTML = `
-    <div class="free-banner" style="margin-top:16px;">
+    <div style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);border-radius:var(--radius-lg);padding:14px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:18px;">
       <div>
-        <div class="free-banner-title"><i class="fas fa-gift me-1"></i>Try our free 14-question practice test!</div>
-        <div class="free-banner-sub">Score 40%+ to unlock an exclusive 30–50% scholarship discount on premium packages.</div>
+        <div style="font-size:13px;font-weight:600;color:#ffffff;margin-bottom:3px;"><i class="fas fa-gift me-1"></i>Try our free 14-question practice test!</div>
+        <div style="font-size:12px;color:rgba(255,255,255,.7);">Score 40%+ to unlock an exclusive 30–50% scholarship discount on premium packages.</div>
       </div>
-      <button class="btn-action btn-success-solid" onclick="navigateToFreeTest()">
+      <button class="btn-action" style="background:#ffffff;color:var(--navy);border:none;white-space:nowrap;flex-shrink:0;" onclick="navigateToFreeTest()">
         <i class="fas fa-rocket me-1"></i>Start free test
       </button>
     </div>
