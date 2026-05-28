@@ -531,7 +531,9 @@
     <script>
         const API_BASE_URL = 'https://lexcello-backend.onrender.com';
         const urlParams = new URLSearchParams(window.location.search);
-        const TEST_ID = parseInt(urlParams.get('test')) || 11;
+        const TEST_NUMBER = parseInt(urlParams.get('test')) || 11;
+const TEST_ID = TEST_NUMBER; // keep for display purposes
+const TEST_DB_ID = { 11: 1, 12: 2, 13: 3 }[TEST_NUMBER] || TEST_NUMBER;
 
         let questions = [];
         let currentQuestionIndex = 0;
@@ -603,7 +605,7 @@
                 showLoading();
 
                 const token = localStorage.getItem('authToken');
-                const response = await fetch(`${API_BASE_URL}/api/featured-tests/${TEST_ID}/questions`, {
+                const response = await fetch(`${API_BASE_URL}/api/featured-tests/${TEST_DB_ID}/questions`, {
                     headers: {
                         'Authorization': `Bearer ${token}`,
                         'Content-Type': 'application/json'
@@ -832,7 +834,7 @@
                 });
 
                 const token = localStorage.getItem('authToken');
-                const response = await fetch(`${API_BASE_URL}/api/featured-tests/${TEST_ID}/submit`, {
+                const response = await fetch(`${API_BASE_URL}/api/featured-tests/${TEST_DB_ID}/submit`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
