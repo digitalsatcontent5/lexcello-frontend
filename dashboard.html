@@ -731,16 +731,14 @@ body {
         </div>
       </div>
 
-      <!-- Achievements + Quick Stats side by side -->
-      <div style="margin-top:20px;display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+      <!-- Achievements + Quick Stats combined -->
+      <div style="margin-top:20px;">
         <div class="panel">
           <div class="panel-title"><i class="fas fa-trophy"></i> Achievements</div>
-          <div class="ach-row" id="achievementsContainer">
+          <div class="ach-row" id="achievementsContainer" style="margin-bottom:14px;">
             <span class="ach-badge ach-blue"><i class="fas fa-star" style="font-size:9px;"></i> Welcome!</span>
           </div>
-        </div>
-        <div class="panel">
-          <div class="panel-title"><i class="fas fa-chart-bar"></i> Quick Stats</div>
+          <div class="panel-title" style="margin-top:4px;"><i class="fas fa-chart-bar"></i> Quick Stats</div>
           <div class="mini-stats">
             <div class="mini-stat"><div class="mini-val" id="totalTime">0h</div><div class="mini-lbl">Study time</div></div>
             <div class="mini-stat"><div class="mini-val" id="accuracy">0%</div><div class="mini-lbl">Accuracy</div></div>
