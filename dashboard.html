@@ -823,7 +823,7 @@
     <!-- Main Dashboard Content -->
     <div class="container">
         <div class="row">
-            <div class="col-lg-8">
+    <div class="col-lg-12">
                 <!-- Free Diagnostic Test Section -->
                 <div class="content-section">
                     <div class="section-header">
@@ -876,9 +876,12 @@
                         <div class="mt-3">Loading your tests...</div>
                     </div>
                 </div>
-            </div>
-            
-            <div class="col-lg-4">
+           </div>
+        </div>
+
+        <!-- Bottom Stats Row -->
+        <div class="row mt-4">
+            <div class="col-lg-3">
                 <!-- Performance Chart -->
                 <div class="content-section">
                     <div class="performance-card">
@@ -895,7 +898,9 @@
                         </div>
                     </div>
                 </div>
+            </div>
 
+            <div class="col-lg-3">
                 <!-- Achievements -->
                 <div class="content-section">
                     <div class="performance-card">
@@ -908,13 +913,14 @@
                         </div>
                     </div>
                 </div>
+            </div>
 
+            <div class="col-lg-3">
                 <!-- Recent Activity -->
                 <div class="content-section">
                     <h3 class="section-title">
                         <i class="fas fa-history me-2"></i>Recent Activity
                     </h3>
-                    
                     <div id="recentActivity">
                         <div class="activity-item">
                             <div class="activity-icon activity-started">
@@ -927,7 +933,9 @@
                         </div>
                     </div>
                 </div>
+            </div>
 
+            <div class="col-lg-3">
                 <!-- Quick Stats -->
                 <div class="content-section">
                     <div class="performance-card">
@@ -1685,12 +1693,7 @@
         ${hasCompleted && latestAttempt ? formatDate(latestAttempt.completed_at) : canAccess ? 'Ready' : (testId <= 5 ? 'Foundation' : 'Advanced')}
     </span>
 </div>
-            <div class="test-detail">
-                <span class="detail-label">${hasCompleted && latestAttempt ? 'Last Completed:' : canAccess ? 'Status:' : 'Required:'}</span>
-                <span class="detail-value">
-                    ${hasCompleted && latestAttempt ? formatDate(latestAttempt.completed_at) : canAccess ? 'Ready' : (testId <= 5 ? 'Foundation/Complete' : 'Advanced/Complete')}
-                </span>
-            </div>
+            
         </div>
 
         <div class="test-actions">
