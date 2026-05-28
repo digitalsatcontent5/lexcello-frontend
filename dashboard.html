@@ -243,197 +243,162 @@
             transition: all 0.3s ease;
         }
         
-        /* Enhanced Test Cards */
-        .tests-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
-            gap: 25px;
-        }
-        
-        .test-card {
-            background: white;
-            border-radius: 15px;
-            padding: 25px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-            transition: all 0.3s ease;
-            border-left: 5px solid transparent;
-            position: relative;
-            overflow: hidden;
-        }
+        /* Horizontal Test Cards */
+.tests-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
 
-        .test-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
-            transform: scaleX(0);
-            transition: transform 0.3s ease;
-        }
-        
-        .test-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
-        }
+.test-card {
+    background: white;
+    border-radius: 12px;
+    padding: 12px 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    transition: box-shadow 0.3s ease;
+    border-left: 4px solid transparent;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
 
-        .test-card:hover::before {
-            transform: scaleX(1);
-        }
-        
-        .test-card.completed {
-            border-left-color: var(--success-color);
-        }
-        
-        .test-card.available {
-            border-left-color: var(--secondary-color);
-        }
-        
-        .test-card.locked {
-            border-left-color: #e2e8f0;
-            opacity: 0.8;
-        }
-        
-        .test-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 20px;
-        }
-        
-        .test-number {
-            background: var(--secondary-color);
-            color: white;
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 1.1rem;
-        }
+.test-card:hover {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+}
 
-        .test-number.completed {
-            background: var(--success-color);
-        }
+.test-card.completed { border-left-color: var(--success-color); }
+.test-card.available { border-left-color: var(--secondary-color); }
+.test-card.locked { border-left-color: #e2e8f0; opacity: 0.85; background: var(--bg-light); }
 
-        .test-number.locked {
-            background: #cbd5e0;
-        }
-        
-        .test-info {
-            flex: 1;
-            margin-left: 15px;
-        }
-        
-        .test-title {
-            font-size: 1.3rem;
-            font-weight: 600;
-            color: var(--primary-color);
-            margin: 0 0 8px 0;
-        }
-        
-        .test-status {
-            font-size: 0.85rem;
-            padding: 6px 12px;
-            border-radius: 12px;
-            font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-        }
-        
-        .status-completed {
-            background: #c6f6d5;
-            color: #22543d;
-        }
-        
-        .status-available {
-            background: #bee3f8;
-            color: #2b6cb0;
-        }
-        
-        .status-locked {
-            background: #fed7d7;
-            color: #c53030;
-        }
+.test-card-divider {
+    width: 1px;
+    height: 40px;
+    background: #e2e8f0;
+    flex-shrink: 0;
+}
 
-        .test-score-display {
-            text-align: right;
-        }
+.test-number {
+    background: var(--secondary-color);
+    color: white;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1rem;
+    flex-shrink: 0;
+}
 
-        .test-score {
-            font-size: 2.2rem;
-            font-weight: 800;
-            color: var(--success-color);
-            line-height: 1;
-        }
+.test-number.completed { background: var(--success-color); }
+.test-number.locked { background: #cbd5e0; }
 
-        .test-score-label {
-            font-size: 0.8rem;
-            color: var(--text-light);
-            margin-top: 2px;
-        }
+.test-identity {
+    flex: 0 0 150px;
+}
 
-        .test-attempts {
-            font-size: 0.8rem;
-            color: var(--text-light);
-        }
-        
-        .test-details {
-            margin: 20px 0;
-        }
-        
-        .test-detail {
-            display: flex;
-            justify-content: space-between;
-            margin: 10px 0;
-            font-size: 0.9rem;
-        }
-        
-        .detail-label {
-            color: var(--text-light);
-        }
-        
-        .detail-value {
-            font-weight: 600;
-            color: var(--text-dark);
-        }
+.test-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--primary-color);
+    margin: 0 0 4px 0;
+}
 
-        .progress-bar-mini {
-            height: 6px;
-            background: #e2e8f0;
-            border-radius: 3px;
-            overflow: hidden;
-            margin-top: 10px;
-        }
+.test-status {
+    font-size: 0.75rem;
+    padding: 2px 10px;
+    border-radius: 10px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
 
-        .progress-fill-mini {
-            height: 100%;
-            background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
-            border-radius: 3px;
-            transition: width 0.8s ease;
-        }
-        
-        .test-actions {
-            margin-top: 25px;
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-        
-        .btn-test-action {
-            flex: 1;
-            padding: 12px;
-            border-radius: 8px;
-            font-weight: 600;
-            border: none;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            min-width: 120px;
-        }
+.status-completed { background: #c6f6d5; color: #22543d; }
+.status-available { background: #bee3f8; color: #2b6cb0; }
+.status-locked { background: #fed7d7; color: #c53030; }
+
+.test-score-display {
+    flex: 0 0 70px;
+    text-align: center;
+}
+
+.test-score {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--success-color);
+    line-height: 1.1;
+}
+
+.test-score-label {
+    font-size: 0.7rem;
+    color: var(--text-light);
+}
+
+.test-attempts {
+    font-size: 0.7rem;
+    color: var(--text-light);
+}
+
+.test-details {
+    flex: 0 0 120px;
+}
+
+.test-detail {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    margin: 2px 0;
+}
+
+.detail-label { color: var(--text-light); }
+.detail-value { font-weight: 600; color: var(--text-dark); }
+
+.test-meta {
+    flex: 1;
+    min-width: 0;
+}
+
+.test-meta .test-detail {
+    font-size: 0.8rem;
+    margin: 2px 0;
+}
+
+.progress-bar-mini {
+    display: none;
+}
+
+.test-actions {
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.btn-test-action {
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    border: none;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    font-size: 0.85rem;
+    white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+    .test-card {
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+    .test-card-divider { display: none; }
+    .test-identity { flex: 1 1 auto; }
+    .test-score-display { flex: 0 0 auto; }
+    .test-details { flex: 1 1 100%; }
+    .test-meta { flex: 1 1 100%; }
+    .test-actions { flex: 1 1 100%; }
+    .btn-test-action { flex: 1; }
+}
         
         .btn-start {
             background: var(--secondary-color);
@@ -1667,54 +1632,62 @@
                         `<span class="badge bg-warning text-dark ms-2" style="font-size: 0.7rem;"><i class="fas fa-check me-1"></i>Purchased</span>` : '';
                     
                     testsHTML += `
-                        <div class="test-card ${cardClass}">
-                            <div class="test-header">
-                                <div class="test-number ${hasCompleted ? 'completed' : canAccess ? '' : 'locked'}">${testId}</div>
-                                <div class="test-info">
-                                    <h4 class="test-title">Practice Test ${testId}${purchaseBadge}</h4>
-                                    <span class="test-status ${statusClass}">
-                                        ${!canAccess ? '<i class="fas fa-lock me-1"></i>' : ''}
-                                        ${statusText}
-                                    </span>
-                                </div>
-                                ${hasCompleted ? `
-                                    <div class="test-score-display">
-                                        <div class="test-score">${Math.round(bestScore)}%</div>
-                                        <div class="test-score-label">Best Score</div>
-                                        <div class="test-attempts">${userAttempts.length} attempt${userAttempts.length > 1 ? 's' : ''}</div>
-                                    </div>
-                                ` : ''}
-                            </div>
-                            <div class="test-details">
-                                <div class="test-detail">
-                                    <span class="detail-label">Questions:</span>
-                                    <span class="detail-value">${status.questionCount > 0 ? status.questionCount : 'TBA'}</span>
-                                </div>
-                                <div class="test-detail">
-                                    <span class="detail-label">Time Limit:</span>
-                                    <span class="detail-value">95 minutes</span>
-                                </div>
-                                <div class="test-detail">
-                                    <span class="detail-label">Access:</span>
-                                    <span class="detail-value ${canAccess ? 'text-success' : 'text-danger'}">
-                                        ${canAccess ? '<i class="fas fa-check-circle"></i> Available' : '<i class="fas fa-lock"></i> Locked'}
-                                    </span>
-                                </div>
-                                ${hasCompleted && latestAttempt ? `
-                                    <div class="test-detail">
-                                        <span class="detail-label">Last Completed:</span>
-                                        <span class="detail-value">${formatDate(latestAttempt.completed_at)}</span>
-                                    </div>
-                                ` : ''}
-                            </div>
-                            <div class="progress-bar-mini">
-                                <div class="progress-fill-mini" style="width: ${progress}%"></div>
-                            </div>
-                            <div class="test-actions">
-                                ${actionButtons}
-                            </div>
-                        </div>
-                    `;
+    <div class="test-card ${cardClass}">
+        <div class="test-number ${hasCompleted ? 'completed' : canAccess ? '' : 'locked'}">${testId}</div>
+
+        <div class="test-identity">
+            <h4 class="test-title">Practice Test ${testId}${purchaseBadge}</h4>
+            <span class="test-status ${statusClass}">
+                ${!canAccess ? '<i class="fas fa-lock me-1"></i>' : ''}
+                ${statusText}
+            </span>
+        </div>
+
+        <div class="test-card-divider"></div>
+
+        <div class="test-score-display">
+            ${hasCompleted ? `
+                <div class="test-score">${Math.round(bestScore)}%</div>
+                <div class="test-score-label">Best Score</div>
+                <div class="test-attempts">${userAttempts.length} attempt${userAttempts.length > 1 ? 's' : ''}</div>
+            ` : '<div style="color:#a0aec0; font-size:0.85rem;">—</div>'}
+        </div>
+
+        <div class="test-card-divider"></div>
+
+        <div class="test-details">
+            <div class="test-detail">
+                <span class="detail-label">Questions:</span>
+                <span class="detail-value">${status.questionCount > 0 ? status.questionCount : 'TBA'}</span>
+            </div>
+            <div class="test-detail">
+                <span class="detail-label">Time Limit:</span>
+                <span class="detail-value">95 min</span>
+            </div>
+        </div>
+
+        <div class="test-card-divider"></div>
+
+        <div class="test-meta">
+            <div class="test-detail">
+                <span class="detail-label">Access:</span>
+                <span class="detail-value ${canAccess ? 'text-success' : 'text-danger'}">
+                    ${canAccess ? '<i class="fas fa-check-circle"></i> Available' : '<i class="fas fa-lock"></i> Locked'}
+                </span>
+            </div>
+            <div class="test-detail">
+                <span class="detail-label">${hasCompleted && latestAttempt ? 'Last Completed:' : canAccess ? 'Status:' : 'Required:'}</span>
+                <span class="detail-value">
+                    ${hasCompleted && latestAttempt ? formatDate(latestAttempt.completed_at) : canAccess ? 'Ready' : (testId <= 5 ? 'Foundation/Complete' : 'Advanced/Complete')}
+                </span>
+            </div>
+        </div>
+
+        <div class="test-actions">
+            ${actionButtons}
+        </div>
+    </div>
+`;
                 }
             }
             
