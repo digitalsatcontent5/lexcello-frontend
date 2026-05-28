@@ -882,19 +882,12 @@
             </a>
         </div>
     </div>
-    <div style="background:linear-gradient(135deg,#fffbeb,#fef3c7);border:2px solid #d69e2e;border-radius:12px;padding:25px;">
-        <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
-            <div>
-                <h5 style="color:#92400e;margin-bottom:8px;">
-                    <i class="fas fa-star me-2"></i>Featured Tests 11, 12 &amp; 13 — Now Available!
-                </h5>
-                <p style="color:#78350f;margin:0;font-size:0.95rem;">
-                    New 4-option format matching the latest official LNAT standard. 42 questions · 95 minutes · Detailed explanations.
-                </p>
-            </div>
-            <a href="featured-tests.html" class="btn" style="background:linear-gradient(135deg,#d69e2e,#b7791f);color:white;font-weight:700;padding:12px 25px;border-radius:8px;white-space:nowrap;">
-                <i class="fas fa-play me-2"></i>Start Featured Tests
-            </a>
+
+    <!-- Featured Tests Cards -->
+    <div id="featuredTestsContainer" class="tests-grid">
+        <div class="loading text-center p-4">
+            <div class="spinner-border text-warning" role="status"></div>
+            <div class="mt-2">Loading featured tests...</div>
         </div>
     </div>
 </div>
@@ -2301,6 +2294,7 @@
     if (userPackage && userPackage !== 'free') {
         const section = document.getElementById('featuredTestsSection');
         if (section) section.style.display = 'block';
+        loadFeaturedTestsHistory();
     }
 }
         function navigateToFreeTest() {
@@ -2335,6 +2329,158 @@
             
             window.location.href = '/free-test.html';
         }
+        // ========== FEATURED TESTS HISTORY ==========
+let featuredAttempts = [];
+
+async function loadFeaturedTestsHistory() {
+    const token = localStorage.getItem('authToken');
+    if (!token) return;
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/featured-tests/my-attempts`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            featuredAttempts = data.attempts || [];
+        }
+    } catch (error) {
+        console.error('Error loading featured test history:', error);
+    }
+
+    renderFeaturedTestsSection();
+}
+
+function renderFeaturedTestsSection() {
+    const container = document.getElementById('featuredTestsContainer');
+    if (!container) return;
+
+    const featuredTestDefs = [
+        { dbId: 1, testNumber: 11 },
+        { dbId: 2, testNumber: 12 },
+        { dbId: 3, testNumber: 13 }
+    ];
+
+    let html = '';
+
+    featuredTestDefs.forEach(({ dbId, testNumber }) => {
+        const attempts = featuredAttempts.filter(a => a.test_id === dbId);
+        const hasCompleted = attempts.length > 0;
+        const bestScore = hasCompleted
+            ? Math.max(...attempts.map(a => Math.round((a.score / a.total_questions) * 100)))
+            : 0;
+        const latestAttempt = hasCompleted ? attempts[0] : null;
+
+        html += `
+            <div class="test-card ${hasCompleted ? 'completed' : 'available'}"
+                 style="border-left-color: #d69e2e;">
+                <div class="test-header">
+                    <div class="test-number ${hasCompleted ? 'completed' : ''}"
+                         style="background: ${hasCompleted ? '#48bb78' : '#d69e2e'};">
+                        ${testNumber}
+                    </div>
+                    <div class="test-info">
+                        <h4 class="test-title">Featured Test ${testNumber}
+                            <span style="background:linear-gradient(135deg,#d69e2e,#b7791f);color:white;font-size:0.65rem;padding:2px 8px;border-radius:10px;font-weight:700;margin-left:8px;">⭐ FEATURED</span>
+                        </h4>
+                        <span class="test-status ${hasCompleted ? 'status-completed' : 'status-available'}">
+                            ${hasCompleted ? `Completed (${bestScore}%)` : 'Ready to Start'}
+                        </span>
+                    </div>
+                    ${hasCompleted ? `
+                        <div class="test-score-display">
+                            <div class="test-score" style="color:#d69e2e;">${bestScore}%</div>
+                            <div class="test-score-label">Best Score</div>
+                            <div class="test-attempts">${attempts.length} attempt${attempts.length > 1 ? 's' : ''}</div>
+                        </div>
+                    ` : ''}
+                </div>
+                <div class="test-details">
+                    <div class="test-detail">
+                        <span class="detail-label">Questions:</span>
+                        <span class="detail-value">42 questions</span>
+                    </div>
+                    <div class="test-detail">
+                        <span class="detail-label">Format:</span>
+                        <span class="detail-value">4-option (latest LNAT format)</span>
+                    </div>
+                    <div class="test-detail">
+                        <span class="detail-label">Time Limit:</span>
+                        <span class="detail-value">95 minutes</span>
+                    </div>
+                    ${hasCompleted && latestAttempt ? `
+                        <div class="test-detail">
+                            <span class="detail-label">Last Completed:</span>
+                            <span class="detail-value">${formatDate(latestAttempt.submitted_at)}</span>
+                        </div>
+                    ` : ''}
+                </div>
+                <div class="progress-bar-mini">
+                    <div class="progress-fill-mini"
+                         style="width:${hasCompleted ? 100 : 0}%; background:linear-gradient(90deg,#d69e2e,#b7791f);"></div>
+                </div>
+                <div class="test-actions">
+                    ${hasCompleted ? `
+                        <button class="btn btn-test-action btn-review"
+                                onclick="viewFeaturedTestResults(${latestAttempt.id}, ${testNumber})">
+                            <i class="fas fa-chart-line me-1"></i>Review Results
+                        </button>
+                        <button class="btn btn-test-action btn-retake"
+                                onclick="window.location.href='featured-test.html?test=${testNumber}'">
+                            <i class="fas fa-redo me-1"></i>Retake
+                        </button>
+                    ` : `
+                        <button class="btn btn-test-action btn-start"
+                                style="background:linear-gradient(135deg,#d69e2e,#b7791f);"
+                                onclick="window.location.href='featured-test.html?test=${testNumber}'">
+                            <i class="fas fa-play me-1"></i>Start Test
+                        </button>
+                    `}
+                </div>
+            </div>
+        `;
+    });
+
+    container.innerHTML = html;
+}
+
+async function viewFeaturedTestResults(attemptId, testNumber) {
+    const token = localStorage.getItem('authToken');
+    if (!token) { showNotification('Please sign in', 'error'); return; }
+
+    showNotification('Loading results...', 'info');
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/featured-tests/attempts/${attemptId}`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            const attempt = data.attempt;
+
+            // Format data to match what featured-test-results.html expects
+            const resultsData = {
+                testId: testNumber,
+                score: attempt.score,
+                totalQuestions: attempt.total_questions,
+                percentage: Math.round((attempt.score / attempt.total_questions) * 100),
+                timeSpent: attempt.time_taken || 0,
+                flaggedQuestions: attempt.flagged_questions || [],
+                results: attempt.results
+            };
+
+            sessionStorage.setItem('featuredTestResults', JSON.stringify(resultsData));
+            window.location.href = `featured-test-results.html?test=${testNumber}`;
+        } else {
+            showNotification('Could not load results', 'error');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        showNotification('Failed to load results', 'error');
+    }
+}
     </script>
 </body>
 </html>
