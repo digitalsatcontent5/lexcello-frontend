@@ -731,20 +731,33 @@ body {
         </div>
       </div>
 
-      <!-- Performance + Achievements -->
-      <div style="margin-top:20px;display:flex;flex-direction:column;gap:14px;">
-        <div class="panel">
-          <div class="panel-title"><i class="fas fa-chart-line"></i> Performance</div>
-          <div id="performanceChartContainer">
-            <div class="chart-area">
-              <div style="font-size:12px;color:var(--ink-light);">Complete a test to see your progress</div>
-            </div>
-          </div>
-        </div>
+      <!-- Achievements + Quick Stats side by side -->
+      <div style="margin-top:20px;display:grid;grid-template-columns:1fr 1fr;gap:14px;">
         <div class="panel">
           <div class="panel-title"><i class="fas fa-trophy"></i> Achievements</div>
           <div class="ach-row" id="achievementsContainer">
             <span class="ach-badge ach-blue"><i class="fas fa-star" style="font-size:9px;"></i> Welcome!</span>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-title"><i class="fas fa-chart-bar"></i> Quick Stats</div>
+          <div class="mini-stats">
+            <div class="mini-stat"><div class="mini-val" id="totalTime">0h</div><div class="mini-lbl">Study time</div></div>
+            <div class="mini-stat"><div class="mini-val" id="accuracy">0%</div><div class="mini-lbl">Accuracy</div></div>
+            <div class="mini-stat"><div class="mini-val" id="improvement">+0%</div><div class="mini-lbl">Improvement</div></div>
+            <div class="mini-stat"><div class="mini-val" id="nextGoal">Test 1</div><div class="mini-lbl">Next goal</div></div>
+          </div>
+          <div class="meta-pair">
+            <span class="meta-lbl">Package</span>
+            <span class="meta-val" id="userPackageDisplay">Loading…</span>
+          </div>
+          <div class="meta-pair">
+            <span class="meta-lbl">Account</span>
+            <span class="meta-val green" id="accountStatus">Active</span>
+          </div>
+          <div class="meta-pair">
+            <span class="meta-lbl">Tests available</span>
+            <span class="meta-val" id="testsAvailable">—</span>
           </div>
         </div>
       </div>
@@ -767,10 +780,8 @@ body {
   </div>
 
   <!-- ── Full-width bottom row ── -->
-  <div class="bottom-grid">
-
-    <!-- Recent Activity -->
-    <div class="panel" style="grid-column:span 3;">
+  <div style="margin-top:20px;margin-bottom:40px;">
+    <div class="panel">
       <div class="panel-title"><i class="fas fa-history"></i> Recent Activity</div>
       <div id="recentActivity">
         <div class="activity-item">
@@ -782,30 +793,6 @@ body {
         </div>
       </div>
     </div>
-
-    <!-- Quick Stats -->
-    <div class="panel">
-      <div class="panel-title"><i class="fas fa-chart-bar"></i> Quick Stats</div>
-      <div class="mini-stats">
-        <div class="mini-stat"><div class="mini-val" id="totalTime">0h</div><div class="mini-lbl">Study time</div></div>
-        <div class="mini-stat"><div class="mini-val" id="accuracy">0%</div><div class="mini-lbl">Accuracy</div></div>
-        <div class="mini-stat"><div class="mini-val" id="improvement">+0%</div><div class="mini-lbl">Improvement</div></div>
-        <div class="mini-stat"><div class="mini-val" id="nextGoal">Test 1</div><div class="mini-lbl">Next goal</div></div>
-      </div>
-      <div class="meta-pair">
-        <span class="meta-lbl">Package</span>
-        <span class="meta-val" id="userPackageDisplay">Loading…</span>
-      </div>
-      <div class="meta-pair">
-        <span class="meta-lbl">Account</span>
-        <span class="meta-val green" id="accountStatus">Active</span>
-      </div>
-      <div class="meta-pair">
-        <span class="meta-lbl">Tests available</span>
-        <span class="meta-val" id="testsAvailable">—</span>
-      </div>
-    </div>
-
   </div>
 </div>
 
@@ -1404,51 +1391,14 @@ function updateProgressStats() {
     statusEl.className   = 'meta-val ' + (isPremium ? 'green' : '');
   }
 
-  updatePerformancePanel(scores, avg, best, improvement);
 }
+
 
 function setTrend(id, dir, text) {
   const el = document.getElementById(id);
   if (!el) return;
   el.className   = 'stat-trend' + (dir === 'down' ? ' down' : dir === 'neutral' ? ' neutral' : '');
   el.textContent = text;
-}
-
-/* ─────────────────────────────────────────────
-   Performance Panel
-───────────────────────────────────────────── */
-function updatePerformancePanel(scores, avg, best, improvement) {
-  const container = document.getElementById('performanceChartContainer');
-  if (!scores.length) return;
-
-  if (scores.length === 1) {
-    container.innerHTML = `
-      <div class="chart-area" style="text-align:center;">
-        <div class="chart-big-num">${Math.round(scores[0])}%</div>
-        <div class="chart-sub">Your score on test ${userTestAttempts[0]?.test_id || 1}</div>
-      </div>`;
-    return;
-  }
-
-  container.innerHTML = `
-    <div class="chart-area" style="text-align:left;">
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
-        <div>
-          <div style="font-size:11px;color:var(--ink-light);margin-bottom:2px;">Average</div>
-          <div style="font-size:18px;font-weight:600;color:var(--navy);">${avg}%</div>
-        </div>
-        <div>
-          <div style="font-size:11px;color:var(--ink-light);margin-bottom:2px;">Best</div>
-          <div style="font-size:18px;font-weight:600;color:var(--green);">${Math.round(best)}%</div>
-        </div>
-      </div>
-    </div>
-    <div class="insight-box">
-      ${improvement > 0
-        ? `<i class="fas fa-arrow-up me-1"></i>+${improvement}% improvement from first to best`
-        : `<i class="fas fa-dumbbell me-1"></i>Building consistency across tests`
-      }
-    </div>`;
 }
 
 /* ─────────────────────────────────────────────
