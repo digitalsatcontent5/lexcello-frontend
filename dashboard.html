@@ -852,7 +852,6 @@ async function initializeDashboard() {
     renderFreeDiagnosticTest();
     updateProgressStats();
     updateRecentActivity();
-    generateAchievements();
     showFreeTestPromoIfNeeded();
     showFeaturedTestsSection();
   } catch (err) {
@@ -1449,33 +1448,6 @@ function updateRecentActivity() {
   }).join('');
 
   container.innerHTML = `<div class="activity-scroll">${items}</div>`;
-}
-
-/* ─────────────────────────────────────────────
-   Achievements
-───────────────────────────────────────────── */
-function generateAchievements() {
-  const el       = document.getElementById('achievementsContainer');
-  const unique   = [...new Set(userTestAttempts.map(a => a.test_id))].length;
-  const total    = userTestAttempts.length;
-  const scores   = userTestAttempts.map(a => {
-    let s = a.score;
-    if (typeof s === 'string') s = parseFloat(s.replace('%',''));
-    return Number(s) || 0;
-  });
-  const best = scores.length ? Math.max(...scores) : 0;
-
-  const badges = [{ cls:'ach-blue', icon:'star',     label:'Welcome!' }];
-  if (unique >= 1) badges.push({ cls:'ach-green', icon:'play',     label:'First test' });
-  if (unique >= 3) badges.push({ cls:'ach-gold',  icon:'medal',    label:'3 tests done' });
-  if (unique >= 5) badges.push({ cls:'ach-gold',  icon:'trophy',   label:'Halfway there' });
-  if (best >= 70)  badges.push({ cls:'ach-green', icon:'thumbs-up',label:'70%+ score' });
-  if (best >= 85)  badges.push({ cls:'ach-gold',  icon:'star',     label:'85%+ score' });
-  if (total >= 5)  badges.push({ cls:'ach-gray',  icon:'dumbbell', label:'Dedicated' });
-
-  el.innerHTML = badges.map(b =>
-    `<span class="ach-badge ${b.cls}"><i class="fas fa-${b.icon}" style="font-size:9px;"></i> ${b.label}</span>`
-  ).join('');
 }
 
 /* ─────────────────────────────────────────────
