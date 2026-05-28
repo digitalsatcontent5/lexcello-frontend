@@ -229,7 +229,7 @@ body {
 
 .test-table-head {
   display: grid;
-  grid-template-columns: 44px 1fr 90px 120px 180px;
+  grid-template-columns: 44px 1fr 100px 120px 180px;
   align-items: center;
   padding: 8px 16px;
   background: var(--surface-alt);
@@ -247,10 +247,11 @@ body {
 
 .th.center { text-align: center; }
 .th.right  { text-align: right; }
+.th.actions-th { text-align: center; }
 
 .test-row {
   display: grid;
-  grid-template-columns: 44px 1fr 90px 120px 180px;
+  grid-template-columns: 44px 1fr 100px 120px 180px;
   align-items: center;
   padding: 10px 16px;
   border-bottom: 1px solid var(--border-soft);
@@ -340,7 +341,7 @@ body {
 .actions-cell {
   display: flex;
   gap: 5px;
-  justify-content: flex-end;
+  justify-content: center;
   flex-wrap: wrap;
 }
 
@@ -1017,7 +1018,7 @@ function renderFreeDiagnosticTest() {
     <div class="th" style="padding-left:12px;">Test</div>
     <div class="th center">Score</div>
     <div class="th">Status</div>
-    <div class="th right">Actions</div>
+    <div class="th actions-th">Actions</div>
   </div>
   <div class="test-row ${hasCompleted ? 'is-done' : 'is-avail'}">
     <div class="num-circle ${hasCompleted ? 'nc-done' : 'nc-avail'}">
@@ -1234,7 +1235,7 @@ function renderTestsWithUserProgress(statuses) {
       <div class="th" style="padding-left:12px;">Test</div>
       <div class="th center">Best score</div>
       <div class="th">Status</div>
-      <div class="th right">Actions</div>
+      <div class="th actions-th">Actions</div>
     </div>`;
 
   let rows = '';
@@ -1493,7 +1494,7 @@ function showFeaturedTestsSection() {
   <div class="th" style="padding-left:12px;">Test</div>
   <div class="th center">Best score</div>
   <div class="th">Format</div>
-  <div class="th right">Actions</div>
+  <div class="th actions-th">Actions</div>
 </div>
 ${[11,12,13].map(n => `
 <div class="test-row is-locked faded">
@@ -1541,7 +1542,7 @@ function renderFeaturedTestsSection() {
   <div class="th" style="padding-left:12px;">Test</div>
   <div class="th center">Best score</div>
   <div class="th">Format</div>
-  <div class="th right">Actions</div>
+  <div class="th actions-th">Actions</div>
 </div>`;
 
   defs.forEach(({ dbId, num }) => {
